@@ -76,7 +76,7 @@
       cursor: pointer;
     }
 
-    /* Jejakmu */
+    /* Artefak utama */
     .artefact-header {
       width: 100%;
       aspect-ratio: 1 / 0.8;
@@ -99,17 +99,18 @@
     .artefact-stamp {
       position: absolute;
       top: 12px;
-      left: 12px;
-      background: rgba(0, 0, 0, 0.5);
+      right: 12px; /* SUDUT KANAN ATAS */
+      background: rgba(0, 0, 0, 0.4);
       padding: 4px 8px;
       border-radius: 6px;
       font-size: 10px;
       color: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(2px);
+      z-index: 10;
       max-width: 90%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      backdrop-filter: blur(2px);
     }
 
     .artefact-notasi {
@@ -237,7 +238,6 @@
       text-overflow: ellipsis;
     }
 
-    /* Bottom nav */
     .bottom-nav-wrapper {
       position: fixed;
       bottom: 0;
@@ -271,7 +271,6 @@
       font-weight: 600;
     }
 
-    /* Modal */
     .modal {
       position: fixed;
       top: 0;
@@ -330,37 +329,32 @@
       color: white;
     }
 
-    /* Hidden */
     #artefactInput {
       display: none;
     }
   </style>
 </head>
 <body>
-  <div id="app">
-    <!-- Akan diisi oleh JS -->
-  </div>
+  <div id="app"></div>
 
   <script>
-    // ==== State ====
+    // === STATE ===
     const state = {
       isOnboarded: localStorage.getItem('nopeOnboarded') === 'true',
-      email: localStorage.getItem('nopeEmail') || '',
-      username: localStorage.getItem('nopeUsername') || '',
-      joined: localStorage.getItem('nopeJoined') || '',
       artefacts: JSON.parse(localStorage.getItem('nopeArtefacts') || '[]'),
       rants: JSON.parse(localStorage.getItem('nopeRants') || '[]')
     };
 
-    // ==== Dummy Data ====
+    // === ARTIFAK GEN Z (1 utama + 6 grid) ===
     if (state.artefacts.length === 0) {
       state.artefacts = [
-        { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format", date: "2025-03-05T10:00:00Z", notasi: "perahu" },
-        { url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=640&fit=crop&auto=format", date: "2025-02-15T10:00:00Z", notasi: "sepatu bapak" },
-        { url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=640&fit=crop&auto=format", date: "2025-01-20T10:00:00Z", notasi: "karcis konser" },
-        { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format", date: "2025-04-05T10:00:00Z", notasi: "surat lama" },
-        { url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=640&fit=crop&auto=format", date: "2025-05-10T10:00:00Z", notasi: "tiket bioskop" },
-        { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format", date: "2025-06-25T10:00:00Z", notasi: "kopi pagi" }
+        { url: "https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format", notasi: "struk pertama", date: "2025-03-05T10:00:00Z" },
+        { url: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=800&h=640&fit=crop&auto=format", notasi: "karcis terakhir", date: "2025-02-15T10:00:00Z" },
+        { url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop&auto=format", notasi: "meja tempat aku menyerah", date: "2025-01-20T10:00:00Z" },
+        { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format", notasi: "bayanganku yang setia", date: "2025-04-05T10:00:00Z" },
+        { url: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=640&fit=crop&auto=format", notasi: "chat yang diarsip", date: "2025-05-10T10:00:00Z" },
+        { url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop&auto=format", notasi: "jepit yang tertinggal", date: "2025-06-25T10:00:00Z" },
+        { url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=640&fit=crop&auto=format", notasi: "catatan buat yang tak baca", date: "2025-07-10T10:00:00Z" }
       ];
     }
 
@@ -372,24 +366,13 @@
       ];
     }
 
-    // ==== Helper ====
+    // === SAVE ===
     function saveState() {
       localStorage.setItem('nopeArtefacts', JSON.stringify(state.artefacts));
       localStorage.setItem('nopeRants', JSON.stringify(state.rants));
     }
 
-    function timeAgo(dateStr) {
-      const past = new Date(dateStr);
-      const now = new Date();
-      const diffSec = Math.floor((now - past) / 1000);
-      if (diffSec < 60) return "baru saja";
-      if (diffSec < 3600) return Math.floor(diffSec / 60) + " menit lalu";
-      if (diffSec < 86400) return Math.floor(diffSec / 3600) + " jam lalu";
-      if (diffSec < 2592000) return Math.floor(diffSec / 86400) + " hari lalu";
-      return Math.floor(diffSec / 2592000) + " bulan lalu";
-    }
-
-    // ==== Onboarding ====
+    // === ONBOARDING ===
     function renderOnboarding() {
       document.getElementById('app').innerHTML = `
         <div class="container">
@@ -412,44 +395,37 @@
       if (!emotion) { alert("Ketik satu kata yang mewakilimu."); return; }
       if (!emailRegex.test(email)) { alert("Email valid diperlukan."); return; }
 
-      const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
-      const adj = adjectives.includes(emotion) ? emotion : adjectives[Math.floor(Math.random() * adjectives.length)];
+      const words = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
+      const adj = words.includes(emotion) ? emotion : words[Math.floor(Math.random() * words.length)];
       const num = Math.floor(1000 + Math.random() * 9000);
-      state.username = `@nope.${adj}.${num}`;
-      state.email = email;
-      state.joined = new Date().toISOString().split('T')[0];
-      state.isOnboarded = true;
-
+      localStorage.setItem('nopeUsername', `@nope.${adj}.${num}`);
       localStorage.setItem('nopeEmail', email);
-      localStorage.setItem('nopeUsername', state.username);
-      localStorage.setItem('nopeJoined', state.joined);
+      localStorage.setItem('nopeJoined', new Date().toISOString().split('T')[0]);
       localStorage.setItem('nopeOnboarded', 'true');
 
       renderJejakmu();
     }
 
-    // ==== Jejakmu ====
+    // === JEJAKMU ===
     function renderJejakmu() {
-      // Artefak utama
-      const latestArt = state.artefacts.length > 0 ? state.artefacts[state.artefacts.length - 1] : null;
-      const artefactImg = latestArt ? latestArt.url : "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format";
-      const artefactNotasi = latestArt ? latestArt.notasi : "—";
-      const artefactDate = latestArt ? new Date(latestArt.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : "—";
+      const latest = state.artefacts[state.artefacts.length - 1];
+      const artefactImg = latest.url;
+      const artefactNotasi = latest.notasi;
+      const artefactDate = new Date(latest.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
-      // Rants
       let rantsHtml = '';
       state.rants.slice(-3).reverse().forEach(text => {
         rantsHtml += `<div class="rant-item"><div class="rant-text">${text}</div></div>`;
       });
 
-      // Artefak grid
       let gridHtml = '';
-      const recentArts = state.artefacts.slice(-6).reverse();
-      recentArts.forEach(art => {
+      const recent = state.artefacts.slice(-6).reverse();
+      recent.forEach(art => {
+        const dateStr = new Date(art.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
         gridHtml += `
           <div class="grid-item">
             <img src="${art.url}" alt="Artefak">
-            <span class="stamp">${art.notasi} • ${timeAgo(art.date)}</span>
+            <span class="stamp">${art.notasi} • ${dateStr}</span>
           </div>
         `;
       });
@@ -501,7 +477,7 @@
       `;
     }
 
-    // ==== Upload ====
+    // === UPLOAD ===
     let currentNotasiUrl = '';
     function uploadArtefact() {
       if (!canUpload()) { alert('Kamu hanya bisa menyembunyikan jejak sekali per 30 hari.'); return; }
@@ -545,7 +521,7 @@
       alert("Disimpan. Tak seorang pun tahu.");
     }
 
-    // ==== Rant ====
+    // === RANT ===
     function submitRant() {
       const text = document.getElementById('rantInput').value.trim();
       if (!text) { alert("Tulis dulu."); return; }
@@ -556,14 +532,13 @@
       alert("Disimpan. Tak seorang pun tahu.");
     }
 
-    // ==== Init ====
+    // === INIT ===
     if (state.isOnboarded) {
       renderJejakmu();
     } else {
       renderOnboarding();
     }
 
-    // Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch(console.warn);
