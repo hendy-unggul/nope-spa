@@ -96,32 +96,33 @@
       object-fit: cover;
     }
 
+    /* Notasi di SUDUT KANAN ATAS — lebih kecil & menyatu */
     .artefact-stamp {
       position: absolute;
-      top: 12px;
-      right: 12px; /* SUDUT KANAN ATAS */
-      background: rgba(0, 0, 0, 0.4);
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.7);
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.45); /* transparan */
+      padding: 3px 7px; /* padding halus */
+      border-radius: 5px;
+      font-size: 8px; /* 80% dari 10px */
+      color: rgba(255, 255, 255, 0.85);
       z-index: 10;
       max-width: 90%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      backdrop-filter: blur(2px);
+      backdrop-filter: blur(1px); /* subtle glow */
     }
 
     .artefact-notasi {
-      font-size: 20px;
+      font-size: 16px; /* 80% dari 20px */
       font-weight: 600;
       color: #fff;
-      margin-right: 4px;
+      margin-right: 3px;
     }
 
     .artefact-date {
-      font-size: 10px;
+      font-size: 8px;
       color: rgba(255, 255, 255, 0.5);
     }
 
@@ -338,14 +339,12 @@
   <div id="app"></div>
 
   <script>
-    // === STATE ===
     const state = {
       isOnboarded: localStorage.getItem('nopeOnboarded') === 'true',
       artefacts: JSON.parse(localStorage.getItem('nopeArtefacts') || '[]'),
       rants: JSON.parse(localStorage.getItem('nopeRants') || '[]')
     };
 
-    // === ARTIFAK GEN Z (1 utama + 6 grid) ===
     if (state.artefacts.length === 0) {
       state.artefacts = [
         { url: "https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format", notasi: "struk pertama", date: "2025-03-05T10:00:00Z" },
@@ -360,19 +359,17 @@
 
     if (state.rants.length === 0) {
       state.rants = [
-        "hari ini aku bilang 'ga apa-apa' padahal hati retak...",
-        "diamku bukan kosong. di dalam, aku sedang menulis puisi...",
-        "aku memilih sunyi, bukan karena tak punya suara..."
+        "gue udah bantuin dia tiap malem pas dia galau, sampe gue lupa ngerjain tugas sendiri. pas gue butuh temen buat ngobrol, dia malah offline terus. gak minta balasan sih, tapi rasanya kayak jadi tempat sampah emosi doang. capek jadi ‘temen baik’ yang cuma dipake pas dia perlu aja.",
+        "deadline mepet, dosen gak jelas, dompet kering. rasanya pengen ijin cuti sehari buat jadi batu aja. gak perlu mikir, gak perlu ngomong, gak perlu diharapkan apa-apa.",
+        "dia bilang ‘kita temenan aja’ — iya, temen yang kau ghosting 3 minggu."
       ];
     }
 
-    // === SAVE ===
     function saveState() {
       localStorage.setItem('nopeArtefacts', JSON.stringify(state.artefacts));
       localStorage.setItem('nopeRants', JSON.stringify(state.rants));
     }
 
-    // === ONBOARDING ===
     function renderOnboarding() {
       document.getElementById('app').innerHTML = `
         <div class="container">
@@ -406,7 +403,6 @@
       renderJejakmu();
     }
 
-    // === JEJAKMU ===
     function renderJejakmu() {
       const latest = state.artefacts[state.artefacts.length - 1];
       const artefactImg = latest.url;
@@ -477,7 +473,6 @@
       `;
     }
 
-    // === UPLOAD ===
     let currentNotasiUrl = '';
     function uploadArtefact() {
       if (!canUpload()) { alert('Kamu hanya bisa menyembunyikan jejak sekali per 30 hari.'); return; }
@@ -521,7 +516,6 @@
       alert("Disimpan. Tak seorang pun tahu.");
     }
 
-    // === RANT ===
     function submitRant() {
       const text = document.getElementById('rantInput').value.trim();
       if (!text) { alert("Tulis dulu."); return; }
@@ -532,7 +526,6 @@
       alert("Disimpan. Tak seorang pun tahu.");
     }
 
-    // === INIT ===
     if (state.isOnboarded) {
       renderJejakmu();
     } else {
