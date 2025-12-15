@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon-192.png">
+  <meta name="theme-color" content="#0b2a4d">
+  <title>NOPE</title>
+  <style>
+    :root {
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 390px;
+      margin: 0 auto;
+      padding: 16px 12px;
+      padding-bottom: calc(68px + var(--safe-bottom));
+    }
+
+    /* Onboarding */
+    .onboarding {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .onboarding h1 {
+      font-weight: 400;
+      font-size: 18px;
+      margin: 30px 0 24px;
+      line-height: 1.5;
+    }
+
+    .onboarding input {
+      width: 100%;
+      padding: 14px;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      margin: 12px 0 20px;
+      text-align: center;
+    }
+
+    .onboarding input::placeholder {
+      color: #555;
+    }
+
+    .onboarding .cta {
+      width: 100%;
+      padding: 14px;
+      background: #0b2a4d;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Jejakmu */
+    .artefact-header {
+      width: 100%;
+      aspect-ratio: 1 / 0.8;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 8px;
+      border-radius: 12px;
+    }
+
+    .artefact-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .artefact-stamp {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(2px);
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .artefact-notasi {
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+      margin-right: 4px;
+    }
+
+    .artefact-date {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .emoji-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 4px 12px 6px;
+      margin-bottom: 16px;
+    }
+
+    .emoji-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 14px;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    .rantbox {
+      background: #0a0a0a;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 70px;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      padding: 10px;
+      resize: none;
+      outline: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 10px;
+      background: #0b2a4d;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .jejakmu-title {
+      font-size: 14px;
+      color: #0b2a4d;
+      margin: 4px 0 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .jejakmu-title::before {
+      content: "🔒";
+      font-size: 12px;
+    }
+
+    .rant-item {
+      background: #0a0a0a;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .rant-text {
+      white-space: pre-line;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .artefact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .grid-item {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: #111;
+    }
+
+    .grid-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .grid-item .stamp {
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.5);
+      padding: 1px 3px;
+      font-size: 7px;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Bottom nav */
+    .bottom-nav-wrapper {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      background: #000;
+      border-top: 1px solid #1a1a1a;
+      padding-bottom: var(--safe-bottom);
+      z-index: 50;
+    }
+
+    .bottom-nav {
+      display: flex;
+      width: 100%;
+      max-width: 390px;
+    }
+
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 12px;
+      color: #666;
+      text-decoration: none;
+    }
+
+    .nav-item.active {
+      color: #0b2a4d;
+      font-weight: 600;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: #0a0a0a;
+      padding: 18px;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 340px;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 10px;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      margin: 8px 0;
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .modal-btn.cancel {
+      background: #222;
+      color: #aaa;
+    }
+
+    .modal-btn.confirm {
+      background: #0b2a4d;
+      color: white;
+    }
+
+    /* Hidden */
+    #artefactInput {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Akan diisi oleh JS -->
+  </div>
+
+  <script>
+    // ==== State ====
+    const state = {
+      isOnboarded: localStorage.getItem('nopeOnboarded') === 'true',
+      email: localStorage.getItem('nopeEmail') || '',
+      username: localStorage.getItem('nopeUsername') || '',
+      joined: localStorage.getItem('nopeJoined') || '',
+      artefacts: JSON.parse(localStorage.getItem('nopeArtefacts') || '[]'),
+      rants: JSON.parse(localStorage.getItem('nopeRants') || '[]')
+    };
+
+    // ==== Dummy Data ====
+    if (state.artefacts.length === 0) {
+      state.artefacts = [
+        { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format", date: "2025-03-05T10:00:00Z", notasi: "perahu" },
+        { url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=640&fit=crop&auto=format", date: "2025-02-15T10:00:00Z", notasi: "sepatu bapak" },
+        { url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=640&fit=crop&auto=format", date: "2025-01-20T10:00:00Z", notasi: "karcis konser" },
+        { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format", date: "2025-04-05T10:00:00Z", notasi: "surat lama" },
+        { url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&h=640&fit=crop&auto=format", date: "2025-05-10T10:00:00Z", notasi: "tiket bioskop" },
+        { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format", date: "2025-06-25T10:00:00Z", notasi: "kopi pagi" }
+      ];
+    }
+
+    if (state.rants.length === 0) {
+      state.rants = [
+        "hari ini aku bilang 'ga apa-apa' padahal hati retak...",
+        "diamku bukan kosong. di dalam, aku sedang menulis puisi...",
+        "aku memilih sunyi, bukan karena tak punya suara..."
+      ];
+    }
+
+    // ==== Helper ====
+    function saveState() {
+      localStorage.setItem('nopeArtefacts', JSON.stringify(state.artefacts));
+      localStorage.setItem('nopeRants', JSON.stringify(state.rants));
+    }
+
+    function timeAgo(dateStr) {
+      const past = new Date(dateStr);
+      const now = new Date();
+      const diffSec = Math.floor((now - past) / 1000);
+      if (diffSec < 60) return "baru saja";
+      if (diffSec < 3600) return Math.floor(diffSec / 60) + " menit lalu";
+      if (diffSec < 86400) return Math.floor(diffSec / 3600) + " jam lalu";
+      if (diffSec < 2592000) return Math.floor(diffSec / 86400) + " hari lalu";
+      return Math.floor(diffSec / 2592000) + " bulan lalu";
+    }
+
+    // ==== Onboarding ====
+    function renderOnboarding() {
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <div class="onboarding">
+            <div style="font-size:24px;opacity:0.9;">NOPE</div>
+            <h1>Ada yang ingin kau sembunyikan?</h1>
+            <input type="text" id="emotionInput" maxlength="20" placeholder="ketik satu kata..."/>
+            <input type="email" id="emailInput" placeholder="emailmu (kami takkan mengganggu)" autocomplete="off"/>
+            <button class="cta" onclick="handleOnboard()">masuk diam-diam</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleOnboard() {
+      const emotion = document.getElementById('emotionInput').value.trim();
+      const email = document.getElementById('emailInput').value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emotion) { alert("Ketik satu kata yang mewakilimu."); return; }
+      if (!emailRegex.test(email)) { alert("Email valid diperlukan."); return; }
+
+      const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
+      const adj = adjectives.includes(emotion) ? emotion : adjectives[Math.floor(Math.random() * adjectives.length)];
+      const num = Math.floor(1000 + Math.random() * 9000);
+      state.username = `@nope.${adj}.${num}`;
+      state.email = email;
+      state.joined = new Date().toISOString().split('T')[0];
+      state.isOnboarded = true;
+
+      localStorage.setItem('nopeEmail', email);
+      localStorage.setItem('nopeUsername', state.username);
+      localStorage.setItem('nopeJoined', state.joined);
+      localStorage.setItem('nopeOnboarded', 'true');
+
+      renderJejakmu();
+    }
+
+    // ==== Jejakmu ====
+    function renderJejakmu() {
+      // Artefak utama
+      const latestArt = state.artefacts.length > 0 ? state.artefacts[state.artefacts.length - 1] : null;
+      const artefactImg = latestArt ? latestArt.url : "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format";
+      const artefactNotasi = latestArt ? latestArt.notasi : "—";
+      const artefactDate = latestArt ? new Date(latestArt.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : "—";
+
+      // Rants
+      let rantsHtml = '';
+      state.rants.slice(-3).reverse().forEach(text => {
+        rantsHtml += `<div class="rant-item"><div class="rant-text">${text}</div></div>`;
+      });
+
+      // Artefak grid
+      let gridHtml = '';
+      const recentArts = state.artefacts.slice(-6).reverse();
+      recentArts.forEach(art => {
+        gridHtml += `
+          <div class="grid-item">
+            <img src="${art.url}" alt="Artefak">
+            <span class="stamp">${art.notasi} • ${timeAgo(art.date)}</span>
+          </div>
+        `;
+      });
+
+      document.getElementById('app').innerHTML = `
+        <div class="container">
+          <div class="artefact-header">
+            <img class="artefact-image" src="${artefactImg}" alt="Artefak">
+            <div class="artefact-stamp">
+              <span class="artefact-notasi">${artefactNotasi}</span>
+              <span class="artefact-date">${artefactDate}</span>
+            </div>
+          </div>
+
+          <div class="emoji-bar">
+            <button class="emoji-btn" onclick="uploadArtefact()">sembunyikan jejak</button>
+          </div>
+
+          <div class="rantbox">
+            <textarea id="rantInput" maxlength="240" placeholder="Curhat yang gak bisa dikirim ke DM..."></textarea>
+            <button class="submit-btn" onclick="submitRant()">simpan diam-diam</button>
+          </div>
+
+          <div class="jejakmu-title">Jejakmu</div>
+          ${rantsHtml}
+          <div class="artefact-grid">${gridHtml}</div>
+        </div>
+
+        <div class="bottom-nav-wrapper">
+          <nav class="bottom-nav">
+            <a href="#" class="nav-item active">Jejak</a>
+            <a href="#" class="nav-item">Dunia</a>
+            <a href="#" class="nav-item">Jalan</a>
+          </nav>
+        </div>
+
+        <input type="file" id="artefactInput" accept="image/*" onchange="handleArtefactUpload(event)">
+        <div id="notasiModal" class="modal" style="display:none;">
+          <div class="modal-content">
+            <div>Maksimal 4 kata (tanpa emoji)</div>
+            <div style="font-size:11px;color:#666;margin:6px 0;">Foto benda bermakna — tanpa wajah, tubuh, atau promosi.</div>
+            <input type="text" id="notasiInput" maxlength="50" placeholder="contoh: struk gaji pertama">
+            <div class="modal-btns">
+              <button class="modal-btn cancel" onclick="closeModal()">batal</button>
+              <button class="modal-btn confirm" onclick="confirmNotasi()">simpan</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ==== Upload ====
+    let currentNotasiUrl = '';
+    function uploadArtefact() {
+      if (!canUpload()) { alert('Kamu hanya bisa menyembunyikan jejak sekali per 30 hari.'); return; }
+      document.getElementById('artefactInput').click();
+    }
+
+    function canUpload() {
+      if (state.artefacts.length === 0) return true;
+      const last = new Date(state.artefacts[state.artefacts.length - 1].date);
+      const now = new Date();
+      const diffDays = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+      return diffDays >= 30;
+    }
+
+    function handleArtefactUpload(e) {
+      const file = e.target.files[0];
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        currentNotasiUrl = ev.target.result;
+        document.getElementById('notasiInput').value = '';
+        document.getElementById('notasiModal').style.display = 'flex';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function closeModal() {
+      document.getElementById('notasiModal').style.display = 'none';
+    }
+
+    function confirmNotasi() {
+      const val = document.getElementById('notasiInput').value.trim();
+      if (!val) { alert('Wajib diisi.'); return; }
+      const words = val.split(/\s+/);
+      if (words.length > 4) { alert('Maksimal 4 kata.'); return; }
+      const notasi = words.join(' ');
+      state.artefacts.push({ url: currentNotasiUrl, date: new Date().toISOString(), notasi });
+      saveState();
+      closeModal();
+      renderJejakmu();
+      alert("Disimpan. Tak seorang pun tahu.");
+    }
+
+    // ==== Rant ====
+    function submitRant() {
+      const text = document.getElementById('rantInput').value.trim();
+      if (!text) { alert("Tulis dulu."); return; }
+      if (text.length > 240) { alert("Maksimal 240 karakter."); return; }
+      state.rants.push(text);
+      saveState();
+      document.getElementById('rantInput').value = '';
+      alert("Disimpan. Tak seorang pun tahu.");
+    }
+
+    // ==== Init ====
+    if (state.isOnboarded) {
+      renderJejakmu();
+    } else {
+      renderOnboarding();
+    }
+
+    // Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(console.warn);
+      });
+    }
+  </script>
+</body>
+</html>
