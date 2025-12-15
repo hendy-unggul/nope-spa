@@ -96,7 +96,6 @@
       object-fit: cover;
     }
 
-    /* Notasi: kanan atas, 80%, transparan */
     .artefact-stamp {
       position: absolute;
       top: 10px;
@@ -148,11 +147,12 @@
       border-radius: 12px;
       padding: 12px;
       margin-bottom: 16px;
+      overflow: hidden; /* untuk float */
     }
 
     textarea {
       width: 100%;
-      height: 88px; /* 5 baris */
+      height: 88px;
       background: #111;
       border: 1px solid #222;
       border-radius: 10px;
@@ -161,19 +161,25 @@
       padding: 10px;
       resize: none;
       outline: none;
+      display: block;
     }
 
-    .submit-btn {
-      width: 100%;
-      padding: 10px;
-      background: #0b2a4d;
-      color: white;
+    .inline-save {
+      background: none;
       border: none;
-      border-radius: 10px;
-      font-size: 15px;
+      color: #0b2a4d;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
+      padding: 4px 0;
       margin-top: 6px;
+      float: right;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+
+    .inline-save:hover {
+      opacity: 0.7;
     }
 
     .jejakmu-title {
@@ -345,7 +351,6 @@
       rants: JSON.parse(localStorage.getItem('nopeRants') || '[]')
     };
 
-    // Artefak Gen Z
     if (state.artefacts.length === 0) {
       state.artefacts = [
         { url: "https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format", notasi: "struk pertama", date: "2025-03-05T10:00:00Z" },
@@ -358,7 +363,6 @@
       ];
     }
 
-    // Rant Gen Z: panjang, sedang, pendek
     if (state.rants.length === 0) {
       state.rants = [
         "gue udah bantuin dia tiap malem pas dia galau, sampe gue lupa ngerjain tugas sendiri. pas gue butuh temen buat ngobrol, dia malah offline terus. gak minta balasan sih, tapi rasanya kayak jadi tempat sampah emosi doang. capek jadi ‘temen baik’ yang cuma dipake pas dia perlu aja.",
@@ -444,7 +448,7 @@
 
           <div class="rantbox">
             <textarea id="rantInput" maxlength="300" placeholder="Curhat yang gak bisa dikirim ke DM..."></textarea>
-            <button class="submit-btn" onclick="submitRant()">simpan diam-diam</button>
+            <button id="submitBtn" class="inline-save" onclick="submitRant()">simpan</button>
           </div>
 
           <div class="jejakmu-title">Jejakmu</div>
@@ -525,7 +529,6 @@
       state.rants.push(text);
       saveState();
       document.getElementById('rantInput').value = '';
-      alert("Disimpan. Tak seorang pun tahu.");
     }
 
     if (state.isOnboarded) {
