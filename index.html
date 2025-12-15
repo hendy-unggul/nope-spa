@@ -35,7 +35,15 @@
       padding-bottom: calc(68px + var(--safe-bottom));
     }
 
-    /* Onboarding */
+    /* Micromovement */
+    .rantbox, .artefact-header, .grid-item {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .rantbox:active, .artefact-header:active, .grid-item:active {
+      transform: scale(1.01);
+      box-shadow: 0 0 8px rgba(11, 42, 77, 0.4);
+    }
+
     .onboarding {
       text-align: center;
       padding: 40px 20px;
@@ -76,7 +84,6 @@
       cursor: pointer;
     }
 
-    /* Artefak utama */
     .artefact-header {
       width: 100%;
       aspect-ratio: 1 / 0.8;
@@ -147,7 +154,7 @@
       border-radius: 12px;
       padding: 12px;
       margin-bottom: 16px;
-      overflow: hidden; /* untuk float */
+      overflow: hidden;
     }
 
     textarea {
@@ -175,7 +182,6 @@
       margin-top: 6px;
       float: right;
       opacity: 0.9;
-      transition: opacity 0.2s;
     }
 
     .inline-save:hover {
@@ -278,65 +284,71 @@
       font-weight: 600;
     }
 
-    .modal {
+    /* Modal artefak besar */
+    .artefact-modal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.95);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 100;
+      z-index: 200;
+      padding: 20px;
     }
 
-    .modal-content {
-      background: #0a0a0a;
-      padding: 18px;
-      border-radius: 14px;
-      width: 90%;
-      max-width: 340px;
+    .modal-img {
+      max-width: 100%;
+      max-height: 60vh;
+      border-radius: 12px;
+      object-fit: cover;
     }
 
-    .modal input {
+    .private-note {
       width: 100%;
-      padding: 10px;
+      max-width: 340px;
+      margin-top: 20px;
       background: #111;
       border: 1px solid #222;
       border-radius: 10px;
       color: #fff;
       font-size: 14px;
-      margin: 8px 0;
+      padding: 10px;
+      resize: none;
+      outline: none;
+      height: 80px;
     }
 
     .modal-btns {
       display: flex;
-      gap: 8px;
-      margin-top: 14px;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .modal-btn {
-      flex: 1;
-      padding: 8px;
-      border-radius: 10px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 8px;
       font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
     }
 
-    .modal-btn.cancel {
-      background: #222;
-      color: #aaa;
-    }
-
-    .modal-btn.confirm {
+    .modal-btn.save {
       background: #0b2a4d;
       color: white;
     }
 
-    #artefactInput {
+    .modal-btn.close {
+      background: #222;
+      color: #aaa;
+    }
+
+    /* Hidden */
+    #artefactInput, #notasiModal {
       display: none;
     }
   </style>
@@ -353,13 +365,13 @@
 
     if (state.artefacts.length === 0) {
       state.artefacts = [
-        { url: "https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format", notasi: "struk pertama", date: "2025-03-05T10:00:00Z" },
-        { url: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=800&h=640&fit=crop&auto=format", notasi: "karcis terakhir", date: "2025-02-15T10:00:00Z" },
-        { url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop&auto=format", notasi: "meja tempat aku menyerah", date: "2025-01-20T10:00:00Z" },
-        { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format", notasi: "bayanganku yang setia", date: "2025-04-05T10:00:00Z" },
-        { url: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=640&fit=crop&auto=format", notasi: "chat yang diarsip", date: "2025-05-10T10:00:00Z" },
-        { url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop&auto=format", notasi: "jepit yang tertinggal", date: "2025-06-25T10:00:00Z" },
-        { url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=640&fit=crop&auto=format", notasi: "catatan buat yang tak baca", date: "2025-07-10T10:00:00Z" }
+        { url: "https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format", notasi: "struk pertama", date: "2025-03-05T10:00:00Z", privateNote: "" },
+        { url: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=800&h=640&fit=crop&auto=format", notasi: "karcis terakhir", date: "2025-02-15T10:00:00Z", privateNote: "" },
+        { url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop&auto=format", notasi: "meja tempat aku menyerah", date: "2025-01-20T10:00:00Z", privateNote: "" },
+        { url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop&auto=format", notasi: "bayanganku yang setia", date: "2025-04-05T10:00:00Z", privateNote: "" },
+        { url: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=640&fit=crop&auto=format", notasi: "chat yang diarsip", date: "2025-05-10T10:00:00Z", privateNote: "" },
+        { url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop&auto=format", notasi: "jepit yang tertinggal", date: "2025-06-25T10:00:00Z", privateNote: "" },
+        { url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=640&fit=crop&auto=format", notasi: "catatan buat yang tak baca", date: "2025-07-10T10:00:00Z", privateNote: "" }
       ];
     }
 
@@ -405,8 +417,38 @@
       localStorage.setItem('nopeEmail', email);
       localStorage.setItem('nopeJoined', new Date().toISOString().split('T')[0]);
       localStorage.setItem('nopeOnboarded', 'true');
-
       renderJejakmu();
+    }
+
+    let currentModalArtefactIndex = -1;
+
+    function openArtefactModal(index) {
+      currentModalArtefactIndex = index;
+      const art = state.artefacts[index];
+      document.body.innerHTML += `
+        <div class="artefact-modal" id="artefactModal">
+          <img class="modal-img" src="${art.url}" alt="Artefak">
+          <textarea class="private-note" id="privateNote" maxlength="300" placeholder="Catatan pribadi (hanya untukmu)...">${art.privateNote || ''}</textarea>
+          <div class="modal-btns">
+            <button class="modal-btn save" onclick="savePrivateNote()">simpan</button>
+            <button class="modal-btn close" onclick="closeArtefactModal()">tutup</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function savePrivateNote() {
+      const note = document.getElementById('privateNote').value.trim();
+      if (currentModalArtefactIndex >= 0) {
+        state.artefacts[currentModalArtefactIndex].privateNote = note;
+        saveState();
+      }
+      closeArtefactModal();
+    }
+
+    function closeArtefactModal() {
+      const modal = document.getElementById('artefactModal');
+      if (modal) modal.remove();
     }
 
     function renderJejakmu() {
@@ -422,10 +464,11 @@
 
       let gridHtml = '';
       const recent = state.artefacts.slice(-6).reverse();
-      recent.forEach(art => {
+      recent.forEach((art, i) => {
+        const origIndex = state.artefacts.length - 6 + i;
         const dateStr = new Date(art.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
         gridHtml += `
-          <div class="grid-item">
+          <div class="grid-item" onclick="openArtefactModal(${origIndex})">
             <img src="${art.url}" alt="Artefak">
             <span class="stamp">${art.notasi} • ${dateStr}</span>
           </div>
@@ -465,7 +508,7 @@
         </div>
 
         <input type="file" id="artefactInput" accept="image/*" onchange="handleArtefactUpload(event)">
-        <div id="notasiModal" class="modal" style="display:none;">
+        <div id="notasiModal">
           <div class="modal-content">
             <div>Maksimal 4 kata (tanpa emoji)</div>
             <div style="font-size:11px;color:#666;margin:6px 0;">Foto benda bermakna — tanpa wajah, tubuh, atau promosi.</div>
@@ -515,7 +558,7 @@
       const words = val.split(/\s+/);
       if (words.length > 4) { alert('Maksimal 4 kata.'); return; }
       const notasi = words.join(' ');
-      state.artefacts.push({ url: currentNotasiUrl, date: new Date().toISOString(), notasi });
+      state.artefacts.push({ url: currentNotasiUrl, date: new Date().toISOString(), notasi: notasi, privateNote: "" });
       saveState();
       closeModal();
       renderJejakmu();
