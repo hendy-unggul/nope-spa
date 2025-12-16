@@ -37,7 +37,7 @@
     .screen.active {
       display: block;
     }
-    /* Landing */
+    /* Landing (opsional: hanya jika akses langsung index.html) */
     .landing {
       text-align: center;
       padding: 40px 20px;
@@ -316,8 +316,8 @@
 </head>
 <body>
   <div id="app">
-    <!-- Landing -->
-    <div id="landingScreen" class="screen active">
+    <!-- Landing (opsional) -->
+    <div id="landingScreen" class="screen">
       <div class="container">
         <div class="landing">
           <div style="font-size:24px;opacity:0.9;">NOPE</div>
@@ -362,13 +362,29 @@
 
     // ==== INIT ====
     function init() {
+      // Cek apakah datang dari login.html
       const email = localStorage.getItem('nopeEmail');
       const username = localStorage.getItem('nopeUsername');
       const onboarded = localStorage.getItem('nopeOnboarded') === 'true';
-      if (email && username && onboarded) {
-        currentUser = { email, username };
-        showJejak();
+      
+      if (email) {
+        // Pengguna sudah login lewat login.html
+        if (username && onboarded) {
+          // Sudah lengkap → ke Jejak
+          currentUser = { email, username };
+          showJejak();
+        } else {
+          // Baru login → butuh username & onboarding
+          const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
+          const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+          const num = Math.floor(1000 + Math.random() * 9000);
+          const username = `@nope.${adj}.${num}`;
+          localStorage.setItem('nopeUsername', username);
+          currentUser = { email, username };
+          showOnboarding();
+        }
       } else {
+        // Akses langsung index.html → tampilkan landing
         showLanding();
       }
     }
@@ -418,7 +434,7 @@
       renderJalan();
     }
 
-    // ==== LOGIN ====
+    // ==== LOGIN (opsional, jika akses langsung index.html) ====
     function handleLogin() {
       const input = document.getElementById('loginInput').value.trim();
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -426,24 +442,18 @@
         alert("Masukkan email yang valid.");
         return;
       }
-      const savedEmail = localStorage.getItem('nopeEmail');
-      if (savedEmail === input) {
-        const username = localStorage.getItem('nopeUsername');
-        currentUser = { email: input, username };
-        showJejak();
-      } else {
-        const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
-        const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-        const num = Math.floor(1000 + Math.random() * 9000);
-        const username = `@nope.${adj}.${num}`;
-        localStorage.setItem('nopeEmail', input);
-        localStorage.setItem('nopeUsername', username);
-        currentUser = { email: input, username };
-        showOnboarding();
-      }
+      localStorage.setItem('nopeEmail', input);
+      // Simulasi generate username
+      const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
+      const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+      const num = Math.floor(1000 + Math.random() * 9000);
+      const username = `@nope.${adj}.${num}`;
+      localStorage.setItem('nopeUsername', username);
+      currentUser = { email: input, username };
+      showOnboarding();
     }
 
-    // ==== ONBOARDING ====
+    // ==== ONBOARDING ==== (sama seperti sebelumnya)
     function toggleHashtag(zone, hashtag) {
       if (selectedHashtags.has(zone)) {
         selectedHashtags.delete(zone);
@@ -475,7 +485,7 @@
       showJejak();
     }
 
-    // ==== JEJAK ====
+    // ==== JEJAK ==== (sama)
     function renderJejak() {
       const username = localStorage.getItem('nopeUsername') || '@nope.anon';
       document.getElementById('jejakScreen').innerHTML = `
@@ -517,7 +527,7 @@
       `;
     }
 
-    // ==== JALAN ====
+    // ==== JALAN ==== (sama)
     function renderJalan() {
       document.getElementById('jalanScreen').innerHTML = `
         <div class="container">
@@ -539,18 +549,16 @@
           </nav>
         </div>
       `;
-      // Add toggle logic
       document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.onclick = () => {
           document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           currentFeedMode = btn.dataset.mode;
-          console.log("Mode feed:", currentFeedMode);
         };
       });
     }
 
-    // ==== UTILS ====
+    // ==== UTILS ==== (sama)
     function submitRant() {
       const text = document.getElementById('rantInput').value.trim();
       if (!text) { alert("Tulis dulu."); return; }
