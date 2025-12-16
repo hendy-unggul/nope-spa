@@ -1,203 +1,269 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="nope-theme">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#000000">
-    <meta name="description" content="Aplikasi Tanpa Jejak">
-    <title>Aplikasi Utama</title>
-    
-    <!-- Manifest untuk PWA -->
-    <link rel="manifest" href="/manifest.json?v=1">
-    
-    <!-- Icon untuk PWA -->
-    <link rel="icon" href="/icon-192.png">
-    <link rel="apple-touch-icon" href="/icon-192.png">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOPE</title>
     <style>
-        * {
+        /* [SIMPLE STYLE SAMA] */
+        body {
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            color: white;
         }
         
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
+        .nope-container {
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 90%;
+            max-width: 400px;
         }
         
-        h1 {
-            font-size: 2.5rem;
+        .nope-logo {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #FF6B8B, #FF9A76);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
-            font-weight: 700;
         }
         
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: block;
-        }
-        
-        .btn-primary {
-            background: white;
-            color: #667eea;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn-secondary {
+        .nope-input {
+            width: 100%;
             background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 107, 139, 0.3);
             color: white;
-            border: 2px solid white;
+            font-size: 1.8rem;
+            text-align: center;
+            padding: 15px 0;
+            outline: none;
+            font-weight: 300;
+            margin: 30px 0;
         }
         
-        .btn-secondary:hover {
-            background: white;
-            color: #667eea;
-        }
-        
-        .version {
-            margin-top: 30px;
+        .nope-status {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
             font-size: 0.9rem;
-            opacity: 0.7;
-        }
-        
-        .debug-info {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            font-size: 0.8rem;
-            text-align: left;
             display: none;
         }
         
-        .debug-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            font-size: 20px;
+        .nope-status.new {
+            background: rgba(78, 205, 196, 0.1);
+            color: #4ECDC4;
+            border: 1px solid #4ECDC4;
+        }
+        
+        .nope-status.return {
+            background: rgba(255, 107, 139, 0.1);
+            color: #FF6B8B;
+            border: 1px solid #FF6B8B;
+        }
+        
+        .nope-hint {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🕶️ App Tanpa Jejak</h1>
-        <p>Session bersih setiap kali login. Aman untuk privasi Anda.</p>
+    <div class="nope-container">
+        <div class="nope-logo">NOPE</div>
         
-        <div class="buttons">
-            <a href="/login.html?fresh=1&t=<%= Date.now() %>" class="btn btn-primary">
-                🔐 Login dengan Session Baru
-            </a>
-            <a href="/register.html?fresh=1&t=<%= Date.now() %>" class="btn btn-secondary">
-                📝 Register Akun Baru
-            </a>
-        </div>
+        <input type="text" 
+               class="nope-input" 
+               placeholder="nama_kamu"
+               autocomplete="off"
+               autocorrect="off"
+               autocapitalize="none"
+               spellcheck="false"
+               id="usernameInput">
         
-        <div class="version">
-            Version: <span id="appVersion">Loading...</span>
-        </div>
+        <div class="nope-status" id="status"></div>
         
-        <div class="debug-info" id="debugInfo">
-            <strong>Debug Information:</strong><br>
-            <span id="debugText">Loading...</span>
+        <div class="nope-hint">
+            tekan <strong>enter</strong> untuk masuk<br>
+            <small>3#, jurnal, artefak tersimpan selamanya</small>
         </div>
     </div>
-    
-    <button class="debug-toggle" onclick="toggleDebug()">🛠</button>
 
-    <!-- RESET SCRIPT HARUS DILOAD PERTAMA -->
-    <script src="/reset-session.js?v=1"></script>
-    
     <script>
-        // Fungsi untuk toggle debug info
-        function toggleDebug() {
-            const debugInfo = document.getElementById('debugInfo');
-            debugInfo.style.display = debugInfo.style.display === 'block' ? 'none' : 'block';
-            updateDebugInfo();
-        }
-        
-        // Update debug information
-        function updateDebugInfo() {
-            const debugText = document.getElementById('debugText');
-            const info = {
-                timestamp: new Date().toISOString(),
-                userAgent: navigator.userAgent.substring(0, 50),
-                platform: navigator.platform,
-                cookies: document.cookie.length,
-                localStorage: Object.keys(localStorage).length,
-                sessionStorage: Object.keys(sessionStorage).length,
-                url: window.location.href,
-                swSupported: 'serviceWorker' in navigator,
-                cacheSupported: 'caches' in window
-            };
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('usernameInput');
+            const status = document.getElementById('status');
             
-            debugText.innerHTML = Object.entries(info)
-                .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
-                .join('<br>');
-        }
-        
-        // Tampilkan versi app
-        document.getElementById('appVersion').textContent = 
-            'v' + (new Date()).toISOString().split('T')[0].replace(/-/g, '.');
-        
-        // Update debug info setiap 5 detik
-        setInterval(updateDebugInfo, 5000);
-        
-        // Force reload jika parameter fresh ada
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('force')) {
-            setTimeout(() => {
-                window.location.href = '/?fresh=' + Date.now();
-            }, 1000);
-        }
+            input.focus();
+            
+            // Auto-format saat ketik
+            input.addEventListener('input', function() {
+                let value = this.value.trim().toLowerCase();
+                
+                // Auto-format ke lowercase dan replace space dengan underscore
+                if (value.length > 0) {
+                    value = value.replace(/\s+/g, '_');
+                    value = value.replace(/[^a-z0-9_]/g, '');
+                    
+                    if (this.value !== value) {
+                        this.value = value;
+                    }
+                    
+                    // Check if username exists
+                    checkUsername(value);
+                } else {
+                    status.style.display = 'none';
+                }
+            });
+            
+            // Enter to submit
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginOrCreate();
+                }
+            });
+            
+            // Check username existence
+            function checkUsername(username) {
+                if (!username || username.length < 3) {
+                    status.style.display = 'none';
+                    return;
+                }
+                
+                const userData = getUserData(username);
+                
+                if (userData) {
+                    // User exists
+                    status.style.display = 'block';
+                    status.className = 'nope-status return';
+                    
+                    // Hitung berapa lama sudah bergabung
+                    const joinDate = new Date(userData.created);
+                    const daysAgo = Math.floor((Date.now() - joinDate) / (1000 * 60 * 60 * 24));
+                    
+                    let timeText = 'baru bergabung';
+                    if (daysAgo > 0) {
+                        timeText = `bergabung ${daysAgo} hari lalu`;
+                    }
+                    
+                    status.innerHTML = `
+                        <strong>@${username}</strong> sudah ada<br>
+                        <small>${userData.journals?.length || 0} jurnal • ${userData.artifacts?.length || 0} artefak • ${timeText}</small>
+                    `;
+                } else {
+                    // New user
+                    status.style.display = 'block';
+                    status.className = 'nope-status new';
+                    status.innerHTML = `
+                        <strong>@${username}</strong> akan dibuat baru<br>
+                        <small>pilih 3# favoritmu untuk memulai</small>
+                    `;
+                }
+            }
+            
+            // Get user data from localStorage
+            function getUserData(username) {
+                const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+                return allUsers[username];
+            }
+            
+            // Main login/create function
+            function loginOrCreate() {
+                let username = input.value.trim().toLowerCase();
+                
+                if (!username || username.length < 3) {
+                    input.style.borderBottomColor = '#ff4757';
+                    return;
+                }
+                
+                // Format final username
+                username = username.replace(/\s+/g, '_');
+                username = username.replace(/[^a-z0-9_]/g, '');
+                
+                // Remove @ if present
+                if (username.startsWith('@')) {
+                    username = username.substring(1);
+                }
+                
+                const userData = getUserData(username);
+                
+                // Save to session
+                sessionStorage.setItem('nope_username', username);
+                sessionStorage.setItem('nope_login_time', Date.now());
+                
+                if (userData) {
+                    // EXISTING USER - langsung ke dunia
+                    status.innerHTML = `<strong>selamat datang kembali</strong><br><small>mengalihkan...</small>`;
+                    
+                    // Update last login
+                    updateUserLastLogin(username);
+                    
+                    setTimeout(() => {
+                        window.location.href = `/dunia.html?user=${username}&t=${Date.now()}`;
+                    }, 800);
+                    
+                } else {
+                    // NEW USER - ke onboarding untuk pilih 3#
+                    status.innerHTML = `<strong>membuat @${username}</strong><br><small>mengalihkan...</small>`;
+                    
+                    // Create initial user data
+                    createNewUser(username);
+                    
+                    setTimeout(() => {
+                        window.location.href = `/onboarding.html?new=${username}&t=${Date.now()}`;
+                    }, 800);
+                }
+            }
+            
+            // Create new user in database
+            function createNewUser(username) {
+                const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+                
+                allUsers[username] = {
+                    username: username,
+                    created: Date.now(),
+                    lastLogin: Date.now(),
+                    interests: [], // akan diisi di onboarding
+                    journals: [],
+                    artifacts: [],
+                    settings: {
+                        theme: 'dark',
+                        vibe: 'chill'
+                    }
+                };
+                
+                localStorage.setItem('nope_users', JSON.stringify(allUsers));
+                
+                // Update counter
+                updateUserCounter();
+            }
+            
+            // Update user's last login time
+            function updateUserLastLogin(username) {
+                const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+                
+                if (allUsers[username]) {
+                    allUsers[username].lastLogin = Date.now();
+                    localStorage.setItem('nope_users', JSON.stringify(allUsers));
+                }
+            }
+            
+            // Update user counter display
+            function updateUserCounter() {
+                const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+                const count = Object.keys(allUsers).length;
+                console.log(`Total NOPE users: ${count}`);
+            }
+            
+            // Initialize counter
+            updateUserCounter();
+        });
     </script>
 </body>
 </html>
