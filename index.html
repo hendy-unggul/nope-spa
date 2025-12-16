@@ -91,7 +91,6 @@
       font-size: 13px;
       color: #aaa;
       cursor: pointer;
-      transition: color 0.2s;
     }
     .hashtag-item.selected {
       color: #569CD6;
@@ -102,14 +101,6 @@
       font-size: 12px;
       color: #666;
       margin: 10px 0 20px;
-    }
-    .zone.locked {
-      opacity: 0.5;
-      pointer-events: none;
-      filter: grayscale(100%);
-    }
-    .zone.locked .zone-title {
-      color: #666;
     }
     /* Jejak UI */
     .artefact-header {
@@ -257,6 +248,29 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    /* Jalan Toggle */
+    .feed-toggle {
+      display: flex;
+      background: #0a0a0a;
+      border-radius: 10px;
+      padding: 4px;
+      width: fit-content;
+      margin: 8px auto 12px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 6px 12px;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .toggle-btn.active {
+      background: #569CD6;
+      color: #000;
+    }
     /* Micromovement */
     .rantbox, .artefact-header, .grid-item {
       transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -295,6 +309,9 @@
       color: #569CD6;
       font-weight: 600;
     }
+    #artefactInput {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -304,61 +321,75 @@
       <div class="container">
         <div class="landing">
           <div style="font-size:24px;opacity:0.9;">NOPE</div>
-          <input type="text" id="loginInput" placeholder="email" autocomplete="off"/>
-          <button class="cta" onclick="handleLogin()">Gaskeun!</button>
+          <input type="text" id="loginInput" placeholder="emailmu" autocomplete="off"/>
+          <button class="cta" onclick="handleLogin()">lanjut</button>
         </div>
       </div>
     </div>
+
     <!-- Onboarding -->
     <div id="onboardingScreen" class="screen">
       <div class="container">
         <div class="zone-instruction">Pilih 1 hashtag dari 3 zona berbeda</div>
         <div class="onboarding-grid" id="onboardingGrid"></div>
-        <button class="cta" onclick="finishOnboarding()">selesai</button>
+        <button class="cta" id="finishBtn" disabled>selesai</button>
       </div>
     </div>
+
     <!-- Jejak -->
     <div id="jejakScreen" class="screen">
       <!-- Diisi oleh renderJejak() -->
     </div>
+
+    <!-- Jalan -->
+    <div id="jalanScreen" class="screen">
+      <!-- Diisi oleh renderJalan() -->
+    </div>
   </div>
+
   <script>
-    // === DATA ===
+    // ==== DATA ====
     const ZONES = {
       PopCulture: ["#bucin_toxic", "#fyp_addict", "#celeb_gosip", "#reels_overload", "#viral_hampa"],
       PersonalPain: ["#harga_diri", "#sendiri_tapi_nggak", "#cape_jadi_baik", "#galau_nyata", "#harapan_menipis"],
       SocialSickness: ["#toxic_wa_group", "#ghosting_budaya", "#pura_pura_sibuk", "#fomo_palsu", "#dm_tak_terjawab"],
       Movement: ["#diam_tapi_ngerasa", "#protes_diam", "#resistensi_soft", "#keberanian_kalem", "#berubah_dari_dalam"]
     };
+
     let currentUser = null;
-    let selectedHashtags = new Map(); // zone → hashtag
-    // === INIT ===
+    let selectedHashtags = new Map();
+
+    // ==== INIT ====
     function init() {
       const email = localStorage.getItem('nopeEmail');
       const username = localStorage.getItem('nopeUsername');
       const onboarded = localStorage.getItem('nopeOnboarded') === 'true';
       if (email && username && onboarded) {
         currentUser = { email, username };
+        // Deteksi route dari hash (opsional, atau gunakan path)
         showJejak();
       } else {
         showLanding();
       }
     }
-    // === SCREENS ===
+
+    // ==== SCREENS ====
     function showLanding() {
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
       document.getElementById('landingScreen').classList.add('active');
     }
+
     function showOnboarding() {
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
       document.getElementById('onboardingScreen').classList.add('active');
+      document.getElementById('finishBtn').disabled = true;
+      selectedHashtags = new Map();
       const grid = document.getElementById('onboardingGrid');
       grid.innerHTML = '';
-      selectedHashtags = new Map();
       Object.entries(ZONES).forEach(([zoneName, tags]) => {
         const zoneEl = document.createElement('div');
-        zoneEl.className = 'zone' + (zoneName === 'Movement' ? ' locked' : '');
-        zoneEl.innerHTML = `<div class="zone-title">${zoneName}</div><div class="hashtag-list" id="zone-${zoneName}"></div>`;
+        zoneEl.className = 'zone';
+        zoneEl.innerHTML = `<div class="zone-title">${zoneName}</div><div class="hashtag-list"></div>`;
         grid.appendChild(zoneEl);
         const list = zoneEl.querySelector('.hashtag-list');
         tags.forEach(tag => {
@@ -370,39 +401,51 @@
         });
       });
     }
+
     function showJejak() {
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
       document.getElementById('jejakScreen').classList.add('active');
       renderJejak();
     }
-    // === LOGIN ===
+
+    function showJalan() {
+      if (!localStorage.getItem('nopeOnboarded')) {
+        showOnboarding();
+        return;
+      }
+      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+      document.getElementById('jalanScreen').classList.add('active');
+      renderJalan();
+    }
+
+    // ==== LOGIN ====
     function handleLogin() {
       const input = document.getElementById('loginInput').value.trim();
-      if (!input) { alert("Masukkan email."); return; }
-      if (!(input.includes('@') && input.includes('.'))) {
-        alert("Gunakan email.");
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(input)) {
+        alert("Masukkan email yang valid.");
         return;
       }
       const savedEmail = localStorage.getItem('nopeEmail');
       if (savedEmail === input) {
-        // Login existing
+        // existing user
         const username = localStorage.getItem('nopeUsername');
         currentUser = { email: input, username };
         showJejak();
       } else {
-        // New user
+        // new user
         const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
         const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
         const num = Math.floor(1000 + Math.random() * 9000);
         const username = `@nope.${adj}.${num}`;
         localStorage.setItem('nopeEmail', input);
         localStorage.setItem('nopeUsername', username);
-        localStorage.setItem('nopeJoined', new Date().toISOString().split('T')[0]);
         currentUser = { email: input, username };
         showOnboarding();
       }
     }
-    // === ONBOARDING LOGIC ===
+
+    // ==== ONBOARDING ====
     function toggleHashtag(zone, hashtag) {
       if (selectedHashtags.has(zone)) {
         selectedHashtags.delete(zone);
@@ -413,43 +456,38 @@
         }
         selectedHashtags.set(zone, hashtag);
       }
-      updateUI();
+      updateOnboardingUI();
     }
-    function updateUI() {
-      // Hapus semua class "selected"
-      document.querySelectorAll('.hashtag-item').forEach(el => {
-        el.classList.remove('selected');
-      });
-      // Terapkan pilihan
+
+    function updateOnboardingUI() {
+      document.querySelectorAll('.hashtag-item').forEach(el => el.classList.remove('selected'));
       selectedHashtags.forEach((hashtag, zone) => {
-        const el = document.querySelector(`.hashtag-item[data-zone="${zone}"][data-tag="${hashtag}"]`);
-        if (el) el.classList.add('selected');
+        const items = document.querySelectorAll(`.zone:nth-child(${Object.keys(ZONES).indexOf(zone)+1}+1) .hashtag-item`);
+        items.forEach(item => {
+          if (item.textContent === hashtag) item.classList.add('selected');
+        });
       });
+      document.getElementById('finishBtn').disabled = selectedHashtags.size !== 3;
     }
+
     function finishOnboarding() {
-      if (selectedHashtags.size !== 3) {
-        alert("Pilih tepat 1 hashtag dari 3 zona berbeda.");
-        return;
-      }
       const hashtags = Array.from(selectedHashtags.values());
       localStorage.setItem('nopeHashtags', JSON.stringify(hashtags));
       localStorage.setItem('nopeOnboarded', 'true');
       showJejak();
     }
-    // === JEJAK (UI Compact) ===
+
+    // ==== JEJAK ====
     function renderJejak() {
-      const artefacts = JSON.parse(localStorage.getItem('nopeArtefacts') || '[]');
-      const latest = artefacts.length > 0 ? artefacts[artefacts.length - 1] : null;
-      const artefactImg = latest ? latest.url : "https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format";
-      const artefactNotasi = latest ? latest.notasi : "—";
-      const artefactDate = latest ? new Date(latest.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : "—";
+      const username = localStorage.getItem('nopeUsername') || '@nope.anon';
       document.getElementById('jejakScreen').innerHTML = `
         <div class="container">
+          <div class="jejakmu-title">Jejakmu</div>
           <div class="artefact-header">
-            <img class="artefact-image" src="${artefactImg}" alt="Artefak">
+            <img class="artefact-image" src="https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format" alt="Artefak">
             <div class="artefact-stamp">
-              <span class="artefact-notasi">${artefactNotasi}</span>
-              <span class="artefact-date">${artefactDate}</span>
+              <span class="artefact-notasi">struk pertama</span>
+              <span class="artefact-date">5 Mar 2025</span>
             </div>
           </div>
           <div class="emoji-bar">
@@ -459,7 +497,6 @@
             <textarea id="rantInput" maxlength="300" placeholder="Curhat yang gak bisa dikirim ke DM..."></textarea>
             <button id="submitBtn" class="inline-save" onclick="submitRant()">simpan</button>
           </div>
-          <div class="jejakmu-title">Jejakmu</div>
           <div class="rant-item"><div class="rant-text">gue udah bantuin dia tiap malem...</div></div>
           <div class="rant-item"><div class="rant-text">deadline mepet, dosen gak jelas...</div></div>
           <div class="rant-item"><div class="rant-text">dia bilang ‘kita temenan aja’...</div></div>
@@ -474,73 +511,41 @@
         </div>
         <div class="bottom-nav-wrapper">
           <nav class="bottom-nav">
-            <a href="#" class="nav-item active">Jejak</a>
-            <a href="#" class="nav-item">Dunia</a>
-            <a href="#" class="nav-item">Jalan</a>
+            <a href="#" class="nav-item active" onclick="showJejak()">Jejak</a>
+            <a href="#" class="nav-item" onclick="showJalan()">Jalan</a>
+            <a href="#" class="nav-item" onclick="alert('Dunia: resensi buku, film, musik akan hadir segera.')">Dunia</a>
           </nav>
         </div>
-        <input type="file" id="artefactInput" accept="image/*" onchange="handleArtefactUpload(event)">
       `;
     }
-    // === UNGGAH ARTEFAK ===
-    function uploadArtefact() {
-      const lastUpload = localStorage.getItem('nopeLastArtefactUpload');
-      const now = new Date();
-      const diffDays = lastUpload ? Math.floor((now - new Date(lastUpload)) / (24 * 60 * 60 * 1000)) : 999;
-      if (diffDays >= 30) {
-        const currentHashtags = JSON.parse(localStorage.getItem('nopeHashtags') || '[]').join(' • ');
-        document.body.innerHTML += `
-          <div class="modal" id="updateFreqModal">
-            <div class="modal-content">
-              <div>Jejak abadi akan disimpan.</div>
-              <div style="margin:12px 0;">
-                Frekuensimu saat ini:<br/>
-                <strong>${currentHashtags}</strong>
-              </div>
-              <div class="modal-btns">
-                <button class="modal-btn save" onclick="proceedWithCurrentHashtags()">lanjutkan dengan ini</button>
-                <button class="modal-btn cancel" onclick="showOnboardingForUpdate()">ubah frekuensi</button>
-              </div>
-            </div>
+
+    // ==== JALAN ====
+    function renderJalan() {
+      document.getElementById('jalanScreen').innerHTML = `
+        <div class="container">
+          <div class="feed-toggle">
+            <button class="toggle-btn active" data-mode="sefrekuensi">sefrekuensi</button>
+            <button class="toggle-btn" data-mode="segelombang">segelombang</button>
           </div>
-        `;
-      } else {
-        alert('Unggah hanya bisa dilakukan sekali per 30 hari.');
-      }
+          <div style="padding:20px;color:#666;text-align:center;">
+            Feed kolektif akan muncul di sini.<br/>
+            Mode "sefrekuensi" menampilkan jejak dari yang punya ≥2 hashtag sama.<br/>
+            Mode "segelombang" menampilkan semua jejak.
+          </div>
+        </div>
+        <div class="bottom-nav-wrapper">
+          <nav class="bottom-nav">
+            <a href="#" class="nav-item" onclick="showJejak()">Jejak</a>
+            <a href="#" class="nav-item active" onclick="showJalan()">Jalan</a>
+            <a href="#" class="nav-item" onclick="alert('Dunia: resensi buku, film, musik akan hadir segera.')">Dunia</a>
+          </nav>
+        </div>
+      `;
     }
-    function proceedWithCurrentHashtags() {
-      document.getElementById('updateFreqModal')?.remove();
-      document.getElementById('artefactInput').click();
-    }
-    function showOnboardingForUpdate() {
-      document.getElementById('updateFreqModal')?.remove();
-      showOnboarding();
-      // Override finishOnboarding untuk lanjut ke unggah
-      const originalFinish = finishOnboarding;
-      finishOnboarding = () => {
-        originalFinish();
-        setTimeout(() => document.getElementById('artefactInput').click(), 500);
-      };
-    }
-    function handleArtefactUpload(e) {
-      const file = e.target.files[0];
-      if (!file || !file.type.startsWith('image/')) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const url = ev.target.result;
-        const notasi = prompt("Maksimal 4 kata (tanpa emoji):");
-        if (!notasi || notasi.trim().split(/\s+/).length > 4) {
-          alert("Harus diisi, maksimal 4 kata.");
-          return;
-        }
-        const artefacts = JSON.parse(localStorage.getItem('nopeArtefacts') || '[]');
-        artefacts.push({ url, date: new Date().toISOString(), notasi: notasi.trim() });
-        localStorage.setItem('nopeArtefacts', JSON.stringify(artefacts));
-        localStorage.setItem('nopeLastArtefactUpload', new Date().toISOString());
-        alert("Disimpan. Tak seorang pun tahu.");
-        renderJejak();
-      };
-      reader.readAsDataURL(file);
+
+    // ==== UTILS ====
+    function uploadArtefact() {
+      alert("Fitur unggah artefak akan hadir setelah onboarding lengkap.");
     }
     function submitRant() {
       const text = document.getElementById('rantInput').value.trim();
@@ -549,7 +554,8 @@
       alert("Disimpan. Tak seorang pun tahu.");
       document.getElementById('rantInput').value = '';
     }
-    // === START ===
+
+    // ==== START ====
     init();
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
