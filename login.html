@@ -3,31 +3,849 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOPE - Home</title>
-    <link rel="stylesheet" href="style.css">
+    <title>NOPE</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* ===== PAGES ===== */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 40px 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* ===== LOGO NOPE ===== */
+        .logo {
+            font-size: 120px;
+            font-weight: 900;
+            text-align: center;
+            color: #ff00ff;
+            margin: 40px 0 20px 0;
+            line-height: 1;
+            letter-spacing: -8px;
+        }
+        
+        /* ===== SUBTITLE ===== */
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            margin-bottom: 60px;
+            font-weight: 300;
+        }
+        
+        /* ===== INPUT STYLE (BOXLESS) ===== */
+        .nope-input {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 30px auto;
+            display: block;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 28px;
+            text-align: center;
+            padding: 15px 0;
+            outline: none;
+            font-weight: 300;
+            transition: all 0.3s;
+        }
+        
+        .nope-input:focus {
+            border-bottom-color: #ff00ff;
+        }
+        
+        .nope-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* ===== USER STATUS ===== */
+        .user-status {
+            text-align: center;
+            margin: 20px auto 40px auto;
+            max-width: 400px;
+            padding: 15px;
+            border-radius: 0;
+            font-size: 15px;
+            line-height: 1.5;
+            background: rgba(255, 0, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+            display: none;
+        }
+        
+        .user-status.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* ===== HINT TEXT ===== */
+        .hint {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            margin: 10px auto;
+            max-width: 400px;
+            line-height: 1.5;
+        }
+        
+        .hint strong {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* ===== INSTRUCTIONS ===== */
+        .instructions {
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+        }
+        
+        /* ===== ZONA SELECTION (BOXLESS) ===== */
+        .zona-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 30px auto;
+        }
+        
+        .zona-item {
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: rgba(255, 255, 255, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        
+        .zona-item:hover {
+            color: white;
+            background: rgba(255, 0, 255, 0.03);
+        }
+        
+        .zona-item.selected {
+            color: #ff00ff;
+        }
+        
+        .zona-item.selected::after {
+            content: "✓";
+            position: absolute;
+            right: 20px;
+            color: #ff00ff;
+        }
+        
+        .zona-name {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .zona-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* ===== HASHTAG SELECTION (BOXLESS) ===== */
+        .hashtag-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+        
+        .hashtag-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .hashtag-item:hover {
+            color: white;
+            background: rgba(255, 0, 255, 0.1);
+        }
+        
+        .hashtag-item.selected {
+            color: #ff00ff;
+            background: rgba(255, 0, 255, 0.15);
+        }
+        
+        /* ===== COUNTER (BOXLESS) ===== */
+        .counter {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            text-align: right;
+        }
+        
+        .counter .number {
+            color: #ff00ff;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        /* ===== SUBMIT BUTTON (BOXLESS) ===== */
+        .submit-area {
+            text-align: center;
+            margin: 60px auto 40px auto;
+            max-width: 400px;
+        }
+        
+        .enter-hint {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        
+        /* ===== WELCOME TEXT ===== */
+        .welcome-text {
+            text-align: center;
+            font-size: 24px;
+            margin: 40px auto;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 500px;
+            line-height: 1.4;
+        }
+        
+        .username-display {
+            color: #ff00ff;
+            font-weight: 500;
+        }
+        
+        /* ===== BACK LINK ===== */
+        .back-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .back-link a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .back-link a:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* ===== DUNIA CONTENT ===== */
+        .user-stats {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            margin: 20px auto 40px auto;
+            max-width: 500px;
+        }
+        
+        .user-stats span {
+            color: #ff00ff;
+        }
+        
+        /* ===== ANIMATIONS ===== */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .logo {
+                font-size: 80px;
+                letter-spacing: -5px;
+            }
+            
+            .nope-input {
+                font-size: 24px;
+                max-width: 300px;
+            }
+            
+            .zona-list {
+                max-width: 300px;
+            }
+            
+            .hashtag-grid {
+                max-width: 320px;
+            }
+        }
+    </style>
 </head>
-<body class="hacker-theme">
-    <div class="container">
+<body>
+    <!-- HOME PAGE -->
+    <div id="home" class="page active">
         <div class="logo">NOPE</div>
         
-        <div class="card">
-            <h2>Selamat Datang di NOPE</h2>
-            <p>Platform untuk mengekspresikan perasaanmu dengan jujur.</p>
-            
-            <div class="button-group">
-                <a href="login.html" class="btn primary">
-                    MASUK / DAFTAR
-                </a>
-            </div>
-            
-            <div class="info">
-                <small>
-                    • 3#, jurnal, artefak tersimpan selamanya<br>
-                    • Privasi terjaga<br>
-                    • Komunitas supportif
-                </small>
-            </div>
+        <div class="subtitle">
+            tempat untuk perasaanmu
+        </div>
+        
+        <input type="text" 
+               class="nope-input" 
+               placeholder="tekan enter untuk mulai"
+               readonly
+               style="border-bottom-color: rgba(255, 0, 255, 0.3);">
+        
+        <div class="hint">
+            3#, jurnal, artefak tersimpan selamanya
+        </div>
+        
+        <div class="hint pulse">
+            tekan <strong>enter</strong> untuk masuk
         </div>
     </div>
+    
+    <!-- LOGIN PAGE -->
+    <div id="login" class="page">
+        <div class="logo">NOPE</div>
+        
+        <input type="text" 
+               class="nope-input" 
+               id="usernameInput"
+               placeholder="nama_kamu"
+               autocomplete="off"
+               autocapitalize="none"
+               spellcheck="false">
+        
+        <div class="user-status" id="userStatus"></div>
+        
+        <div class="hint">
+            gunakan huruf, angka, underscore<br>
+            minimal 3 karakter
+        </div>
+        
+        <div class="hint">
+            tekan <strong>enter</strong> untuk masuk
+        </div>
+        
+        <div class="back-link">
+            <a href="#" onclick="showPage('home')">← kembali</a>
+        </div>
+    </div>
+    
+    <!-- ONBOARDING PAGE -->
+    <div id="onboarding" class="page">
+        <div class="logo">NOPE</div>
+        
+        <div class="welcome-text">
+            halo <span class="username-display" id="currentUser">...</span><br>
+            pilih zona dan hashtag mu
+        </div>
+        
+        <div class="instructions">
+            pilih <strong>1 zona</strong> yang paling sesuai denganmu
+        </div>
+        
+        <div class="zona-list" id="zonaList">
+            <!-- Zona items will be added by JavaScript -->
+        </div>
+        
+        <div class="instructions">
+            pilih <strong>5#</strong> yang paling relate dengan perasaanmu
+        </div>
+        
+        <div class="hashtag-grid" id="hashtagGrid">
+            <!-- Hashtag items will be added by JavaScript -->
+        </div>
+        
+        <div class="counter">
+            <div>zona: <span class="number" id="zonaCount">0</span>/1</div>
+            <div>#: <span class="number" id="hashtagCount">0</span>/5</div>
+        </div>
+        
+        <div class="submit-area">
+            <div class="enter-hint" id="submitHint">
+                pilih zona dan 5# untuk melanjutkan
+            </div>
+        </div>
+        
+        <div class="back-link">
+            <a href="#" onclick="showPage('login')">← ganti username</a>
+        </div>
+    </div>
+    
+    <!-- DUNIA PAGE -->
+    <div id="dunia" class="page">
+        <div class="logo">NOPE</div>
+        
+        <div class="welcome-text" id="welcomeText">
+            selamat datang
+        </div>
+        
+        <div class="user-stats" id="userStats">
+            <!-- Stats will be filled by JavaScript -->
+        </div>
+        
+        <div class="instructions">
+            kamu telah masuk ke dunia NOPE
+        </div>
+        
+        <div class="submit-area">
+            <div class="enter-hint">
+                terima kasih telah bergabung
+            </div>
+        </div>
+        
+        <div class="back-link">
+            <a href="#" onclick="logout()">← keluar</a>
+        </div>
+    </div>
+
+    <script>
+        // ===== STATE =====
+        let currentUser = null;
+        let selectedZona = null;
+        let selectedHashtags = [];
+        
+        // ===== DATA =====
+        const zonas = [
+            {
+                id: 'popculture',
+                name: 'PopCulture',
+                desc: 'film, musik, meme, tren viral'
+            },
+            {
+                id: 'personalpain',
+                name: 'PersonalPain', 
+                desc: 'kecemasan, trauma, healing, self-care'
+            },
+            {
+                id: 'socialsickness',
+                name: 'SocialSickness',
+                desc: 'toxic relationship, FOMO, loneliness'
+            },
+            {
+                id: 'movement',
+                name: 'Movement',
+                desc: 'aktivisme, perubahan, gerakan sosial'
+            }
+        ];
+        
+        const hashtags = [
+            '#depresi', '#anxiety', '#overthinking',
+            '#selflove', '#burnout', '#lonely',
+            '#mentalhealth', '#healing', '#trauma',
+            '#fomo', '#toxic', '#pressure',
+            '#sadboy', '#sadgirl', '#escape',
+            '#arttherapy', '#music', '#writing',
+            '#socialmedia', '#digitaldetox', '#mindfulness',
+            '#growth', '#change', '#hope'
+        ];
+        
+        // ===== ROUTER =====
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show target page
+            const page = document.getElementById(pageId);
+            if (page) {
+                page.classList.add('active');
+                
+                // Update URL hash
+                window.location.hash = pageId;
+                
+                // Initialize page
+                switch(pageId) {
+                    case 'home':
+                        initHomePage();
+                        break;
+                    case 'login':
+                        initLoginPage();
+                        break;
+                    case 'onboarding':
+                        initOnboardingPage();
+                        break;
+                    case 'dunia':
+                        initDuniaPage();
+                        break;
+                }
+            }
+        }
+        
+        // Handle browser back/forward
+        window.addEventListener('hashchange', function() {
+            const pageId = window.location.hash.replace('#', '') || 'home';
+            showPage(pageId);
+        });
+        
+        // ===== PAGE: HOME =====
+        function initHomePage() {
+            // Enter key to go to login
+            document.addEventListener('keydown', function homeKeyHandler(e) {
+                if (e.key === 'Enter') {
+                    showPage('login');
+                    document.removeEventListener('keydown', homeKeyHandler);
+                }
+            });
+            
+            // Click anywhere to go to login
+            document.addEventListener('click', function homeClickHandler() {
+                showPage('login');
+                document.removeEventListener('click', homeClickHandler);
+            });
+        }
+        
+        // ===== PAGE: LOGIN =====
+        function initLoginPage() {
+            const input = document.getElementById('usernameInput');
+            const status = document.getElementById('userStatus');
+            
+            // Focus input
+            input.value = '';
+            input.focus();
+            status.style.display = 'none';
+            
+            // Enter key listener
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    processLogin();
+                }
+            });
+            
+            // Real-time validation
+            input.addEventListener('input', function() {
+                const username = this.value.trim().toLowerCase();
+                
+                if (username.length < 3) {
+                    status.style.display = 'none';
+                    return;
+                }
+                
+                // Auto-format
+                let formatted = username
+                    .replace(/\s+/g, '_')
+                    .replace(/[^a-z0-9_]/g, '');
+                
+                if (username !== formatted) {
+                    this.value = formatted;
+                }
+                
+                // Check if user exists
+                const users = getUsers();
+                
+                if (users[formatted]) {
+                    status.style.display = 'block';
+                    status.textContent = `@${formatted} sudah ada • tekan enter untuk login`;
+                } else {
+                    status.style.display = 'block';
+                    status.textContent = `@${formatted} akan dibuat baru`;
+                }
+            });
+        }
+        
+        function processLogin() {
+            const input = document.getElementById('usernameInput');
+            let username = input.value.trim().toLowerCase();
+            
+            // Validation
+            if (username.length < 3) {
+                return;
+            }
+            
+            // Format username
+            username = username
+                .replace(/\s+/g, '_')
+                .replace(/[^a-z0-9_]/g, '');
+            
+            if (username.length < 3) {
+                return;
+            }
+            
+            // Set current user
+            currentUser = username;
+            
+            // Check if user exists and is onboarded
+            const users = getUsers();
+            
+            if (users[username] && users[username].onboarded) {
+                // Go to dunia
+                showPage('dunia');
+            } else {
+                // Go to onboarding
+                showPage('onboarding');
+            }
+        }
+        
+        // ===== PAGE: ONBOARDING =====
+        function initOnboardingPage() {
+            if (!currentUser) {
+                showPage('login');
+                return;
+            }
+            
+            // Display username
+            document.getElementById('currentUser').textContent = '@' + currentUser;
+            
+            // Reset selections
+            selectedZona = null;
+            selectedHashtags = [];
+            
+            // Render zonas
+            renderZonas();
+            
+            // Render hashtags
+            renderHashtags();
+            
+            // Update counter
+            updateOnboardingCounter();
+            
+            // Enter key listener for submit
+            document.addEventListener('keydown', function onboardingKeyHandler(e) {
+                if (e.key === 'Enter') {
+                    const canSubmit = selectedZona && selectedHashtags.length === 5;
+                    if (canSubmit) {
+                        saveOnboarding();
+                        document.removeEventListener('keydown', onboardingKeyHandler);
+                    }
+                }
+            });
+        }
+        
+        function renderZonas() {
+            const container = document.getElementById('zonaList');
+            container.innerHTML = '';
+            
+            zonas.forEach(zona => {
+                const div = document.createElement('div');
+                div.className = 'zona-item';
+                div.dataset.id = zona.id;
+                
+                div.innerHTML = `
+                    <div class="zona-name">${zona.name}</div>
+                    <div class="zona-desc">${zona.desc}</div>
+                `;
+                
+                div.addEventListener('click', () => selectZona(zona.id));
+                container.appendChild(div);
+            });
+        }
+        
+        function renderHashtags() {
+            const container = document.getElementById('hashtagGrid');
+            container.innerHTML = '';
+            
+            hashtags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'hashtag-item';
+                span.textContent = tag;
+                span.dataset.tag = tag;
+                
+                span.addEventListener('click', () => toggleHashtag(tag));
+                container.appendChild(span);
+            });
+        }
+        
+        function selectZona(zonaId) {
+            // Reset all zonas
+            document.querySelectorAll('.zona-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Select clicked zona
+            const item = document.querySelector(`.zona-item[data-id="${zonaId}"]`);
+            if (item) {
+                item.classList.add('selected');
+                selectedZona = zonaId;
+            }
+            
+            updateOnboardingCounter();
+        }
+        
+        function toggleHashtag(tag) {
+            const element = document.querySelector(`.hashtag-item[data-tag="${tag}"]`);
+            
+            if (selectedHashtags.includes(tag)) {
+                // Remove
+                const index = selectedHashtags.indexOf(tag);
+                selectedHashtags.splice(index, 1);
+                element.classList.remove('selected');
+            } else if (selectedHashtags.length < 5) {
+                // Add
+                selectedHashtags.push(tag);
+                element.classList.add('selected');
+            }
+            
+            updateOnboardingCounter();
+        }
+        
+        function updateOnboardingCounter() {
+            // Update counts
+            document.getElementById('zonaCount').textContent = selectedZona ? '1' : '0';
+            document.getElementById('hashtagCount').textContent = selectedHashtags.length;
+            
+            // Update hint
+            const hint = document.getElementById('submitHint');
+            if (selectedZona && selectedHashtags.length === 5) {
+                hint.textContent = 'tekan enter untuk melanjutkan';
+                hint.style.color = 'rgba(255, 0, 255, 0.7)';
+            } else {
+                hint.textContent = 'pilih zona dan 5# untuk melanjutkan';
+                hint.style.color = 'rgba(255, 255, 255, 0.3)';
+            }
+        }
+        
+        function saveOnboarding() {
+            // Save user data
+            const users = getUsers();
+            
+            users[currentUser] = {
+                username: currentUser,
+                created: Date.now(),
+                lastLogin: Date.now(),
+                interests: {
+                    zona: selectedZona,
+                    hashtags: selectedHashtags,
+                    selectedAt: new Date().toISOString()
+                },
+                onboarded: true,
+                journals: [],
+                artifacts: [],
+                settings: {
+                    theme: 'minimal',
+                    zona: selectedZona
+                }
+            };
+            
+            localStorage.setItem('nope_users', JSON.stringify(users));
+            
+            // Show success then redirect
+            const hint = document.getElementById('submitHint');
+            hint.textContent = 'tersimpan ✓ mengalihkan...';
+            
+            setTimeout(() => {
+                showPage('dunia');
+            }, 800);
+        }
+        
+        // ===== PAGE: DUNIA =====
+        function initDuniaPage() {
+            if (!currentUser) {
+                showPage('login');
+                return;
+            }
+            
+            // Get user data
+            const users = getUsers();
+            const user = users[currentUser];
+            
+            if (!user || !user.onboarded) {
+                showPage('onboarding');
+                return;
+            }
+            
+            // Update welcome text
+            document.getElementById('welcomeText').innerHTML = `
+                selamat datang di dunia NOPE<br>
+                <span style="color:#ff00ff">@${currentUser}</span>
+            `;
+            
+            // Update stats
+            const stats = document.getElementById('userStats');
+            stats.innerHTML = `
+                zona: <span>${user.interests.zona}</span> • 
+                #: <span>${user.interests.hashtags.length}</span> • 
+                bergabung: <span>${formatDate(user.created)}</span>
+            `;
+        }
+        
+        // ===== UTILITIES =====
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('nope_users') || '{}');
+        }
+        
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+        
+        function logout() {
+            currentUser = null;
+            showPage('home');
+        }
+        
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL hash on load
+            const pageId = window.location.hash.replace('#', '') || 'home';
+            showPage(pageId);
+            
+            // Check for existing session
+            const savedUser = sessionStorage.getItem('nope_user');
+            if (savedUser) {
+                currentUser = savedUser;
+                const users = getUsers();
+                if (users[savedUser] && users[savedUser].onboarded) {
+                    showPage('dunia');
+                }
+            }
+            
+            // Register Service Worker for PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(() => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker error:', err));
+            }
+        });
+    </script>
 </body>
 </html>
