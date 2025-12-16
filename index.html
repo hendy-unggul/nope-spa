@@ -481,7 +481,7 @@
       const username = localStorage.getItem('nopeUsername') || '@nope.anon';
       document.getElementById('jejakScreen').innerHTML = `
         <div class="container">
-          <div class="jejakmu-title">Jejakmu <span style="color:#fff;">${username}</span></div>
+          <div class="jejakmu-title">Jejakmu</div>
           <div class="artefact-header">
             <img class="artefact-image" src="https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format" alt="Artefak">
             <div class="artefact-stamp">
@@ -540,13 +540,6 @@
           </nav>
         </div>
       `;
-      // Add toggle logic
-      document.querySelectorAll('.toggle-btn').forEach(btn => {
-        btn.onclick = () => {
-          document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-        };
-      });
     }
 
     // ==== UTILS ====
