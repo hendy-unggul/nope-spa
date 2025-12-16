@@ -91,7 +91,6 @@
       font-size: 13px;
       color: #aaa;
       cursor: pointer;
-      transition: color 0.2s;
     }
     .hashtag-item.selected {
       color: #569CD6;
@@ -409,7 +408,7 @@
     }
 
     function showJalan() {
-      if (!localStorage.getItem('nopeHashtags')) {
+      if (!localStorage.getItem('nopeOnboarded')) {
         showOnboarding();
         return;
       }
@@ -482,7 +481,7 @@
       const username = localStorage.getItem('nopeUsername') || '@nope.anon';
       document.getElementById('jejakScreen').innerHTML = `
         <div class="container">
-          <div class="jejakmu-title">Jejakmu</div>
+          <div class="jejakmu-title">Jejakmu <span style="color:#fff;">${username}</span></div>
           <div class="artefact-header">
             <img class="artefact-image" src="https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format" alt="Artefak">
             <div class="artefact-stamp">
@@ -541,11 +540,18 @@
           </nav>
         </div>
       `;
+      // Add toggle logic
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        };
+      });
     }
 
     // ==== UTILS ====
     function uploadArtefact() {
-      alert("Fitur unggah artefak akan hadir setelah onboarding selesai.");
+      alert("Fitur unggah artefak akan hadir setelah onboarding lengkap.");
     }
     function submitRant() {
       const text = document.getElementById('rantInput').value.trim();
@@ -554,9 +560,6 @@
       alert("Disimpan. Tak seorang pun tahu.");
       document.getElementById('rantInput').value = '';
     }
-
-    // ==== EVENT LISTENERS ====
-    document.getElementById('finishBtn').onclick = finishOnboarding;
 
     // ==== START ====
     init();
