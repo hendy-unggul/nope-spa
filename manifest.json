@@ -1,7 +1,7 @@
 {
   "name": "NOPE",
   "short_name": "NOPE",
-  "description": "Platform untuk mengekspresikan perasaan",
+  "description": "Tempat untuk perasaanmu",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
