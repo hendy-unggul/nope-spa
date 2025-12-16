@@ -91,6 +91,7 @@
       font-size: 13px;
       color: #aaa;
       cursor: pointer;
+      transition: color 0.2s;
     }
     .hashtag-item.selected {
       color: #569CD6;
@@ -366,7 +367,6 @@
       const onboarded = localStorage.getItem('nopeOnboarded') === 'true';
       if (email && username && onboarded) {
         currentUser = { email, username };
-        // Deteksi route dari hash (opsional, atau gunakan path)
         showJejak();
       } else {
         showLanding();
@@ -389,7 +389,7 @@
       Object.entries(ZONES).forEach(([zoneName, tags]) => {
         const zoneEl = document.createElement('div');
         zoneEl.className = 'zone';
-        zoneEl.innerHTML = `<div class="zone-title">${zoneName}</div><div class="hashtag-list"></div>`;
+        zoneEl.innerHTML = `<div class="zone-title">${zoneName}</div><div class="hashtag-list" id="zone-${zoneName}"></div>`;
         grid.appendChild(zoneEl);
         const list = zoneEl.querySelector('.hashtag-list');
         tags.forEach(tag => {
@@ -409,7 +409,7 @@
     }
 
     function showJalan() {
-      if (!localStorage.getItem('nopeOnboarded')) {
+      if (!localStorage.getItem('nopeHashtags')) {
         showOnboarding();
         return;
       }
@@ -545,7 +545,7 @@
 
     // ==== UTILS ====
     function uploadArtefact() {
-      alert("Fitur unggah artefak akan hadir setelah onboarding lengkap.");
+      alert("Fitur unggah artefak akan hadir setelah onboarding selesai.");
     }
     function submitRant() {
       const text = document.getElementById('rantInput').value.trim();
@@ -554,6 +554,9 @@
       alert("Disimpan. Tak seorang pun tahu.");
       document.getElementById('rantInput').value = '';
     }
+
+    // ==== EVENT LISTENERS ====
+    document.getElementById('finishBtn').onclick = finishOnboarding;
 
     // ==== START ====
     init();
