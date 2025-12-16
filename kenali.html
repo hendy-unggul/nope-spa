@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenali - NOPE</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        .nope-header {
+            margin: 40px 0;
+        }
+        .nope-username {
+            font-size: 2rem;
+            color: #FF6B8B;
+            margin: 20px 0;
+        }
+        .nope-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+        }
+        .nope-back a {
+            color: #FF6B8B;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="nope-back">
+        <a href="/dunia.html">← Kembali</a>
+    </div>
+    
+    <div class="nope-header">
+        <h1>NOPE</h1>
+        <div class="nope-username" id="usernameDisplay"></div>
+        <p>Ini adalah profil NOPE-mu</p>
+    </div>
+    
+    <div>
+        <p>Data tersimpan di browser-mu sendiri.</p>
+        <p>Tidak ada server, tidak ada database.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = sessionStorage.getItem('nope_username');
+            if (!username) {
+                window.location.href = '/';
+                return;
+            }
+            
+            document.getElementById('usernameDisplay').textContent = `@${username}`;
+        });
+    </script>
+</body>
+</html>
