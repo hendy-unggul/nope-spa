@@ -1,67 +1,50 @@
 <!DOCTYPE html>
-<html lang="id" class="hacker-theme">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onboarding • NOPE</title>
     <style>
-        /* HACKER THEME */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             background: #000;
             color: #0f0;
             font-family: 'Courier New', monospace;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        
-        /* Scanline effect */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                rgba(0, 255, 0, 0.03) 50%,
-                rgba(0, 0, 0, 0.03) 50%
-            );
-            background-size: 100% 4px;
-            z-index: 1000;
-            pointer-events: none;
-            opacity: 0.3;
+            min-height: 100vh;
+            padding: 20px;
         }
         
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            position: relative;
         }
         
-        /* NOPE Logo */
+        /* Logo */
         .logo {
-            font-size: 3.5rem;
-            font-weight: 900;
             text-align: center;
-            margin-bottom: 30px;
+            font-size: 48px;
+            font-weight: bold;
             color: #ff00ff;
-            text-shadow: 
-                0 0 10px #ff00ff,
-                0 0 20px #ff00ff;
+            margin: 20px 0 30px 0;
+            text-shadow: 0 0 10px #ff00ff;
         }
         
         /* Header */
         .header {
-            border: 1px solid #0f0;
+            border: 2px solid #0f0;
             padding: 15px;
             margin-bottom: 30px;
-            background: rgba(0, 30, 0, 0.3);
+            background: rgba(0, 40, 0, 0.2);
         }
         
         .user-info {
             color: #0ff;
+            font-size: 18px;
             font-weight: bold;
         }
         
@@ -69,31 +52,34 @@
         .instructions {
             border-left: 3px solid #0f0;
             padding-left: 15px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             color: #8f8;
         }
         
-        /* Zona Selection */
-        .zona-section {
-            margin-bottom: 40px;
+        /* Zona */
+        .zona-section, .hashtag-section {
+            margin-bottom: 30px;
         }
         
         .section-title {
             color: #ff0;
             border-bottom: 1px solid #0f0;
             padding-bottom: 5px;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
         
+        /* Grid */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 15px;
+            margin-bottom: 20px;
         }
         
+        /* Cards */
         .card {
-            background: rgba(0, 20, 0, 0.5);
+            background: rgba(0, 30, 0, 0.3);
             border: 1px solid #0a0;
             padding: 15px;
             cursor: pointer;
@@ -101,12 +87,12 @@
         }
         
         .card:hover {
-            background: rgba(0, 40, 0, 0.7);
+            background: rgba(0, 50, 0, 0.5);
             border-color: #0f0;
         }
         
         .card.selected {
-            background: rgba(0, 60, 0, 0.8);
+            background: rgba(0, 70, 0, 0.7);
             border-color: #0f0;
             box-shadow: 0 0 10px #0f0;
         }
@@ -119,38 +105,63 @@
         
         .card-desc {
             color: #8f8;
-            font-size: 0.9rem;
+            font-size: 14px;
         }
         
-        /* Hashtag Selection */
-        .hashtag-section {
-            margin-bottom: 40px;
-        }
-        
-        .tag-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-        }
-        
+        /* Tags */
         .tag {
-            background: rgba(0, 20, 0, 0.5);
+            background: rgba(0, 30, 0, 0.3);
             border: 1px solid #0a0;
-            padding: 12px;
-            cursor: pointer;
+            padding: 10px;
             text-align: center;
+            cursor: pointer;
             transition: all 0.3s;
         }
         
         .tag:hover {
-            background: rgba(0, 40, 0, 0.7);
+            background: rgba(0, 50, 0, 0.5);
             border-color: #0f0;
         }
         
         .tag.selected {
-            background: rgba(0, 60, 0, 0.8);
+            background: rgba(0, 70, 0, 0.7);
             border-color: #0f0;
             box-shadow: 0 0 8px #0f0;
+        }
+        
+        /* Button */
+        .submit-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 30px auto;
+            padding: 15px;
+            background: transparent;
+            color: #0f0;
+            border: 2px solid #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 15px #0f0;
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* Status */
+        .status {
+            background: rgba(0, 20, 0, 0.5);
+            border: 1px solid #0a0;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
         }
         
         /* Counter */
@@ -161,66 +172,23 @@
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid #0f0;
             padding: 10px 15px;
-            font-size: 0.9rem;
+            font-size: 14px;
         }
         
-        .counter-num {
+        .counter strong {
             color: #0ff;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        
-        /* Submit Button */
-        .submit-section {
-            text-align: center;
-            margin: 40px 0 60px 0;
-        }
-        
-        .btn {
-            background: transparent;
-            color: #0f0;
-            border: 2px solid #0f0;
-            padding: 15px 40px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn:hover:not(:disabled) {
-            background: rgba(0, 255, 0, 0.1);
-            box-shadow: 0 0 15px #0f0;
-        }
-        
-        .btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            border-color: #080;
-        }
-        
-        /* Status */
-        .status {
-            background: rgba(0, 10, 0, 0.8);
-            border: 1px solid #0a0;
-            padding: 15px;
-            margin-top: 20px;
-            display: none;
-            font-size: 0.9rem;
-        }
-        
-        .status-line {
-            margin-bottom: 5px;
         }
         
         /* Progress */
-        .progress-bar {
+        .progress {
             width: 100%;
-            height: 3px;
-            background: rgba(0, 30, 0, 0.5);
+            height: 4px;
+            background: rgba(0, 30, 0, 0.3);
             margin: 20px 0;
+            overflow: hidden;
         }
         
-        .progress {
+        .progress-bar {
             height: 100%;
             background: #0f0;
             width: 0%;
@@ -238,26 +206,26 @@
             <div class="user-info" id="usernameDisplay">
                 USER: <span id="currentUser">loading...</span>
             </div>
-            <div style="color: #8f8; font-size: 0.9rem; margin-top: 5px;">
+            <div style="color: #8f8; font-size: 14px; margin-top: 5px;">
                 >> PILIH 1 ZONA DAN 5# UNTUK MEMULAI
             </div>
         </div>
         
-        <!-- Progress -->
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
+        <!-- Progress Bar -->
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
         
         <!-- Instructions -->
         <div class="instructions">
-            <div style="margin-bottom: 10px;">
-                <strong style="color: #ff0">INSTRUKSI:</strong>
+            <div style="margin-bottom: 10px; color: #ff0;">
+                <strong>INSTRUKSI:</strong>
             </div>
             <div>
-                1. Pilih <strong>1 ZONA</strong> yang paling sesuai denganmu<br>
-                2. Pilih <strong>5#</strong> yang paling relate dengan perasaanmu<br>
-                3. Klik tombol MASUK untuk melanjutkan<br>
-                4. Pilihan tidak bisa diubah setelah ini
+                1. Pilih <strong style="color:#ff0">1 ZONA</strong><br>
+                2. Pilih <strong style="color:#ff0">5#</strong><br>
+                3. Klik tombol MASUK<br>
+                4. Pilihan tidak bisa diubah
             </div>
         </div>
         
@@ -265,55 +233,48 @@
         <div class="zona-section">
             <div class="section-title">>> PILIH 1 ZONA</div>
             <div class="grid" id="zonaContainer">
-                <!-- Zona akan diisi JS -->
+                <!-- Diisi JavaScript -->
             </div>
         </div>
         
         <!-- Hashtag Selection -->
         <div class="hashtag-section">
             <div class="section-title">>> PILIH 5#</div>
-            <div class="tag-grid" id="hashtagContainer">
-                <!-- Hashtag akan diisi JS -->
+            <div class="grid" id="hashtagContainer">
+                <!-- Diisi JavaScript -->
             </div>
         </div>
         
-        <!-- Submit -->
-        <div class="submit-section">
-            <button class="btn" id="submitBtn" disabled>
-                MASUK KE NOPE
-            </button>
-        </div>
+        <!-- Submit Button -->
+        <button class="submit-btn" id="submitBtn" disabled>
+            MASUK KE NOPE
+        </button>
         
         <!-- Status -->
-        <div class="status" id="statusBox">
-            <!-- Status akan muncul di sini -->
-        </div>
+        <div class="status" id="statusBox"></div>
         
         <!-- Counter -->
         <div class="counter">
-            <div>TERPILIH:</div>
-            <div>ZONA: <span class="counter-num" id="zonaCount">0</span>/1</div>
-            <div>#: <span class="counter-num" id="hashtagCount">0</span>/5</div>
+            <div>ZONA: <strong id="zonaCount">0</strong>/1</div>
+            <div>#: <strong id="hashtagCount">0</strong>/5</div>
         </div>
     </div>
 
     <script>
-        // ========== KODE UTAMA ==========
-        
-        // Inisialisasi variabel
+        // Variabel global
         let selectedZona = null;
-        let selectedHashtags = [];
+        let selectedTags = [];
         
-        // Data zona (4 zona sesuai permintaan)
-        const zonaData = [
-            { id: 'popculture', name: 'PopCulture', desc: 'Film, musik, tren, semua yang viral' },
+        // Data Zona (4 zona)
+        const zonas = [
+            { id: 'popculture', name: 'PopCulture', desc: 'Film, musik, meme, tren viral' },
             { id: 'personalpain', name: 'PersonalPain', desc: 'Kecemasan, trauma, healing, self-care' },
             { id: 'socialsickness', name: 'SocialSickness', desc: 'Toxic relationship, FOMO, loneliness' },
             { id: 'movement', name: 'Movement', desc: 'Aktivisme, perubahan, gerakan sosial' }
         ];
         
-        // Data hashtag (25 pilihan asli)
-        const hashtagData = [
+        // Data Hashtag (25 pilihan)
+        const hashtags = [
             '#depresi', '#anxiety', '#overthinking', 
             '#selflove', '#burnout', '#lonely', 
             '#mentalhealth', '#healing', '#trauma',
@@ -324,225 +285,175 @@
             '#growth', '#change', '#hope', '#recovery'
         ];
         
-        // Fungsi utama saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Onboarding page loaded');
-            
-            // Ambil username dari URL atau session
+        // Inisialisasi saat halaman dimuat
+        window.onload = function() {
+            initPage();
+        };
+        
+        function initPage() {
+            // Dapatkan username
             const urlParams = new URLSearchParams(window.location.search);
-            let username = urlParams.get('new');
-            
-            if (!username) {
-                username = sessionStorage.getItem('nope_username');
-            }
-            
-            if (!username) {
-                username = 'anonymous';
-            }
+            let username = urlParams.get('new') || sessionStorage.getItem('nope_username') || 'anonymous';
             
             // Tampilkan username
             document.getElementById('currentUser').textContent = '@' + username;
             
             // Render zona
-            renderZona();
+            renderZonas();
             
             // Render hashtag
-            renderHashtag();
-            
-            // Update progress awal
-            updateProgress();
-            updateCounter();
-            checkSubmitButton();
+            renderHashtags();
             
             // Setup event listeners
-            setupEventListeners();
-        });
+            setupEvents();
+            
+            // Update tampilan awal
+            updateDisplay();
+        }
         
-        // Render zona ke HTML
-        function renderZona() {
+        function renderZonas() {
             const container = document.getElementById('zonaContainer');
             container.innerHTML = '';
             
-            zonaData.forEach(zona => {
+            zonas.forEach(zona => {
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.dataset.id = zona.id;
-                
                 div.innerHTML = `
                     <div class="card-name">${zona.name}</div>
                     <div class="card-desc">${zona.desc}</div>
                 `;
-                
-                div.addEventListener('click', function() {
-                    selectZona(zona.id);
-                });
-                
+                div.onclick = () => selectZona(zona.id);
                 container.appendChild(div);
             });
         }
         
-        // Render hashtag ke HTML
-        function renderHashtag() {
+        function renderHashtags() {
             const container = document.getElementById('hashtagContainer');
             container.innerHTML = '';
             
-            hashtagData.forEach(tag => {
+            hashtags.forEach(tag => {
                 const div = document.createElement('div');
                 div.className = 'tag';
                 div.textContent = tag;
                 div.dataset.tag = tag;
-                
-                div.addEventListener('click', function() {
-                    toggleHashtag(tag);
-                });
-                
+                div.onclick = () => toggleTag(tag);
                 container.appendChild(div);
             });
         }
         
-        // Pilih zona
         function selectZona(zonaId) {
-            // Reset semua zona
+            // Reset selection
             document.querySelectorAll('.card').forEach(card => {
                 card.classList.remove('selected');
             });
             
-            // Pilih zona yang diklik
-            const target = document.querySelector(`.card[data-id="${zonaId}"]`);
-            if (target) {
-                target.classList.add('selected');
+            // Select new
+            const card = document.querySelector(`.card[data-id="${zonaId}"]`);
+            if (card) {
+                card.classList.add('selected');
                 selectedZona = zonaId;
             }
             
-            updateProgress();
-            updateCounter();
-            checkSubmitButton();
+            updateDisplay();
         }
         
-        // Toggle hashtag (pilih/batalkan)
-        function toggleHashtag(tag) {
-            const target = document.querySelector(`.tag[data-tag="${tag}"]`);
+        function toggleTag(tag) {
+            const element = document.querySelector(`.tag[data-tag="${tag}"]`);
             
-            // Jika sudah dipilih, batalkan
-            if (selectedHashtags.includes(tag)) {
-                const index = selectedHashtags.indexOf(tag);
-                selectedHashtags.splice(index, 1);
-                target.classList.remove('selected');
-            } 
-            // Jika belum dipilih dan belum mencapai 5
-            else if (selectedHashtags.length < 5) {
-                selectedHashtags.push(tag);
-                target.classList.add('selected');
-            }
-            // Jika sudah 5, ganti yang pertama
-            else {
-                const firstTag = selectedHashtags[0];
-                const firstElement = document.querySelector(`.tag[data-tag="${firstTag}"]`);
-                firstElement.classList.remove('selected');
-                
-                selectedHashtags.shift();
-                selectedHashtags.push(tag);
-                target.classList.add('selected');
+            if (selectedTags.includes(tag)) {
+                // Remove
+                const index = selectedTags.indexOf(tag);
+                selectedTags.splice(index, 1);
+                element.classList.remove('selected');
+            } else {
+                // Add if less than 5
+                if (selectedTags.length < 5) {
+                    selectedTags.push(tag);
+                    element.classList.add('selected');
+                }
             }
             
-            updateProgress();
-            updateCounter();
-            checkSubmitButton();
+            updateDisplay();
         }
         
-        // Update progress bar
-        function updateProgress() {
-            const progress = document.getElementById('progress');
-            const total = 6; // 1 zona + 5 hashtag
-            let completed = 0;
-            
-            if (selectedZona) completed++;
-            completed += selectedHashtags.length;
-            
-            const percentage = (completed / total) * 100;
-            progress.style.width = percentage + '%';
-        }
-        
-        // Update counter
-        function updateCounter() {
+        function updateDisplay() {
+            // Update counters
             document.getElementById('zonaCount').textContent = selectedZona ? '1' : '0';
-            document.getElementById('hashtagCount').textContent = selectedHashtags.length;
-        }
-        
-        // Cek apakah submit button harus aktif
-        function checkSubmitButton() {
-            const btn = document.getElementById('submitBtn');
+            document.getElementById('hashtagCount').textContent = selectedTags.length;
             
-            if (selectedZona && selectedHashtags.length === 5) {
+            // Update progress bar
+            const total = 6; // 1 zona + 5 tags
+            let completed = 0;
+            if (selectedZona) completed++;
+            completed += selectedTags.length;
+            const percent = (completed / total) * 100;
+            document.getElementById('progressBar').style.width = percent + '%';
+            
+            // Update submit button
+            const btn = document.getElementById('submitBtn');
+            if (selectedZona && selectedTags.length === 5) {
                 btn.disabled = false;
             } else {
                 btn.disabled = true;
             }
         }
         
-        // Setup event listeners
-        function setupEventListeners() {
+        function setupEvents() {
             // Submit button
-            document.getElementById('submitBtn').addEventListener('click', savePreferences);
+            document.getElementById('submitBtn').onclick = saveData;
             
             // Enter key
-            document.addEventListener('keydown', function(e) {
+            document.onkeydown = function(e) {
                 if (e.key === 'Enter') {
                     const btn = document.getElementById('submitBtn');
                     if (!btn.disabled) {
-                        savePreferences();
+                        saveData();
                     }
                 }
-            });
+            };
         }
         
-        // Simpan preferensi user
-        function savePreferences() {
-            console.log('Saving user preferences...');
-            
+        function saveData() {
             const username = document.getElementById('currentUser').textContent.replace('@', '');
             const btn = document.getElementById('submitBtn');
-            const statusBox = document.getElementById('statusBox');
+            const status = document.getElementById('statusBox');
             
             // Disable button
             btn.disabled = true;
             btn.textContent = 'MENYIMPAN...';
             
-            // Show status box
-            statusBox.style.display = 'block';
-            statusBox.innerHTML = '<div class="status-line">>> Memproses pilihan...</div>';
+            // Show status
+            status.style.display = 'block';
+            status.innerHTML = '<div style="color:#8f8">>> Menyimpan pilihan...</div>';
             
-            // Simpan ke localStorage
-            setTimeout(function() {
+            // Simpan data
+            setTimeout(() => {
                 try {
-                    // Ambil data user yang ada
+                    // Load existing users
                     let allUsers = localStorage.getItem('nope_users');
-                    
                     if (!allUsers) {
                         allUsers = '{}';
                     }
                     
-                    const usersObj = JSON.parse(allUsers);
+                    const users = JSON.parse(allUsers);
                     
-                    // Update atau buat data user baru
-                    if (usersObj[username]) {
-                        // Update user yang sudah ada
-                        usersObj[username].interests = {
+                    // Update or create user
+                    if (users[username]) {
+                        users[username].interests = {
                             zona: selectedZona,
-                            hashtags: selectedHashtags,
+                            hashtags: selectedTags,
                             selectedAt: new Date().toISOString()
                         };
-                        usersObj[username].onboarded = true;
-                        usersObj[username].lastLogin = Date.now();
+                        users[username].onboarded = true;
                     } else {
-                        // Buat user baru
-                        usersObj[username] = {
+                        users[username] = {
                             username: username,
                             created: Date.now(),
                             lastLogin: Date.now(),
                             interests: {
                                 zona: selectedZona,
-                                hashtags: selectedHashtags,
+                                hashtags: selectedTags,
                                 selectedAt: new Date().toISOString()
                             },
                             onboarded: true,
@@ -555,33 +466,30 @@
                         };
                     }
                     
-                    // Simpan ke localStorage
-                    localStorage.setItem('nope_users', JSON.stringify(usersObj));
+                    // Save to localStorage
+                    localStorage.setItem('nope_users', JSON.stringify(users));
                     
-                    // Simpan ke sessionStorage
+                    // Save to sessionStorage
                     sessionStorage.setItem('nope_onboarded', 'true');
                     sessionStorage.setItem('nope_zona', selectedZona);
-                    sessionStorage.setItem('nope_hashtags', JSON.stringify(selectedHashtags));
+                    sessionStorage.setItem('nope_hashtags', JSON.stringify(selectedTags));
                     
-                    // Update status
-                    statusBox.innerHTML += '<div class="status-line">>> Berhasil menyimpan preferensi</div>';
-                    statusBox.innerHTML += '<div class="status-line" style="color:#0ff">>> Mengalihkan ke DUNIA...</div>';
+                    // Success message
+                    status.innerHTML += '<div style="color:#0ff">>> Berhasil disimpan!</div>';
+                    status.innerHTML += '<div style="color:#8f8">>> Mengalihkan ke DUNIA...</div>';
                     
-                    // Redirect setelah 2 detik
-                    setTimeout(function() {
+                    // Redirect
+                    setTimeout(() => {
                         window.location.href = 'dunia.html?user=' + username + '&onboarded=true&t=' + Date.now();
-                    }, 2000);
+                    }, 1500);
                     
                 } catch (error) {
-                    console.error('Error saving preferences:', error);
-                    statusBox.innerHTML += '<div class="status-line" style="color:#f00">>> ERROR: Gagal menyimpan</div>';
-                    statusBox.innerHTML += '<div class="status-line">>> ' + error.message + '</div>';
-                    
-                    // Enable button kembali
+                    // Error message
+                    status.innerHTML += '<div style="color:#f00">>> ERROR: ' + error.message + '</div>';
                     btn.disabled = false;
                     btn.textContent = 'MASUK KE NOPE';
                 }
-            }, 500);
+            }, 800);
         }
     </script>
 </body>
