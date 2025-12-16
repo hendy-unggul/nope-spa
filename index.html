@@ -3,23 +3,329 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="/icon-192.png">
   <meta name="theme-color" content="#569CD6">
   <title>NOPE</title>
   <style>
-    /* [SAMA PERSIS DENGAN STYLE SEBELUMNYA] */
-    /* Copy semua style dari versi sebelumnya */
-    :root { --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); }
-    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    body { margin: 0; background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
-    .container { max-width: 390px; margin: 0 auto; padding: 16px 12px; padding-bottom: calc(68px + var(--safe-bottom)); }
-    .screen { display: none; }
-    .screen.active { display: block; }
-    /* ... dan seterusnya (sama dengan sebelumnya) ... */
+    :root {
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 390px;
+      margin: 0 auto;
+      padding: 16px 12px;
+      padding-bottom: calc(68px + var(--safe-bottom));
+    }
+    .screen {
+      display: none;
+    }
+    .screen.active {
+      display: block;
+    }
+    /* Landing */
+    .landing {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .landing input {
+      width: 100%;
+      padding: 14px;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 16px;
+      margin: 12px 0 20px;
+      text-align: center;
+    }
+    .landing input::placeholder {
+      color: #555;
+    }
+    .cta {
+      width: 100%;
+      padding: 14px;
+      background: #569CD6;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    /* Onboarding */
+    .onboarding-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .zone {
+      background: #0a0a0a;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .zone-title {
+      font-size: 12px;
+      color: #569CD6;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .hashtag-item {
+      display: block;
+      padding: 6px 0;
+      font-size: 13px;
+      color: #aaa;
+      cursor: pointer;
+    }
+    .hashtag-item.selected {
+      color: #569CD6;
+      font-weight: 600;
+    }
+    .zone-instruction {
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      margin: 10px 0 20px;
+    }
+    .counter {
+      text-align: center;
+      font-size: 11px;
+      color: #569CD6;
+      margin: 10px 0;
+      font-weight: 600;
+    }
+    /* Jejak UI */
+    .artefact-header {
+      width: 100%;
+      aspect-ratio: 1 / 0.8;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 6px;
+      border-radius: 12px;
+    }
+    .artefact-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .artefact-stamp {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 3px 7px;
+      border-radius: 5px;
+      font-size: 8px;
+      color: rgba(255, 255, 255, 0.85);
+      z-index: 10;
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      backdrop-filter: blur(1px);
+    }
+    .artefact-notasi {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-right: 3px;
+    }
+    .artefact-date {
+      font-size: 8px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .emoji-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 2px 12px 4px;
+      margin-bottom: 10px;
+    }
+    .emoji-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 14px;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+    .rantbox {
+      background: #0a0a0a;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    textarea {
+      width: 100%;
+      height: 88px;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      padding: 10px;
+      resize: none;
+      outline: none;
+      display: block;
+    }
+    .inline-save {
+      background: none;
+      border: none;
+      color: #569CD6;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 0;
+      margin-top: 6px;
+      float: right;
+      opacity: 0.9;
+    }
+    .jejakmu-title {
+      font-size: 14px;
+      color: #569CD6;
+      margin: 2px 0 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .jejakmu-title::before {
+      content: "🔒";
+      font-size: 12px;
+    }
+    .rant-item {
+      background: #0a0a0a;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+    .rant-text {
+      white-space: pre-line;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .artefact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .grid-item {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: #111;
+    }
+    .grid-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .grid-item .stamp {
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.5);
+      padding: 1px 3px;
+      font-size: 7px;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* Jalan Toggle */
+    .feed-toggle {
+      display: flex;
+      background: #0a0a0a;
+      border-radius: 10px;
+      padding: 4px;
+      width: fit-content;
+      margin: 8px auto 12px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 6px 12px;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .toggle-btn.active {
+      background: #569CD6;
+      color: #000;
+    }
+    /* Bottom nav */
+    .bottom-nav-wrapper {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      background: #000;
+      border-top: 1px solid #1a1a1a;
+      padding-bottom: var(--safe-bottom);
+      z-index: 50;
+    }
+    .bottom-nav {
+      display: flex;
+      width: 100%;
+      max-width: 390px;
+    }
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 12px;
+      color: #666;
+      text-decoration: none;
+    }
+    .nav-item.active {
+      color: #569CD6;
+      font-weight: 600;
+    }
+    #artefactInput {
+      display: none;
+    }
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    /* Simple responsive */
+    @media (max-width: 360px) {
+      .onboarding-grid {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        padding: 12px 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -28,16 +334,9 @@
     <div id="landingScreen" class="screen active">
       <div class="container">
         <div class="landing">
-          <div style="font-size:24px;opacity:0.9;margin-bottom:20px;">NOPE</div>
-          <div style="font-size:12px;color:#666;margin-bottom:20px;">
-            Masuk dengan email untuk melanjutkan
-          </div>
-          <input type="email" id="loginInput" placeholder="emailmu@contoh.com" autocomplete="off" autofocus/>
-          <button class="cta" onclick="handleLogin()" id="loginBtn">lanjut</button>
-          <div style="margin-top:20px;font-size:11px;color:#555;">
-            Data disimpan lokal di perangkatmu
-          </div>
-          <div style="margin-top:10px;font-size:10px;color:#444;" id="debugInfo"></div>
+          <div style="font-size:24px;opacity:0.9;">NOPE</div>
+          <input type="text" id="loginInput" placeholder="emailmu" autocomplete="off"/>
+          <button class="cta" onclick="handleLogin()">lanjut</button>
         </div>
       </div>
     </div>
@@ -49,9 +348,6 @@
         <div class="counter" id="counter">Pilih 3 zona lagi</div>
         <div class="onboarding-grid" id="onboardingGrid"></div>
         <button class="cta" id="finishBtn" disabled onclick="finishOnboarding()">selesai</button>
-        <div style="margin-top:20px;text-align:center;">
-          <button class="emoji-btn" onclick="showLanding()" style="font-size:12px;">↶ ganti email</button>
-        </div>
       </div>
     </div>
 
@@ -67,49 +363,6 @@
   </div>
 
   <script>
-    // ==== STORAGE MANAGER (CROSS-PLATFORM) ====
-    const Storage = {
-      get: (key) => {
-        try {
-          // Coba localStorage dulu
-          return localStorage.getItem(key);
-        } catch (e) {
-          console.log('LocalStorage error, trying sessionStorage');
-          try {
-            return sessionStorage.getItem(key);
-          } catch (e2) {
-            console.log('Both storage failed, using memory');
-            return window.__nopeMemoryStorage?.[key] || null;
-          }
-        }
-      },
-      
-      set: (key, value) => {
-        try {
-          localStorage.setItem(key, value);
-        } catch (e) {
-          try {
-            sessionStorage.setItem(key, value);
-          } catch (e2) {
-            if (!window.__nopeMemoryStorage) window.__nopeMemoryStorage = {};
-            window.__nopeMemoryStorage[key] = value;
-          }
-        }
-      },
-      
-      remove: (key) => {
-        try { localStorage.removeItem(key); } catch(e) {}
-        try { sessionStorage.removeItem(key); } catch(e) {}
-        if (window.__nopeMemoryStorage) delete window.__nopeMemoryStorage[key];
-      },
-      
-      clear: () => {
-        try { localStorage.clear(); } catch(e) {}
-        try { sessionStorage.clear(); } catch(e) {}
-        window.__nopeMemoryStorage = {};
-      }
-    };
-
     // ==== DATA ====
     const ZONES = {
       PopCulture: ["#bucin_toxic", "#fyp_addict", "#celeb_gosip", "#reels_overload", "#viral_hampa"],
@@ -122,44 +375,31 @@
     let selectedHashtags = new Map();
     let userRants = [];
 
-    // ==== DEBUG UTILITIES ====
-    function debugLog(message) {
-      console.log(`[NOPE DEBUG] ${message}`);
-      const debugEl = document.getElementById('debugInfo');
-      if (debugEl) {
-        debugEl.innerHTML = `<small>${message}</small>`;
-        setTimeout(() => debugEl.innerHTML = '', 3000);
+    // ==== STORAGE HELPERS ====
+    function getStorage(key) {
+      try {
+        return localStorage.getItem(key);
+      } catch (e) {
+        return null;
       }
     }
 
-    function checkStorageStatus() {
-      const email = Storage.get('nopeEmail');
-      const onboarded = Storage.get('nopeOnboarded');
-      debugLog(`Storage: email=${email ? '✓' : '✗'}, onboarded=${onboarded}`);
+    function setStorage(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        // Ignore storage errors
+      }
     }
 
     // ==== INIT ====
     function init() {
-      console.log('NOPE App Initializing...');
-      checkStorageStatus();
-      
-      // Clear any problematic service workers
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
-          registrations.forEach(reg => {
-            console.log('Unregistering SW:', reg.scope);
-            reg.unregister();
-          });
-        });
-      }
-      
-      // Check user status
-      const email = Storage.get('nopeEmail');
-      const username = Storage.get('nopeUsername');
-      const onboarded = Storage.get('nopeOnboarded') === 'true';
+      const email = getStorage('nopeEmail');
+      const username = getStorage('nopeUsername');
+      const onboarded = getStorage('nopeOnboarded') === 'true';
       
       // Load rants
-      const savedRants = Storage.get('nopeRants');
+      const savedRants = getStorage('nopeRants');
       if (savedRants) {
         try {
           userRants = JSON.parse(savedRants);
@@ -168,18 +408,16 @@
         }
       }
       
-      console.log('User status:', { email, username, onboarded, rants: userRants.length });
-      
-      // Flow logic
+      // FLOW LOGIC YANG BENAR:
       if (!email) {
-        debugLog('New session - No email found');
+        // 1. New user - belum ada email sama sekali
         showLanding();
       } else if (email && !onboarded) {
-        debugLog('Returning user - Not onboarded yet');
+        // 2. Returning user - email ada tapi belum onboarded
         currentUser = { email, username };
         showOnboarding();
       } else if (email && onboarded) {
-        debugLog('Returning user - Already onboarded');
+        // 3. Returning user - email ada dan sudah onboarded
         currentUser = { email, username };
         showJejak();
       }
@@ -190,44 +428,30 @@
           handleLogin();
         }
       });
-      
-      // Prevent form submission
-      document.addEventListener('submit', (e) => e.preventDefault());
     }
 
-    // ==== SCREEN MANAGEMENT ====
-    function showScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
-      const screen = document.getElementById(screenId);
-      if (screen) {
-        screen.classList.add('active');
-        console.log(`Showing screen: ${screenId}`);
-      }
-    }
-
+    // ==== SCREENS ====
     function showLanding() {
-      showScreen('landingScreen');
-      const input = document.getElementById('loginInput');
-      if (input) {
-        input.value = '';
-        setTimeout(() => input.focus(), 100);
-      }
+      hideAllScreens();
+      document.getElementById('landingScreen').classList.add('active');
+      document.getElementById('loginInput').focus();
     }
 
     function showOnboarding() {
-      showScreen('onboardingScreen');
+      hideAllScreens();
+      document.getElementById('onboardingScreen').classList.add('active');
       
+      // Reset selection
       selectedHashtags = new Map();
+      
+      // Render zones
       const grid = document.getElementById('onboardingGrid');
       grid.innerHTML = '';
       
       Object.entries(ZONES).forEach(([zoneName, tags]) => {
         const zoneEl = document.createElement('div');
         zoneEl.className = 'zone';
-        zoneEl.innerHTML = `
-          <div class="zone-title">${zoneName}</div>
-          <div class="hashtag-list" id="zone-${zoneName}"></div>
-        `;
+        zoneEl.innerHTML = `<div class="zone-title">${zoneName}</div><div class="hashtag-list" id="zone-${zoneName}"></div>`;
         grid.appendChild(zoneEl);
         
         const list = zoneEl.querySelector('.hashtag-list');
@@ -244,113 +468,100 @@
     }
 
     function showJejak() {
-      showScreen('jejakScreen');
+      hideAllScreens();
+      document.getElementById('jejakScreen').classList.add('active');
       renderJejak();
     }
 
     function showJalan() {
-      const onboarded = Storage.get('nopeOnboarded') === 'true';
+      const onboarded = getStorage('nopeOnboarded') === 'true';
       if (!onboarded) {
-        alert('Silakan selesaikan onboarding dulu.');
         showOnboarding();
         return;
       }
-      showScreen('jalanScreen');
+      hideAllScreens();
+      document.getElementById('jalanScreen').classList.add('active');
       renderJalan();
     }
 
-    // ==== LOGIN HANDLER ====
+    function hideAllScreens() {
+      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    }
+
+    // ==== LOGIN ====
     function handleLogin() {
-      const input = document.getElementById('loginInput');
-      const btn = document.getElementById('loginBtn');
+      const input = document.getElementById('loginInput').value.trim();
       
-      if (!input || !btn) return;
-      
-      const email = input.value.trim();
-      
-      if (!email) {
-        alert('Masukkan email dulu.');
-        input.focus();
+      if (!input) {
+        alert("Masukkan email dulu.");
         return;
       }
       
-      if (!email.includes('@') || !email.includes('.')) {
-        alert('Format email tidak valid.');
-        input.focus();
+      if (!input.includes('@') || !input.includes('.')) {
+        alert("Masukkan email yang valid.");
         return;
       }
       
-      // Disable button selama proses
-      btn.disabled = true;
-      btn.textContent = 'memproses...';
+      const savedEmail = getStorage('nopeEmail');
       
-      setTimeout(() => {
-        const savedEmail = Storage.get('nopeEmail');
+      if (savedEmail === input) {
+        // Email sudah terdaftar
+        const username = getStorage('nopeUsername');
+        const onboarded = getStorage('nopeOnboarded') === 'true';
         
-        if (savedEmail === email) {
-          // Registered user
-          const username = Storage.get('nopeUsername');
-          const onboarded = Storage.get('nopeOnboarded') === 'true';
-          
-          debugLog(`Registered user: ${email}, onboarded: ${onboarded}`);
-          currentUser = { email, username };
-          
-          if (onboarded) {
-            showJejak();
-          } else {
-            showOnboarding();
-          }
+        currentUser = { email: input, username };
+        
+        if (onboarded) {
+          showJejak();
         } else {
-          // New user
-          debugLog(`New user detected: ${email}`);
-          
-          const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
-          const nouns = ['angin', 'awan', 'rembulan', 'senja', 'fajar', 'bayang'];
-          
-          const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-          const noun = nouns[Math.floor(Math.random() * nouns.length)];
-          const num = Math.floor(1000 + Math.random() * 9000);
-          const username = `@${adj}_${noun}_${num}`;
-          
-          Storage.set('nopeEmail', email);
-          Storage.set('nopeUsername', username);
-          Storage.set('nopeOnboarded', 'false');
-          Storage.set('nopeHashtags', '[]');
-          
-          currentUser = { email, username };
           showOnboarding();
         }
+      } else {
+        // Email baru
+        const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
+        const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+        const num = Math.floor(1000 + Math.random() * 9000);
+        const username = `@nope.${adj}.${num}`;
         
-        // Reset button
-        btn.disabled = false;
-        btn.textContent = 'lanjut';
-      }, 500);
+        setStorage('nopeEmail', input);
+        setStorage('nopeUsername', username);
+        setStorage('nopeOnboarded', 'false');
+        
+        currentUser = { email: input, username };
+        showOnboarding();
+      }
     }
 
     // ==== ONBOARDING ====
     function toggleHashtag(zone, hashtag) {
+      // Cek apakah zona ini sudah dipilih
       if (selectedHashtags.has(zone)) {
+        // Jika hashtag yang sama diklik, hapus
         if (selectedHashtags.get(zone) === hashtag) {
           selectedHashtags.delete(zone);
         } else {
+          // Jika pilih hashtag lain di zona yang sama
           selectedHashtags.set(zone, hashtag);
         }
       } else {
+        // Cek apakah sudah 3 zona
         if (selectedHashtags.size >= 3) {
-          alert('Maksimal 3 zona berbeda.');
+          alert("Maksimal 3 zona berbeda.");
           return;
         }
         selectedHashtags.set(zone, hashtag);
       }
+      
       updateOnboardingUI();
     }
 
     function updateOnboardingUI() {
-      // Update selection visual
-      document.querySelectorAll('.hashtag-item').forEach(item => {
-        item.classList.remove('selected');
+      // Reset semua selected
+      document.querySelectorAll('.hashtag-item').forEach(el => {
+        el.classList.remove('selected');
       });
       
+      // Set selected berdasarkan Map
       selectedHashtags.forEach((hashtag, zone) => {
         document.querySelectorAll(`#zone-${zone} .hashtag-item`).forEach(item => {
           if (item.textContent === hashtag) item.classList.add('selected');
@@ -361,68 +572,54 @@
       const counter = document.getElementById('counter');
       const remaining = 3 - selectedHashtags.size;
       counter.textContent = remaining > 0 ? `Pilih ${remaining} zona lagi` : '✓ 3 zona terpilih';
-      counter.style.color = remaining > 0 ? '#569CD6' : '#4CAF50';
       
       // Update button
       const finishBtn = document.getElementById('finishBtn');
-      const isComplete = selectedHashtags.size === 3;
-      finishBtn.disabled = !isComplete;
-      finishBtn.textContent = isComplete ? 'Selesai →' : 'selesai';
+      finishBtn.disabled = selectedHashtags.size !== 3;
+      finishBtn.textContent = selectedHashtags.size === 3 ? 'Selesai →' : 'selesai';
     }
 
     function finishOnboarding() {
       if (selectedHashtags.size !== 3) {
-        alert('Harus memilih 3 hashtag dari zona berbeda!');
+        alert("Harus memilih 3 hashtag dari zona berbeda!");
         return;
       }
       
       const hashtags = Array.from(selectedHashtags.values());
+      
+      setStorage('nopeHashtags', JSON.stringify(hashtags));
+      setStorage('nopeOnboarded', 'true');
+      
+      // Loading effect
       const finishBtn = document.getElementById('finishBtn');
-      
-      finishBtn.disabled = true;
       finishBtn.textContent = 'Menyimpan...';
-      
-      Storage.set('nopeHashtags', JSON.stringify(hashtags));
-      Storage.set('nopeOnboarded', 'true');
+      finishBtn.disabled = true;
       
       setTimeout(() => {
         showJejak();
-        setTimeout(() => {
-          alert(`✅ Onboarding selesai!\n\nHashtag pilihanmu:\n${hashtags.join('\n')}`);
-        }, 300);
-      }, 800);
+      }, 500);
     }
 
-    // ==== JEJAK RENDER ====
+    // ==== JEJAK ====
     function renderJejak() {
-      const email = Storage.get('nopeEmail');
-      const username = Storage.get('nopeUsername') || '@nope_user';
-      const hashtags = JSON.parse(Storage.get('nopeHashtags') || '[]');
-      const onboarded = Storage.get('nopeOnboarded') === 'true';
-      
-      // Safety check
-      if (!onboarded) {
-        debugLog('User not onboarded, redirecting...');
-        showOnboarding();
-        return;
-      }
+      const username = getStorage('nopeUsername') || '@nope.anon';
+      const hashtags = JSON.parse(getStorage('nopeHashtags') || '[]');
       
       // Load rants
-      const savedRants = Storage.get('nopeRants');
-      userRants = savedRants ? JSON.parse(savedRants) : [];
+      const savedRants = getStorage('nopeRants');
+      if (savedRants) {
+        try {
+          userRants = JSON.parse(savedRants);
+        } catch (e) {
+          userRants = [];
+        }
+      }
       
       document.getElementById('jejakScreen').innerHTML = `
         <div class="container">
-          <div class="jejakmu-title">
-            Jejakmu · ${username}
-            <div style="font-size:11px;font-weight:normal;color:#666;margin-left:auto;">
-              <button onclick="forceReset()" style="background:none;border:none;color:#666;font-size:11px;cursor:pointer;padding:4px 8px;border-radius:4px;border:1px solid #333;">
-                reset
-              </button>
-            </div>
-          </div>
+          <div class="jejakmu-title">Jejakmu · ${username}</div>
           
-          <div class="artefact-header" onclick="uploadArtefact()">
+          <div class="artefact-header">
             <img class="artefact-image" src="https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format" alt="Artefak">
             <div class="artefact-stamp">
               <span class="artefact-notasi">${hashtags[0] || '#nope'}</span>
@@ -431,17 +628,12 @@
           </div>
           
           <div class="emoji-bar">
-            <button class="emoji-btn" onclick="uploadArtefact()">📸 artefak</button>
-            <button class="emoji-btn" onclick="refreshJejak()">🔄 refresh</button>
-            <button class="emoji-btn" onclick="editOnboarding()" style="font-size:12px;">✏️ edit</button>
+            <button class="emoji-btn" onclick="uploadArtefact()">unggah artefak</button>
           </div>
           
           <div class="rantbox">
-            <textarea id="rantInput" maxlength="300" placeholder="Tulis yang gak bisa dikirim ke DM... (max 300 karakter)"></textarea>
-            <div style="text-align:right;font-size:11px;color:#666;margin-top:4px;">
-              <span id="charCount">0</span>/300
-            </div>
-            <button class="inline-save" onclick="submitRant()">💾 simpan</button>
+            <textarea id="rantInput" maxlength="300" placeholder="Curhat yang gak bisa dikirim ke DM..."></textarea>
+            <button id="submitBtn" class="inline-save" onclick="submitRant()">simpan</button>
           </div>
           
           <div id="rantsContainer">
@@ -453,29 +645,25 @@
                 </div>
               </div>
             `).join('') : `
-              <div class="rant-item" style="text-align:center;color:#666;padding:30px;">
-                Belum ada curhatan. Mulai tulis di atas.
+              <div class="rant-item">
+                <div class="rant-text" style="color:#666;text-align:center;padding:20px;">
+                  Belum ada curhatan. Mulai tulis di atas.
+                </div>
               </div>
             `}
           </div>
           
           <div style="margin:20px 0 10px;font-size:12px;color:#569CD6;font-weight:600;">
-            📦 Artefakmu
+            📦 Artefak Terkumpul
           </div>
           
           <div class="artefact-grid">
-            ${[1,2,3,4,5].map(i => `
-              <div class="grid-item" onclick="viewArtefact(${i})">
-                <img src="https://images.unsplash.com/photo-${1506744038 + i}136-46273834b3fb?w=800&h=640&fit=crop" alt="Artefak">
-                <span class="stamp">artefak #${i} • ${formatDate(new Date(Date.now() - i * 86400000))}</span>
-              </div>
-            `).join('')}
-            <div class="grid-item" onclick="addArtefact()" style="background:#1a1a1a;">
-              <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#569CD6;font-size:24px;">
-                +
-              </div>
-              <span class="stamp">tambah baru</span>
-            </div>
+            <div class="grid-item"><img src="https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">struk pertama • 5 Mar</span></div>
+            <div class="grid-item"><img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">karcis terakhir • 15 Feb</span></div>
+            <div class="grid-item"><img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">meja tempat aku menyerah • 20 Jan</span></div>
+            <div class="grid-item"><img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">bayanganku yang setia • 5 Apr</span></div>
+            <div class="grid-item"><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">chat yang diarsip • 10 May</span></div>
+            <div class="grid-item"><img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">jepit yang tertinggal • 25 Jun</span></div>
           </div>
         </div>
         
@@ -484,36 +672,65 @@
             <a href="#" class="nav-item active" onclick="event.preventDefault(); showJejak();">Jejak</a>
             <a href="#" class="nav-item" onclick="event.preventDefault(); showJalan();">Jalan</a>
             <a href="#" class="nav-item" onclick="event.preventDefault(); showDunia();">Dunia</a>
-            <a href="#" class="nav-item" onclick="event.preventDefault(); showSettings();">⚙️</a>
           </nav>
         </div>
       `;
       
       // Setup character counter
       const textarea = document.getElementById('rantInput');
-      const charCount = document.getElementById('charCount');
-      if (textarea && charCount) {
+      if (textarea) {
         textarea.addEventListener('input', function() {
-          charCount.textContent = this.value.length;
+          const charCount = document.getElementById('charCount');
+          if (charCount) charCount.textContent = this.value.length;
         });
-        setTimeout(() => textarea.focus(), 200);
       }
     }
 
-    // ==== UTILITY FUNCTIONS ====
+    // ==== JALAN ====
+    function renderJalan() {
+      document.getElementById('jalanScreen').innerHTML = `
+        <div class="container">
+          <div class="feed-toggle">
+            <button class="toggle-btn active" data-mode="sefrekuensi">sefrekuensi</button>
+            <button class="toggle-btn" data-mode="segelombang">segelombang</button>
+          </div>
+          <div style="padding:20px;color:#666;text-align:center;">
+            Feed kolektif akan muncul di sini.<br/>
+            Mode "sefrekuensi" menampilkan jejak dari yang punya ≥2 hashtag sama.<br/>
+            Mode "segelombang" menampilkan semua jejak.
+          </div>
+        </div>
+        <div class="bottom-nav-wrapper">
+          <nav class="bottom-nav">
+            <a href="#" class="nav-item" onclick="event.preventDefault(); showJejak();">Jejak</a>
+            <a href="#" class="nav-item active" onclick="event.preventDefault(); showJalan();">Jalan</a>
+            <a href="#" class="nav-item" onclick="event.preventDefault(); showDunia();">Dunia</a>
+          </nav>
+        </div>
+      `;
+    }
+
+    // ==== UTILS ====
+    function uploadArtefact() {
+      alert("Fitur unggah artefak akan hadir setelah onboarding lengkap.");
+    }
+    
+    function showDunia() {
+      alert("Dunia: resensi buku, film, musik akan hadir segera.");
+    }
+    
     function submitRant() {
       const textarea = document.getElementById('rantInput');
       if (!textarea) return;
       
       const text = textarea.value.trim();
       if (!text) {
-        alert('Tulis sesuatu dulu...');
-        textarea.focus();
+        alert("Tulis dulu.");
         return;
       }
       
       if (text.length > 300) {
-        alert('Maksimal 300 karakter!');
+        alert("Maksimal 300 karakter.");
         return;
       }
       
@@ -523,70 +740,32 @@
       };
       
       userRants.unshift(newRant);
-      Storage.set('nopeRants', JSON.stringify(userRants));
+      setStorage('nopeRants', JSON.stringify(userRants));
       
       textarea.value = '';
       renderJejak();
       
       setTimeout(() => {
-        alert('✅ Tersimpan. Hanya kamu yang tahu.');
+        alert("Disimpan. Tak seorang pun tahu.");
       }, 100);
     }
-    
-    function editOnboarding() {
-      if (confirm('Edit hashtag pilihan?\n\nKamu akan memilih ulang 3 hashtag.')) {
-        Storage.set('nopeOnboarded', 'false');
-        showOnboarding();
-      }
-    }
-    
-    function forceReset() {
-      if (confirm('Reset semua data?\n\nSemua data lokal akan dihapus.')) {
-        Storage.clear();
-        location.reload();
-      }
-    }
-    
-    function refreshJejak() {
-      const screen = document.getElementById('jejakScreen');
-      if (screen) {
-        screen.innerHTML = '<div class="loading">Memuat ulang...</div>';
-        setTimeout(renderJejak, 300);
-      }
-    }
-    
-    function showDunia() {
-      alert('🌍 Dunia\n\nFitur resensi buku/film/musik akan hadir segera!');
-    }
-    
-    function showSettings() {
-      const email = Storage.get('nopeEmail');
-      const username = Storage.get('nopeUsername');
-      const hashtags = JSON.parse(Storage.get('nopeHashtags') || '[]');
-      const rantCount = userRants.length;
-      
-      alert(`⚙️ Settings\n\nEmail: ${email}\nUsername: ${username}\nHashtag: ${hashtags.join(', ')}\nCurhatan: ${rantCount}\n\nPilih action di console.`);
-      console.log('=== NOPE DEBUG ===');
-      console.log('1. Storage.clear() - Hapus semua data');
-      console.log('2. showOnboarding() - Edit hashtag');
-      console.log('3. showLanding() - Kembali ke login');
-    }
-    
+
     function formatDate(date) {
-      return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+      return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
     }
-    
-    function formatTime(iso) {
-      const date = new Date(iso);
+
+    function formatTime(isoString) {
+      const date = new Date(isoString);
       const now = new Date();
       const diff = now - date;
-      const mins = Math.floor(diff / 60000);
-      if (mins < 60) return `${mins}m lalu`;
       const hours = Math.floor(diff / 3600000);
-      if (hours < 24) return `${hours}j lalu`;
+      
+      if (hours < 1) return 'baru saja';
+      if (hours < 24) return `${hours} jam lalu`;
       return formatDate(date);
     }
-    
+
     function escapeHtml(text) {
       return text
         .replace(/&/g, '&amp;')
@@ -596,15 +775,15 @@
         .replace(/'/g, '&#039;');
     }
 
-    // ==== INIT APP ====
-    window.addEventListener('DOMContentLoaded', init);
-    window.addEventListener('load', () => {
-      console.log('NOPE App Loaded');
-      // Optional: Register service worker only in production
-      if ('serviceWorker' in navigator && window.location.hostname !== 'localhost') {
+    // ==== START ====
+    init();
+    
+    // Service Worker hanya untuk PWA
+    if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
+      window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch(console.warn);
-      }
-    });
+      });
+    }
   </script>
 </body>
 </html>
