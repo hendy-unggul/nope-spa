@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="id" class="nope-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jalan - NOPE</title>
+    <style>
+        :root {
+            --nope-bg: #000000;
+            --nope-dark: #0a0a0a;
+            --nope-gray: #1a1a1a;
+            --nope-light: #2a2a2a;
+            --nope-accent: #FF6B8B;
+            --nope-secondary: #4ECDC4;
+            --nope-warm: #FF9A76;
+            --nope-text: #FFFFFF;
+            --nope-text-dim: #AAAAAA;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--nope-bg);
+            color: var(--nope-text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            padding: 0;
+        }
+        
+        .nope-header {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(26,26,46,0.9));
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 107, 139, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nope-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nope-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--nope-accent), var(--nope-warm));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        
+        .nope-user {
+            font-size: 1rem;
+            color: var(--nope-accent);
+        }
+        
+        .nope-nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nope-nav-link {
+            color: var(--nope-text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .nope-nav-link:hover {
+            color: var(--nope-accent);
+        }
+        
+        .nope-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .nope-hero {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+        }
+        
+        .nope-hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--nope-accent), var(--nope-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nope-hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--nope-text-dim);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .nope-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .nope-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 107, 139, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nope-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 107, 139, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 107, 139, 0.1);
+        }
+        
+        .nope-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .nope-card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--nope-text);
+        }
+        
+        .nope-card-desc {
+            color: var(--nope-text-dim);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .nope-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .nope-tag {
+            background: rgba(255, 107, 139, 0.1);
+            color: var(--nope-accent);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .nope-explore-section {
+            margin: 60px 0;
+        }
+        
+        .nope-section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--nope-text);
+            border-left: 4px solid var(--nope-accent);
+            padding-left: 15px;
+        }
+        
+        .nope-journals {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .nope-journal-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .nope-journal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .nope-journal-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nope-journal-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(45deg, var(--nope-accent), var(--nope-warm));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .nope-journal-username {
+            color: var(--nope-accent);
+            font-weight: 500;
+        }
+        
+        .nope-journal-date {
+            color: var(--nope-text-dim);
+            font-size: 0.85rem;
+        }
+        
+        .nope-journal-content {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: var(--nope-text);
+        }
+        
+        .nope-journal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .nope-action-btn {
+            background: transparent;
+            border: none;
+            color: var(--nope-text-dim);
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+        
+        .nope-action-btn:hover {
+            color: var(--nope-accent);
+        }
+        
+        .nope-create-section {
+            background: linear-gradient(135deg, rgba(255, 107, 139, 0.1), rgba(78, 205, 196, 0.1));
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin: 50px 0;
+            border: 1px solid rgba(255, 107, 139, 0.2);
+        }
+        
+        .nope-create-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--nope-text);
+        }
+        
+        .nope-create-subtitle {
+            color: var(--nope-text-dim);
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .nope-textarea {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            color: var(--nope-text);
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .nope-textarea:focus {
+            outline: none;
+            border-color: var(--nope-accent);
+        }
+        
+        .nope-btn {
+            background: linear-gradient(45deg, var(--nope-accent), var(--nope-warm));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 25px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .nope-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nope-btn-secondary {
+            background: transparent;
+            color: var(--nope-accent);
+            border: 1px solid var(--nope-accent);
+        }
+        
+        .nope-btn-secondary:hover {
+            background: rgba(255, 107, 139, 0.1);
+        }
+        
+        .nope-footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--nope-text-dim);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 50px;
+        }
+        
+        .nope-back-home {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+        }
+        
+        .nope-back-btn {
+            background: var(--nope-accent);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 107, 139, 0.3);
+            transition: transform 0.2s;
+        }
+        
+        .nope-back-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .nope-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--nope-dark);
+            border: 1px solid var(--nope-accent);
+            border-radius: 10px;
+            padding: 15px 20px;
+            max-width: 300px;
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .nope-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--nope-text-dim);
+        }
+        
+        .nope-empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .nope-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .nope-modal-content {
+            background: var(--nope-dark);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(255, 107, 139, 0.3);
+        }
+        
+        .nope-modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--nope-text);
+        }
+        
+        .nope-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--nope-text-dim);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .nope-hero-title {
+                font-size: 2rem;
+            }
+            
+            .nope-nav-links {
+                display: none;
+            }
+            
+            .nope-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="nope-header">
+        <nav class="nope-nav">
+            <a href="/dunia.html" class="nope-logo">NOPE</a>
+            <div class="nope-nav-links">
+                <a href="/dunia.html" class="nope-nav-link">🏠 Dunia</a>
+                <a href="/kenali.html" class="nope-nav-link">👤 Profil</a>
+                <a href="/jalan.html" class="nope-nav-link" style="color: var(--nope-accent);">🛣️ Jalan</a>
+            </div>
+            <div class="nope-user" id="currentUser">@user</div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="nope-container">
+        <!-- Hero Section -->
+        <section class="nope-hero">
+            <h1 class="nope-hero-title">Jalan-jalan di NOPE</h1>
+            <p class="nope-hero-subtitle">
+                Temukan sudut-sudut menarik, jelajahi cerita orang lain, 
+                atau buat jejakmu sendiri. Semua tanpa meninggalkan bekas.
+            </p>
+        </section>
+
+        <!-- Explore Cards -->
+        <section class="nope-grid">
+            <div class="nope-card" onclick="exploreSection('random')">
+                <div class="nope-card-icon">🎲</div>
+                <h3 class="nope-card-title">Jalan Acak</h3>
+                <p class="nope-card-desc">
+                    Biarkan NOPE membawamu ke tempat tak terduga. 
+                    Temukan cerita dan artefak dari pengguna lain.
+                </p>
+                <div class="nope-card-tags">
+                    <span class="nope-tag">surprise</span>
+                    <span class="nope-tag">discovery</span>
+                </div>
+            </div>
+            
+            <div class="nope-card" onclick="exploreSection('stories')">
+                <div class="nope-card-icon">📖</div>
+                <h3 class="nope-card-title">Cerita Hari Ini</h3>
+                <p class="nope-card-desc">
+                    Baca jurnal rant terbaru dari komunitas NOPE. 
+                    Semua anonim, semua jujur.
+                </p>
+                <div class="nope-card-tags">
+                    <span class="nope-tag">jurnal</span>
+                    <span class="nope-tag">komunitas</span>
+                </div>
+            </div>
+            
+            <div class="nope-card" onclick="exploreSection('artifacts')">
+                <div class="nope-card-icon">🎨</div>
+                <h3 class="nope-card-title">Artefak Publik</h3>
+                <p class="nope-card-desc">
+                    Koleksi gambar, tulisan, dan kreasi yang dibagikan 
+                    oleh pengguna NOPE.
+                </p>
+                <div class="nope-card-tags">
+                    <span class="nope-tag">kreatif</span>
+                    <span class="nope-tag">inspirasi</span>
+                </div>
+            </div>
+            
+            <div class="nope-card" onclick="createNewJourney()">
+                <div class="nope-card-icon">✨</div>
+                <h3 class="nope-card-title">Mulai Perjalanan</h3>
+                <p class="nope-card-desc">
+                    Buat jalanmu sendiri. Tulis eksplorasi, bagikan 
+                    penemuan, atau dokumentasikan perjalanan.
+                </p>
+                <div class="nope-card-tags">
+                    <span class="nope-tag">personal</span>
+                    <span class="nope-tag">create</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Journals Section -->
+        <section class="nope-explore-section">
+            <h2 class="nope-section-title">Jurnal Terbaru dari Jalan</h2>
+            <div class="nope-journals" id="journalsContainer">
+                <!-- Journals will be loaded here -->
+                <div class="nope-empty-state">
+                    <div class="nope-empty-icon">🛣️</div>
+                    <p>Belum ada jurnal jalan. Jadilah yang pertama!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Journal Section -->
+        <section class="nope-create-section">
+            <h3 class="nope-create-title">Bagikan Perjalananmu</h3>
+            <p class="nope-create-subtitle">
+                Ceritakan jalan yang kamu lalui hari ini. Bisa tentang apapun, 
+                tanpa filter, tanpa judgment.
+            </p>
+            
+            <textarea 
+                class="nope-textarea" 
+                id="newJournalInput"
+                placeholder="Tulis tentang jalan yang kamu lalui hari ini..."></textarea>
+            
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button class="nope-btn" onclick="publishJournal()">
+                    🚀 Terbitkan Jurnal
+                </button>
+                <button class="nope-btn nope-btn-secondary" onclick="saveDraft()">
+                    💾 Simpan Draft
+                </button>
+            </div>
+        </section>
+
+        <!-- Public Artifacts Section -->
+        <section class="nope-explore-section">
+            <h2 class="nope-section-title">Artefak Publik Terbaru</h2>
+            <div id="artifactsContainer">
+                <!-- Public artifacts will be loaded here -->
+                <div class="nope-empty-state">
+                    <div class="nope-empty-icon">🎨</div>
+                    <p>Belum ada artefak yang dibagikan.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="nope-footer">
+        <p>NOPE • Jalan tanpa jejak • <span id="totalJourneys">0</span> perjalanan dibagikan</p>
+        <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.7;">
+            Semua konten bersifat sementara dan anonim
+        </p>
+    </footer>
+
+    <!-- Back to Home -->
+    <div class="nope-back-home">
+        <button class="nope-back-btn" onclick="window.location.href='/dunia.html'">🏠</button>
+    </div>
+
+    <!-- Notification -->
+    <div class="nope-notification" id="notification"></div>
+
+    <!-- Create Journey Modal -->
+    <div class="nope-modal" id="createModal">
+        <div class="nope-modal-content">
+            <button class="nope-modal-close" onclick="closeModal()">×</button>
+            <h3 class="nope-modal-title">Mulai Perjalanan Baru</h3>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--nope-text-dim);">
+                    Judul Perjalanan
+                </label>
+                <input type="text" 
+                       id="journeyTitle"
+                       style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--nope-text);"
+                       placeholder="Misalnya: Jalan pagi di taman">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--nope-text-dim);">
+                    Deskripsi
+                </label>
+                <textarea 
+                    id="journeyDescription"
+                    style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--nope-text); min-height: 100px;"
+                    placeholder="Ceritakan perjalananmu..."></textarea>
+            </div>
+            
+            <button class="nope-btn" onclick="createJourney()" style="width: 100%;">
+                🛣️ Mulai Jalan
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // NOPE JALAN - EXPLORATION SYSTEM
+        // ============================================
+        
+        let currentUser = null;
+        let publicJournals = [];
+        let publicArtifacts = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get current user
+            currentUser = sessionStorage.getItem('nope_username');
+            
+            if (!currentUser) {
+                // Not logged in, redirect to home
+                window.location.href = '/';
+                return;
+            }
+            
+            // Display current user
+            document.getElementById('currentUser').textContent = `@${currentUser}`;
+            
+            // Load public data
+            loadPublicJournals();
+            loadPublicArtifacts();
+            
+            // Update stats
+            updateStats();
+        });
+        
+        // Load public journals from all users
+        function loadPublicJournals() {
+            const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+            publicJournals = [];
+            
+            // Collect journals from all users
+            Object.keys(allUsers).forEach(username => {
+                const user = allUsers[username];
+                if (user.journals && user.journals.length > 0) {
+                    user.journals.forEach(journal => {
+                        publicJournals.push({
+                            username: username,
+                            ...journal
+                        });
+                    });
+                }
+            });
+            
+            // Sort by date (newest first)
+            publicJournals.sort((a, b) => b.date - a.date);
+            
+            // Display
+            displayJournals();
+        }
+        
+        // Display journals
+        function displayJournals() {
+            const container = document.getElementById('journalsContainer');
+            
+            if (publicJournals.length === 0) {
+                container.innerHTML = `
+                    <div class="nope-empty-state">
+                        <div class="nope-empty-icon">📖</div>
+                        <p>Belum ada jurnal yang dibagikan. Jadilah yang pertama!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Show only recent 5 journals
+            const recentJournals = publicJournals.slice(0, 5);
+            
+            container.innerHTML = recentJournals.map(journal => `
+                <div class="nope-journal-card">
+                    <div class="nope-journal-header">
+                        <div class="nope-journal-user">
+                            <div class="nope-journal-avatar">
+                                ${journal.username.charAt(0).toUpperCase()}
+                            </div>
+                            <span class="nope-journal-username">@${journal.username}</span>
+                        </div>
+                        <div class="nope-journal-date">
+                            ${formatDate(journal.date)}
+                        </div>
+                    </div>
+                    
+                    <div class="nope-journal-content">
+                        ${journal.content}
+                    </div>
+                    
+                    <div class="nope-journal-actions">
+                        <button class="nope-action-btn" onclick="likeJournal('${journal.id}')">
+                            🤍 <span>${journal.likes || 0}</span>
+                        </button>
+                        <button class="nope-action-btn" onclick="saveJournal('${journal.id}')">
+                            💾 Simpan
+                        </button>
+                        <button class="nope-action-btn" onclick="viewJourney('${journal.id}')">
+                            🔍 Lihat
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Load public artifacts
+        function loadPublicArtifacts() {
+            const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+            publicArtifacts = [];
+            
+            // Collect artifacts from all users
+            Object.keys(allUsers).forEach(username => {
+                const user = allUsers[username];
+                if (user.artifacts && user.artifacts.length > 0) {
+                    user.artifacts.forEach(artifact => {
+                        if (artifact.public === true) { // Only show public artifacts
+                            publicArtifacts.push({
+                                username: username,
+                                ...artifact
+                            });
+                        }
+                    });
+                }
+            });
+            
+            // Sort by date
+            publicArtifacts.sort((a, b) => b.created - a.created);
+            
+            // Display
+            displayArtifacts();
+        }
+        
+        // Display artifacts
+        function displayArtifacts() {
+            const container = document.getElementById('artifactsContainer');
+            
+            if (publicArtifacts.length === 0) {
+                container.innerHTML = `
+                    <div class="nope-empty-state">
+                        <div class="nope-empty-icon">🎨</div>
+                        <p>Belum ada artefak yang dibagikan.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Show only recent 3 artifacts
+            const recentArtifacts = publicArtifacts.slice(0, 3);
+            
+            container.innerHTML = recentArtifacts.map(artifact => `
+                <div style="
+                    background: rgba(255,255,255,0.03);
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    border: 1px solid rgba(255, 107, 139, 0.1);
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 30px; height: 30px; background: linear-gradient(45deg, var(--nope-accent), var(--nope-warm)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                ${artifact.username.charAt(0).toUpperCase()}
+                            </div>
+                            <span style="color: var(--nope-accent);">@${artifact.username}</span>
+                            <span style="color: var(--nope-text-dim); font-size: 0.85rem;">• ${artifact.type}</span>
+                        </div>
+                        <span style="color: var(--nope-text-dim); font-size: 0.85rem;">
+                            ${formatDate(artifact.created)}
+                        </span>
+                    </div>
+                    
+                    <div style="color: var(--nope-text); line-height: 1.6; margin-bottom: 15px;">
+                        ${artifact.content}
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button class="nope-action-btn" onclick="likeArtifact('${artifact.id}')">
+                            🤍 <span>${artifact.likes || 0}</span>
+                        </button>
+                        <button class="nope-action-btn" onclick="saveArtifact('${artifact.id}')">
+                            💾 Simpan
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Publish new journal
+        function publishJournal() {
+            const content = document.getElementById('newJournalInput').value.trim();
+            
+            if (!content) {
+                showNotification('Tulis sesuatu dulu ya!', 'error');
+                return;
+            }
+            
+            // Create journal object
+            const newJournal = {
+                id: 'pub_' + Date.now(),
+                date: Date.now(),
+                content: content,
+                likes: 0,
+                public: true
+            };
+            
+            // Add to current user's journals
+            const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+            if (!allUsers[currentUser].journals) {
+                allUsers[currentUser].journals = [];
+            }
+            
+            allUsers[currentUser].journals.push(newJournal);
+            localStorage.setItem('nope_users', JSON.stringify(allUsers));
+            
+            // Add to public journals
+            publicJournals.unshift({
+                username: currentUser,
+                ...newJournal
+            });
+            
+            // Update display
+            displayJournals();
+            
+            // Clear input
+            document.getElementById('newJournalInput').value = '';
+            
+            // Show success notification
+            showNotification('Jurnal berhasil diterbitkan!', 'success');
+            
+            // Update stats
+            updateStats();
+        }
+        
+        // Save as draft
+        function saveDraft() {
+            const content = document.getElementById('newJournalInput').value.trim();
+            
+            if (!content) {
+                showNotification('Tidak ada yang disimpan', 'info');
+                return;
+            }
+            
+            // Save to localStorage as draft
+            const drafts = JSON.parse(localStorage.getItem('nope_drafts') || '[]');
+            drafts.push({
+                content: content,
+                saved: Date.now()
+            });
+            
+            localStorage.setItem('nope_drafts', JSON.stringify(drafts));
+            
+            // Clear input
+            document.getElementById('newJournalInput').value = '';
+            
+            showNotification('Draft disimpan!', 'success');
+        }
+        
+        // Explore different sections
+        function exploreSection(section) {
+            switch(section) {
+                case 'random':
+                    // Show random journal
+                    if (publicJournals.length > 0) {
+                        const randomJournal = publicJournals[Math.floor(Math.random() * publicJournals.length)];
+                        showNotification(`Membawa ke jurnal @${randomJournal.username}`, 'info');
+                        viewJourney(randomJournal.id);
+                    } else {
+                        showNotification('Belum ada jurnal untuk dijelajahi', 'info');
+                    }
+                    break;
+                    
+                case 'stories':
+                    // Scroll to journals section
+                    document.querySelector('.nope-explore-section').scrollIntoView({ behavior: 'smooth' });
+                    break;
+                    
+                case 'artifacts':
+                    // Scroll to artifacts section
+                    document.querySelectorAll('.nope-explore-section')[1].scrollIntoView({ behavior: 'smooth' });
+                    break;
+            }
+        }
+        
+        // Create new journey
+        function createNewJourney() {
+            document.getElementById('createModal').style.display = 'flex';
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('createModal').style.display = 'none';
+        }
+        
+        // Create journey
+        function createJourney() {
+            const title = document.getElementById('journeyTitle').value.trim();
+            const description = document.getElementById('journeyDescription').value.trim();
+            
+            if (!title || !description) {
+                showNotification('Isi judul dan deskripsi dulu!', 'error');
+                return;
+            }
+            
+            // Create journey artifact
+            const journeyArtifact = {
+                id: 'journey_' + Date.now(),
+                type: 'journey',
+                title: title,
+                content: description,
+                created: Date.now(),
+                public: true
+            };
+            
+            // Add to user's artifacts
+            const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+            if (!allUsers[currentUser].artifacts) {
+                allUsers[currentUser].artifacts = [];
+            }
+            
+            allUsers[currentUser].artifacts.push(journeyArtifact);
+            localStorage.setItem('nope_users', JSON.stringify(allUsers));
+            
+            // Add to public artifacts
+            publicArtifacts.unshift({
+                username: currentUser,
+                ...journeyArtifact
+            });
+            
+            // Update display
+            displayArtifacts();
+            
+            // Close modal
+            closeModal();
+            
+            // Clear form
+            document.getElementById('journeyTitle').value = '';
+            document.getElementById('journeyDescription').value = '';
+            
+            // Show success
+            showNotification(`Perjalanan "${title}" dimulai!`, 'success');
+            
+            // Update stats
+            updateStats();
+        }
+        
+        // Like a journal
+        function likeJournal(journalId) {
+            // Find journal in publicJournals
+            const journalIndex = publicJournals.findIndex(j => j.id === journalId);
+            if (journalIndex !== -1) {
+                publicJournals[journalIndex].likes = (publicJournals[journalIndex].likes || 0) + 1;
+                displayJournals();
+                showNotification('Journal disukai!', 'success');
+            }
+        }
+        
+        // Like an artifact
+        function likeArtifact(artifactId) {
+            const artifactIndex = publicArtifacts.findIndex(a => a.id === artifactId);
+            if (artifactIndex !== -1) {
+                publicArtifacts[artifactIndex].likes = (publicArtifacts[artifactIndex].likes || 0) + 1;
+                displayArtifacts();
+                showNotification('Artefak disukai!', 'success');
+            }
+        }
+        
+        // Save journal to personal collection
+        function saveJournal(journalId) {
+            const journal = publicJournals.find(j => j.id === journalId);
+            if (journal) {
+                // Add to user's saved items
+                const savedItems = JSON.parse(localStorage.getItem('nope_saved') || '[]');
+                savedItems.push({
+                    ...journal,
+                    saved: Date.now()
+                });
+                
+                localStorage.setItem('nope_saved', JSON.stringify(savedItems));
+                showNotification('Journal disimpan ke koleksimu!', 'success');
+            }
+        }
+        
+        // Save artifact
+        function saveArtifact(artifactId) {
+            const artifact = publicArtifacts.find(a => a.id === artifactId);
+            if (artifact) {
+                const savedItems = JSON.parse(localStorage.getItem('nope_saved') || '[]');
+                savedItems.push({
+                    ...artifact,
+                    saved: Date.now()
+                });
+                
+                localStorage.setItem('nope_saved', JSON.stringify(savedItems));
+                showNotification('Artefak disimpan!', 'success');
+            }
+        }
+        
+        // View journey details
+        function viewJourney(journalId) {
+            const journal = publicJournals.find(j => j.id === journalId);
+            if (journal) {
+                const modal = document.createElement('div');
+                modal.className = 'nope-modal';
+                modal.style.display = 'flex';
+                modal.innerHTML = `
+                    <div class="nope-modal-content">
+                        <button class="nope-modal-close" onclick="this.parentElement.parentElement.remove()">×</button>
+                        <h3 class="nope-modal-title">Jurnal dari @${journal.username}</h3>
+                        <div style="color: var(--nope-text-dim); margin-bottom: 20px;">
+                            ${formatDate(journal.date)}
+                        </div>
+                        <div style="line-height: 1.8; color: var(--nope-text);">
+                            ${journal.content}
+                        </div>
+                        <div style="margin-top: 20px; display: flex; gap: 15px;">
+                            <button class="nope-action-btn" onclick="likeJournal('${journal.id}')">
+                                🤍 ${journal.likes || 0} suka
+                            </button>
+                            <button class="nope-action-btn" onclick="saveJournal('${journal.id}')">
+                                💾 Simpan
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+            let totalJourneys = 0;
+            
+            Object.values(allUsers).forEach(user => {
+                if (user.journals) {
+                    totalJourneys += user.journals.length;
+                }
+            });
+            
+            document.getElementById('totalJourneys').textContent = totalJourneys;
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            // Set color based on type
+            if (type === 'error') {
+                notification.style.borderColor = '#ff4757';
+                notification.style.color = '#ff4757';
+            } else if (type === 'success') {
+                notification.style.borderColor = '#4ECDC4';
+                notification.style.color = '#4ECDC4';
+            }
+            
+            // Auto hide
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Format date
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            // Within last 24 hours
+            if (diff < 24 * 60 * 60 * 1000) {
+                if (diff < 60 * 60 * 1000) {
+                    const minutes = Math.floor(diff / (60 * 1000));
+                    return `${minutes} menit lalu`;
+                }
+                const hours = Math.floor(diff / (60 * 60 * 1000));
+                return `${hours} jam lalu`;
+            }
+            
+            // More than 24 hours
+            return date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('createModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
