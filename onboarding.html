@@ -13,7 +13,6 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
-            position: relative;
         }
         
         /* Scanline effect */
@@ -34,59 +33,36 @@
             opacity: 0.3;
         }
         
-        .glitch-container {
+        .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
         }
         
-        /* NOPE Logo glitch effect */
-        .nope-logo {
+        /* NOPE Logo */
+        .logo {
             font-size: 3.5rem;
             font-weight: 900;
             text-align: center;
             margin-bottom: 30px;
-            position: relative;
             color: #ff00ff;
             text-shadow: 
                 0 0 10px #ff00ff,
-                0 0 20px #ff00ff,
-                0 0 30px #ff00ff;
-            animation: glitch 3s infinite;
-        }
-        
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            2% { transform: translate(-2px, 2px); }
-            4% { transform: translate(-2px, -2px); }
-            6% { transform: translate(2px, 2px); }
-            8% { transform: translate(2px, -2px); }
-            10% { transform: translate(0); }
-            100% { transform: translate(0); }
+                0 0 20px #ff00ff;
         }
         
         /* Header */
-        .hacker-header {
+        .header {
             border: 1px solid #0f0;
             padding: 15px;
             margin-bottom: 30px;
-            position: relative;
             background: rgba(0, 30, 0, 0.3);
         }
         
-        .hacker-header::before {
-            content: ">>> ";
-            color: #0f0;
-            position: absolute;
-            left: 10px;
-            top: 15px;
-        }
-        
-        .username-display {
+        .user-info {
             color: #0ff;
             font-weight: bold;
-            margin-left: 30px;
         }
         
         /* Instructions */
@@ -94,7 +70,6 @@
             border-left: 3px solid #0f0;
             padding-left: 15px;
             margin-bottom: 40px;
-            font-size: 0.9rem;
             color: #8f8;
         }
         
@@ -103,7 +78,7 @@
             margin-bottom: 40px;
         }
         
-        .zona-title {
+        .section-title {
             color: #ff0;
             border-bottom: 1px solid #0f0;
             padding-bottom: 5px;
@@ -111,73 +86,54 @@
             font-size: 1.2rem;
         }
         
-        .zona-grid {
+        .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
         }
         
-        .zona-card {
+        .card {
             background: rgba(0, 20, 0, 0.5);
             border: 1px solid #0a0;
             padding: 15px;
             cursor: pointer;
             transition: all 0.3s;
-            position: relative;
         }
         
-        .zona-card:hover {
+        .card:hover {
             background: rgba(0, 40, 0, 0.7);
+            border-color: #0f0;
+        }
+        
+        .card.selected {
+            background: rgba(0, 60, 0, 0.8);
             border-color: #0f0;
             box-shadow: 0 0 10px #0f0;
         }
         
-        .zona-card.selected {
-            background: rgba(0, 60, 0, 0.8);
-            border-color: #0f0;
-            box-shadow: 0 0 15px #0f0;
-        }
-        
-        .zona-card.selected::after {
-            content: "✓";
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            color: #0f0;
-            font-weight: bold;
-        }
-        
-        .zona-name {
+        .card-name {
             color: #0ff;
             font-weight: bold;
             margin-bottom: 5px;
         }
         
-        .zona-desc {
+        .card-desc {
             color: #8f8;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
         
-        /* 5# Selection */
+        /* Hashtag Selection */
         .hashtag-section {
             margin-bottom: 40px;
         }
         
-        .hashtag-title {
-            color: #ff0;
-            border-bottom: 1px solid #0f0;
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-        }
-        
-        .hashtag-grid {
+        .tag-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 10px;
         }
         
-        .hashtag-item {
+        .tag {
             background: rgba(0, 20, 0, 0.5);
             border: 1px solid #0a0;
             padding: 12px;
@@ -186,20 +142,19 @@
             transition: all 0.3s;
         }
         
-        .hashtag-item:hover {
+        .tag:hover {
             background: rgba(0, 40, 0, 0.7);
             border-color: #0f0;
-            transform: translateY(-2px);
         }
         
-        .hashtag-item.selected {
+        .tag.selected {
             background: rgba(0, 60, 0, 0.8);
             border-color: #0f0;
-            box-shadow: 0 0 10px #0f0;
+            box-shadow: 0 0 8px #0f0;
         }
         
-        /* Selection Counter */
-        .selection-counter {
+        /* Counter */
+        .counter {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -209,7 +164,7 @@
             font-size: 0.9rem;
         }
         
-        .counter-number {
+        .counter-num {
             color: #0ff;
             font-weight: bold;
             font-size: 1.2rem;
@@ -218,11 +173,10 @@
         /* Submit Button */
         .submit-section {
             text-align: center;
-            margin-top: 40px;
-            margin-bottom: 60px;
+            margin: 40px 0 60px 0;
         }
         
-        .hacker-button {
+        .btn {
             background: transparent;
             color: #0f0;
             border: 2px solid #0f0;
@@ -231,449 +185,403 @@
             font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            overflow: hidden;
         }
         
-        .hacker-button:hover:not(:disabled) {
+        .btn:hover:not(:disabled) {
             background: rgba(0, 255, 0, 0.1);
-            box-shadow: 0 0 20px #0f0;
-            text-shadow: 0 0 10px #0f0;
+            box-shadow: 0 0 15px #0f0;
         }
         
-        .hacker-button:disabled {
+        .btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
             border-color: #080;
         }
         
-        .hacker-button::after {
-            content: ">>>";
-            margin-left: 10px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .hacker-button:hover:not(:disabled)::after {
-            opacity: 1;
-        }
-        
-        /* Terminal Output */
-        .terminal-output {
+        /* Status */
+        .status {
             background: rgba(0, 10, 0, 0.8);
             border: 1px solid #0a0;
             padding: 15px;
             margin-top: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            min-height: 50px;
             display: none;
+            font-size: 0.9rem;
         }
         
-        .terminal-line {
+        .status-line {
             margin-bottom: 5px;
-            animation: typewriter 0.5s steps(40, end);
         }
         
-        @keyframes typewriter {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-        
-        /* Progress Bar */
-        .progress-container {
+        /* Progress */
+        .progress-bar {
             width: 100%;
             height: 3px;
             background: rgba(0, 30, 0, 0.5);
             margin: 20px 0;
-            position: relative;
         }
         
-        .progress-bar {
+        .progress {
             height: 100%;
             background: #0f0;
             width: 0%;
             transition: width 0.5s;
         }
-        
-        /* Typewriter effect for text */
-        .typewriter {
-            overflow: hidden;
-            border-right: 2px solid #0f0;
-            white-space: nowrap;
-            animation: typing 3.5s steps(40, end),
-                       blink-caret 0.75s step-end infinite;
-        }
-        
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-        
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: #0f0; }
-        }
     </style>
 </head>
 <body>
-    <div class="glitch-container">
-        <!-- NOPE Logo -->
-        <div class="nope-logo">NOPE</div>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">NOPE</div>
         
-        <!-- Header dengan username -->
-        <div class="hacker-header">
-            <div class="username-display" id="usernameDisplay">
+        <!-- Header -->
+        <div class="header">
+            <div class="user-info" id="usernameDisplay">
                 USER: <span id="currentUser">loading...</span>
             </div>
             <div style="color: #8f8; font-size: 0.9rem; margin-top: 5px;">
-                >> SYSTEM: PILIH 1 ZONA DAN 5# UNTUK MEMULAI
+                >> PILIH 1 ZONA DAN 5# UNTUK MEMULAI
             </div>
         </div>
         
-        <!-- Progress Bar -->
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
+        <!-- Progress -->
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
         </div>
         
         <!-- Instructions -->
         <div class="instructions">
-            <div class="typewriter">
-                >> WELCOME TO NOPE NETWORK
+            <div style="margin-bottom: 10px;">
+                <strong style="color: #ff0">INSTRUKSI:</strong>
             </div>
-            <div style="margin-top: 10px;">
-                • Pilih <strong style="color: #ff0">1 ZONA</strong> yang mencerminkan vibe-mu<br>
-                • Pilih <strong style="color: #ff0">5#</strong> yang paling relate denganmu<br>
-                • Data akan disimpan di localStorage browser-mu<br>
-                • Tidak bisa diubah setelah onboarding selesai
+            <div>
+                1. Pilih <strong>1 ZONA</strong> yang paling sesuai denganmu<br>
+                2. Pilih <strong>5#</strong> yang paling relate dengan perasaanmu<br>
+                3. Klik tombol MASUK untuk melanjutkan<br>
+                4. Pilihan tidak bisa diubah setelah ini
             </div>
         </div>
         
         <!-- Zona Selection -->
         <div class="zona-section">
-            <div class="zona-title">>> PILIH 1 ZONA</div>
-            <div class="zona-grid" id="zonaGrid">
-                <!-- Zona akan diisi oleh JavaScript -->
+            <div class="section-title">>> PILIH 1 ZONA</div>
+            <div class="grid" id="zonaContainer">
+                <!-- Zona akan diisi JS -->
             </div>
         </div>
         
-        <!-- 5# Selection -->
+        <!-- Hashtag Selection -->
         <div class="hashtag-section">
-            <div class="hashtag-title">>> PILIH 5#</div>
-            <div class="hashtag-grid" id="hashtagGrid">
-                <!-- Hashtag akan diisi oleh JavaScript -->
+            <div class="section-title">>> PILIH 5#</div>
+            <div class="tag-grid" id="hashtagContainer">
+                <!-- Hashtag akan diisi JS -->
             </div>
         </div>
         
-        <!-- Submit Button -->
+        <!-- Submit -->
         <div class="submit-section">
-            <button class="hacker-button" id="submitButton" disabled>
-                LOCK SELECTION & ENTER NOPE
+            <button class="btn" id="submitBtn" disabled>
+                MASUK KE NOPE
             </button>
         </div>
         
-        <!-- Terminal Output -->
-        <div class="terminal-output" id="terminalOutput">
-            <!-- Output akan muncul di sini -->
+        <!-- Status -->
+        <div class="status" id="statusBox">
+            <!-- Status akan muncul di sini -->
         </div>
         
-        <!-- Selection Counter -->
-        <div class="selection-counter">
-            <div>SELECTED:</div>
-            <div>ZONA: <span class="counter-number" id="zonaCount">0</span>/1</div>
-            <div>#: <span class="counter-number" id="hashtagCount">0</span>/5</div>
+        <!-- Counter -->
+        <div class="counter">
+            <div>TERPILIH:</div>
+            <div>ZONA: <span class="counter-num" id="zonaCount">0</span>/1</div>
+            <div>#: <span class="counter-num" id="hashtagCount">0</span>/5</div>
         </div>
     </div>
 
     <script>
+        // ========== KODE UTAMA ==========
+        
+        // Inisialisasi variabel
+        let selectedZona = null;
+        let selectedHashtags = [];
+        
+        // Data zona (4 zona sesuai permintaan)
+        const zonaData = [
+            { id: 'popculture', name: 'PopCulture', desc: 'Film, musik, tren, semua yang viral' },
+            { id: 'personalpain', name: 'PersonalPain', desc: 'Kecemasan, trauma, healing, self-care' },
+            { id: 'socialsickness', name: 'SocialSickness', desc: 'Toxic relationship, FOMO, loneliness' },
+            { id: 'movement', name: 'Movement', desc: 'Aktivisme, perubahan, gerakan sosial' }
+        ];
+        
+        // Data hashtag (25 pilihan asli)
+        const hashtagData = [
+            '#depresi', '#anxiety', '#overthinking', 
+            '#selflove', '#burnout', '#lonely', 
+            '#mentalhealth', '#healing', '#trauma',
+            '#fomo', '#toxic', '#pressure',
+            '#sadboy', '#sadgirl', '#escape',
+            '#arttherapy', '#music', '#writing',
+            '#socialmedia', '#digitaldetox', '#mindfulness',
+            '#growth', '#change', '#hope', '#recovery'
+        ];
+        
+        // Fungsi utama saat halaman dimuat
         document.addEventListener('DOMContentLoaded', function() {
-            // Get username from URL parameter
+            console.log('Onboarding page loaded');
+            
+            // Ambil username dari URL atau session
             const urlParams = new URLSearchParams(window.location.search);
-            const username = urlParams.get('new') || sessionStorage.getItem('nope_username') || 'anonymous';
+            let username = urlParams.get('new');
             
-            // Display username
-            document.getElementById('currentUser').textContent = `@${username}`;
+            if (!username) {
+                username = sessionStorage.getItem('nope_username');
+            }
             
-            // Initialize data
-            let selectedZona = null;
-            let selectedHashtags = [];
+            if (!username) {
+                username = 'anonymous';
+            }
             
-            // Define 4 Zona
-            const zonaList = [
-                {
-                    id: 'popculture',
-                    name: 'PopCulture',
-                    desc: 'Film, musik, meme, tren terbaru, semua yang viral'
-                },
-                {
-                    id: 'personalpain',
-                    name: 'PersonalPain',
-                    desc: 'Kecemasan, trauma, healing, self-care, inner child'
-                },
-                {
-                    id: 'socialsickness',
-                    name: 'SocialSickness',
-                    desc: 'Toxic relationship, FOMO, loneliness, digital fatigue'
-                },
-                {
-                    id: 'movement',
-                    name: 'Movement',
-                    desc: 'Aktivisme, perubahan, gerakan sosial, awareness'
-                }
-            ];
+            // Tampilkan username
+            document.getElementById('currentUser').textContent = '@' + username;
             
-            // Define 5# asli (jangan diubah)
-            const hashtagList = [
-                '#depresi', '#anxiety', '#overthinking', 
-                '#selflove', '#burnout', '#lonely', 
-                '#mentalhealth', '#healing', '#trauma',
-                '#fomo', '#toxic', '#pressure',
-                '#sadboy', '#sadgirl', '#escape',
-                '#arttherapy', '#music', '#writing',
-                '#socialmedia', '#digitaldetox', '#mindfulness',
-                '#growth', '#change', '#hope'
-            ];
+            // Render zona
+            renderZona();
             
-            // Render Zona
-            const zonaGrid = document.getElementById('zonaGrid');
-            zonaList.forEach(zona => {
-                const card = document.createElement('div');
-                card.className = 'zona-card';
-                card.dataset.id = zona.id;
+            // Render hashtag
+            renderHashtag();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Update progress awal
+            updateProgress();
+            updateCounter();
+        });
+        
+        // Render zona ke HTML
+        function renderZona() {
+            const container = document.getElementById('zonaContainer');
+            container.innerHTML = '';
+            
+            zonaData.forEach(zona => {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.dataset.id = zona.id;
                 
-                card.innerHTML = `
-                    <div class="zona-name">${zona.name}</div>
-                    <div class="zona-desc">${zona.desc}</div>
+                div.innerHTML = `
+                    <div class="card-name">${zona.name}</div>
+                    <div class="card-desc">${zona.desc}</div>
                 `;
                 
-                card.addEventListener('click', () => selectZona(zona.id));
-                zonaGrid.appendChild(card);
-            });
-            
-            // Render 5#
-            const hashtagGrid = document.getElementById('hashtagGrid');
-            hashtagList.forEach(hashtag => {
-                const item = document.createElement('div');
-                item.className = 'hashtag-item';
-                item.textContent = hashtag;
-                item.dataset.tag = hashtag;
-                
-                item.addEventListener('click', () => toggleHashtag(hashtag));
-                hashtagGrid.appendChild(item);
-            });
-            
-            // Zona selection function
-            function selectZona(zonaId) {
-                // Reset semua zona
-                document.querySelectorAll('.zona-card').forEach(card => {
-                    card.classList.remove('selected');
+                div.addEventListener('click', function() {
+                    selectZona(zona.id);
                 });
                 
-                // Select zona yang diklik
-                const selectedCard = document.querySelector(`.zona-card[data-id="${zonaId}"]`);
-                selectedCard.classList.add('selected');
+                container.appendChild(div);
+            });
+        }
+        
+        // Render hashtag ke HTML
+        function renderHashtag() {
+            const container = document.getElementById('hashtagContainer');
+            container.innerHTML = '';
+            
+            hashtagData.forEach(tag => {
+                const div = document.createElement('div');
+                div.className = 'tag';
+                div.textContent = tag;
+                div.dataset.tag = tag;
                 
+                div.addEventListener('click', function() {
+                    toggleHashtag(tag);
+                });
+                
+                container.appendChild(div);
+            });
+        }
+        
+        // Pilih zona
+        function selectZona(zonaId) {
+            // Reset semua zona
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Pilih zona yang diklik
+            const target = document.querySelector(`.card[data-id="${zonaId}"]`);
+            if (target) {
+                target.classList.add('selected');
                 selectedZona = zonaId;
-                updateProgress();
-                updateCounter();
-                checkSubmit();
             }
             
-            // Hashtag selection function
-            function toggleHashtag(hashtag) {
-                const item = document.querySelector(`.hashtag-item[data-tag="${hashtag}"]`);
+            updateProgress();
+            updateCounter();
+            checkSubmitButton();
+        }
+        
+        // Toggle hashtag (pilih/batalkan)
+        function toggleHashtag(tag) {
+            const target = document.querySelector(`.tag[data-tag="${tag}"]`);
+            
+            // Jika sudah dipilih, batalkan
+            if (selectedHashtags.includes(tag)) {
+                const index = selectedHashtags.indexOf(tag);
+                selectedHashtags.splice(index, 1);
+                target.classList.remove('selected');
+            } 
+            // Jika belum dipilih dan belum mencapai 5
+            else if (selectedHashtags.length < 5) {
+                selectedHashtags.push(tag);
+                target.classList.add('selected');
+            }
+            // Jika sudah 5, ganti yang pertama
+            else {
+                const firstTag = selectedHashtags[0];
+                const firstElement = document.querySelector(`.tag[data-tag="${firstTag}"]`);
+                firstElement.classList.remove('selected');
                 
-                if (selectedHashtags.includes(hashtag)) {
-                    // Remove jika sudah ada
-                    selectedHashtags = selectedHashtags.filter(tag => tag !== hashtag);
-                    item.classList.remove('selected');
-                } else {
-                    // Add jika belum mencapai 5
-                    if (selectedHashtags.length < 5) {
-                        selectedHashtags.push(hashtag);
-                        item.classList.add('selected');
-                    } else {
-                        // Jika sudah 5, ganti yang terakhir
-                        const firstSelected = selectedHashtags[0];
-                        const firstItem = document.querySelector(`.hashtag-item[data-tag="${firstSelected}"]`);
-                        firstItem.classList.remove('selected');
-                        
-                        selectedHashtags.shift();
-                        selectedHashtags.push(hashtag);
-                        item.classList.add('selected');
-                    }
-                }
-                
-                updateProgress();
-                updateCounter();
-                checkSubmit();
+                selectedHashtags.shift();
+                selectedHashtags.push(tag);
+                target.classList.add('selected');
             }
             
-            // Update progress bar
-            function updateProgress() {
-                const totalItems = 6; // 1 zona + 5 hashtag
-                let completed = 0;
-                
-                if (selectedZona) completed++;
-                completed += selectedHashtags.length;
-                
-                const progress = (completed / totalItems) * 100;
-                document.getElementById('progressBar').style.width = `${progress}%`;
+            updateProgress();
+            updateCounter();
+            checkSubmitButton();
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const progress = document.getElementById('progress');
+            const total = 6; // 1 zona + 5 hashtag
+            let completed = 0;
+            
+            if (selectedZona) completed++;
+            completed += selectedHashtags.length;
+            
+            const percentage = (completed / total) * 100;
+            progress.style.width = percentage + '%';
+        }
+        
+        // Update counter
+        function updateCounter() {
+            document.getElementById('zonaCount').textContent = selectedZona ? '1' : '0';
+            document.getElementById('hashtagCount').textContent = selectedHashtags.length;
+        }
+        
+        // Cek apakah submit button harus aktif
+        function checkSubmitButton() {
+            const btn = document.getElementById('submitBtn');
+            
+            if (selectedZona && selectedHashtags.length === 5) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
             }
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Submit button
+            document.getElementById('submitBtn').addEventListener('click', savePreferences);
             
-            // Update counter display
-            function updateCounter() {
-                document.getElementById('zonaCount').textContent = selectedZona ? '1' : '0';
-                document.getElementById('hashtagCount').textContent = selectedHashtags.length;
-            }
-            
-            // Check if can submit
-            function checkSubmit() {
-                const submitButton = document.getElementById('submitButton');
-                if (selectedZona && selectedHashtags.length === 5) {
-                    submitButton.disabled = false;
-                } else {
-                    submitButton.disabled = true;
-                }
-            }
-            
-            // Submit function
-            document.getElementById('submitButton').addEventListener('click', function() {
-                saveUserPreferences();
-            });
-            
-            // Main save function
-            function saveUserPreferences() {
-                const terminal = document.getElementById('terminalOutput');
-                const submitButton = document.getElementById('submitButton');
-                
-                // Disable button
-                submitButton.disabled = true;
-                submitButton.textContent = 'PROCESSING...';
-                
-                // Show terminal
-                terminal.style.display = 'block';
-                terminal.innerHTML = '';
-                
-                // Terminal messages
-                const messages = [
-                    `>> SYSTEM: Saving preferences for @${username}...`,
-                    `>> ZONA: ${selectedZona.toUpperCase()} selected`,
-                    `>> HASHTAGS: ${selectedHashtags.join(', ')}`,
-                    '>> Encrypting user data...',
-                    '>> Writing to localStorage...',
-                    '>> Connection established...',
-                    '>> Welcome to NOPE network!'
-                ];
-                
-                // Animate terminal messages
-                let delay = 0;
-                messages.forEach((msg, index) => {
-                    setTimeout(() => {
-                        const line = document.createElement('div');
-                        line.className = 'terminal-line';
-                        line.textContent = msg;
-                        terminal.appendChild(line);
-                        terminal.scrollTop = terminal.scrollHeight;
-                        
-                        // Last message
-                        if (index === messages.length - 1) {
-                            setTimeout(() => {
-                                actuallySaveData();
-                            }, 1000);
-                        }
-                    }, delay);
-                    delay += 500;
-                });
-            }
-            
-            // Actually save data to localStorage
-            function actuallySaveData() {
-                const username = document.getElementById('currentUser').textContent.replace('@', '');
-                
-                // Get existing users data
-                const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
-                
-                // Update current user data
-                if (allUsers[username]) {
-                    allUsers[username].interests = {
-                        zona: selectedZona,
-                        hashtags: selectedHashtags,
-                        selectedAt: Date.now()
-                    };
-                    allUsers[username].onboarded = true;
-                    allUsers[username].lastLogin = Date.now();
-                } else {
-                    // Create new user data
-                    allUsers[username] = {
-                        username: username,
-                        created: Date.now(),
-                        lastLogin: Date.now(),
-                        interests: {
-                            zona: selectedZona,
-                            hashtags: selectedHashtags,
-                            selectedAt: Date.now()
-                        },
-                        onboarded: true,
-                        journals: [],
-                        artifacts: [],
-                        settings: {
-                            theme: 'hacker',
-                            zona: selectedZona
-                        }
-                    };
-                }
-                
-                // Save to localStorage
-                localStorage.setItem('nope_users', JSON.stringify(allUsers));
-                
-                // Save to sessionStorage
-                sessionStorage.setItem('nope_onboarded', 'true');
-                sessionStorage.setItem('nope_zona', selectedZona);
-                sessionStorage.setItem('nope_hashtags', JSON.stringify(selectedHashtags));
-                
-                // Final terminal message
-                const terminal = document.getElementById('terminalOutput');
-                const finalMsg = document.createElement('div');
-                finalMsg.className = 'terminal-line';
-                finalMsg.style.color = '#0ff';
-                finalMsg.style.fontWeight = 'bold';
-                finalMsg.textContent = `>> SUCCESS: @${username} onboarded! Redirecting to DUNIA...`;
-                terminal.appendChild(finalMsg);
-                
-                // Redirect after delay
-                setTimeout(() => {
-                    window.location.href = `dunia.html?user=${username}&onboarded=true&t=${Date.now()}`;
-                }, 2000);
-            }
-            
-            // Enter key to submit
+            // Enter key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
-                    const submitButton = document.getElementById('submitButton');
-                    if (!submitButton.disabled) {
-                        saveUserPreferences();
+                    const btn = document.getElementById('submitBtn');
+                    if (!btn.disabled) {
+                        savePreferences();
                     }
                 }
             });
+        }
+        
+        // Simpan preferensi user
+        function savePreferences() {
+            console.log('Saving user preferences...');
             
-            // Initialize counters
-            updateCounter();
-            updateProgress();
+            const username = document.getElementById('currentUser').textContent.replace('@', '');
+            const btn = document.getElementById('submitBtn');
+            const statusBox = document.getElementById('statusBox');
             
-            // Typewriter effect for instructions
-            setTimeout(() => {
-                document.querySelector('.typewriter').style.animation = 'none';
-                document.querySelector('.typewriter').style.borderRight = 'none';
-            }, 3500);
+            // Disable button
+            btn.disabled = true;
+            btn.textContent = 'MENYIMPAN...';
             
-            // Console log
-            console.log(`Onboarding for @${username}`);
-            console.log('4 Zona available:', zonaList.map(z => z.name));
-            console.log('25 Hashtags available');
-        });
+            // Show status box
+            statusBox.style.display = 'block';
+            statusBox.innerHTML = '<div class="status-line">>> Memproses pilihan...</div>';
+            
+            // Simpan ke localStorage
+            setTimeout(function() {
+                try {
+                    // Ambil data user yang ada
+                    let allUsers = localStorage.getItem('nope_users');
+                    
+                    if (!allUsers) {
+                        allUsers = '{}';
+                    }
+                    
+                    const usersObj = JSON.parse(allUsers);
+                    
+                    // Update atau buat data user baru
+                    if (usersObj[username]) {
+                        // Update user yang sudah ada
+                        usersObj[username].interests = {
+                            zona: selectedZona,
+                            hashtags: selectedHashtags,
+                            selectedAt: new Date().toISOString()
+                        };
+                        usersObj[username].onboarded = true;
+                        usersObj[username].lastLogin = Date.now();
+                    } else {
+                        // Buat user baru
+                        usersObj[username] = {
+                            username: username,
+                            created: Date.now(),
+                            lastLogin: Date.now(),
+                            interests: {
+                                zona: selectedZona,
+                                hashtags: selectedHashtags,
+                                selectedAt: new Date().toISOString()
+                            },
+                            onboarded: true,
+                            journals: [],
+                            artifacts: [],
+                            settings: {
+                                theme: 'hacker',
+                                zona: selectedZona
+                            }
+                        };
+                    }
+                    
+                    // Simpan ke localStorage
+                    localStorage.setItem('nope_users', JSON.stringify(usersObj));
+                    
+                    // Simpan ke sessionStorage
+                    sessionStorage.setItem('nope_onboarded', 'true');
+                    sessionStorage.setItem('nope_zona', selectedZona);
+                    sessionStorage.setItem('nope_hashtags', JSON.stringify(selectedHashtags));
+                    
+                    // Update status
+                    statusBox.innerHTML += '<div class="status-line">>> Berhasil menyimpan preferensi</div>';
+                    statusBox.innerHTML += '<div class="status-line" style="color:#0ff">>> Mengalihkan ke DUNIA...</div>';
+                    
+                    // Redirect setelah 2 detik
+                    setTimeout(function() {
+                        window.location.href = 'dunia.html?user=' + username + '&onboarded=true&t=' + Date.now();
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Error saving preferences:', error);
+                    statusBox.innerHTML += '<div class="status-line" style="color:#f00">>> ERROR: Gagal menyimpan</div>';
+                    statusBox.innerHTML += '<div class="status-line">>> ' + error.message + '</div>';
+                    
+                    // Enable button kembali
+                    btn.disabled = false;
+                    btn.textContent = 'MASUK KE NOPE';
+                }
+            }, 500);
+        }
     </script>
 </body>
 </html>
