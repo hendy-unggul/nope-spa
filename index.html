@@ -865,5 +865,70 @@
       });
     }
   </script>
+  <script>
+// Fungsi untuk clear semua data
+async function clearAllStorageAndCache() {
+  console.log('Clearing all storage and cache...');
+  
+  // 1. Clear localStorage & sessionStorage
+  localStorage.clear();
+  sessionStorage.clear();
+  
+  // 2. Clear cookies
+  document.cookie.split(';').forEach(cookie => {
+    const [name] = cookie.split('=');
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  });
+  
+  // 3. Clear IndexedDB
+  if (window.indexedDB) {
+    const databases = await indexedDB.databases?.();
+    if (databases) {
+      databases.forEach(db => {
+        if (db.name) indexedDB.deleteDatabase(db.name);
+      });
+    }
+  }
+  
+  // 4. Clear Service Worker cache
+  if ('serviceWorker' in navigator) {
+    const registration = await navigator.serviceWorker.ready;
+    
+    // Kirim pesan ke SW untuk clear cache
+    registration.active?.postMessage('CLEAR_CACHE');
+    
+    // Unregister jika perlu
+    // await registration.unregister();
+  }
+  
+  // 5. Hapus cache dari Cache API
+  if ('caches' in window) {
+    const cacheNames = await caches.keys();
+    await Promise.all(cacheNames.map(name => caches.delete(name)));
+  }
+  
+  console.log('All storage cleared!');
+  return true;
+}
+
+// Panggil fungsi ini saat:
+// 1. User logout
+// 2. User register (sebelum/atau sesudah)
+// 3. Aplikasi pertama kali load (optional)
+
+// Contoh penggunaan:
+document.addEventListener('DOMContentLoaded', function() {
+  // Jika di halaman register, clear dulu
+  if (window.location.pathname.includes('register')) {
+    clearAllStorageAndCache();
+  }
+  
+  // Jika tombol logout ada
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', clearAllStorageAndCache);
+  }
+});
+</script>
 </body>
 </html>
