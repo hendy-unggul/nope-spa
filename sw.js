@@ -1,5 +1,4 @@
-// Service Worker untuk NOPE
-const CACHE_NAME = 'nope-v1';
+const CACHE_NAME = 'nope-v2';
 
 self.addEventListener('install', event => {
   event.waitUntil(
