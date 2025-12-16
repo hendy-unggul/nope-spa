@@ -248,6 +248,29 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    /* Jalan Toggle */
+    .feed-toggle {
+      display: flex;
+      background: #0a0a0a;
+      border-radius: 10px;
+      padding: 4px;
+      width: fit-content;
+      margin: 8px auto 12px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 6px 12px;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .toggle-btn.active {
+      background: #569CD6;
+      color: #000;
+    }
     /* Micromovement */
     .rantbox, .artefact-header, .grid-item {
       transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -353,18 +376,19 @@
       <div class="container">
         <div class="zone-instruction">Pilih 1 hashtag dari 3 zona berbeda</div>
         <div class="onboarding-grid" id="onboardingGrid"></div>
-        <button class="cta" onclick="finishOnboarding()" id="finishBtn" disabled>selesai</button>
+        <button class="cta" id="finishBtn" disabled>selesai</button>
       </div>
     </div>
 
     <!-- Jejak -->
     <div id="jejakScreen" class="screen">
-      <!-- Isi Jejak di-generate oleh JS -->
+      <!-- Diisi oleh renderJejak() -->
     </div>
-  </div>
 
-  <div id="artefactInputContainer" style="display: none;">
-    <input type="file" id="artefactInput" accept="image/*" onchange="handleArtefactUpload(event)">
+    <!-- Jalan -->
+    <div id="jalanScreen" class="screen">
+      <!-- Diisi oleh renderJalan() -->
+    </div>
   </div>
 
   <script>
@@ -378,13 +402,7 @@
 
     let currentUser = null;
     let selectedHashtags = new Map();
-
-    // ==== Jurnal 3 Rant (FULL, tidak disingkat) ====
-    const JOURNAL_FULL = [
-      "gue udah bantuin dia tiap malem pas dia galau, sampe gue lupa ngerjain tugas sendiri. pas gue butuh temen buat ngobrol, dia malah offline terus. gak minta balasan sih, tapi rasanya kayak jadi tempat sampah emosi doang. capek jadi ‘temen baik’ yang cuma dipake pas dia perlu aja.",
-      "deadline mepet, dosen gak jelas, dompet kering. rasanya pengen ijin cuti sehari buat jadi batu aja. gak perlu mikir, gak perlu ngomong, gak perlu diharapkan apa-apa.",
-      "dia bilang ‘kita temenan aja’ — iya, temen yang kau ghosting 3 minggu."
-    ];
+    let currentFeedMode = 'sefrekuensi';
 
     // ==== INIT ====
     function init() {
@@ -434,6 +452,16 @@
       renderJejak();
     }
 
+    function showJalan() {
+      if (!localStorage.getItem('nopeOnboarded')) {
+        showOnboarding();
+        return;
+      }
+      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+      document.getElementById('jalanScreen').classList.add('active');
+      renderJalan();
+    }
+
     // ==== LOGIN ====
     function handleLogin() {
       const input = document.getElementById('loginInput').value.trim();
@@ -444,12 +472,10 @@
       }
       const savedEmail = localStorage.getItem('nopeEmail');
       if (savedEmail === input) {
-        // existing user
         const username = localStorage.getItem('nopeUsername');
         currentUser = { email: input, username };
         showJejak();
       } else {
-        // new user
         const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
         const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
         const num = Math.floor(1000 + Math.random() * 9000);
@@ -495,25 +521,15 @@
 
     // ==== JEJAK ====
     function renderJejak() {
-      const artefacts = JSON.parse(localStorage.getItem('nopeArtefacts') || '[]');
-      const latest = artefacts.length > 0 ? artefacts[artefacts.length - 1] : null;
-      const artefactImg = latest ? latest.url : "https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format";
-      const artefactNotasi = latest ? latest.notasi : "—";
-      const artefactDate = latest ? new Date(latest.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : "—";
-
-      let rantsHtml = '';
-      JOURNAL_FULL.forEach(text => {
-        rantsHtml += `<div class="rant-item"><div class="rant-text">${text}</div></div>`;
-      });
-
+      const username = localStorage.getItem('nopeUsername') || '@nope.anon';
       document.getElementById('jejakScreen').innerHTML = `
         <div class="container">
-          <div class="jejakmu-title">Jejakmu</div>
+          <div class="jejakmu-title">Jejakmu <span style="color:#fff;">${username}</span></div>
           <div class="artefact-header">
-            <img class="artefact-image" src="${artefactImg}" alt="Artefak">
+            <img class="artefact-image" src="https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format" alt="Artefak">
             <div class="artefact-stamp">
-              <span class="artefact-notasi">${artefactNotasi}</span>
-              <span class="artefact-date">${artefactDate}</span>
+              <span class="artefact-notasi">struk pertama</span>
+              <span class="artefact-date">5 Mar 2025</span>
             </div>
           </div>
           <div class="emoji-bar">
@@ -523,7 +539,9 @@
             <textarea id="rantInput" maxlength="300" placeholder="Curhat yang gak bisa dikirim ke DM..."></textarea>
             <button id="submitBtn" class="inline-save" onclick="submitRant()">simpan</button>
           </div>
-          ${rantsHtml}
+          <div class="rant-item"><div class="rant-text">gue udah bantuin dia tiap malem...</div></div>
+          <div class="rant-item"><div class="rant-text">deadline mepet, dosen gak jelas...</div></div>
+          <div class="rant-item"><div class="rant-text">dia bilang ‘kita temenan aja’...</div></div>
           <div class="artefact-grid">
             <div class="grid-item"><img src="https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">struk pertama • 5 Mar</span></div>
             <div class="grid-item"><img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">karcis terakhir • 15 Feb</span></div>
@@ -537,38 +555,49 @@
           <nav class="bottom-nav">
             <a href="#" class="nav-item active" onclick="showJejak()">Jejak</a>
             <a href="#" class="nav-item" onclick="showJalan()">Jalan</a>
-            <a href="#" class="nav-item" onclick="showDunia()">Dunia</a>
+            <a href="#" class="nav-item" onclick="alert('Dunia: resensi buku, film, musik akan hadir segera.')">Dunia</a>
           </nav>
         </div>
       `;
     }
 
-    // ==== JALAN (placeholder) ====
-    function showJalan() {
-      if (!localStorage.getItem('nopeOnboarded')) {
-        alert("Selesaikan onboarding terlebih dahulu.");
-        showOnboarding();
-        return;
-      }
-      alert("Jalan akan hadir segera — tempat untuk sefrekuensi dan segelombang.");
-      showJejak();
+    // ==== JALAN ====
+    function renderJalan() {
+      document.getElementById('jalanScreen').innerHTML = `
+        <div class="container">
+          <div class="feed-toggle">
+            <button class="toggle-btn active" data-mode="sefrekuensi">sefrekuensi</button>
+            <button class="toggle-btn" data-mode="segelombang">segelombang</button>
+          </div>
+          <div style="padding:20px;color:#666;text-align:center;">
+            Feed kolektif akan muncul di sini.<br/>
+            Mode "sefrekuensi" menampilkan jejak dari yang punya ≥2 hashtag sama.<br/>
+            Mode "segelombang" menampilkan semua jejak.
+          </div>
+        </div>
+        <div class="bottom-nav-wrapper">
+          <nav class="bottom-nav">
+            <a href="#" class="nav-item" onclick="showJejak()">Jejak</a>
+            <a href="#" class="nav-item active" onclick="showJalan()">Jalan</a>
+            <a href="#" class="nav-item" onclick="alert('Dunia: resensi buku, film, musik akan hadir segera.')">Dunia</a>
+          </nav>
+        </div>
+      `;
+      // Add toggle logic
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFeedMode = btn.dataset.mode;
+          console.log("Mode feed:", currentFeedMode);
+        };
+      });
     }
 
-    // ==== DUNIA (placeholder) ====
-    function showDunia() {
-      alert("Dunia akan hadir segera — tempat resensi buku, film, musik, dan tokoh.");
-      showJejak();
-    }
-
-    // ==== UNGGAH ARTEFAK ====
+    // ==== UTILS ====
     function uploadArtefact() {
-      alert("Fitur unggah artefak akan hadir setelah onboarding selesai.");
+      alert("Fitur unggah artefak akan hadir setelah onboarding lengkap.");
     }
-
-    function handleArtefactUpload(e) {
-      // future logic
-    }
-
     function submitRant() {
       const text = document.getElementById('rantInput').value.trim();
       if (!text) { alert("Tulis dulu."); return; }
@@ -576,6 +605,9 @@
       alert("Disimpan. Tak seorang pun tahu.");
       document.getElementById('rantInput').value = '';
     }
+
+    // ==== EVENT LISTENERS ====
+    document.getElementById('finishBtn').onclick = finishOnboarding;
 
     // ==== START ====
     init();
@@ -587,3 +619,5 @@
   </script>
 </body>
 </html>
+
+Jika kamu ingin **Dunia** atau fitur **unggah artefak + ubah username**, beri tahu — saya siap lanjutkan.
