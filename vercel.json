@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/jejak", "destination": "/index.html" },
+    { "source": "/jalan", "destination": "/index.html" },
+    { "source": "/dunia", "destination": "/index.html" }
+  ]
+}
