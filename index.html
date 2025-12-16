@@ -304,6 +304,17 @@
     #artefactInput {
       display: none;
     }
+    /* Status Message */
+    .status-msg {
+      background: rgba(86, 156, 214, 0.1);
+      border: 1px solid rgba(86, 156, 214, 0.3);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 10px 0;
+      font-size: 11px;
+      color: #569CD6;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -315,6 +326,7 @@
           <div style="font-size:24px;opacity:0.9;">NOPE</div>
           <input type="text" id="loginInput" placeholder="emailmu" autocomplete="off"/>
           <button class="cta" onclick="handleLogin()">lanjut</button>
+          <div id="landingStatus" class="status-msg" style="display:none; margin-top:15px;"></div>
         </div>
       </div>
     </div>
@@ -323,6 +335,7 @@
     <div id="onboardingScreen" class="screen">
       <div class="container">
         <div class="zone-instruction">Pilih 1 hashtag dari 3 zona berbeda</div>
+        <div id="onboardingStatus" class="status-msg"></div>
         <div class="onboarding-grid" id="onboardingGrid"></div>
         <button class="cta" id="finishBtn" disabled onclick="finishOnboarding()">selesai</button>
       </div>
@@ -345,27 +358,112 @@
       PopCulture: ["#bucin_toxic", "#fyp_addict", "#celeb_gosip", "#reels_overload", "#viral_hampa"],
       PersonalPain: ["#harga_diri", "#sendiri_tapi_nggak", "#cape_jadi_baik", "#galau_nyata", "#harapan_menipis"],
       SocialSickness: ["#toxic_wa_group", "#ghosting_budaya", "#pura_pura_sibuk", "#fomo_palsu", "#dm_tak_terjawab"],
-      Movement: ["#diam_tapi_ngerasa", "#protes_diam", "#resistensi_soft", "#keberanian_kalem", "#berubah_dari_dalam"]
+      Movement: ["#diam_tapi_ngerasa", "#protes_diam", "#resistensi_soft", "#keberangan_kalem", "#berubah_dari_dalam"]
     };
 
     let currentUser = null;
     let selectedHashtags = [];
 
-    // ==== INIT ====
+    // ==== STORAGE WITH VALIDATION ====
+    function getStorage(key) {
+      try {
+        const value = localStorage.getItem(key);
+        console.log(`[STORAGE GET] ${key} = ${value}`);
+        return value;
+      } catch (e) {
+        console.error(`[STORAGE ERROR] Cannot get ${key}:`, e);
+        return null;
+      }
+    }
+
+    function setStorage(key, value) {
+      try {
+        console.log(`[STORAGE SET] ${key} = ${value}`);
+        localStorage.setItem(key, value);
+        return true;
+      } catch (e) {
+        console.error(`[STORAGE ERROR] Cannot set ${key}:`, e);
+        return false;
+      }
+    }
+
+    function clearUserData() {
+      console.log('[STORAGE] Clearing user data');
+      try {
+        localStorage.removeItem('nopeEmail');
+        localStorage.removeItem('nopeUsername');
+        localStorage.removeItem('nopeHashtags');
+        localStorage.removeItem('nopeRants');
+        return true;
+      } catch (e) {
+        console.error('[STORAGE ERROR] Clear failed:', e);
+        return false;
+      }
+    }
+
+    // ==== USER VALIDATION ====
+    function validateUserData() {
+      const email = getStorage('nopeEmail');
+      const username = getStorage('nopeUsername');
+      const hashtags = getStorage('nopeHashtags');
+      
+      console.log('[VALIDATE] User data:', { email, username, hashtags });
+      
+      // Validasi data lengkap
+      if (!email || !username) {
+        console.log('[VALIDATE] Missing email or username');
+        return false;
+      }
+      
+      // Validasi hashtags harus array JSON valid
+      if (hashtags) {
+        try {
+          const parsed = JSON.parse(hashtags);
+          if (!Array.isArray(parsed) || parsed.length === 0) {
+            console.log('[VALIDATE] Hashtags invalid or empty array');
+            return false;
+          }
+        } catch (e) {
+          console.log('[VALIDATE] Hashtags JSON invalid');
+          return false;
+        }
+      } else {
+        console.log('[VALIDATE] No hashtags found');
+        return false;
+      }
+      
+      return true;
+    }
+
+    // ==== INIT WITH DEBUG ====
     function init() {
-      const email = localStorage.getItem('nopeEmail');
-      const username = localStorage.getItem('nopeUsername');
-      const hashtags = localStorage.getItem('nopeHashtags');
+      console.log('=== NOPE APP INIT ===');
+      console.log('User Agent:', navigator.userAgent);
+      console.log('Platform:', navigator.platform);
       
-      // HANYA DUA KONDISI:
-      // 1. Jika sudah ada email, username, DAN hashtags -> langsung ke Jejak
-      // 2. Selain itu -> Landing (baik new user maupun data tidak lengkap)
+      // Clear Service Worker cache jika ada masalah
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          registrations.forEach(reg => {
+            console.log('Unregistering Service Worker:', reg.scope);
+            reg.unregister();
+          });
+        });
+      }
       
-      if (email && username && hashtags) {
-        currentUser = { email, username };
+      // Cek apakah data user valid
+      if (validateUserData()) {
+        console.log('[INIT] Valid user data found, going to Jejak');
         showJejak();
       } else {
+        console.log('[INIT] No valid user data, showing Landing');
         showLanding();
+        
+        // Tampilkan status jika ada data tapi invalid
+        const email = getStorage('nopeEmail');
+        if (email) {
+          showStatus('landingStatus', `Data untuk ${email} tidak lengkap. Silakan onboarding lagi.`);
+        }
       }
     }
 
@@ -373,14 +471,23 @@
     function showLanding() {
       hideAllScreens();
       document.getElementById('landingScreen').classList.add('active');
+      document.getElementById('loginInput').focus();
     }
 
-    function showOnboarding() {
+    function showOnboarding(email, username, isNewUser = false) {
       hideAllScreens();
       document.getElementById('onboardingScreen').classList.add('active');
       
       // Reset selection
       selectedHashtags = [];
+      
+      // Show status message
+      const statusEl = document.getElementById('onboardingStatus');
+      if (isNewUser) {
+        statusEl.textContent = `👋 Welcome ${username}! Pilih 3 hashtag untuk memulai.`;
+      } else {
+        statusEl.textContent = `🔄 Melengkapi data untuk ${email}`;
+      }
       
       // Render zones
       const grid = document.getElementById('onboardingGrid');
@@ -421,77 +528,97 @@
       document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
     }
 
+    function showStatus(elementId, message) {
+      const el = document.getElementById(elementId);
+      if (el) {
+        el.textContent = message;
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 5000);
+      }
+    }
+
     // ==== LOGIN ====
     function handleLogin() {
-      const input = document.getElementById('loginInput').value.trim();
+      const input = document.getElementById('loginInput');
+      const email = input.value.trim();
       
-      if (!input) {
+      if (!email) {
         alert("Masukkan email dulu.");
+        input.focus();
         return;
       }
       
-      // Simple email check
-      if (!input.includes('@')) {
+      if (!email.includes('@') || !email.includes('.')) {
         alert("Masukkan email yang valid.");
+        input.focus();
         return;
       }
       
-      const savedEmail = localStorage.getItem('nopeEmail');
+      const savedEmail = getStorage('nopeEmail');
+      console.log('[LOGIN] Input:', email, 'Saved:', savedEmail);
       
-      if (savedEmail === input) {
-        // Existing user - CECK APAKAH SUDAH ADA HASHTAGS
-        const hashtags = localStorage.getItem('nopeHashtags');
-        const username = localStorage.getItem('nopeUsername');
+      if (savedEmail === email) {
+        // Existing user - cek data lengkap
+        const username = getStorage('nopeUsername');
+        const hashtags = getStorage('nopeHashtags');
         
-        currentUser = { email: input, username };
+        console.log('[LOGIN] Existing user data:', { username, hashtags });
         
-        if (hashtags) {
-          // Sudah ada hashtags -> langsung ke Jejak
-          showJejak();
-        } else {
-          // Belum ada hashtags -> ke Onboarding
-          // INI SEHARUSNYA TIDAK PERNAH TERJADI jika flow 1 benar
-          console.warn("Inconsistent state: User exists but no hashtags");
-          showOnboarding();
+        if (username && hashtags) {
+          try {
+            const parsedHashtags = JSON.parse(hashtags);
+            if (Array.isArray(parsedHashtags) && parsedHashtags.length > 0) {
+              // Data lengkap -> langsung ke Jejak
+              console.log('[LOGIN] Complete data, going to Jejak');
+              currentUser = { email, username };
+              showJejak();
+              return;
+            }
+          } catch (e) {
+            console.log('[LOGIN] Hashtags parsing failed');
+          }
         }
+        
+        // Data tidak lengkap -> onboarding
+        console.log('[LOGIN] Incomplete data, going to Onboarding');
+        currentUser = { email, username: username || '@nope.user' };
+        showOnboarding(email, currentUser.username, false);
+        
       } else {
-        // New user - langsung ke onboarding
+        // New user - selalu onboarding
+        console.log('[LOGIN] New user detected');
+        
         const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
         const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
         const num = Math.floor(1000 + Math.random() * 9000);
         const username = `@nope.${adj}.${num}`;
         
-        // Simpan data user
-        localStorage.setItem('nopeEmail', input);
-        localStorage.setItem('nopeUsername', username);
-        // JANGAN simpan nopeHashtags dulu, nanti setelah onboarding
+        // Clear data lama jika ada
+        clearUserData();
         
-        currentUser = { email: input, username };
-        showOnboarding();
+        // Simpan email dan username
+        setStorage('nopeEmail', email);
+        setStorage('nopeUsername', username);
+        
+        currentUser = { email, username };
+        showOnboarding(email, username, true);
       }
     }
 
     // ==== ONBOARDING ====
     function toggleHashtag(zone, hashtag, element) {
-      // Cari hashtag dalam selectedHashtags
       const index = selectedHashtags.findIndex(item => item.zone === zone);
       
       if (index > -1) {
-        // Jika zona sudah dipilih
         if (selectedHashtags[index].hashtag === hashtag) {
-          // Klik yang sama -> hapus
           selectedHashtags.splice(index, 1);
           element.classList.remove('selected');
         } else {
-          // Klik berbeda di zona sama -> ganti
-          // Hapus selected dari element lama
           selectedHashtags[index].element.classList.remove('selected');
-          // Update dengan yang baru
           selectedHashtags[index] = { zone, hashtag, element };
           element.classList.add('selected');
         }
       } else {
-        // Zona belum dipilih
         if (selectedHashtags.length >= 3) {
           alert("Maksimal 3 zona berbeda.");
           return;
@@ -504,16 +631,9 @@
     }
 
     function updateOnboardingUI() {
-      // Update button state
       const finishBtn = document.getElementById('finishBtn');
       finishBtn.disabled = selectedHashtags.length !== 3;
-      
-      // Update button text
-      if (selectedHashtags.length === 3) {
-        finishBtn.textContent = "Selesai →";
-      } else {
-        finishBtn.textContent = "selesai";
-      }
+      finishBtn.textContent = selectedHashtags.length === 3 ? "Selesai →" : "selesai";
     }
 
     function finishOnboarding() {
@@ -522,11 +642,17 @@
         return;
       }
       
-      // Extract hanya hashtag values
       const hashtags = selectedHashtags.map(item => item.hashtag);
       
-      // Save to localStorage
-      localStorage.setItem('nopeHashtags', JSON.stringify(hashtags));
+      // Simpan hashtags
+      const success = setStorage('nopeHashtags', JSON.stringify(hashtags));
+      
+      if (!success) {
+        alert("Gagal menyimpan data. Coba lagi.");
+        return;
+      }
+      
+      console.log('[ONBOARDING] Saved hashtags:', hashtags);
       
       // Navigate to Jejak
       showJejak();
@@ -534,38 +660,86 @@
 
     // ==== JEJAK ====
     function renderJejak() {
-      const username = localStorage.getItem('nopeUsername') || '@nope.anon';
-      const hashtags = JSON.parse(localStorage.getItem('nopeHashtags') || '[]');
+      const email = getStorage('nopeEmail');
+      const username = getStorage('nopeUsername') || '@nope.anon';
+      const hashtagsStr = getStorage('nopeHashtags');
+      let hashtags = [];
+      
+      if (hashtagsStr) {
+        try {
+          hashtags = JSON.parse(hashtagsStr);
+        } catch (e) {
+          console.error('Failed to parse hashtags:', e);
+        }
+      }
+      
+      // Load rants
+      let userRants = [];
+      const rantsStr = getStorage('nopeRants');
+      if (rantsStr) {
+        try {
+          userRants = JSON.parse(rantsStr);
+        } catch (e) {
+          console.error('Failed to parse rants:', e);
+        }
+      }
+      
+      console.log('[JEJAK] Rendering for:', { email, username, hashtagsCount: hashtags.length });
       
       document.getElementById('jejakScreen').innerHTML = `
         <div class="container">
-          <div class="jejakmu-title">Jejakmu</div>
+          <div class="jejakmu-title">Jejakmu · ${username}</div>
+          
+          ${!hashtags.length ? `<div class="status-msg">⚠️ Belum ada hashtag. Klik "edit" untuk pilih.</div>` : ''}
+          
           <div class="artefact-header">
             <img class="artefact-image" src="https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop&auto=format" alt="Artefak">
             <div class="artefact-stamp">
-              <span class="artefact-notasi">${hashtags[0] || 'struk pertama'}</span>
-              <span class="artefact-date">5 Mar 2025</span>
+              <span class="artefact-notasi">${hashtags[0] || '#nope'}</span>
+              <span class="artefact-date">${formatDate(new Date())}</span>
             </div>
           </div>
+          
           <div class="emoji-bar">
-            <button class="emoji-btn" onclick="uploadArtefact()">unggah artefak</button>
+            <button class="emoji-btn" onclick="uploadArtefact()">📸 artefak</button>
+            <button class="emoji-btn" onclick="editOnboarding()">✏️ edit</button>
+            <button class="emoji-btn" onclick="showDebugInfo()">🐛 debug</button>
           </div>
+          
           <div class="rantbox">
-            <textarea id="rantInput" maxlength="300" placeholder="Curhat yang gak bisa dikirim ke DM..."></textarea>
-            <button id="submitBtn" class="inline-save" onclick="submitRant()">simpan</button>
+            <textarea id="rantInput" maxlength="300" placeholder="Tulis yang gak bisa dikirim ke DM..."></textarea>
+            <button class="inline-save" onclick="submitRant()">💾 simpan</button>
           </div>
-          <div class="rant-item"><div class="rant-text">gue udah bantuin dia tiap malem...</div></div>
-          <div class="rant-item"><div class="rant-text">deadline mepet, dosen gak jelas...</div></div>
-          <div class="rant-item"><div class="rant-text">dia bilang 'kita temenan aja'...</div></div>
+          
+          <div id="rantsContainer">
+            ${userRants.length > 0 ? userRants.map(rant => `
+              <div class="rant-item">
+                <div class="rant-text">${escapeHtml(rant.text)}</div>
+                <div style="font-size:11px;color:#666;margin-top:8px;text-align:right;">
+                  ${formatTime(rant.timestamp)}
+                </div>
+              </div>
+            `).join('') : `
+              <div class="rant-item" style="text-align:center;color:#666;padding:30px;">
+                Belum ada curhatan. Mulai tulis di atas.
+              </div>
+            `}
+          </div>
+          
+          <div style="margin:20px 0 10px;font-size:12px;color:#569CD6;font-weight:600;">
+            📦 Artefak Terkumpul
+          </div>
+          
           <div class="artefact-grid">
-            <div class="grid-item"><img src="https://images.unsplash.com/photo-1600880292089-90a84e2c4a8f?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">struk pertama • 5 Mar</span></div>
-            <div class="grid-item"><img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">karcis terakhir • 15 Feb</span></div>
-            <div class="grid-item"><img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">meja tempat aku menyerah • 20 Jan</span></div>
-            <div class="grid-item"><img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">bayanganku yang setia • 5 Apr</span></div>
-            <div class="grid-item"><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">chat yang diarsip • 10 May</span></div>
-            <div class="grid-item"><img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=640&fit=crop" alt="Artefak"><span class="stamp">jepit yang tertinggal • 25 Jun</span></div>
+            ${[1,2,3,4,5,6].map(i => `
+              <div class="grid-item">
+                <img src="https://images.unsplash.com/photo-${1506744038 + i}136-46273834b3fb?w=800&h=640&fit=crop" alt="Artefak">
+                <span class="stamp">artefak #${i} • ${formatDate(new Date(Date.now() - i * 86400000))}</span>
+              </div>
+            `).join('')}
           </div>
         </div>
+        
         <div class="bottom-nav-wrapper">
           <nav class="bottom-nav">
             <a href="#" class="nav-item active" onclick="event.preventDefault(); showJejak();">Jejak</a>
@@ -576,37 +750,29 @@
       `;
     }
 
-    // ==== JALAN ====
-    function renderJalan() {
-      document.getElementById('jalanScreen').innerHTML = `
-        <div class="container">
-          <div class="feed-toggle">
-            <button class="toggle-btn active" data-mode="sefrekuensi">sefrekuensi</button>
-            <button class="toggle-btn" data-mode="segelombang">segelombang</button>
-          </div>
-          <div style="padding:20px;color:#666;text-align:center;">
-            Feed kolektif akan muncul di sini.<br/>
-            Mode "sefrekuensi" menampilkan jejak dari yang punya ≥2 hashtag sama.<br/>
-            Mode "segelombang" menampilkan semua jejak.
-          </div>
-        </div>
-        <div class="bottom-nav-wrapper">
-          <nav class="bottom-nav">
-            <a href="#" class="nav-item" onclick="event.preventDefault(); showJejak();">Jejak</a>
-            <a href="#" class="nav-item active" onclick="event.preventDefault(); showJalan();">Jalan</a>
-            <a href="#" class="nav-item" onclick="event.preventDefault(); showDunia();">Dunia</a>
-          </nav>
-        </div>
-      `;
-    }
-
-    // ==== UTILS ====
-    function uploadArtefact() {
-      alert("Fitur unggah artefak akan hadir setelah onboarding lengkap.");
+    // ==== UTILITY FUNCTIONS ====
+    function editOnboarding() {
+      if (confirm("Edit hashtag pilihan?\n\nKamu akan memilih ulang 3 hashtag.")) {
+        // Clear hashtags untuk memulai ulang
+        localStorage.removeItem('nopeHashtags');
+        const email = getStorage('nopeEmail');
+        const username = getStorage('nopeUsername');
+        showOnboarding(email, username, false);
+      }
     }
     
-    function showDunia() {
-      alert("Dunia: resensi buku, film, musik akan hadir segera.");
+    function showDebugInfo() {
+      const email = getStorage('nopeEmail');
+      const username = getStorage('nopeUsername');
+      const hashtags = getStorage('nopeHashtags');
+      const rants = getStorage('nopeRants');
+      
+      alert(`🐛 DEBUG INFO\n\nEmail: ${email || 'none'}\nUsername: ${username || 'none'}\nHashtags: ${hashtags || 'none'}\nRants: ${rants ? 'exists' : 'none'}\n\nOpen console for details.`);
+      console.log('=== DEBUG DATA ===');
+      console.log('Email:', email);
+      console.log('Username:', username);
+      console.log('Hashtags:', hashtags);
+      console.log('Rants:', rants);
     }
     
     function submitRant() {
@@ -615,36 +781,87 @@
       
       const text = textarea.value.trim();
       if (!text) {
-        alert("Tulis dulu.");
+        alert("Tulis sesuatu dulu...");
         return;
       }
       
       if (text.length > 300) {
-        alert("Maksimal 300 karakter.");
+        alert("Maksimal 300 karakter!");
         return;
       }
       
-      // Simpan rant ke localStorage
-      const rants = JSON.parse(localStorage.getItem('nopeRants') || '[]');
-      rants.unshift({
+      const newRant = {
         text: text,
         timestamp: new Date().toISOString()
-      });
-      localStorage.setItem('nopeRants', JSON.stringify(rants));
+      };
+      
+      // Load existing rants
+      let rants = [];
+      const rantsStr = getStorage('nopeRants');
+      if (rantsStr) {
+        try {
+          rants = JSON.parse(rantsStr);
+        } catch (e) {
+          console.error('Failed to parse rants:', e);
+        }
+      }
+      
+      // Add new rant
+      rants.unshift(newRant);
+      
+      // Save back
+      setStorage('nopeRants', JSON.stringify(rants));
       
       textarea.value = '';
       renderJejak();
       
       setTimeout(() => {
-        alert("Disimpan. Tak seorang pun tahu.");
+        alert("✅ Tersimpan.");
       }, 100);
     }
+    
+    function uploadArtefact() {
+      alert("📸 Fitur upload artefak akan hadir segera!");
+    }
+    
+    function showDunia() {
+      alert("🌍 Dunia: resensi buku, film, musik akan hadir segera.");
+    }
+    
+    function formatDate(date) {
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+      return `${date.getDate()} ${months[date.getMonth()]}`;
+    }
+    
+    function formatTime(isoString) {
+      const date = new Date(isoString);
+      const now = new Date();
+      const diff = now - date;
+      const hours = Math.floor(diff / 3600000);
+      
+      if (hours < 1) return 'baru saja';
+      if (hours < 24) return `${hours} jam lalu`;
+      return formatDate(date);
+    }
+    
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
-    // ==== START ====
-    init();
-    if ('serviceWorker' in navigator) {
+    // ==== START APP ====
+    window.addEventListener('DOMContentLoaded', init);
+    
+    // Optional: Register service worker only in production
+    if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(console.warn);
+        navigator.serviceWorker.register('/sw.js').catch(err => {
+          console.log('ServiceWorker registration failed:', err);
+        });
       });
     }
   </script>
