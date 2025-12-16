@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - App Tanpa Jejak</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .register-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 { 
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .btn-register:hover {
+            transform: translateY(-2px);
+        }
+        .links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .links a {
+            color: #4facfe;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .privacy-note {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>📝 Register Baru</h1>
+        <p class="subtitle">Session 100% bersih • Data tidak tersimpan</p>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="name">Nama Lengkap</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Nama Anda"
+                       autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="email@example.com"
+                       autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required
+                       placeholder="••••••••"
+                       autocomplete="new-password"
+                       minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Konfirmasi Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required
+                       placeholder="••••••••"
+                       autocomplete="new-password">
+            </div>
+            
+            <button type="submit" class="btn-register">Buat Akun Baru</button>
+        </form>
+        
+        <div class="privacy-note">
+            🔒 Data registrasi tidak disimpan di browser.<br>
+            Setiap session benar-benar baru.
+        </div>
+        
+        <div class="links">
+            <a href="/login.html?fresh=1">Sudah punya akun? Login</a>
+            |
+            <a href="/">Kembali ke beranda</a>
+        </div>
+        
+        <div id="statusMessage" class="status"></div>
+    </div>
+    
+    <!-- RESET SCRIPT -->
+    <script src="/reset-session.js?v=1"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Register page loaded with fresh session');
+            
+            // Force reset untuk register page
+            if (window.resetAppSession) {
+                window.resetAppSession();
+            }
+            
+            // Auto-focus name field
+            document.getElementById('name').focus();
+            
+            // Handle form submission
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const status = document.getElementById('statusMessage');
+                
+                // Validasi
+                if (password !== confirmPassword) {
+                    status.style.display = 'block';
+                    status.className = 'status error';
+                    status.textContent = 'Password tidak cocok!';
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    status.style.display = 'block';
+                    status.className = 'status error';
+                    status.textContent = 'Password minimal 6 karakter!';
+                    return;
+                }
+                
+                // Show loading
+                status.style.display = 'block';
+                status.className = 'status';
+                status.textContent = 'Membuat akun baru...';
+                
+                // Simulate registration process
+                setTimeout(() => {
+                    // Simpan sementara di sessionStorage (akan hilang saat tab ditutup)
+                    sessionStorage.setItem('user_name', name);
+                    sessionStorage.setItem('user_email', email);
+                    sessionStorage.setItem('registered', 'true');
+                    sessionStorage.setItem('reg_time', Date.now());
+                    
+                    // Show success
+                    status.className = 'status success';
+                    status.textContent = 'Akun berhasil dibuat! Mengalihkan ke login...';
+                    
+                    // Redirect to login with fresh session
+                    setTimeout(() => {
+                        // Clear form data
+                        document.getElementById('registerForm').reset();
+                        
+                        // Go to login
+                        window.location.href = '/login.html?fresh=1&registered=' + Date.now();
+                    }, 1500);
+                    
+                }, 2000);
+            });
+            
+            // Add timestamp to prevent caching
+            if (!window.location.search.includes('t=')) {
+                const url = new URL(window.location);
+                url.searchParams.set('t', Date.now());
+                url.searchParams.set('reg', '1');
+                window.history.replaceState({}, '', url);
+            }
+        });
+    </script>
+</body>
+</html>
