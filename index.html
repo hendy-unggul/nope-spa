@@ -391,6 +391,17 @@
       40% { content: '..'; }
       60%, 100% { content: '...'; }
     }
+    /* Status */
+    .status-info {
+      background: rgba(86, 156, 214, 0.1);
+      border: 1px solid rgba(86, 156, 214, 0.3);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 10px 0;
+      font-size: 11px;
+      color: #569CD6;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -400,8 +411,14 @@
       <div class="container">
         <div class="landing">
           <div style="font-size:24px;opacity:0.9;margin-bottom:20px;">NOPE</div>
-          <input type="text" id="loginInput" placeholder="emailmu" autocomplete="off" autofocus/>
+          <div style="font-size:12px;color:#666;margin-bottom:20px;">
+            Masuk dengan email untuk melanjutkan
+          </div>
+          <input type="email" id="loginInput" placeholder="emailmu@contoh.com" autocomplete="off" autofocus/>
           <button class="cta" onclick="handleLogin()">lanjut</button>
+          <div style="margin-top:20px;font-size:11px;color:#555;">
+            Data disimpan lokal di perangkatmu
+          </div>
         </div>
       </div>
     </div>
@@ -413,6 +430,9 @@
         <div class="counter" id="counter">Pilih 3 zona lagi</div>
         <div class="onboarding-grid" id="onboardingGrid"></div>
         <button class="cta" id="finishBtn" disabled onclick="finishOnboarding()">selesai</button>
+        <div style="margin-top:20px;text-align:center;">
+          <button class="emoji-btn" onclick="showLanding()" style="font-size:12px;">↶ ganti email</button>
+        </div>
       </div>
     </div>
 
@@ -442,11 +462,13 @@
 
     // ==== INIT ====
     function init() {
+      // Cek apakah ada user data di localStorage
       const email = localStorage.getItem('nopeEmail');
       const username = localStorage.getItem('nopeUsername');
       const onboarded = localStorage.getItem('nopeOnboarded') === 'true';
       const savedRants = localStorage.getItem('nopeRants');
       
+      // Load rants jika ada
       if (savedRants) {
         try {
           userRants = JSON.parse(savedRants);
@@ -455,11 +477,22 @@
         }
       }
       
-      if (email && username && onboarded) {
+      // LOGIKA PERBAIKAN:
+      // 1. Jika belum ada email sama sekali -> landing (new user)
+      // 2. Jika ada email tapi belum onboarded -> onboarding
+      // 3. Jika ada email dan sudah onboarded -> jejak
+      
+      if (!email) {
+        // Case 1: New user, belum ada email
+        showLanding();
+      } else if (email && !onboarded) {
+        // Case 2: Email ada tapi belum onboarded
+        currentUser = { email, username };
+        showOnboarding();
+      } else if (email && onboarded) {
+        // Case 3: Email ada dan sudah onboarded
         currentUser = { email, username };
         showJejak();
-      } else {
-        showLanding();
       }
       
       // Enter key untuk login
@@ -477,7 +510,11 @@
     function showLanding() {
       hideAllScreens();
       document.getElementById('landingScreen').classList.add('active');
-      document.getElementById('loginInput').focus();
+      const input = document.getElementById('loginInput');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
     }
 
     function showOnboarding() {
@@ -520,7 +557,9 @@
     }
 
     function showJalan() {
-      if (!localStorage.getItem('nopeOnboarded')) {
+      // PERBAIKAN: Cek onboarding status sebelum ke Jalan
+      const onboarded = localStorage.getItem('nopeOnboarded') === 'true';
+      if (!onboarded) {
         showOnboarding();
         return;
       }
@@ -535,34 +574,49 @@
 
     // ==== LOGIN ====
     function handleLogin() {
-      const input = document.getElementById('loginInput').value.trim();
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const input = document.getElementById('loginInput');
+      if (!input) return;
       
-      if (!input) {
+      const email = input.value.trim();
+      
+      // Validasi email
+      if (!email) {
         alert("Masukkan email dulu.");
+        input.focus();
         return;
       }
       
-      if (!emailRegex.test(input)) {
-        alert("Masukkan email yang valid.");
+      // Validasi format email sederhana
+      if (!email.includes('@') || !email.includes('.')) {
+        alert("Masukkan email yang valid (contoh: nama@email.com).");
+        input.focus();
         return;
       }
       
+      // Cek apakah email ini sudah pernah digunakan
       const savedEmail = localStorage.getItem('nopeEmail');
       
-      if (savedEmail === input) {
-        // User sudah ada
+      if (savedEmail === email) {
+        // EMAIL REGISTERED (sudah ada di sistem)
         const username = localStorage.getItem('nopeUsername');
         const onboarded = localStorage.getItem('nopeOnboarded') === 'true';
-        currentUser = { email: input, username };
+        
+        console.log('Registered user detected:', { email, onboarded });
+        
+        currentUser = { email, username };
         
         if (onboarded) {
+          // Sudah onboarded -> langsung ke Jejak
           showJejak();
         } else {
+          // Belum onboarded -> ke Onboarding
           showOnboarding();
         }
       } else {
-        // User baru
+        // EMAIL UNREGISTERED (baru pertama kali)
+        console.log('New user detected:', email);
+        
+        // Generate username random untuk user baru
         const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia', 'sunyi', 'tunggu'];
         const nouns = ['angin', 'awan', 'rembulan', 'senja', 'fajar', 'bayang', 'jejak'];
         
@@ -572,12 +626,26 @@
         
         const username = `@${adj}_${noun}_${num}`;
         
-        localStorage.setItem('nopeEmail', input);
+        // Simpan data user BARU
+        localStorage.setItem('nopeEmail', email);
         localStorage.setItem('nopeUsername', username);
-        localStorage.setItem('nopeOnboarded', 'false');
+        localStorage.setItem('nopeOnboarded', 'false'); // TANDAI BELUM ONBOARDED
         
-        currentUser = { email: input, username };
+        currentUser = { email, username };
+        
+        // Tampilkan onboarding untuk user baru
         showOnboarding();
+        
+        // Tampilkan status info
+        setTimeout(() => {
+          const statusDiv = document.createElement('div');
+          statusDiv.className = 'status-info';
+          statusDiv.innerHTML = `👋 Welcome ${username}! Pilih 3 hashtag untuk memulai.`;
+          const container = document.querySelector('.onboarding .container');
+          if (container) {
+            container.insertBefore(statusDiv, container.firstChild.nextSibling);
+          }
+        }, 100);
       }
     }
 
@@ -666,7 +734,7 @@
       
       // Simpan ke localStorage
       localStorage.setItem('nopeHashtags', JSON.stringify(hashtags));
-      localStorage.setItem('nopeOnboarded', 'true');
+      localStorage.setItem('nopeOnboarded', 'true'); // TANDAI SUDAH ONBOARDED
       
       // Update tombol dengan loading state
       const finishBtn = document.getElementById('finishBtn');
@@ -679,15 +747,28 @@
         
         // Tampilkan welcome message
         setTimeout(() => {
-          alert(`Selamat datang di NOPE!\n\nHashtag pilihanmu:\n${hashtags.join('\n')}\n\nJejakmu aman di sini.`);
+          const username = localStorage.getItem('nopeUsername') || '@nope_user';
+          alert(`🎉 Welcome to NOPE, ${username}!\n\nHashtag pilihanmu:\n${hashtags.join('\n')}\n\nJejakmu aman di sini.`);
         }, 300);
       }, 800);
     }
 
     // ==== JEJAK ====
     function renderJejak() {
+      const email = localStorage.getItem('nopeEmail');
       const username = localStorage.getItem('nopeUsername') || '@nope.anon';
       const hashtags = JSON.parse(localStorage.getItem('nopeHashtags') || '[]');
+      const onboarded = localStorage.getItem('nopeOnboarded') === 'true';
+      
+      // DEBUG: Tampilkan status user
+      console.log('Render Jejak - User status:', { email, username, onboarded, hashtags });
+      
+      // PERIKSA: Jika belum onboarded, redirect ke onboarding
+      if (!onboarded) {
+        console.log('User not onboarded, redirecting to onboarding');
+        showOnboarding();
+        return;
+      }
       
       // Ambil rants dari localStorage
       const savedRants = localStorage.getItem('nopeRants');
@@ -702,14 +783,29 @@
       // Format hashtags untuk ditampilkan
       const hashtagDisplay = hashtags.length > 0 
         ? hashtags.map(h => `<span style="color:#569CD6;font-size:11px;">${h}</span>`).join(' ')
-        : '<span style="color:#666;font-size:11px;">pilih hashtag dulu di onboarding</span>';
+        : '<span style="color:#666;font-size:11px;">belum memilih hashtag</span>';
+      
+      // Status info berdasarkan user type
+      let statusInfo = '';
+      if (email && onboarded) {
+        statusInfo = `
+          <div class="status-info">
+            👋 ${username} · ${email}<br>
+            <small>${hashtags.length} hashtag terpilih</small>
+          </div>
+        `;
+      }
       
       document.getElementById('jejakScreen').innerHTML = `
         <div class="container">
+          ${statusInfo}
+          
           <div class="jejakmu-title">
-            Jejakmu · ${username}
-            <div style="font-size:11px;font-weight:normal;color:#666;margin-top:4px;">
-              ${hashtagDisplay}
+            Jejakmu
+            <div style="font-size:11px;font-weight:normal;color:#666;margin-left:auto;">
+              <button onclick="logout()" style="background:none;border:none;color:#666;font-size:11px;cursor:pointer;">
+                logout
+              </button>
             </div>
           </div>
           
@@ -724,6 +820,7 @@
           <div class="emoji-bar">
             <button class="emoji-btn" onclick="uploadArtefact()">📸 unggah artefak</button>
             <button class="emoji-btn" onclick="refreshJejak()">🔄 refresh</button>
+            <button class="emoji-btn" onclick="editHashtags()" style="font-size:12px;">✏️ edit hashtag</button>
           </div>
           
           <div class="rantbox">
@@ -846,6 +943,22 @@
       setTimeout(loadFeedContent, 500);
     }
 
+    // ==== UTILITY FUNCTIONS ====
+    function logout() {
+      if (confirm("Logout dari NOPE?\n\nData akan tetap tersimpan di perangkat ini.")) {
+        // Clear current session but keep data
+        currentUser = null;
+        showLanding();
+      }
+    }
+    
+    function editHashtags() {
+      if (confirm("Edit hashtag pilihan?\n\nKamu akan kembali ke onboarding untuk memilih ulang.")) {
+        localStorage.setItem('nopeOnboarded', 'false');
+        showOnboarding();
+      }
+    }
+
     function loadFeedContent() {
       const feedContent = document.getElementById('feedContent');
       if (!feedContent) return;
@@ -898,7 +1011,6 @@
       }
     }
 
-    // ==== UTILS ====
     function submitRant() {
       const textarea = document.getElementById('rantInput');
       if (!textarea) return;
@@ -977,19 +1089,22 @@
       const username = localStorage.getItem('nopeUsername') || '@nope.anon';
       const hashtags = JSON.parse(localStorage.getItem('nopeHashtags') || '[]');
       const rantCount = userRants.length;
+      const onboarded = localStorage.getItem('nopeOnboarded') === 'true';
       
       const settings = `
 === SETTINGS ===
 Email: ${email}
 Username: ${username}
+Status: ${onboarded ? 'Onboarded ✓' : 'Belum Onboarded'}
 Jumlah curhatan: ${rantCount}
-Hashtag pilihan: ${hashtags.join(', ') || 'belum dipilih'}
+Hashtag: ${hashtags.join(', ') || 'belum dipilih'}
 
 === ACTIONS ===
-1. Logout (hapus data lokal)
-2. Reset onboarding
+1. Logout (kembali ke login)
+2. Reset onboarding (pilih hashtag lagi)
 3. Hapus semua curhatan
-4. Export data
+4. Clear semua data
+5. Export data
 
 Pilih angka:`;
 
@@ -997,15 +1112,14 @@ Pilih angka:`;
       
       switch(choice) {
         case '1':
-          if (confirm("Yakin logout? Data lokal akan dihapus.")) {
-            localStorage.clear();
-            location.reload();
+          if (confirm("Yakin logout?")) {
+            currentUser = null;
+            showLanding();
           }
           break;
         case '2':
-          if (confirm("Reset onboarding? Pilihan hashtag akan hilang.")) {
-            localStorage.removeItem('nopeOnboarded');
-            localStorage.removeItem('nopeHashtags');
+          if (confirm("Reset onboarding?\n\nKamu akan memilih hashtag lagi.")) {
+            localStorage.setItem('nopeOnboarded', 'false');
             showOnboarding();
           }
           break;
@@ -1017,6 +1131,12 @@ Pilih angka:`;
           }
           break;
         case '4':
+          if (confirm("HAPUS SEMUA DATA?\n\nEmail, username, curhatan, semuanya akan hilang.")) {
+            localStorage.clear();
+            location.reload();
+          }
+          break;
+        case '5':
           alert("Fitur export akan hadir di versi berikutnya.");
           break;
       }
