@@ -1,0 +1,18 @@
+// Di onboarding.html - setelah user pilih 3#:
+
+function saveInterests(selectedInterests) {
+    const username = sessionStorage.getItem('nope_username');
+    
+    // Load user data
+    const allUsers = JSON.parse(localStorage.getItem('nope_users') || '{}');
+    
+    // Update interests
+    allUsers[username].interests = selectedInterests;
+    allUsers[username].onboarded = true;
+    
+    // Save back
+    localStorage.setItem('nope_users', JSON.stringify(allUsers));
+    
+    // Redirect to dunia
+    window.location.href = `/dunia.html?onboarded=1&t=${Date.now()}`;
+}
