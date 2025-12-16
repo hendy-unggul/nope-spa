@@ -72,6 +72,28 @@
             color: rgba(255, 255, 255, 0.5);
             margin-top: 20px;
         }
+        
+        /* TAMBAHAN STYLE BARU */
+        .nope-actions {
+            margin-top: 30px;
+        }
+        
+        .nope-button {
+            background: transparent;
+            color: #FF6B8B;
+            border: 2px solid #FF6B8B;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+        
+        .nope-button:hover {
+            opacity: 1;
+            background: rgba(255, 107, 139, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -93,14 +115,24 @@
             tekan <strong>enter</strong> untuk masuk<br>
             <small>3#, jurnal, artefak tersimpan selamanya</small>
         </div>
+        
+        <!-- TAMBAHAN TOMBOL MASUK -->
+        <div class="nope-actions">
+            <button id="enterButton" class="nope-button">
+                MASUK
+            </button>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('usernameInput');
             const status = document.getElementById('status');
+            const enterButton = document.getElementById('enterButton');
             
+            // Fokus ke input saat halaman dimuat
             input.focus();
+            input.select();
             
             // Auto-format saat ketik
             input.addEventListener('input', function() {
@@ -115,19 +147,58 @@
                         this.value = value;
                     }
                     
+                    // Update tombol MASUK
+                    if (enterButton) {
+                        if (value.length >= 3) {
+                            enterButton.style.opacity = '1';
+                            enterButton.style.cursor = 'pointer';
+                        } else {
+                            enterButton.style.opacity = '0.5';
+                            enterButton.style.cursor = 'not-allowed';
+                        }
+                    }
+                    
                     // Check if username exists
                     checkUsername(value);
                 } else {
                     status.style.display = 'none';
+                    if (enterButton) {
+                        enterButton.style.opacity = '0.5';
+                        enterButton.style.cursor = 'not-allowed';
+                    }
                 }
             });
             
-            // Enter to submit
-            input.addEventListener('keypress', function(e) {
+            // FUNGSI ENTER KEY - CARA PERTAMA (di input)
+            input.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
+                    e.preventDefault(); // Mencegah aksi default
+                    console.log('Tombol Enter ditekan di input');
                     loginOrCreate();
+                    return false;
                 }
             });
+            
+            // FUNGSI ENTER KEY - CARA KEDUA (di seluruh halaman)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    // Hanya proses jika input sedang aktif
+                    if (document.activeElement === input) {
+                        e.preventDefault();
+                        console.log('Tombol Enter ditekan di document');
+                        loginOrCreate();
+                    }
+                }
+            });
+            
+            // Tombol MASUK fisik
+            if (enterButton) {
+                enterButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Tombol MASUK diklik');
+                    loginOrCreate();
+                });
+            }
             
             // Check username existence
             function checkUsername(username) {
@@ -139,7 +210,7 @@
                 const userData = getUserData(username);
                 
                 if (userData) {
-                    // User exists
+                    // User sudah ada
                     status.style.display = 'block';
                     status.className = 'nope-status return';
                     
@@ -157,7 +228,7 @@
                         <small>${userData.journals?.length || 0} jurnal • ${userData.artifacts?.length || 0} artefak • ${timeText}</small>
                     `;
                 } else {
-                    // New user
+                    // User baru
                     status.style.display = 'block';
                     status.className = 'nope-status new';
                     status.innerHTML = `
@@ -175,10 +246,24 @@
             
             // Main login/create function
             function loginOrCreate() {
-                let username = input.value.trim().toLowerCase();
+                console.log('Fungsi loginOrCreate dipanggil');
                 
-                if (!username || username.length < 3) {
+                let username = input.value.trim().toLowerCase();
+                console.log('Username yang dimasukkan:', username);
+                
+                // Validasi username
+                if (!username) {
                     input.style.borderBottomColor = '#ff4757';
+                    input.placeholder = 'masukkan nama dulu!';
+                    input.focus();
+                    return;
+                }
+                
+                if (username.length < 3) {
+                    input.style.borderBottomColor = '#ff4757';
+                    input.value = '';
+                    input.placeholder = 'minimal 3 karakter!';
+                    input.focus();
                     return;
                 }
                 
@@ -191,6 +276,15 @@
                     username = username.substring(1);
                 }
                 
+                // Validasi lagi setelah format
+                if (username.length < 3) {
+                    input.style.borderBottomColor = '#ff4757';
+                    input.value = '';
+                    input.placeholder = 'gunakan huruf/angka!';
+                    input.focus();
+                    return;
+                }
+                
                 const userData = getUserData(username);
                 
                 // Save to session
@@ -198,8 +292,10 @@
                 sessionStorage.setItem('nope_login_time', Date.now());
                 
                 if (userData) {
-                    // EXISTING USER - langsung ke dunia
+                    // USER SUDAH ADA - langsung ke dunia
                     status.innerHTML = `<strong>selamat datang kembali</strong><br><small>mengalihkan...</small>`;
+                    status.style.display = 'block';
+                    status.className = 'nope-status return';
                     
                     // Update last login
                     updateUserLastLogin(username);
@@ -209,8 +305,10 @@
                     }, 800);
                     
                 } else {
-                    // NEW USER - ke onboarding untuk pilih 3#
+                    // USER BARU - ke onboarding untuk pilih 3#
                     status.innerHTML = `<strong>membuat @${username}</strong><br><small>mengalihkan...</small>`;
+                    status.style.display = 'block';
+                    status.className = 'nope-status new';
                     
                     // Create initial user data
                     createNewUser(username);
@@ -263,6 +361,18 @@
             
             // Initialize counter
             updateUserCounter();
+            
+            // FOKUS ULANG setiap kali halaman diklik
+            document.addEventListener('click', function() {
+                if (document.activeElement !== input) {
+                    input.focus();
+                    input.select();
+                }
+            });
+            
+            // Test console
+            console.log('NOPE Login System siap!');
+            console.log('Tekan ENTER atau klik tombol MASUK');
         });
     </script>
 </body>
