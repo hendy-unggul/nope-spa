@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon-192.png">
+  <meta name="theme-color" content="#569CD6">
   <title>NOPE • Masuk</title>
   <style>
     body {
@@ -30,9 +33,12 @@
       border-radius: 14px;
       color: #fff;
       font-size: 16px;
-      margin: 12px 0 24px;
+      margin-bottom: 24px;
       box-sizing: border-box;
       outline: none;
+    }
+    input::placeholder {
+      color: #555;
     }
     .cta {
       width: 100%;
@@ -46,6 +52,8 @@
       cursor: pointer;
     }
     /* Onboarding */
+    .screen { display: none; }
+    .screen.active { display: block; }
     .onboarding-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -80,8 +88,6 @@
       color: #666;
       margin: 10px 0 20px;
     }
-    .screen { display: none; }
-    .screen.active { display: block; }
   </style>
 </head>
 <body>
@@ -110,32 +116,32 @@
       const email = document.getElementById('emailInput').value.trim();
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        alert("Masukkan email yang valid.");
+        alert('Masukkan email yang valid.');
         return;
       }
       const savedEmail = localStorage.getItem('nopeEmail');
       if (savedEmail === email) {
-        // Existing user → langsung ke Jejak
+        // Existing user → go to Jejak
         window.location.href = '/index.html';
       } else {
-        // New user → generate username & onboarding
+        // New user → generate username + show onboarding
         const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
         const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
         const num = Math.floor(1000 + Math.random() * 9000);
         const username = `@nope.${adj}.${num}`;
         localStorage.setItem('nopeEmail', email);
         localStorage.setItem('nopeUsername', username);
-        // Show onboarding
-        document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
-        document.getElementById('onboardingScreen').classList.add('active');
-        renderOnboarding();
+        localStorage.setItem('nopeJoined', new Date().toISOString().split('T')[0]);
+        showOnboarding();
       }
     }
 
-    function renderOnboarding() {
+    function showOnboarding() {
+      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+      document.getElementById('onboardingScreen').classList.add('active');
+      selectedHashtags = new Map();
       const grid = document.getElementById('onboardingGrid');
       grid.innerHTML = '';
-      selectedHashtags = new Map();
       Object.entries(ZONES).forEach(([zoneName, tags]) => {
         const zoneEl = document.createElement('div');
         zoneEl.className = 'zone';
@@ -169,15 +175,15 @@
     function updateOnboardingUI() {
       document.querySelectorAll('.hashtag-item').forEach(el => el.classList.remove('selected'));
       selectedHashtags.forEach((hashtag, zone) => {
-        const items = document.querySelectorAll(`.zone:nth-child(${Object.keys(ZONES).indexOf(zone)+1}+1) .hashtag-item`);
-        items.forEach(item => {
+        const items = Array.from(document.querySelectorAll('.zone')).find((_, i) => Object.keys(ZONES)[i] === zone)?.querySelectorAll('.hashtag-item');
+        items?.forEach(item => {
           if (item.textContent === hashtag) item.classList.add('selected');
         });
       });
       document.getElementById('finishBtn').disabled = selectedHashtags.size !== 3;
     }
 
-    function finishOnboarding() {
+    document.getElementById('finishBtn').onclick = function() {
       if (selectedHashtags.size !== 3) {
         alert("Pilih 1 hashtag dari 3 zona berbeda.");
         return;
@@ -186,9 +192,7 @@
       localStorage.setItem('nopeHashtags', JSON.stringify(hashtags));
       localStorage.setItem('nopeOnboarded', 'true');
       window.location.href = '/index.html';
-    }
-
-    document.getElementById('finishBtn').onclick = finishOnboarding;
+    };
   </script>
 </body>
 </html>
