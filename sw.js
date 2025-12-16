@@ -1,64 +1,123 @@
-const CACHE_NAME = 'app-cache-v1';
-const DYNAMIC_CACHE = 'dynamic-cache-v1';
+// ============================================
+// SERVICE WORKER - NO CACHE UNTUK AUTH PAGES
+// ============================================
+
+const APP_VERSION = 'v3-' + new Date().toISOString().split('T')[0];
+const STATIC_CACHE = 'static-' + APP_VERSION;
+const DYNAMIC_CACHE = 'dynamic-' + APP_VERSION;
 
 // ==================== INSTALL ====================
 self.addEventListener('install', event => {
+  console.log('[SW] Install event:', APP_VERSION);
+  
+  // Skip waiting agar SW aktif segera
   self.skipWaiting();
-  console.log('Service Worker: Installed');
+  
+  // Cache file statis ESSENTIAL saja
+  event.waitUntil(
+    caches.open(STATIC_CACHE).then(cache => {
+      return cache.addAll([
+        '/',
+        '/index.html',
+        '/manifest.json',
+        '/icon-192.png'
+        // JANGAN cache login.html, register.html, dunia.html, jalan.html
+      ]);
+    }).catch(err => {
+      console.log('[SW] Cache failed:', err);
+    })
+  );
 });
 
 // ==================== ACTIVATE ====================
 self.addEventListener('activate', event => {
+  console.log('[SW] Activate event');
+  
   event.waitUntil(
     Promise.all([
-      // Klaim semua klien segera
+      // Klaim kontrol semua clients
       self.clients.claim(),
       
-      // Hapus semua cache lama
+      // Hapus SEMUA cache lama
       caches.keys().then(cacheNames => {
         return Promise.all(
-          cacheNames.map(cache => {
-            if (cache !== CACHE_NAME && cache !== DYNAMIC_CACHE) {
-              console.log('Service Worker: Clearing Old Cache', cache);
-              return caches.delete(cache);
+          cacheNames.map(cacheName => {
+            // Hapus semua cache kecuali yang versi sekarang
+            if (!cacheName.includes(APP_VERSION)) {
+              console.log('[SW] Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
             }
           })
         );
+      }),
+      
+      // Clear semua storage di semua clients
+      self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'CLEAR_STORAGE',
+            timestamp: Date.now()
+          });
+        });
       })
     ])
   );
-  console.log('Service Worker: Activated');
 });
 
-// ==================== FETCH ====================
+// ==================== FETCH HANDLER ====================
 self.addEventListener('fetch', event => {
-  // JANGAN intercept request API atau data sensitif
   const url = new URL(event.request.url);
+  const requestUrl = url.pathname + url.search;
   
-  // 1. Skip request API (biarkan fresh selalu)
-  if (url.pathname.includes('/api/') || 
-      url.pathname.includes('/auth/') ||
-      url.pathname.includes('/register')) {
-    return; // Biarkan request lepas tanpa caching
+  console.log('[SW] Fetch:', requestUrl);
+  
+  // ===== BLOCKLIST: JANGAN PROSES HALAMAN INI =====
+  const BLOCKED_PATHS = [
+    'login',
+    'register',
+    'logout',
+    'auth',
+    'signin',
+    'signup',
+    'dunia',  // Tambahkan dunia.html
+    'jalan'   // Tambahkan jalan.html
+  ];
+  
+  const isBlocked = BLOCKED_PATHS.some(path => 
+    url.pathname.toLowerCase().includes(path.toLowerCase())
+  );
+  
+  // ===== SKIP UNTUK HALAMAN BLOCKED =====
+  if (isBlocked) {
+    console.log('[SW] Bypassing blocked page:', url.pathname);
+    return; // Biarkan request ke network tanpa caching
   }
   
-  // 2. Skip request dengan query parameter (untuk hindari cache unique session)
-  if (url.search) {
+  // ===== SKIP UNTUK REQUEST METHOD SELAIN GET =====
+  if (event.request.method !== 'GET') {
     return;
   }
   
-  // 3. Hanya cache asset statis
-  if (event.request.method === 'GET') {
+  // ===== SKIP UNTUK REQUEST DENGAN QUERY PARAMETER =====
+  if (url.search) {
+    console.log('[SW] Bypassing request with query params');
+    return;
+  }
+  
+  // ===== HANYA PROSES ASSET STATIS =====
+  const isStaticAsset = /\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json)$/i.test(url.pathname);
+  
+  if (isStaticAsset) {
     event.respondWith(
       caches.match(event.request).then(cachedResponse => {
-        // Jika ada di cache, return
-        if (cachedResponse) {
+        // Jika ada di cache, return (kecuali manifest.json)
+        if (cachedResponse && !url.pathname.includes('manifest.json')) {
           return cachedResponse;
         }
         
-        // Jika tidak, fetch dan cache untuk future
+        // Fetch dari network
         return fetch(event.request).then(response => {
-          // Jangan cache response yang tidak valid
+          // Validasi response
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
@@ -66,38 +125,71 @@ self.addEventListener('fetch', event => {
           // Clone response untuk cache
           const responseToCache = response.clone();
           
-          caches.open(CACHE_NAME).then(cache => {
-            // JANGAN cache halaman login/register
-            if (!url.pathname.includes('login') && 
-                !url.pathname.includes('register')) {
-              cache.put(event.request, responseToCache);
-            }
+          // Simpan ke cache dinamis
+          caches.open(DYNAMIC_CACHE).then(cache => {
+            cache.put(event.request, responseToCache);
           });
           
           return response;
+        }).catch(() => {
+          // Fallback untuk asset yang gagal load
+          return new Response('Offline', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({
+              'Content-Type': 'text/plain'
+            })
+          });
         });
-      }).catch(() => {
-        // Fallback untuk halaman offline
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
-        }
       })
     );
+  } else {
+    // Untuk HTML pages lainnya, bypass SW
+    return;
   }
 });
 
 // ==================== MESSAGE HANDLER ====================
 self.addEventListener('message', event => {
+  console.log('[SW] Message received:', event.data);
+  
+  if (event.data && event.data.type === 'CLEAR_CACHE') {
+    // Clear semua cache
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          console.log('[SW] Clearing cache by request:', cacheName);
+          return caches.delete(cacheName);
+        })
+      );
+    }).then(() => {
+      event.ports[0].postMessage({ success: true });
+    });
+  }
+  
   if (event.data === 'SKIP_WAITING') {
     self.skipWaiting();
   }
   
-  if (event.data === 'CLEAR_CACHE') {
-    caches.keys().then(cacheNames => {
-      cacheNames.forEach(cacheName => {
-        caches.delete(cacheName);
-      });
-    });
-    console.log('Service Worker: Cache Cleared by Message');
+  if (event.data === 'GET_VERSION') {
+    event.ports[0].postMessage({ version: APP_VERSION });
   }
+});
+
+// ==================== SYNC & BACKGROUND SYNC ====================
+self.addEventListener('sync', event => {
+  console.log('[SW] Sync event:', event.tag);
+});
+
+self.addEventListener('push', event => {
+  console.log('[SW] Push event');
+});
+
+// ==================== ERROR HANDLER ====================
+self.addEventListener('error', event => {
+  console.error('[SW] Error:', event.error);
+});
+
+self.addEventListener('unhandledrejection', event => {
+  console.error('[SW] Unhandled rejection:', event.reason);
 });
