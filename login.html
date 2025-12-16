@@ -17,6 +17,7 @@
       justify-content: center;
       min-height: 100vh;
       align-items: center;
+      -webkit-font-smoothing: antialiased;
     }
     .container {
       width: 100%;
@@ -24,6 +25,11 @@
       padding: 0 24px;
       box-sizing: border-box;
       text-align: center;
+    }
+    .logo {
+      font-size: 24px;
+      margin-bottom: 30px;
+      opacity: 0.9;
     }
     input {
       width: 100%;
@@ -36,6 +42,7 @@
       margin-bottom: 24px;
       box-sizing: border-box;
       outline: none;
+      text-align: center;
     }
     input::placeholder {
       color: #555;
@@ -51,148 +58,27 @@
       font-weight: 600;
       cursor: pointer;
     }
-    /* Onboarding */
-    .screen { display: none; }
-    .screen.active { display: block; }
-    .onboarding-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin: 20px 0;
-    }
-    .zone {
-      background: #0a0a0a;
-      border-radius: 12px;
-      padding: 12px;
-    }
-    .zone-title {
-      font-size: 12px;
-      color: #569CD6;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-    .hashtag-item {
-      display: block;
-      padding: 6px 0;
-      font-size: 13px;
-      color: #aaa;
-      cursor: pointer;
-    }
-    .hashtag-item.selected {
-      color: #569CD6;
-      font-weight: 600;
-    }
-    .zone-instruction {
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-      margin: 10px 0 20px;
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div id="landingScreen" class="screen active">
-      <div style="font-size:24px;opacity:0.9;margin-bottom:30px;">NOPE</div>
-      <input type="email" id="emailInput" placeholder="emailmu" autocomplete="off"/>
-      <button class="cta" onclick="handleLogin()">lanjut</button>
-    </div>
-    <div id="onboardingScreen" class="screen">
-      <div class="zone-instruction">Pilih 1 hashtag dari 3 zona berbeda</div>
-      <div class="onboarding-grid" id="onboardingGrid"></div>
-      <button class="cta" id="finishBtn" disabled>selesai</button>
-    </div>
+    <div class="logo">NOPE</div>
+    <input type="email" id="email" placeholder="emailmu" autocomplete="off" autocapitalize="none" required>
+    <button class="cta" onclick="login()">lanjut</button>
   </div>
   <script>
-    const ZONES = {
-      PopCulture: ["#bucin_toxic", "#fyp_addict", "#celeb_gosip", "#reels_overload", "#viral_hampa"],
-      PersonalPain: ["#harga_diri", "#sendiri_tapi_nggak", "#cape_jadi_baik", "#galau_nyata", "#harapan_menipis"],
-      SocialSickness: ["#toxic_wa_group", "#ghosting_budaya", "#pura_pura_sibuk", "#fomo_palsu", "#dm_tak_terjawab"],
-      Movement: ["#diam_tapi_ngerasa", "#protes_diam", "#resistensi_soft", "#keberanian_kalem", "#berubah_dari_dalam"]
-    };
-    let selectedHashtags = new Map();
-
-    function handleLogin() {
-      const email = document.getElementById('emailInput').value.trim();
+    function login() {
+      const email = document.getElementById('email').value.trim();
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         alert('Masukkan email yang valid.');
         return;
       }
-      const savedEmail = localStorage.getItem('nopeEmail');
-      if (savedEmail === email) {
-        // Existing user → go to Jejak
-        window.location.href = '/index.html';
-      } else {
-        // New user → generate username + show onboarding
-        const adjectives = ['diam', 'sunyi', 'retak', 'senja', 'pulih', 'rahasia'];
-        const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-        const num = Math.floor(1000 + Math.random() * 9000);
-        const username = `@nope.${adj}.${num}`;
-        localStorage.setItem('nopeEmail', email);
-        localStorage.setItem('nopeUsername', username);
-        localStorage.setItem('nopeJoined', new Date().toISOString().split('T')[0]);
-        showOnboarding();
-      }
-    }
-
-    function showOnboarding() {
-      document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
-      document.getElementById('onboardingScreen').classList.add('active');
-      selectedHashtags = new Map();
-      const grid = document.getElementById('onboardingGrid');
-      grid.innerHTML = '';
-      Object.entries(ZONES).forEach(([zoneName, tags]) => {
-        const zoneEl = document.createElement('div');
-        zoneEl.className = 'zone';
-        zoneEl.innerHTML = `<div class="zone-title">${zoneName}</div><div class="hashtag-list"></div>`;
-        grid.appendChild(zoneEl);
-        const list = zoneEl.querySelector('.hashtag-list');
-        tags.forEach(tag => {
-          const item = document.createElement('div');
-          item.className = 'hashtag-item';
-          item.textContent = tag;
-          item.onclick = () => toggleHashtag(zoneName, tag);
-          list.appendChild(item);
-        });
-      });
-      document.getElementById('finishBtn').disabled = true;
-    }
-
-    function toggleHashtag(zone, hashtag) {
-      if (selectedHashtags.has(zone)) {
-        selectedHashtags.delete(zone);
-      } else {
-        if (selectedHashtags.size >= 3) {
-          alert("Pilih hanya dari 3 zona.");
-          return;
-        }
-        selectedHashtags.set(zone, hashtag);
-      }
-      updateOnboardingUI();
-    }
-
-    function updateOnboardingUI() {
-      document.querySelectorAll('.hashtag-item').forEach(el => el.classList.remove('selected'));
-      selectedHashtags.forEach((hashtag, zone) => {
-        const items = Array.from(document.querySelectorAll('.zone')).find((_, i) => Object.keys(ZONES)[i] === zone)?.querySelectorAll('.hashtag-item');
-        items?.forEach(item => {
-          if (item.textContent === hashtag) item.classList.add('selected');
-        });
-      });
-      document.getElementById('finishBtn').disabled = selectedHashtags.size !== 3;
-    }
-
-    document.getElementById('finishBtn').onclick = function() {
-      if (selectedHashtags.size !== 3) {
-        alert("Pilih 1 hashtag dari 3 zona berbeda.");
-        return;
-      }
-      const hashtags = Array.from(selectedHashtags.values());
-      localStorage.setItem('nopeHashtags', JSON.stringify(hashtags));
-      localStorage.setItem('nopeOnboarded', 'true');
+      // Simpan ke localStorage
+      localStorage.setItem('nopeEmail', email);
+      // Redirect ke index.html (onboarding akan otomatis muncul jika belum onboarded)
       window.location.href = '/index.html';
-    };
+    }
   </script>
 </body>
 </html>
