@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOPE</title>
-    
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
-    
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -16,7 +14,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             background: #000;
             color: #fff;
@@ -25,7 +22,6 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
-        
         /* ===== PAGES ===== */
         .page {
             display: none;
@@ -35,22 +31,19 @@
             padding: 20px;
             min-height: 100vh;
         }
-        
         .page.active {
             display: block;
         }
-        
         /* ===== LOGO NOPE ===== */
         .logo {
-            font-size: 50px;
+            font-size: 70px;
             font-weight: 900;
             text-align: center;
             color: #ff00ff;
-            margin: 10px 0 5px 0;
+            margin: 20px 0 10px 0;
             line-height: 1;
-            letter-spacing: -2px;
+            letter-spacing: -3px;
         }
-        
         /* ===== INPUT STYLE ===== */
         .nope-input {
             width: 100%;
@@ -65,11 +58,9 @@
             font-weight: 300;
             margin: 30px 0 20px 0;
         }
-        
         .nope-input:focus {
             border-bottom-color: #ff00ff;
         }
-        
         /* ===== HINT TEXT ===== */
         .hint {
             text-align: center;
@@ -78,11 +69,9 @@
             margin: 8px 0;
             line-height: 1.4;
         }
-        
         .hint strong {
             color: rgba(255, 255, 255, 0.7);
         }
-        
         /* ===== USER STATUS ===== */
         .user-status {
             text-align: center;
@@ -95,29 +84,24 @@
             display: none;
             border-radius: 6px;
         }
-        
         .user-status.show {
             display: block;
         }
-        
         /* ===== ZONA SELECTION HEADER ===== */
         .zona-header {
             text-align: center;
             margin: 20px 0 30px 0;
         }
-        
         .zona-title {
             font-size: 18px;
             font-weight: 600;
             color: #ff00ff;
             margin-bottom: 5px;
         }
-        
         .zona-subtitle {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.5);
         }
-        
         /* ===== ZONA CARD ===== */
         .zona-card {
             background: rgba(255, 255, 255, 0.03);
@@ -126,7 +110,6 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-        
         .zona-card-header {
             display: flex;
             justify-content: space-between;
@@ -135,31 +118,26 @@
             padding-bottom: 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
         .zona-card-name {
             font-size: 18px;
             font-weight: 600;
             color: #ff00ff;
         }
-        
         .zona-card-desc {
             font-size: 12px;
             color: rgba(255, 255, 255, 0.5);
         }
-        
         .zona-card-counter {
             font-size: 14px;
             color: #ff00ff;
             font-weight: 600;
         }
-        
         /* ===== HASHTAG SELECTION ===== */
         .hashtag-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
-        
         .hashtag-item {
             padding: 12px;
             background: rgba(255, 255, 255, 0.05);
@@ -168,31 +146,26 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        
         .hashtag-item:hover {
             background: rgba(255, 255, 255, 0.08);
         }
-        
         .hashtag-item.selected {
             background: rgba(255, 0, 255, 0.15);
             border-color: #ff00ff;
             box-shadow: 0 2px 8px rgba(255, 0, 255, 0.1);
         }
-        
         .hashtag-name {
             font-size: 15px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.9);
             margin-bottom: 4px;
         }
-        
         .hashtag-microcopy {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.5);
             line-height: 1.3;
             font-style: italic;
         }
-        
         /* ===== SELECTION PROGRESS ===== */
         .selection-progress {
             background: rgba(255, 0, 255, 0.05);
@@ -202,25 +175,21 @@
             margin: 25px 0;
             text-align: center;
         }
-        
         .progress-title {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
             margin-bottom: 10px;
         }
-        
         .progress-number {
             font-size: 32px;
             font-weight: 700;
             color: #ff00ff;
             margin-bottom: 5px;
         }
-        
         .progress-subtitle {
             font-size: 12px;
             color: rgba(255, 255, 255, 0.4);
         }
-        
         /* ===== ACTION BUTTONS ===== */
         .action-btn {
             width: 100%;
@@ -237,52 +206,43 @@
             transition: all 0.2s;
             text-align: center;
         }
-        
         .action-btn:hover:not(:disabled) {
             background: rgba(255, 0, 255, 0.25);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 0, 255, 0.2);
         }
-        
         .action-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
             transform: none !important;
             box-shadow: none !important;
         }
-        
         .action-btn.secondary {
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.1);
         }
-        
         .action-btn.secondary:hover {
             background: rgba(255, 255, 255, 0.1);
         }
-        
         /* ===== JEJAK PAGE - NEW STYLES ===== */
         .jejak-header {
             text-align: center;
-            margin: 0 0 15px 0;
+            margin: 0 0 20px 0;
         }
-        
         .jejak-title {
             font-size: 20px;
             font-weight: 600;
             color: #ff00ff;
             margin-bottom: 10px;
         }
-        
         .jejak-subtitle {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
         }
-        
         /* Artefak Preview - Full Width Image */
         .artefak-preview-container {
-            margin: 10px 0 20px 0;
+            margin: 20px 0;
         }
-        
         .artefak-preview {
             width: 100%;
             position: relative;
@@ -293,32 +253,27 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
         .artefak-preview:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 20px rgba(255, 0, 255, 0.15);
         }
-        
         .artefak-preview-image {
             width: 100%;
             height: 0;
-            padding-bottom: 80%;
+            padding-bottom: 80%; /* 80% dari lebar */
             background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 150, 255, 0.1));
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
         }
-        
         .artefak-placeholder {
             font-size: 48px;
             color: rgba(255, 255, 255, 0.2);
         }
-        
         .artefak-preview-info {
-            padding: 10px 15px;
+            padding: 15px;
         }
-        
         .artefak-preview-title {
             font-size: 16px;
             font-weight: 600;
@@ -328,281 +283,195 @@
             align-items: center;
             gap: 8px;
         }
-        
         .artefak-preview-date {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.4);
         }
-        
-        /* Interaksi Sosial untuk Artefak */
-        .artefak-interaction {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        /* Rant Box */
+        .rant-box-container {
+            margin: 25px 0;
         }
-        
-        .interaction-toggle {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .interaction-toggle:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .reaction-stats {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .reaction-stat {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .reaction-icon {
-            font-size: 14px;
-        }
-        
-        /* Rant Archive Container */
-        .rant-archive-container {
-            margin: 20px 0;
-        }
-        
-        .rant-archive-header {
+        .rant-box-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
-        
-        .rant-archive-title {
+        .rant-box-title {
             font-size: 16px;
             font-weight: 600;
             color: #ff00ff;
         }
-        
-        /* Tiga rant box sebagai archive */
-        .rant-archive-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 15px;
+        .rant-box-counter {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
         }
-        
-        .rant-archive-item {
+        .rant-box {
+            width: 100%;
+            min-height: 120px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 15px;
-            transition: all 0.2s;
-        }
-        
-        .rant-archive-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        
-        .rant-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.4;
+            resize: none;
             margin-bottom: 10px;
         }
-        
-        .rant-date {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
+        .rant-box:focus {
+            outline: none;
+            border-color: #ff00ff;
+            background: rgba(255, 255, 255, 0.05);
         }
-        
-        .rant-hashtag {
-            font-size: 11px;
-            color: #ff00ff;
-            font-weight: 500;
-            background: rgba(255, 0, 255, 0.1);
-            padding: 2px 8px;
-            border-radius: 10px;
+        .rant-box::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
-        
-        .rant-content {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.5;
-            margin-bottom: 12px;
-            white-space: pre-wrap;
-        }
-        
-        .rant-interaction {
+        .rant-box-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
-        .rant-reactions {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .rant-reaction-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .rant-hashtag-select {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 6px 12px;
-            border-radius: 20px;
-            color: rgba(255, 255, 255, 0.7);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: white;
+            font-family: inherit;
             font-size: 12px;
+            outline: none;
             cursor: pointer;
-            transition: all 0.2s;
         }
-        
-        .rant-reaction-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-1px);
+        .rant-hashtag-select:focus {
+            border-color: #ff00ff;
         }
-        
-        .rant-reaction-btn.active {
-            background: rgba(255, 0, 255, 0.15);
-            border-color: rgba(255, 0, 255, 0.3);
-            color: #ff00ff;
+        /* Recent Rants Section */
+        .recent-rants {
+            margin: 30px 0;
         }
-        
-        .reaction-count {
-            font-weight: 600;
-        }
-        
-        /* Recent Artefaks Grid (3 kolom 2 row) */
-        .recent-artefaks {
-            margin: 25px 0 100px 0;
-        }
-        
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-        
         .section-title {
             font-size: 16px;
             font-weight: 600;
             color: #ff00ff;
         }
-        
         .section-view-all {
             font-size: 12px;
             color: rgba(255, 255, 255, 0.5);
             cursor: pointer;
             transition: color 0.2s;
         }
-        
         .section-view-all:hover {
             color: #ff00ff;
         }
-        
+        .recent-rants-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .recent-rant-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.2s;
+        }
+        .recent-rant-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+        .recent-rant-date {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 5px;
+        }
+        .recent-rant-content {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        /* Recent Artefaks Grid */
+        .recent-artefaks {
+            margin: 30px 0 100px 0;
+        }
         .artefaks-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
-        
         .artefak-grid-item {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 6px;
-            padding: 8px;
+            border-radius: 8px;
+            padding: 12px;
             cursor: pointer;
             transition: all 0.2s;
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
-        
         .artefak-grid-item:hover {
             background: rgba(255, 255, 255, 0.05);
             transform: translateY(-2px);
-            border-color: rgba(255, 0, 255, 0.3);
         }
-        
         .artefak-grid-image {
             width: 100%;
             height: 0;
-            padding-bottom: 100%;
+            padding-bottom: 60%;
             background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 150, 255, 0.1));
-            border-radius: 4px;
+            border-radius: 6px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 6px;
         }
-        
         .artefak-grid-icon {
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.3);
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.2);
         }
-        
         .artefak-grid-title {
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
             display: -webkit-box;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            text-align: center;
-            width: 100%;
+            margin-bottom: 4px;
         }
-        
         .artefak-grid-date {
-            font-size: 9px;
+            font-size: 10px;
             color: rgba(255, 255, 255, 0.4);
-            text-align: center;
-            margin-top: 2px;
         }
-        
         /* ===== JALAN PAGE ===== */
         .jalan-header {
             text-align: center;
             margin: 20px 0 30px 0;
         }
-        
         .jalan-title {
             font-size: 20px;
             font-weight: 600;
             color: #ff00ff;
             margin-bottom: 10px;
         }
-        
         .jalan-subtitle {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
         }
-        
         .jalan-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin: 30px 0;
         }
-        
         .jalan-stat {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -610,39 +479,33 @@
             padding: 20px;
             text-align: center;
         }
-        
         .jalan-number {
             font-size: 28px;
             font-weight: 700;
             color: #ff00ff;
             margin-bottom: 5px;
         }
-        
         .jalan-label {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.5);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
         /* ===== DUNIA PAGE ===== */
         .dunia-header {
             text-align: center;
             margin: 20px 0 30px 0;
         }
-        
         .dunia-title {
             font-size: 20px;
             font-weight: 600;
             color: #ff00ff;
             margin-bottom: 10px;
         }
-        
         .dunia-subtitle {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
         }
-        
         .profile-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -651,20 +514,17 @@
             margin: 30px 0;
             text-align: center;
         }
-        
         .profile-username {
             font-size: 24px;
             font-weight: 700;
             color: #ff00ff;
             margin-bottom: 10px;
         }
-        
         .profile-meta {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.5);
             margin: 5px 0;
         }
-        
         /* ===== POST MODAL ===== */
         .modal-overlay {
             position: fixed;
@@ -679,11 +539,9 @@
             z-index: 1000;
             padding: 20px;
         }
-        
         .modal-overlay.active {
             display: flex;
         }
-        
         .modal {
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -694,7 +552,6 @@
             max-height: 90vh;
             overflow-y: auto;
         }
-        
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -703,13 +560,11 @@
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
         .modal-title {
             font-size: 20px;
             font-weight: 600;
             color: #ff00ff;
         }
-        
         .modal-close {
             background: none;
             border: none;
@@ -723,11 +578,9 @@
             align-items: center;
             justify-content: center;
         }
-        
         .modal-close:hover {
             color: white;
         }
-        
         .textarea-input {
             width: 100%;
             min-height: 150px;
@@ -741,12 +594,10 @@
             resize: vertical;
             margin-bottom: 15px;
         }
-        
         .textarea-input:focus {
             outline: none;
             border-color: #ff00ff;
         }
-        
         .text-input {
             width: 100%;
             padding: 12px;
@@ -758,12 +609,10 @@
             font-size: 14px;
             margin-bottom: 15px;
         }
-        
         .text-input:focus {
             outline: none;
             border-color: #ff00ff;
         }
-        
         /* ===== BOTTOM NAV ===== */
         .bottom-nav {
             position: fixed;
@@ -777,7 +626,6 @@
             padding: 10px 0;
             z-index: 1000;
         }
-        
         .nav-item {
             display: flex;
             flex-direction: column;
@@ -789,152 +637,41 @@
             transition: all 0.2s;
             min-width: 70px;
         }
-        
         .nav-item.active {
             color: #ff00ff;
         }
-        
         .nav-icon {
             font-size: 18px;
             margin-bottom: 3px;
         }
-        
         .nav-label {
             font-weight: 500;
             letter-spacing: 0.5px;
         }
-        
         /* ===== UTILITY ===== */
         .mt-20 {
             margin-top: 20px;
         }
-        
         .mb-20 {
             margin-bottom: 20px;
         }
-        
         .text-center {
             text-align: center;
         }
-        
         /* ===== ANIMATION ===== */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
         .fade-in {
             animation: fadeIn 0.3s ease;
         }
-        
         /* ===== CHARACTER COUNTER ===== */
         .char-counter {
             text-align: right;
             font-size: 12px;
             color: rgba(255, 255, 255, 0.4);
             margin-bottom: 15px;
-        }
-        
-        /* ===== HIDE/REVEAL TOGGLE ===== */
-        .hide-reveal-toggle {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 6px 12px;
-            border-radius: 6px;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .hide-reveal-toggle:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        /* ===== COMMENT SECTION ===== */
-        .comment-section {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            display: none;
-        }
-        
-        .comment-section.show {
-            display: block;
-        }
-        
-        .comment-input-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .comment-input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 8px 15px;
-            color: white;
-            font-family: inherit;
-            font-size: 12px;
-        }
-        
-        .comment-input:focus {
-            outline: none;
-            border-color: #ff00ff;
-        }
-        
-        .comment-submit {
-            background: rgba(255, 0, 255, 0.15);
-            border: 1px solid #ff00ff;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .comment-submit:hover {
-            background: rgba(255, 0, 255, 0.25);
-        }
-        
-        .comments-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .comment-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 10px;
-        }
-        
-        .comment-author {
-            font-size: 11px;
-            color: #ff00ff;
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-        
-        .comment-text {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.4;
-        }
-        
-        .comment-date {
-            font-size: 9px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-top: 5px;
-            text-align: right;
         }
     </style>
 </head>
@@ -945,7 +682,6 @@
             <!-- Modal content will be injected here -->
         </div>
     </div>
-    
     <!-- BOTTOM NAVIGATION -->
     <div class="bottom-nav" id="bottomNav" style="display: none;">
         <a href="#" class="nav-item active" onclick="showTab('jejak')">
@@ -961,11 +697,9 @@
             <div class="nav-label">Dunia</div>
         </a>
     </div>
-    
     <!-- LOGIN PAGE -->
     <div id="login" class="page active">
         <div class="logo">NOPE</div>
-        
         <input type="text" 
                class="nope-input" 
                id="usernameInput"
@@ -973,31 +707,24 @@
                autocomplete="off"
                autocapitalize="none"
                spellcheck="false">
-        
         <div class="user-status" id="userStatus"></div>
-        
         <div class="hint">
             gunakan huruf, angka, underscore • minimal 3 karakter
         </div>
-        
         <div class="hint">
             tekan <strong>enter</strong> untuk masuk
         </div>
-        
         <div class="hint mt-20">
-            3#, jurnal, artefak tersimpan selamanya
+            4#, jurnal, artefak tersimpan selamanya
         </div>
     </div>
-    
     <!-- ONBOARDING PAGE -->
     <div id="onboarding" class="page">
         <div class="logo">NOPE</div>
-        
         <div class="zona-header">
             <div class="zona-title">Temukan frekuensi mu</div>
-            <div class="zona-subtitle">Pilih 1# dari masing-masing 3 zona</div>
+            <div class="zona-subtitle">Pilih 1# dari masing-masing 4 zona</div>
         </div>
-        
         <!-- Zona 1: PopCulture -->
         <div class="zona-card">
             <div class="zona-card-header">
@@ -1007,12 +734,8 @@
                 </div>
                 <div class="zona-card-counter" id="popcultureCounter">0/1</div>
             </div>
-            
-            <div class="hashtag-list" id="popcultureList">
-                <!-- PopCulture hashtags will be populated by JavaScript -->
-            </div>
+            <div class="hashtag-list" id="popcultureList"></div>
         </div>
-        
         <!-- Zona 2: PersonalPain -->
         <div class="zona-card">
             <div class="zona-card-header">
@@ -1022,12 +745,8 @@
                 </div>
                 <div class="zona-card-counter" id="personalpainCounter">0/1</div>
             </div>
-            
-            <div class="hashtag-list" id="personalpainList">
-                <!-- PersonalPain hashtags will be populated by JavaScript -->
-            </div>
+            <div class="hashtag-list" id="personalpainList"></div>
         </div>
-        
         <!-- Zona 3: SocialSickness -->
         <div class="zona-card">
             <div class="zona-card-header">
@@ -1037,67 +756,90 @@
                 </div>
                 <div class="zona-card-counter" id="socialsicknessCounter">0/1</div>
             </div>
-            
-            <div class="hashtag-list" id="socialsicknessList">
-                <!-- SocialSickness hashtags will be populated by JavaScript -->
-            </div>
+            <div class="hashtag-list" id="socialsicknessList"></div>
         </div>
-        
+        <!-- Zona 4: Movement -->
+        <div class="zona-card">
+            <div class="zona-card-header">
+                <div>
+                    <div class="zona-card-name">Movement</div>
+                    <div class="zona-card-desc">Aktivisme, perubahan, gerakan sosial</div>
+                </div>
+                <div class="zona-card-counter" id="movementCounter">0/1</div>
+            </div>
+            <div class="hashtag-list" id="movementList"></div>
+        </div>
         <!-- Progress -->
         <div class="selection-progress">
             <div class="progress-title">Progress pemilihan</div>
             <div class="progress-number" id="totalCounter">0</div>
-            <div class="progress-subtitle">dari 3# terpilih</div>
+            <div class="progress-subtitle">dari 4# terpilih</div>
         </div>
-        
         <!-- Action Button -->
         <button class="action-btn" id="saveBtn" onclick="saveSelections()" disabled>
             Temukan frekuensimu...
         </button>
     </div>
-    
     <!-- JEJAK PAGE -->
     <div id="jejak" class="page">
         <div class="logo">NOPE</div>
-        
-        <!-- Artefak Preview (Latest Artefak) -->
-        <div class="artefak-preview-container" id="artefakPreviewContainer">
-            <!-- Artefak preview will be populated by JavaScript -->
-        </div>
-        
-        <!-- Rant Archive (3 rant terbaru) -->
-        <div class="rant-archive-container">
-            <div class="rant-archive-header">
-                <div class="rant-archive-title">Kesel level dewa...</div>
-            </div>
-            <div class="rant-archive-wrapper" id="rantArchive">
-                <!-- Rant archive items will be populated by JavaScript -->
+        <div class="jejak-header">
+            <div class="jejak-title">Jejak mu</div>
+            <div class="jejak-subtitle">
+                <span id="postCount">0</span> posting • 
+                <span id="lastActive">baru bergabung</span>
             </div>
         </div>
-        
-        <!-- Recent Artefaks Grid (3 kolom 2 row) -->
+        <!-- Artefak Preview -->
+        <div class="artefak-preview-container" id="artefakPreviewContainer"></div>
+        <!-- Rant Box -->
+        <div class="rant-box-container">
+            <div class="rant-box-header">
+                <div class="rant-box-title">Tulis Rant mu</div>
+                <div class="rant-box-counter" id="rantCounter">0/300</div>
+            </div>
+            <textarea 
+                class="rant-box" 
+                id="rantBox" 
+                placeholder="Apa yang sedang kamu pikirkan? (maks 300 karakter)" 
+                maxlength="300" 
+                rows="5"
+            ></textarea>
+            <div class="rant-box-footer">
+                <select class="rant-hashtag-select" id="rantHashtagSelect">
+                    <!-- Hashtag options will be populated by JavaScript -->
+                </select>
+                <button class="action-btn" style="padding: 8px 16px; font-size: 14px;" onclick="postRantFromBox()">
+                    Post Rant
+                </button>
+            </div>
+        </div>
+        <!-- Recent Rants -->
+        <div class="recent-rants">
+            <div class="section-header">
+                <div class="section-title">Rant Terbaru</div>
+                <div class="section-view-all" onclick="viewAllRants()">Lihat semua</div>
+            </div>
+            <div class="recent-rants-list" id="recentRantsList"></div>
+        </div>
+        <!-- Recent Artefaks Grid -->
         <div class="recent-artefaks">
             <div class="section-header">
-                <div class="section-title">Artefak</div>
+                <div class="section-title">Artefak Terbaru</div>
                 <div class="section-view-all" onclick="viewAllArtefaks()">Lihat semua</div>
             </div>
-            <div class="artefaks-grid" id="artefaksGrid">
-                <!-- Recent artefaks will be populated by JavaScript -->
-            </div>
+            <div class="artefaks-grid" id="artefaksGrid"></div>
         </div>
     </div>
-    
     <!-- JALAN PAGE -->
     <div id="jalan" class="page">
         <div class="logo">NOPE</div>
-        
         <div class="jalan-header">
             <div class="jalan-title">Jalan mu</div>
             <div class="jalan-subtitle">
                 Statistik perjalanan di NOPE
             </div>
         </div>
-        
         <div class="jalan-stats">
             <div class="jalan-stat">
                 <div class="jalan-number" id="daysCount">0</div>
@@ -1112,140 +854,126 @@
                 <div class="jalan-label">Artefak</div>
             </div>
             <div class="jalan-stat">
-                <div class="jalan-number" id="hashtagsCount">3</div>
+                <div class="jalan-number" id="hashtagsCount">4</div>
                 <div class="jalan-label"># terpilih</div>
             </div>
         </div>
-        
         <div class="zona-card">
             <div class="zona-card-header">
                 <div>
                     <div class="zona-card-name">Frekuensi mu</div>
-                    <div class="zona-card-desc">3# yang kamu pilih</div>
+                    <div class="zona-card-desc">4# yang kamu pilih</div>
                 </div>
             </div>
-            <div id="selectedHashtagsList">
-                <!-- Selected hashtags will be shown here -->
-            </div>
+            <div id="selectedHashtagsList"></div>
         </div>
     </div>
-    
     <!-- DUNIA PAGE -->
     <div id="dunia" class="page">
         <div class="logo">NOPE</div>
-        
         <div class="dunia-header">
             <div class="dunia-title">Dunia mu</div>
             <div class="dunia-subtitle">
                 Profil dan pengaturan
             </div>
         </div>
-        
         <div class="profile-card">
             <div class="profile-username" id="profileUsername">@username</div>
             <div class="profile-meta" id="profileJoinDate">Bergabung: -</div>
             <div class="profile-meta" id="profileActivity">Aktivitas: 0 posting</div>
         </div>
-        
         <div class="action-btn" onclick="showArtefakModal()" style="margin-top: 10px;">
             + Tambah Artefak
         </div>
-        
         <div class="action-btn secondary" onclick="exportData()" style="margin-top: 10px;">
             📤 Export Data
         </div>
-        
         <div class="action-btn secondary" onclick="showHashtagsModal()" style="margin-top: 10px;">
             👁️ Lihat # terpilih
         </div>
-        
         <div class="action-btn secondary" onclick="logout()" style="background: rgba(255,50,50,0.1); border-color: rgba(255,50,50,0.3); margin-top: 20px;">
             🚪 Keluar
         </div>
     </div>
-
     <script>
         // ===== STATE =====
         let currentUser = null;
         let currentTab = 'jejak';
-        
         // ===== SELECTED HASHTAGS =====
         let selectedHashtags = {
             popculture: null,
             personalpain: null,
-            socialsickness: null
+            socialsickness: null,
+            movement: null
         };
-        
         // ===== DATA STRUCTURE =====
         const zonaData = {
             popculture: {
                 name: "PopCulture",
                 description: "Film, musik, meme, tren viral",
                 hashtags: [
-                    { name: "#flatpacking", microcopy: "cape mungguin antre yang masuk akal. tunggu ajang gak pernah salah." },
-                    { name: "#influencergenes", microcopy: "list konten [tunggu semester], pas buat niat serius malah auto read." },
-                    { name: "#BelieveInQuadGinjal", microcopy: "nangis tiket konser - 3 bulan gaji ngabisin. tapi hati bilang: worth it." },
-                    { name: "#HealingPaylater", microcopy: "self-care pakai cicilan. besok stres, hari ini bahagia dulu." }
+                    { name: "#FilmEndingGaje", microcopy: "capek nunggu akhir yang masuk akal. hidup aja nggak pernah adil." },
+                    { name: "#InfluencerNgehek", microcopy: "liat konten ‘hidup sempurna’, pas DM minta endorse malah auto read." },
+                    { name: "#BeliTiketJualGinjal", microcopy: "harga tiket konser = 3 bulan gaji magang. tapi hati bilang: worth it." },
+                    { name: "#HealingPayLater", microcopy: "self-care pakai cicilan. besok stres, hari ini bahagia dulu." }
                 ]
             },
             personalpain: {
                 name: "PersonalPain",
                 description: "Kecemasan, trauma, healing, self-care",
                 hashtags: [
-                    { name: "#SayMORE", microcopy: "bukan sokong. cuma lagi butuh ruang untuk pulih." },
-                    { name: "#DoNotHostGhosting", microcopy: "ditinggal tanpa kabar, tapi masih ngecek story-nya tiap malam." },
-                    { name: "#CopeWithKris", microcopy: "senyum di kiri, nangis di kamar mandi." },
-                    { name: "#BilaDiamMenangis", microcopy: "nangis tanpa suara, biar nggak jadi beban buat orang." }
+                    { name: "#SayNOPE", microcopy: "bukan sombong. cuma lagi butuh ruang untuk pulih." },
+                    { name: "#DiGhostingGebetan", microcopy: "ditinggal tanpa kabar, tapi masih ngecek story-nya tiap malam." },
+                    { name: "#CapekPuraPura", microcopy: "senyum di WA, nangis di kamar mandi." },
+                    { name: "#DiamDiamNangis", microcopy: "nangis tanpa suara, biar nggak jadi beban buat orang." }
                 ]
             },
             socialsickness: {
                 name: "SocialSickness",
                 description: "Toxic relationship, FOMO, loneliness",
                 hashtags: [
-                    { name: "#MenganggurDibayarSertifikat", microcopy: "kerja 8 jam, upahnya cuma kertas yang nggak bisa bayar kos." },
-                    { name: "#MeninggalkanGroup", microcopy: "tinggalkan grup yang bikin anxiety, bukan kehilangan teman." },
-                    { name: "#TrustNoOneTrustMe", microcopy: "curhat dikira rahasia, eh besok jadi bahan posting." },
-                    { name: "#GajiLangsungHabis", microcopy: "gaji pagi, siang udah habis. tapi tetap dipanggil [belum]." }
+                    { name: "#MagangDibayarSerifikat", microcopy: "kerja 8 jam, upahnya cuma kertas yang nggak bisa bayar kos." },
+                    { name: "#KeluarWAGroup", microcopy: "tinggalkan grup yang bikin anxiety, bukan kehilangan teman." },
+                    { name: "#TemenLambeTurah", microcopy: "curhat dikira rahasia, eh besok jadi bahan gosip." },
+                    { name: "#GajianSejamAbis", microcopy: "gajian pagi, siang udah nol. tapi tetap dipanggil ‘pelit’." }
+                ]
+            },
+            movement: {
+                name: "Movement",
+                description: "Aktivisme, perubahan, gerakan sosial",
+                hashtags: [
+                    { name: "#PendidikanUntukSemua", microcopy: "nggak semua punya privilege kuliah. yang bisa, jangan jadi penghalang." },
+                    { name: "#JanganExploitBuruh", microcopy: "kerja keras jangan jadi alasan buat bayar murah." },
+                    { name: "#FUNDINGSolidaritasDiam", microcopy: "bantu tanpa perlu dipamerin. yang penting mereka selamat." },
+                    { name: "#PetisiTerbuka", microcopy: "suara kecil yang dikumpulkan, bisa jadi badai." }
                 ]
             }
         };
-        
         // ===== STORAGE HELPERS =====
         function getUsers() {
             const usersJson = localStorage.getItem('nope_users');
             return usersJson ? JSON.parse(usersJson) : {};
         }
-        
         function saveUsers(users) {
             localStorage.setItem('nope_users', JSON.stringify(users));
         }
-        
         function getUserData(username) {
             const users = getUsers();
             return users[username] || null;
         }
-        
         function saveUserData(username, data) {
             const users = getUsers();
             users[username] = data;
             saveUsers(users);
         }
-        
         // ===== ROUTER & TAB SYSTEM =====
         function showPage(pageId) {
-            // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-                page.classList.remove('fade-in');
+                page.classList.remove('active', 'fade-in');
             });
-            
-            // Show target page
             const page = document.getElementById(pageId);
             if (page) {
-                page.classList.add('active');
-                page.classList.add('fade-in');
-                
-                // Show/hide bottom nav
+                page.classList.add('active', 'fade-in');
                 const bottomNav = document.getElementById('bottomNav');
                 if (['jejak', 'jalan', 'dunia'].includes(pageId)) {
                     bottomNav.style.display = 'flex';
@@ -1254,145 +982,78 @@
                 } else {
                     bottomNav.style.display = 'none';
                 }
-                
-                // Initialize page
                 switch(pageId) {
-                    case 'login':
-                        initLoginPage();
-                        break;
-                    case 'onboarding':
-                        initOnboardingPage();
-                        break;
-                    case 'jejak':
-                        initJejakPage();
-                        break;
-                    case 'jalan':
-                        initJalanPage();
-                        break;
-                    case 'dunia':
-                        initDuniaPage();
-                        break;
+                    case 'login': initLoginPage(); break;
+                    case 'onboarding': initOnboardingPage(); break;
+                    case 'jejak': initJejakPage(); break;
+                    case 'jalan': initJalanPage(); break;
+                    case 'dunia': initDuniaPage(); break;
                 }
             }
         }
-        
         function showTab(tabId) {
             showPage(tabId);
         }
-        
         function updateNavActive(activeTab) {
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            
-            const activeItem = document.querySelector(`.nav-item[onclick*="${activeTab}"]`);
-            if (activeItem) {
-                activeItem.classList.add('active');
-            }
+            document.querySelector(`.nav-item[onclick*="${activeTab}"]`).classList.add('active');
         }
-        
-        // ===== INITIAL LOAD - SELALU MULAI DARI LOGIN =====
+        // ===== INITIAL LOAD =====
         function initializeApp() {
-            // HAPUS AUTO-LOGIN CHECK, SELALU MULAI DARI LOGIN
             currentUser = null;
-            
-            // Hapus user yang sedang login dari localStorage
             localStorage.removeItem('nope_current_user');
-            
-            // Tampilkan halaman login
             showPage('login');
         }
-        
         // ===== PAGE: LOGIN =====
         function initLoginPage() {
             const input = document.getElementById('usernameInput');
             const status = document.getElementById('userStatus');
-            
-            // Focus input
             input.value = '';
             input.focus();
             status.style.display = 'none';
-            
-            // Clear any previous event listeners
             const newInput = input.cloneNode(true);
             input.parentNode.replaceChild(newInput, input);
-            
-            // Re-assign ID
             const newInputElement = document.getElementById('usernameInput');
-            
-            // Enter key listener
-            newInputElement.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    processLogin();
-                }
+            newInputElement.addEventListener('keydown', e => {
+                if (e.key === 'Enter') processLogin();
             });
-            
-            // Real-time validation
             newInputElement.addEventListener('input', function() {
-                const username = this.value.trim().toLowerCase();
-                
+                let username = this.value.trim().toLowerCase();
                 if (username.length < 3) {
                     status.style.display = 'none';
                     return;
                 }
-                
-                // Auto-format
-                let formatted = username
-                    .replace(/\s+/g, '_')
-                    .replace(/[^a-z0-9_]/g, '');
-                
-                if (username !== formatted) {
-                    this.value = formatted;
-                }
-                
-                // Check if user exists
+                let formatted = username.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+                if (username !== formatted) this.value = formatted;
                 const userData = getUserData(formatted);
-                
+                status.style.display = 'block';
                 if (userData) {
-                    if (userData.onboarded) {
-                        status.style.display = 'block';
-                        status.textContent = `@${formatted} sudah ada • tekan enter untuk login`;
-                    } else {
-                        status.style.display = 'block';
-                        status.textContent = `@${formatted} belum onboarding • tekan enter untuk lanjut`;
-                    }
+                    status.textContent = userData.onboarded ?
+                        `@${formatted} sudah ada • tekan enter untuk login` :
+                        `@${formatted} belum onboarding • tekan enter untuk lanjut`;
                 } else {
-                    status.style.display = 'block';
                     status.textContent = `@${formatted} akan dibuat baru`;
                 }
             });
         }
-        
         function processLogin() {
-            const input = document.getElementById('usernameInput');
-            let username = input.value.trim().toLowerCase();
-            
-            // Validation
+            let username = document.getElementById('usernameInput').value.trim().toLowerCase();
             if (username.length < 3) {
                 alert('Username minimal 3 karakter!');
                 return;
             }
-            
-            // Format username
-            username = username
-                .replace(/\s+/g, '_')
-                .replace(/[^a-z0-9_]/g, '');
-            
+            username = username.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
             if (username.length < 3) {
                 alert('Username hanya boleh huruf, angka, underscore!');
                 return;
             }
-            
-            // Set current user
             currentUser = username;
             localStorage.setItem('nope_current_user', username);
-            
-            // Check if user exists
-            const userData = getUserData(username);
-            
+            let userData = getUserData(username);
             if (!userData) {
-                // User baru - buat data baru
-                const newUser = {
+                userData = {
                     username: username,
                     created: Date.now(),
                     lastLogin: Date.now(),
@@ -1401,774 +1062,260 @@
                     rants: [],
                     artefacts: []
                 };
-                saveUserData(username, newUser);
-                
-                // SELALU KE ONBOARDING UNTUK USER BARU
+                saveUserData(username, userData);
                 showPage('onboarding');
                 return;
             }
-            
-            // User sudah ada - update last login
             userData.lastLogin = Date.now();
             saveUserData(username, userData);
-            
-            // Check if user is onboarded
             if (userData.onboarded) {
-                // User sudah onboarding - arahkan ke jejak
                 showPage('jejak');
             } else {
-                // User belum selesai onboarding - arahkan ke onboarding
                 showPage('onboarding');
             }
         }
-        
         // ===== PAGE: ONBOARDING =====
         function initOnboardingPage() {
-            if (!currentUser) {
-                showPage('login');
-                return;
-            }
-            
+            if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
-            
-            // Jika user sudah onboarded, arahkan ke jejak
-            if (userData && userData.onboarded) {
-                showPage('jejak');
-                return;
-            }
-            
-            // Reset selections
-            selectedHashtags = {
+            if (userData && userData.onboarded) { showPage('jejak'); return; }
+            selectedHashtags = userData && userData.selectedHashtags ? { ...userData.selectedHashtags } : {
                 popculture: null,
                 personalpain: null,
-                socialsickness: null
+                socialsickness: null,
+                movement: null
             };
-            
-            // Jika user sudah punya pilihan sebelumnya, load
-            if (userData && userData.selectedHashtags) {
-                selectedHashtags = userData.selectedHashtags;
-            }
-            
-            // Render hashtags for each zona
-            renderHashtags('popculture');
-            renderHashtags('personalpain');
-            renderHashtags('socialsickness');
-            
-            // Update counters
+            ['popculture', 'personalpain', 'socialsickness', 'movement'].forEach(z => renderHashtags(z));
             updateCounters();
         }
-        
         function renderHashtags(zonaId) {
             const container = document.getElementById(zonaId + 'List');
             const zona = zonaData[zonaId];
-            
             container.innerHTML = '';
-            
             zona.hashtags.forEach(hashtag => {
                 const isSelected = selectedHashtags[zonaId] === hashtag.name;
                 const item = document.createElement('div');
                 item.className = `hashtag-item ${isSelected ? 'selected' : ''}`;
                 item.onclick = () => selectHashtag(zonaId, hashtag.name);
-                
                 item.innerHTML = `
                     <div class="hashtag-name">${hashtag.name}</div>
                     <div class="hashtag-microcopy">${hashtag.microcopy}</div>
                 `;
-                
                 container.appendChild(item);
             });
         }
-        
         function selectHashtag(zonaId, hashtagName) {
-            // Select/deselect
-            if (selectedHashtags[zonaId] === hashtagName) {
-                selectedHashtags[zonaId] = null;
-            } else {
-                selectedHashtags[zonaId] = hashtagName;
-            }
-            
-            // Re-render this zona's hashtags
+            selectedHashtags[zonaId] = selectedHashtags[zonaId] === hashtagName ? null : hashtagName;
             renderHashtags(zonaId);
-            
-            // Update counters
             updateCounters();
         }
-        
         function updateCounters() {
-            // Update individual counters
-            document.getElementById('popcultureCounter').textContent = 
-                `${selectedHashtags.popculture ? '1' : '0'}/1`;
-            document.getElementById('personalpainCounter').textContent = 
-                `${selectedHashtags.personalpain ? '1' : '0'}/1`;
-            document.getElementById('socialsicknessCounter').textContent = 
-                `${selectedHashtags.socialsickness ? '1' : '0'}/1`;
-            
-            // Calculate total selected
+            ['popculture', 'personalpain', 'socialsickness', 'movement'].forEach(z => {
+                document.getElementById(z + 'Counter').textContent = `${selectedHashtags[z] ? '1' : '0'}/1`;
+            });
             const total = Object.values(selectedHashtags).filter(h => h !== null).length;
             document.getElementById('totalCounter').textContent = total;
-            
-            // Enable/disable save button
             const btn = document.getElementById('saveBtn');
-            if (total === 3) {
+            if (total === 4) {
                 btn.disabled = false;
                 btn.textContent = 'Temukan frekuensimu...';
             } else {
                 btn.disabled = true;
-                btn.textContent = `Pilih ${3 - total} lagi...`;
+                btn.textContent = `Pilih ${4 - total} lagi...`;
             }
         }
-        
         function saveSelections() {
             if (!currentUser) return;
-            
-            // Get user data
             const userData = getUserData(currentUser);
-            
-            // Update user data
             userData.selectedHashtags = selectedHashtags;
             userData.onboarded = true;
             userData.lastLogin = Date.now();
-            
-            // Save to localStorage
             saveUserData(currentUser, userData);
-            
-            // Update button state
-            const btn = document.getElementById('saveBtn');
-            btn.textContent = 'Menyimpan...';
-            btn.disabled = true;
-            
-            // Redirect to jejak page
-            setTimeout(() => {
-                showPage('jejak');
-            }, 600);
+            document.getElementById('saveBtn').textContent = 'Menyimpan...';
+            document.getElementById('saveBtn').disabled = true;
+            setTimeout(() => showPage('jejak'), 600);
         }
-        
         // ===== PAGE: JEJAK =====
         function initJejakPage() {
-            if (!currentUser) {
-                showPage('login');
-                return;
-            }
-            
+            if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
-            
-            // Render all sections
+            const postCount = (userData.rants?.length || 0) + (userData.artefacts?.length || 0);
+            document.getElementById('postCount').textContent = postCount;
+            document.getElementById('lastActive').textContent = formatLastActive(userData.lastLogin);
+            setupRantBox();
             renderArtefakPreview();
-            renderRantArchive();
-            renderArtefaksGrid();
+            renderRecentRants();
+            renderRecentArtefaks();
         }
-        
+        function setupRantBox() {
+            const userData = getUserData(currentUser);
+            const rantBox = document.getElementById('rantBox');
+            const counter = document.getElementById('rantCounter');
+            rantBox.addEventListener('input', () => counter.textContent = `${rantBox.value.length}/300`);
+            const hashtagSelect = document.getElementById('rantHashtagSelect');
+            hashtagSelect.innerHTML = '<option value="">Pilih hashtag...</option>';
+            if (userData.selectedHashtags) {
+                Object.values(userData.selectedHashtags).forEach(hashtag => {
+                    if (hashtag) {
+                        const option = document.createElement('option');
+                        option.value = hashtag;
+                        option.textContent = hashtag;
+                        hashtagSelect.appendChild(option);
+                    }
+                });
+            }
+            if (hashtagSelect.options.length > 1) hashtagSelect.selectedIndex = 1;
+            rantBox.value = '';
+            counter.textContent = '0/300';
+        }
         function renderArtefakPreview() {
             const container = document.getElementById('artefakPreviewContainer');
             const userData = getUserData(currentUser);
-            
             if (!userData.artefacts || userData.artefacts.length === 0) {
                 container.innerHTML = `
                     <div class="artefak-preview" onclick="showArtefakModal()">
-                        <div class="artefak-preview-image">
-                            <div class="artefak-placeholder">🖼️</div>
-                        </div>
+                        <div class="artefak-preview-image"><div class="artefak-placeholder">🖼️</div></div>
                         <div class="artefak-preview-info">
-                            <div class="artefak-preview-title">Unggah</div>
-                            <div class="artefak-interaction">
-                                <button class="interaction-toggle" onclick="toggleArtefakComments(event)">
-                                    👁️ Hide/Reveal
-                                </button>
-                                <div class="reaction-stats">
-                                    <div class="reaction-stat">
-                                        <span class="reaction-icon">🙌</span>
-                                        <span class="reaction-count">0</span>
-                                    </div>
-                                    <div class="reaction-stat">
-                                        <span class="reaction-icon">🤗</span>
-                                        <span class="reaction-count">0</span>
-                                    </div>
-                                    <div class="reaction-stat">
-                                        <span class="reaction-icon">👏</span>
-                                        <span class="reaction-count">0</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="artefak-preview-title">📁 Belum ada artefak</div>
+                            <div class="artefak-preview-date">Klik untuk menambahkan artefak pertama mu</div>
                         </div>
                     </div>
                 `;
                 return;
             }
-            
-            // Get latest artefak
             const latestArtefak = userData.artefacts[userData.artefacts.length - 1];
             const date = new Date(latestArtefak.date);
-            const dateStr = date.toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-            
-            // Initialize reaction counts
-            const reactions = latestArtefak.reactions || {
-                gueJuga: 0,
-                peluk: 0,
-                bangga: 0
-            };
-            
+            const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             container.innerHTML = `
                 <div class="artefak-preview" onclick="viewArtefak(${userData.artefacts.length - 1})">
-                    <div class="artefak-preview-image">
-                        <div class="artefak-placeholder">📁</div>
-                    </div>
+                    <div class="artefak-preview-image"><div class="artefak-placeholder">📁</div></div>
                     <div class="artefak-preview-info">
                         <div class="artefak-preview-title">📁 ${latestArtefak.title}</div>
-                        <div class="artefak-preview-date">${dateStr}</div>
-                        <div class="artefak-interaction">
-                            <button class="interaction-toggle" onclick="toggleArtefakComments(event, ${userData.artefacts.length - 1})">
-                                👁️ Hide/Reveal
-                            </button>
-                            <div class="reaction-stats">
-                                <button class="reaction-stat" onclick="addArtefakReaction(${userData.artefacts.length - 1}, 'gueJuga', event)">
-                                    <span class="reaction-icon">🙌</span>
-                                    <span class="reaction-count" id="arteGueJuga">${reactions.gueJuga}</span>
-                                </button>
-                                <button class="reaction-stat" onclick="addArtefakReaction(${userData.artefacts.length - 1}, 'peluk', event)">
-                                    <span class="reaction-icon">🤗</span>
-                                    <span class="reaction-count" id="artePeluk">${reactions.peluk}</span>
-                                </button>
-                                <button class="reaction-stat" onclick="addArtefakReaction(${userData.artefacts.length - 1}, 'bangga', event)">
-                                    <span class="reaction-icon">👏</span>
-                                    <span class="reaction-count" id="arteBangga">${reactions.bangga}</span>
-                                </button>
-                            </div>
-                        </div>
+                        <div class="artefak-preview-date">Ditambahkan: ${dateStr}</div>
                     </div>
                 </div>
             `;
         }
-        
-        function renderRantArchive() {
-            const container = document.getElementById('rantArchive');
+        function renderRecentRants() {
+            const container = document.getElementById('recentRantsList');
             const userData = getUserData(currentUser);
-            
             if (!userData.rants || userData.rants.length === 0) {
-                container.innerHTML = `
-                    <div class="rant-archive-item" style="text-align: center; color: rgba(255,255,255,0.4); padding: 30px 20px;">
-                        Belum ada rant. Mulai tambah rant di halaman dunia!
-                    </div>
-                `;
+                container.innerHTML = `<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant. Mulai tulis di box di atas!</div>`;
                 return;
             }
-            
-            // Get 3 latest rants (most recent first)
             const recentRants = userData.rants.slice(-3).reverse();
-            
             container.innerHTML = '';
-            recentRants.forEach((rant, index) => {
+            recentRants.forEach(rant => {
                 const date = new Date(rant.date);
-                const dateStr = date.toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                // Initialize reaction counts if not exists
-                const reactions = rant.reactions || {
-                    gueJuga: 0,
-                    peluk: 0,
-                    bangga: 0
-                };
-                
-                const isUserReacted = rant.userReactions || {
-                    gueJuga: false,
-                    peluk: false,
-                    bangga: false
-                };
-                
-                const rantIndex = userData.rants.length - 1 - index;
-                
+                const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                let content = rant.content.length > 100 ? rant.content.substring(0, 100) + '...' : rant.content;
                 const item = document.createElement('div');
-                item.className = 'rant-archive-item';
-                item.dataset.rantIndex = rantIndex;
-                
-                item.innerHTML = `
-                    <div class="rant-header">
-                        <div class="rant-date">${dateStr}</div>
-                        <div class="rant-hashtag">${rant.hashtag || ''}</div>
-                    </div>
-                    <div class="rant-content">${rant.content}</div>
-                    <div class="rant-interaction">
-                        <button class="hide-reveal-toggle" onclick="toggleRantComments(event, ${rantIndex})">
-                            👁️ Hide/Reveal
-                        </button>
-                        <div class="rant-reactions">
-                            <button class="rant-reaction-btn ${isUserReacted.gueJuga ? 'active' : ''}" onclick="addRantReaction(${rantIndex}, 'gueJuga', event)">
-                                <span class="reaction-icon">🙌</span>
-                                <span class="reaction-count">${reactions.gueJuga}</span>
-                            </button>
-                            <button class="rant-reaction-btn ${isUserReacted.peluk ? 'active' : ''}" onclick="addRantReaction(${rantIndex}, 'peluk', event)">
-                                <span class="reaction-icon">🤗</span>
-                                <span class="reaction-count">${reactions.peluk}</span>
-                            </button>
-                            <button class="rant-reaction-btn ${isUserReacted.bangga ? 'active' : ''}" onclick="addRantReaction(${rantIndex}, 'bangga', event)">
-                                <span class="reaction-icon">👏</span>
-                                <span class="reaction-count">${reactions.bangga}</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="comment-section" id="commentSection-${rantIndex}">
-                        <div class="comment-input-container">
-                            <input type="text" class="comment-input" id="commentInput-${rantIndex}" placeholder="Tulis komentar..." maxlength="200">
-                            <button class="comment-submit" onclick="addComment(${rantIndex})">Kirim</button>
-                        </div>
-                        <div class="comments-list" id="commentsList-${rantIndex}">
-                            ${renderComments(rant.comments || [])}
-                        </div>
-                    </div>
-                `;
-                
+                item.className = 'recent-rant-item';
+                item.onclick = () => viewRantDetails(rant);
+                item.innerHTML = `<div class="recent-rant-date">${dateStr} • ${rant.hashtag || ''}</div><div class="recent-rant-content">${content}</div>`;
                 container.appendChild(item);
             });
         }
-        
-        function renderComments(comments) {
-            if (!comments || comments.length === 0) {
-                return '<div style="color: rgba(255,255,255,0.4); text-align: center; padding: 10px;">Belum ada komentar</div>';
-            }
-            
-            let html = '';
-            comments.forEach(comment => {
-                const date = new Date(comment.date);
-                const dateStr = date.toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                html += `
-                    <div class="comment-item">
-                        <div class="comment-author">@${comment.author}</div>
-                        <div class="comment-text">${comment.text}</div>
-                        <div class="comment-date">${dateStr}</div>
-                    </div>
-                `;
-            });
-            return html;
-        }
-        
-        function renderArtefaksGrid() {
+        function renderRecentArtefaks() {
             const container = document.getElementById('artefaksGrid');
             const userData = getUserData(currentUser);
-            
             if (!userData.artefacts || userData.artefacts.length === 0) {
-                // Create 6 empty grid items
-                container.innerHTML = '';
-                for (let i = 0; i < 6; i++) {
-                    const item = document.createElement('div');
-                    item.className = 'artefak-grid-item';
-                    item.onclick = () => showArtefakModal();
-                    item.innerHTML = `
-                        <div class="artefak-grid-image">
-                            <div class="artefak-grid-icon">+</div>
-                        </div>
-                        <div class="artefak-grid-title">Unggah</div>
-                    `;
-                    container.appendChild(item);
-                }
+                container.innerHTML = `<div class="artefak-grid-item" style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.4);">Belum ada artefak. Tambah artefak untuk dokumentasi!</div>`;
                 return;
             }
-            
-            // Get up to 6 latest artefaks (3x2 grid)
             const recentArtefaks = userData.artefacts.slice(-6).reverse();
-            
             container.innerHTML = '';
-            recentArtefaks.forEach((artefak, index) => {
+            recentArtefaks.forEach((_, index) => {
+                const artefak = userData.artefacts[userData.artefacts.length - 1 - index];
                 const date = new Date(artefak.date);
-                const dateStr = date.toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short'
-                });
-                
-                // Truncate title if too long
-                let title = artefak.title;
-                if (title.length > 15) {
-                    title = title.substring(0, 15) + '...';
-                }
-                
+                const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                let title = artefak.title.length > 20 ? artefak.title.substring(0, 20) + '...' : artefak.title;
                 const item = document.createElement('div');
                 item.className = 'artefak-grid-item';
                 item.onclick = () => viewArtefakDetails(userData.artefacts.length - 1 - index);
-                
                 item.innerHTML = `
-                    <div class="artefak-grid-image">
-                        <div class="artefak-grid-icon">📁</div>
-                    </div>
+                    <div class="artefak-grid-image"><div class="artefak-grid-icon">📁</div></div>
                     <div class="artefak-grid-title">${title}</div>
                     <div class="artefak-grid-date">${dateStr}</div>
                 `;
-                
                 container.appendChild(item);
             });
-            
-            // Fill remaining spots with empty items
-            const emptySpots = 6 - recentArtefaks.length;
-            for (let i = 0; i < emptySpots; i++) {
-                const item = document.createElement('div');
-                item.className = 'artefak-grid-item';
-                item.onclick = () => showArtefakModal();
-                item.innerHTML = `
-                    <div class="artefak-grid-image">
-                        <div class="artefak-grid-icon">+</div>
-                    </div>
-                    <div class="artefak-grid-title">Unggah</div>
-                `;
-                container.appendChild(item);
-            }
         }
-        
-        // ===== INTERACTION FUNCTIONS =====
-        function toggleRantComments(event, rantIndex) {
-            event.stopPropagation();
-            const commentSection = document.getElementById(`commentSection-${rantIndex}`);
-            commentSection.classList.toggle('show');
-            
-            // Update button text
-            const button = event.target.closest('.hide-reveal-toggle');
-            if (commentSection.classList.contains('show')) {
-                button.textContent = '👁️ Hide';
-            } else {
-                button.textContent = '👁️ Reveal';
-            }
-        }
-        
-        function toggleArtefakComments(event, artefakIndex = null) {
-            event.stopPropagation();
-            // Untuk artefak utama, tampilkan modal detail
-            if (artefakIndex !== null) {
-                viewArtefakDetails(artefakIndex);
-            } else {
-                showArtefakModal();
-            }
-        }
-        
-        function addRantReaction(rantIndex, reactionType, event) {
-            event.stopPropagation();
-            
+        function postRantFromBox() {
+            const content = document.getElementById('rantBox').value.trim();
+            const hashtag = document.getElementById('rantHashtagSelect').value;
+            if (!content) { alert('Tulis rant terlebih dahulu!'); return; }
+            if (!hashtag) { alert('Pilih hashtag terlebih dahulu!'); return; }
             if (!currentUser) return;
-            
             const userData = getUserData(currentUser);
-            if (!userData.rants || !userData.rants[rantIndex]) return;
-            
-            const rant = userData.rants[rantIndex];
-            
-            // Initialize reactions if not exists
-            if (!rant.reactions) {
-                rant.reactions = {
-                    gueJuga: 0,
-                    peluk: 0,
-                    bangga: 0
-                };
-            }
-            
-            if (!rant.userReactions) {
-                rant.userReactions = {
-                    gueJuga: false,
-                    peluk: false,
-                    bangga: false
-                };
-            }
-            
-            // Toggle reaction
-            if (rant.userReactions[reactionType]) {
-                // Remove reaction
-                rant.reactions[reactionType]--;
-                rant.userReactions[reactionType] = false;
-            } else {
-                // Add reaction
-                rant.reactions[reactionType]++;
-                rant.userReactions[reactionType] = true;
-            }
-            
-            // Save
+            if (!userData.rants) userData.rants = [];
+            userData.rants.push({ content, hashtag, date: Date.now() });
+            userData.lastLogin = Date.now();
             saveUserData(currentUser, userData);
-            
-            // Update UI
-            const button = event.target.closest('.rant-reaction-btn');
-            const countSpan = button.querySelector('.reaction-count');
-            
-            if (rant.userReactions[reactionType]) {
-                button.classList.add('active');
-            } else {
-                button.classList.remove('active');
-            }
-            
-            countSpan.textContent = rant.reactions[reactionType];
+            document.getElementById('rantBox').value = '';
+            document.getElementById('rantCounter').textContent = '0/300';
+            renderRecentRants();
+            const postCount = (userData.rants?.length || 0) + (userData.artefacts?.length || 0);
+            document.getElementById('postCount').textContent = postCount;
+            showToast('Rant berhasil diposting!');
         }
-        
-        function addArtefakReaction(artefakIndex, reactionType, event) {
-            event.stopPropagation();
-            
-            if (!currentUser) return;
-            
-            const userData = getUserData(currentUser);
-            if (!userData.artefacts || !userData.artefacts[artefakIndex]) return;
-            
-            const artefak = userData.artefacts[artefakIndex];
-            
-            // Initialize reactions if not exists
-            if (!artefak.reactions) {
-                artefak.reactions = {
-                    gueJuga: 0,
-                    peluk: 0,
-                    bangga: 0
-                };
-            }
-            
-            // Increment reaction
-            artefak.reactions[reactionType] = (artefak.reactions[reactionType] || 0) + 1;
-            
-            // Save
-            saveUserData(currentUser, userData);
-            
-            // Update UI
-            const countElement = document.getElementById(`arte${reactionType.charAt(0).toUpperCase() + reactionType.slice(1)}`);
-            if (countElement) {
-                countElement.textContent = artefak.reactions[reactionType];
-            }
-            
-            // Show visual feedback
-            const button = event.target.closest('.reaction-stat');
-            button.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                button.style.transform = 'scale(1)';
-            }, 300);
+        function viewAllRants() { showRantListModal(); }
+        function viewAllArtefaks() { showArtefakListModal(); }
+        function viewRantDetails(rant) {
+            const date = new Date(rant.date);
+            const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            showModal(`
+                <div class="modal-header">
+                    <div class="modal-title">Rant</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div style="margin-bottom:15px;color:rgba(255,255,255,0.6);font-size:12px;">${dateStr} • ${rant.hashtag || ''}</div>
+                <div style="color:rgba(255,255,255,0.9);line-height:1.6;font-size:14px;white-space:pre-wrap;">${rant.content}</div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
+            `);
         }
-        
-        function addComment(rantIndex) {
-            if (!currentUser) return;
-            
-            const commentInput = document.getElementById(`commentInput-${rantIndex}`);
-            const commentText = commentInput.value.trim();
-            
-            if (!commentText) return;
-            
-            const userData = getUserData(currentUser);
-            if (!userData.rants || !userData.rants[rantIndex]) return;
-            
-            const rant = userData.rants[rantIndex];
-            
-            // Initialize comments if not exists
-            if (!rant.comments) {
-                rant.comments = [];
-            }
-            
-            // Add comment
-            rant.comments.push({
-                author: currentUser,
-                text: commentText,
-                date: Date.now()
-            });
-            
-            // Save
-            saveUserData(currentUser, userData);
-            
-            // Clear input
-            commentInput.value = '';
-            
-            // Update UI
-            const commentsList = document.getElementById(`commentsList-${rantIndex}`);
-            commentsList.innerHTML = renderComments(rant.comments);
-        }
-        
-        function viewAllArtefaks() {
-            showArtefakListModal();
-        }
-        
         function viewArtefakDetails(index) {
             const userData = getUserData(currentUser);
             if (!userData.artefacts || !userData.artefacts[index]) return;
-            
             const artefak = userData.artefacts[index];
             const date = new Date(artefak.date);
-            const dateStr = date.toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            
-            const reactions = artefak.reactions || {
-                gueJuga: 0,
-                peluk: 0,
-                bangga: 0
-            };
-            
-            const content = `
+            const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            showModal(`
                 <div class="modal-header">
                     <div class="modal-title">Artefak</div>
                     <button class="modal-close" onclick="hideModal()">×</button>
                 </div>
-                <div style="margin-bottom: 15px; color: #ff00ff; font-size: 16px; font-weight: 600;">
-                    ${artefak.title}
-                </div>
-                <div style="margin-bottom: 15px; color: rgba(255,255,255,0.6); font-size: 12px;">
-                    ${dateStr}
-                </div>
-                <div style="color: rgba(255,255,255,0.9); line-height: 1.6; font-size: 14px; white-space: pre-wrap; margin-bottom: 20px;">
-                    ${artefak.content}
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                    <button class="hide-reveal-toggle" onclick="toggleArtefakModalComments(${index})">
-                        👁️ Hide/Reveal
-                    </button>
-                    <div style="display: flex; gap: 15px;">
-                        <button style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; color: rgba(255,255,255,0.7); font-size: 12px; cursor: pointer;" onclick="addArtefakReactionModal(${index}, 'gueJuga')">
-                            <span>🙌</span>
-                            <span>${reactions.gueJuga}</span>
-                        </button>
-                        <button style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; color: rgba(255,255,255,0.7); font-size: 12px; cursor: pointer;" onclick="addArtefakReactionModal(${index}, 'peluk')">
-                            <span>🤗</span>
-                            <span>${reactions.peluk}</span>
-                        </button>
-                        <button style="display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; color: rgba(255,255,255,0.7); font-size: 12px; cursor: pointer;" onclick="addArtefakReactionModal(${index}, 'bangga')">
-                            <span>👏</span>
-                            <span>${reactions.bangga}</span>
-                        </button>
-                    </div>
-                </div>
-                <div id="artefakModalComments-${index}" class="comment-section" style="display: none;">
-                    <div class="comment-input-container">
-                        <input type="text" class="comment-input" id="artefakCommentInput-${index}" placeholder="Tulis komentar..." maxlength="200">
-                        <button class="comment-submit" onclick="addArtefakComment(${index})">Kirim</button>
-                    </div>
-                    <div class="comments-list" id="artefakCommentsList-${index}">
-                        ${renderComments(artefak.comments || [])}
-                    </div>
-                </div>
-                <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 20px;">Tutup</button>
-            `;
-            
-            showModal(content);
+                <div style="margin-bottom:15px;color:#ff00ff;font-size:16px;font-weight:600;">${artefak.title}</div>
+                <div style="margin-bottom:15px;color:rgba(255,255,255,0.6);font-size:12px;">${dateStr}</div>
+                <div style="color:rgba(255,255,255,0.9);line-height:1.6;font-size:14px;white-space:pre-wrap;">${artefak.content}</div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
+            `);
         }
-        
-        function toggleArtefakModalComments(artefakIndex) {
-            const commentSection = document.getElementById(`artefakModalComments-${artefakIndex}`);
-            commentSection.style.display = commentSection.style.display === 'none' ? 'block' : 'none';
-        }
-        
-        function addArtefakReactionModal(artefakIndex, reactionType) {
-            if (!currentUser) return;
-            
-            const userData = getUserData(currentUser);
-            if (!userData.artefacts || !userData.artefacts[artefakIndex]) return;
-            
-            const artefak = userData.artefacts[artefakIndex];
-            
-            // Initialize reactions if not exists
-            if (!artefak.reactions) {
-                artefak.reactions = {
-                    gueJuga: 0,
-                    peluk: 0,
-                    bangga: 0
-                };
-            }
-            
-            // Increment reaction
-            artefak.reactions[reactionType] = (artefak.reactions[reactionType] || 0) + 1;
-            
-            // Save
-            saveUserData(currentUser, userData);
-            
-            // Update modal UI
-            const reactionElements = document.querySelectorAll(`[onclick="addArtefakReactionModal(${artefakIndex}, '${reactionType}')"] span:last-child`);
-            if (reactionElements.length > 0) {
-                reactionElements[0].textContent = artefak.reactions[reactionType];
-            }
-            
-            // Update main page if needed
-            if (currentTab === 'jejak') {
-                initJejakPage();
-            }
-        }
-        
-        function addArtefakComment(artefakIndex) {
-            if (!currentUser) return;
-            
-            const commentInput = document.getElementById(`artefakCommentInput-${artefakIndex}`);
-            const commentText = commentInput.value.trim();
-            
-            if (!commentText) return;
-            
-            const userData = getUserData(currentUser);
-            if (!userData.artefacts || !userData.artefacts[artefakIndex]) return;
-            
-            const artefak = userData.artefacts[artefakIndex];
-            
-            // Initialize comments if not exists
-            if (!artefak.comments) {
-                artefak.comments = [];
-            }
-            
-            // Add comment
-            artefak.comments.push({
-                author: currentUser,
-                text: commentText,
-                date: Date.now()
-            });
-            
-            // Save
-            saveUserData(currentUser, userData);
-            
-            // Clear input
-            commentInput.value = '';
-            
-            // Update UI
-            const commentsList = document.getElementById(`artefakCommentsList-${artefakIndex}`);
-            commentsList.innerHTML = renderComments(artefak.comments);
-        }
-        
-        function viewArtefak(index) {
-            viewArtefakDetails(index);
-        }
-        
+        function viewArtefak(index) { viewArtefakDetails(index); }
         // ===== PAGE: JALAN =====
         function initJalanPage() {
-            if (!currentUser) {
-                showPage('login');
-                return;
-            }
-            
+            if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
-            
-            // Calculate stats
             const joinDate = new Date(userData.created);
             const now = new Date();
-            const daysDiff = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24));
-            
+            const daysDiff = Math.max(1, Math.floor((now - joinDate) / (1000 * 60 * 60 * 24)));
             const rantsCount = userData.rants?.length || 0;
             const artefactsCount = userData.artefacts?.length || 0;
             const hashtagsCount = userData.selectedHashtags ? Object.values(userData.selectedHashtags).filter(h => h !== null).length : 0;
-            
-            // Update stats
-            document.getElementById('daysCount').textContent = Math.max(1, daysDiff);
+            document.getElementById('daysCount').textContent = daysDiff;
             document.getElementById('rantsCount').textContent = rantsCount;
             document.getElementById('artefaksCount').textContent = artefactsCount;
             document.getElementById('hashtagsCount').textContent = hashtagsCount;
-            
-            // Render selected hashtags
             renderSelectedHashtags();
         }
-        
         function renderSelectedHashtags() {
             const container = document.getElementById('selectedHashtagsList');
             const userData = getUserData(currentUser);
-            
             if (!userData.selectedHashtags) {
                 container.innerHTML = '<div class="hint">Belum memilih hashtag</div>';
                 return;
             }
-            
             container.innerHTML = '';
-            
             Object.entries(userData.selectedHashtags).forEach(([zona, hashtag]) => {
                 if (hashtag) {
                     const item = document.createElement('div');
@@ -2181,47 +1328,98 @@
                 }
             });
         }
-        
         // ===== PAGE: DUNIA =====
         function initDuniaPage() {
-            if (!currentUser) {
-                showPage('login');
-                return;
-            }
-            
+            if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
-            
-            // Update profile
             document.getElementById('profileUsername').textContent = `@${currentUser}`;
-            
             const joinDate = new Date(userData.created);
-            const joinDateStr = joinDate.toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
+            const joinDateStr = joinDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             document.getElementById('profileJoinDate').textContent = `Bergabung: ${joinDateStr}`;
-            
             const postCount = (userData.rants?.length || 0) + (userData.artefacts?.length || 0);
             document.getElementById('profileActivity').textContent = `Aktivitas: ${postCount} posting`;
         }
-        
         // ===== MODAL SYSTEM =====
         function showModal(content) {
-            const modal = document.querySelector('.modal');
-            const overlay = document.getElementById('modalOverlay');
-            
-            modal.innerHTML = content;
-            overlay.classList.add('active');
+            document.querySelector('.modal').innerHTML = content;
+            document.getElementById('modalOverlay').classList.add('active');
         }
-        
         function hideModal() {
-            const overlay = document.getElementById('modalOverlay');
-            overlay.classList.remove('active');
+            document.getElementById('modalOverlay').classList.remove('active');
         }
-        
+        function showRantListModal() {
+            const userData = getUserData(currentUser);
+            if (!userData.rants || userData.rants.length === 0) {
+                showModal(`
+                    <div class="modal-header">
+                        <div class="modal-title">Semua Rant</div>
+                        <button class="modal-close" onclick="hideModal()">×</button>
+                    </div>
+                    <div style="text-align:center;color:rgba(255,255,255,0.4);padding:40px 20px;">Belum ada rant</div>
+                `);
+                return;
+            }
+            const sortedRants = [...userData.rants].sort((a, b) => b.date - a.date);
+            let rantListHtml = '';
+            sortedRants.forEach(rant => {
+                const date = new Date(rant.date);
+                const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                let content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                rantListHtml += `
+                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})" style="margin-bottom:10px;">
+                        <div class="recent-rant-date">${dateStr} • ${rant.hashtag || ''}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
+            });
+            showModal(`
+                <div class="modal-header">
+                    <div class="modal-title">Semua Rant (${sortedRants.length})</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div class="recent-rants-list" style="max-height:400px;overflow-y:auto;">${rantListHtml}</div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
+            `);
+        }
+        function showArtefakListModal() {
+            const userData = getUserData(currentUser);
+            if (!userData.artefacts || userData.artefacts.length === 0) {
+                showModal(`
+                    <div class="modal-header">
+                        <div class="modal-title">Semua Artefak</div>
+                        <button class="modal-close" onclick="hideModal()">×</button>
+                    </div>
+                    <div style="text-align:center;color:rgba(255,255,255,0.4);padding:40px 20px;">Belum ada artefak</div>
+                `);
+                return;
+            }
+            const sortedArtefaks = [...userData.artefacts].sort((a, b) => b.date - a.date);
+            let artefakListHtml = '';
+            sortedArtefaks.forEach((_, i) => {
+                const artefak = userData.artefacts[userData.artefacts.length - 1 - i];
+                const date = new Date(artefak.date);
+                const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                let title = artefak.title.length > 30 ? artefak.title.substring(0, 30) + '...' : artefak.title;
+                let content = artefak.content.length > 60 ? artefak.content.substring(0, 60) + '...' : artefak.content;
+                artefakListHtml += `
+                    <div class="recent-rant-item" onclick="viewArtefakDetails(${userData.artefacts.length - 1 - i})" style="margin-bottom:10px;">
+                        <div class="recent-rant-date">${dateStr}</div>
+                        <div style="color:#ff00ff;font-weight:600;margin-bottom:5px;">${title}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
+            });
+            showModal(`
+                <div class="modal-header">
+                    <div class="modal-title">Semua Artefak (${sortedArtefaks.length})</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div class="recent-rants-list" style="max-height:400px;overflow-y:auto;">${artefakListHtml}</div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
+            `);
+        }
         function showArtefakModal() {
-            const content = `
+            showModal(`
                 <div class="modal-header">
                     <div class="modal-title">Tambah Artefak</div>
                     <button class="modal-close" onclick="hideModal()">×</button>
@@ -2230,133 +1428,28 @@
                 <textarea class="textarea-input" id="artefakContent" placeholder="Deskripsi artefak..." maxlength="1000"></textarea>
                 <div class="char-counter" id="artefakCounter">0/1000</div>
                 <button class="action-btn" onclick="saveArtefak()">Simpan Artefak</button>
-            `;
-            
-            showModal(content);
-            
-            // Setup character counter
+            `);
             const textarea = document.getElementById('artefakContent');
             const counter = document.getElementById('artefakCounter');
-            
-            textarea.addEventListener('input', function() {
-                counter.textContent = `${this.value.length}/1000`;
-            });
+            textarea.addEventListener('input', () => counter.textContent = `${textarea.value.length}/1000`);
         }
-        
         function saveArtefak() {
             const title = document.getElementById('artefakTitle').value.trim();
             const content = document.getElementById('artefakContent').value.trim();
-            
-            if (!title || !content) {
-                alert('Isi judul dan deskripsi artefak terlebih dahulu!');
-                return;
-            }
-            
+            if (!title || !content) { alert('Isi judul dan deskripsi artefak terlebih dahulu!'); return; }
             if (!currentUser) return;
-            
             const userData = getUserData(currentUser);
-            
-            // Add artefak
             if (!userData.artefacts) userData.artefacts = [];
-            
-            userData.artefacts.push({
-                title: title,
-                content: content,
-                date: Date.now(),
-                reactions: {
-                    gueJuga: 0,
-                    peluk: 0,
-                    bangga: 0
-                }
-            });
-            
-            // Update last login
+            userData.artefacts.push({ title, content, date: Date.now() });
             userData.lastLogin = Date.now();
-            
-            // Save
             saveUserData(currentUser, userData);
-            
-            // Close modal and refresh
             hideModal();
-            
-            // Refresh displays
             initJejakPage();
-            
-            // Show success message
             showToast('Artefak berhasil disimpan!');
         }
-        
-        function showArtefakListModal() {
-            const userData = getUserData(currentUser);
-            
-            if (!userData.artefacts || userData.artefacts.length === 0) {
-                showModal(`
-                    <div class="modal-header">
-                        <div class="modal-title">Semua Artefak</div>
-                        <button class="modal-close" onclick="hideModal()">×</button>
-                    </div>
-                    <div style="text-align: center; color: rgba(255,255,255,0.4); padding: 40px 20px;">
-                        Belum ada artefak
-                    </div>
-                `);
-                return;
-            }
-            
-            // Sort by date (newest first)
-            const sortedArtefaks = [...userData.artefacts].sort((a, b) => b.date - a.date);
-            
-            let artefakListHtml = '';
-            sortedArtefaks.forEach((artefak, index) => {
-                const date = new Date(artefak.date);
-                const dateStr = date.toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric'
-                });
-                
-                // Truncate title if too long
-                let title = artefak.title;
-                if (title.length > 30) {
-                    title = title.substring(0, 30) + '...';
-                }
-                
-                // Truncate content if too long
-                let content = artefak.content;
-                if (content.length > 60) {
-                    content = content.substring(0, 60) + '...';
-                }
-                
-                artefakListHtml += `
-                    <div class="recent-rant-item" onclick="viewArtefakDetails(${userData.artefacts.length - 1 - index})" style="margin-bottom: 10px;">
-                        <div class="recent-rant-date">${dateStr}</div>
-                        <div style="color: #ff00ff; font-weight: 600; margin-bottom: 5px;">${title}</div>
-                        <div class="recent-rant-content">${content}</div>
-                    </div>
-                `;
-            });
-            
-            const content = `
-                <div class="modal-header">
-                    <div class="modal-title">Semua Artefak (${sortedArtefaks.length})</div>
-                    <button class="modal-close" onclick="hideModal()">×</button>
-                </div>
-                <div class="recent-rants-list" style="max-height: 400px; overflow-y: auto;">
-                    ${artefakListHtml}
-                </div>
-                <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 20px;">Tutup</button>
-            `;
-            
-            showModal(content);
-        }
-        
         function showHashtagsModal() {
             const userData = getUserData(currentUser);
-            
-            if (!userData.selectedHashtags) {
-                alert('Belum memilih hashtag!');
-                return;
-            }
-            
+            if (!userData.selectedHashtags) { alert('Belum memilih hashtag!'); return; }
             let hashtagsHtml = '';
             Object.entries(userData.selectedHashtags).forEach(([zona, hashtag]) => {
                 if (hashtag) {
@@ -2368,71 +1461,46 @@
                     `;
                 }
             });
-            
-            const content = `
+            showModal(`
                 <div class="modal-header">
                     <div class="modal-title"># Terpilih</div>
                     <button class="modal-close" onclick="hideModal()">×</button>
                 </div>
-                <div class="hashtag-list">
-                    ${hashtagsHtml}
-                </div>
-                <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 20px;">Tutup</button>
-            `;
-            
-            showModal(content);
+                <div class="hashtag-list">${hashtagsHtml}</div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
+            `);
         }
-        
         // ===== UTILITY FUNCTIONS =====
+        function formatLastActive(timestamp) {
+            if (!timestamp) return 'baru bergabung';
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / (1000 * 60));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (minutes < 1) return 'baru saja';
+            if (minutes < 60) return `${minutes} menit lalu`;
+            if (hours < 24) return `${hours} jam lalu`;
+            if (days === 1) return 'kemarin';
+            if (days < 7) return `${days} hari lalu`;
+            return new Date(timestamp).toLocaleDateString('id-ID');
+        }
         function showToast(message) {
-            // Create toast element
             const toast = document.createElement('div');
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(255, 0, 255, 0.9);
-                color: white;
-                padding: 12px 20px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 500;
-                z-index: 10000;
-                animation: fadeIn 0.3s ease;
-            `;
+            toast.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(255,0,255,0.9);color:white;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;z-index:10000;animation:fadeIn 0.3s ease;`;
             toast.textContent = message;
             document.body.appendChild(toast);
-            
-            // Remove after 3 seconds
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transition = 'opacity 0.3s ease';
-                setTimeout(() => {
-                    if (toast.parentNode) {
-                        document.body.removeChild(toast);
-                    }
-                }, 300);
+                setTimeout(() => document.body.removeChild(toast), 300);
             }, 3000);
         }
-        
         function exportData() {
             if (!currentUser) return;
-            
             const userData = getUserData(currentUser);
-            
-            // Create export object
-            const exportData = {
-                username: currentUser,
-                exportedAt: new Date().toISOString(),
-                userData: userData
-            };
-            
-            // Convert to JSON
-            const json = JSON.stringify(exportData, null, 2);
-            
-            // Create download link
-            const blob = new Blob([json], { type: 'application/json' });
+            const exportData = { username: currentUser, exportedAt: new Date().toISOString(), userData };
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -2442,27 +1510,18 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
-        
         function logout() {
             if (confirm('Yakin ingin keluar?')) {
-                // Hapus user yang sedang login
                 localStorage.removeItem('nope_current_user');
                 currentUser = null;
-                // Kembali ke login page
                 showPage('login');
             }
         }
-        
         // ===== INITIALIZE APP =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize modal close button
-            document.getElementById('modalOverlay').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    hideModal();
-                }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('modalOverlay').addEventListener('click', e => {
+                if (e.target === e.currentTarget) hideModal();
             });
-            
-            // SELALU MULAI DARI LOGIN PAGE
             initializeApp();
         });
     </script>
