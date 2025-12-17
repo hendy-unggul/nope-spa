@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nope-v3';
+const CACHE_NAME = 'nope-compact-v1';
 
 self.addEventListener('install', event => {
   event.waitUntil(
