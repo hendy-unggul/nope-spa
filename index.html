@@ -809,7 +809,7 @@
     </div>
     
     <!-- LOGIN PAGE -->
-    <div id="login" class="page">
+    <div id="login" class="page active">
         <div class="logo">NOPE</div>
         
         <input type="text" 
@@ -1169,32 +1169,15 @@
             }
         }
         
-        // ===== AUTO-LOGIN CHECK =====
-        function checkAutoLogin() {
-            // Check if there's a logged-in user
-            const savedUser = localStorage.getItem('nope_current_user');
-            
-            if (savedUser) {
-                const userData = getUserData(savedUser);
-                if (userData) {
-                    currentUser = savedUser;
-                    
-                    // Update last login
-                    userData.lastLogin = Date.now();
-                    saveUserData(savedUser, userData);
-                    
-                    // Check if user is onboarded
-                    if (userData.onboarded) {
-                        showPage('jejak');
-                    } else {
-                        showPage('onboarding');
-                    }
-                    return;
-                }
-            }
-            
-            // No saved user or user doesn't exist
+        // ===== INITIAL LOAD - SELALU MULAI DARI LOGIN =====
+        function initializeApp() {
+            // HAPUS AUTO-LOGIN CHECK, SELALU MULAI DARI LOGIN
             currentUser = null;
+            
+            // Hapus user yang sedang login dari localStorage
+            localStorage.removeItem('nope_current_user');
+            
+            // Tampilkan halaman login
             showPage('login');
         }
         
@@ -1246,14 +1229,14 @@
                 if (userData) {
                     if (userData.onboarded) {
                         status.style.display = 'block';
-                        status.textContent = `@${formatted} • tekan enter untuk login`;
+                        status.textContent = `@${formatted} sudah ada • tekan enter untuk login`;
                     } else {
                         status.style.display = 'block';
-                        status.textContent = `@${formatted} • lanjutkan onboarding`;
+                        status.textContent = `@${formatted} belum onboarding • tekan enter untuk lanjut`;
                     }
                 } else {
                     status.style.display = 'block';
-                    status.textContent = `@${formatted} • akan dibuat baru`;
+                    status.textContent = `@${formatted} akan dibuat baru`;
                 }
             });
         }
@@ -1264,6 +1247,7 @@
             
             // Validation
             if (username.length < 3) {
+                alert('Username minimal 3 karakter!');
                 return;
             }
             
@@ -1273,6 +1257,7 @@
                 .replace(/[^a-z0-9_]/g, '');
             
             if (username.length < 3) {
+                alert('Username hanya boleh huruf, angka, underscore!');
                 return;
             }
             
@@ -1296,7 +1281,7 @@
                 };
                 saveUserData(username, newUser);
                 
-                // Arahkan ke onboarding
+                // SELALU KE ONBOARDING UNTUK USER BARU
                 showPage('onboarding');
                 return;
             }
@@ -2137,8 +2122,10 @@
         
         function logout() {
             if (confirm('Yakin ingin keluar?')) {
+                // Hapus user yang sedang login
                 localStorage.removeItem('nope_current_user');
                 currentUser = null;
+                // Kembali ke login page
                 showPage('login');
             }
         }
@@ -2152,9 +2139,9 @@
                 }
             });
             
-            // Start with auto-login check
-            checkAutoLogin();
+            // SELALU MULAI DARI LOGIN PAGE
+            initializeApp();
         });
     </script>
 </body>
-</html>
+    </html>
