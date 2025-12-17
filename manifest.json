@@ -1,7 +1,7 @@
 {
   "name": "NOPE",
   "short_name": "NOPE",
-  "description": "Pilih # mu yang relate",
+  "description": "Low friction tempat ungkapkan perasaan",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
