@@ -260,10 +260,10 @@
             background: rgba(255, 255, 255, 0.1);
         }
         
-        /* ===== JEJAK PAGE ===== */
+        /* ===== JEJAK PAGE - NEW STYLES ===== */
         .jejak-header {
             text-align: center;
-            margin: 20px 0 30px 0;
+            margin: 0 0 20px 0;
         }
         
         .jejak-title {
@@ -278,37 +278,252 @@
             color: rgba(255, 255, 255, 0.6);
         }
         
-        .timeline {
-            margin: 20px 0 100px 0;
+        /* Artefak Preview - Full Width Image */
+        .artefak-preview-container {
+            margin: 20px 0;
         }
         
-        .timeline-empty {
-            text-align: center;
-            padding: 40px 20px;
+        .artefak-preview {
+            width: 100%;
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .artefak-preview:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(255, 0, 255, 0.15);
+        }
+        
+        .artefak-preview-image {
+            width: 100%;
+            height: 0;
+            padding-bottom: 80%; /* 80% dari lebar */
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 150, 255, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .artefak-placeholder {
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .artefak-preview-info {
+            padding: 15px;
+        }
+        
+        .artefak-preview-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .artefak-preview-date {
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.4);
         }
         
-        .empty-icon {
-            font-size: 48px;
+        /* Rant Box */
+        .rant-box-container {
+            margin: 25px 0;
+        }
+        
+        .rant-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .rant-box-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ff00ff;
+        }
+        
+        .rant-box-counter {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .rant-box {
+            width: 100%;
+            min-height: 120px; /* 5 baris x sekitar 24px */
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.4;
+            resize: none;
+            margin-bottom: 10px;
+        }
+        
+        .rant-box:focus {
+            outline: none;
+            border-color: #ff00ff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .rant-box::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .rant-box-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .rant-hashtag-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: white;
+            font-family: inherit;
+            font-size: 12px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .rant-hashtag-select:focus {
+            border-color: #ff00ff;
+        }
+        
+        /* Recent Rants Section */
+        .recent-rants {
+            margin: 30px 0;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
-            opacity: 0.5;
         }
         
-        .timeline-item {
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ff00ff;
         }
         
-        .timeline-date {
+        .section-view-all {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .section-view-all:hover {
+            color: #ff00ff;
+        }
+        
+        .recent-rants-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .recent-rant-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.2s;
+        }
+        
+        .recent-rant-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .recent-rant-date {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.4);
             margin-bottom: 5px;
         }
         
-        .timeline-content {
-            font-size: 14px;
+        .recent-rant-content {
+            font-size: 13px;
             color: rgba(255, 255, 255, 0.8);
             line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Recent Artefaks Grid */
+        .recent-artefaks {
+            margin: 30px 0 100px 0;
+        }
+        
+        .artefaks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .artefak-grid-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .artefak-grid-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .artefak-grid-image {
+            width: 100%;
+            height: 0;
+            padding-bottom: 60%;
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 150, 255, 0.1));
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .artefak-grid-icon {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .artefak-grid-title {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+        
+        .artefak-grid-date {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
         }
         
         /* ===== JALAN PAGE ===== */
@@ -699,15 +914,54 @@
             </div>
         </div>
         
-        <div class="timeline" id="timeline">
-            <!-- Timeline items will be populated by JavaScript -->
+        <!-- Artefak Preview (Latest Artefak) -->
+        <div class="artefak-preview-container" id="artefakPreviewContainer">
+            <!-- Artefak preview will be populated by JavaScript -->
         </div>
         
-        <div class="action-btn" onclick="showRantModal()">
-            + Tambah Rant
+        <!-- Rant Box -->
+        <div class="rant-box-container">
+            <div class="rant-box-header">
+                <div class="rant-box-title">Tulis Rant mu</div>
+                <div class="rant-box-counter" id="rantCounter">0/300</div>
+            </div>
+            <textarea 
+                class="rant-box" 
+                id="rantBox" 
+                placeholder="Apa yang sedang kamu pikirkan? (maks 300 karakter)" 
+                maxlength="300" 
+                rows="5"
+            ></textarea>
+            <div class="rant-box-footer">
+                <select class="rant-hashtag-select" id="rantHashtagSelect">
+                    <!-- Hashtag options will be populated by JavaScript -->
+                </select>
+                <button class="action-btn" style="padding: 8px 16px; font-size: 14px;" onclick="postRantFromBox()">
+                    Post Rant
+                </button>
+            </div>
         </div>
-        <div class="action-btn secondary" onclick="showArtefakModal()" style="margin-top: 10px;">
-            + Tambah Artefak
+        
+        <!-- Recent Rants (3 terakhir) -->
+        <div class="recent-rants">
+            <div class="section-header">
+                <div class="section-title">Rant Terbaru</div>
+                <div class="section-view-all" onclick="viewAllRants()">Lihat semua</div>
+            </div>
+            <div class="recent-rants-list" id="recentRantsList">
+                <!-- Recent rants will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Recent Artefaks Grid (3x2 terakhir) -->
+        <div class="recent-artefaks">
+            <div class="section-header">
+                <div class="section-title">Artefak Terbaru</div>
+                <div class="section-view-all" onclick="viewAllArtefaks()">Lihat semua</div>
+            </div>
+            <div class="artefaks-grid" id="artefaksGrid">
+                <!-- Recent artefaks will be populated by JavaScript -->
+            </div>
         </div>
     </div>
     
@@ -771,7 +1025,11 @@
             <div class="profile-meta" id="profileActivity">Aktivitas: 0 posting</div>
         </div>
         
-        <div class="action-btn secondary" onclick="exportData()">
+        <div class="action-btn" onclick="showArtefakModal()" style="margin-top: 10px;">
+            + Tambah Artefak
+        </div>
+        
+        <div class="action-btn secondary" onclick="exportData()" style="margin-top: 10px;">
             📤 Export Data
         </div>
         
@@ -1195,81 +1453,302 @@
             const lastActive = formatLastActive(userData.lastLogin);
             document.getElementById('lastActive').textContent = lastActive;
             
-            // Render timeline
-            renderTimeline();
+            // Setup rant box
+            setupRantBox();
+            
+            // Render all sections
+            renderArtefakPreview();
+            renderRecentRants();
+            renderRecentArtefaks();
         }
         
-        function renderTimeline() {
-            const timeline = document.getElementById('timeline');
+        function setupRantBox() {
             const userData = getUserData(currentUser);
             
-            if (!userData) {
-                timeline.innerHTML = '<div class="timeline-empty"><div class="empty-icon">📝</div>Belum ada jejak</div>';
-                return;
-            }
+            // Setup character counter
+            const rantBox = document.getElementById('rantBox');
+            const counter = document.getElementById('rantCounter');
             
-            // Combine rants and artefacts
-            const allPosts = [];
+            rantBox.addEventListener('input', function() {
+                counter.textContent = `${this.value.length}/300`;
+            });
             
-            if (userData.rants) {
-                userData.rants.forEach(rant => {
-                    allPosts.push({
-                        type: 'rant',
-                        content: rant.content,
-                        date: rant.date,
-                        hashtag: rant.hashtag
-                    });
+            // Setup hashtag select
+            const hashtagSelect = document.getElementById('rantHashtagSelect');
+            hashtagSelect.innerHTML = '<option value="">Pilih hashtag...</option>';
+            
+            if (userData.selectedHashtags) {
+                Object.values(userData.selectedHashtags).forEach(hashtag => {
+                    if (hashtag) {
+                        const option = document.createElement('option');
+                        option.value = hashtag;
+                        option.textContent = hashtag;
+                        hashtagSelect.appendChild(option);
+                    }
                 });
             }
             
-            if (userData.artefacts) {
-                userData.artefacts.forEach(artefak => {
-                    allPosts.push({
-                        type: 'artefak',
-                        title: artefak.title,
-                        content: artefak.content,
-                        date: artefak.date
-                    });
-                });
+            // Set first hashtag as default if available
+            if (hashtagSelect.options.length > 1) {
+                hashtagSelect.selectedIndex = 1;
             }
             
-            // Sort by date (newest first)
-            allPosts.sort((a, b) => b.date - a.date);
+            // Clear rant box
+            rantBox.value = '';
+            counter.textContent = '0/300';
+        }
+        
+        function renderArtefakPreview() {
+            const container = document.getElementById('artefakPreviewContainer');
+            const userData = getUserData(currentUser);
             
-            if (allPosts.length === 0) {
-                timeline.innerHTML = '<div class="timeline-empty"><div class="empty-icon">📝</div>Belum ada jejak</div>';
+            if (!userData.artefacts || userData.artefacts.length === 0) {
+                container.innerHTML = `
+                    <div class="artefak-preview" onclick="showArtefakModal()">
+                        <div class="artefak-preview-image">
+                            <div class="artefak-placeholder">🖼️</div>
+                        </div>
+                        <div class="artefak-preview-info">
+                            <div class="artefak-preview-title">📁 Belum ada artefak</div>
+                            <div class="artefak-preview-date">Klik untuk menambahkan artefak pertama mu</div>
+                        </div>
+                    </div>
+                `;
                 return;
             }
             
-            timeline.innerHTML = '';
+            // Get latest artefak
+            const latestArtefak = userData.artefacts[userData.artefacts.length - 1];
+            const date = new Date(latestArtefak.date);
+            const dateStr = date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
             
-            allPosts.forEach(post => {
-                const item = document.createElement('div');
-                item.className = 'timeline-item';
-                
-                const date = new Date(post.date);
+            container.innerHTML = `
+                <div class="artefak-preview" onclick="viewArtefak(${userData.artefacts.length - 1})">
+                    <div class="artefak-preview-image">
+                        <div class="artefak-placeholder">📁</div>
+                    </div>
+                    <div class="artefak-preview-info">
+                        <div class="artefak-preview-title">📁 ${latestArtefak.title}</div>
+                        <div class="artefak-preview-date">Ditambahkan: ${dateStr}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderRecentRants() {
+            const container = document.getElementById('recentRantsList');
+            const userData = getUserData(currentUser);
+            
+            if (!userData.rants || userData.rants.length === 0) {
+                container.innerHTML = `
+                    <div class="recent-rant-item" style="text-align: center; color: rgba(255,255,255,0.4);">
+                        Belum ada rant. Mulai tulis di box di atas!
+                    </div>
+                `;
+                return;
+            }
+            
+            // Get 3 latest rants
+            const recentRants = userData.rants.slice(-3).reverse();
+            
+            container.innerHTML = '';
+            recentRants.forEach(rant => {
+                const date = new Date(rant.date);
                 const dateStr = date.toLocaleDateString('id-ID', {
                     day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
+                    month: 'short',
                     hour: '2-digit',
                     minute: '2-digit'
                 });
                 
-                if (post.type === 'rant') {
-                    item.innerHTML = `
-                        <div class="timeline-date">${dateStr} • ${post.hashtag || ''}</div>
-                        <div class="timeline-content">${post.content}</div>
-                    `;
-                } else {
-                    item.innerHTML = `
-                        <div class="timeline-date">${dateStr} • Artefak</div>
-                        <div class="timeline-content"><strong>${post.title}</strong><br>${post.content}</div>
-                    `;
+                // Truncate content if too long
+                let content = rant.content;
+                if (content.length > 100) {
+                    content = content.substring(0, 100) + '...';
                 }
                 
-                timeline.appendChild(item);
+                const item = document.createElement('div');
+                item.className = 'recent-rant-item';
+                item.onclick = () => viewRantDetails(rant);
+                
+                item.innerHTML = `
+                    <div class="recent-rant-date">${dateStr} • ${rant.hashtag || ''}</div>
+                    <div class="recent-rant-content">${content}</div>
+                `;
+                
+                container.appendChild(item);
             });
+        }
+        
+        function renderRecentArtefaks() {
+            const container = document.getElementById('artefaksGrid');
+            const userData = getUserData(currentUser);
+            
+            if (!userData.artefacts || userData.artefacts.length === 0) {
+                container.innerHTML = `
+                    <div class="artefak-grid-item" style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.4);">
+                        Belum ada artefak. Tambah artefak untuk dokumentasi!
+                    </div>
+                `;
+                return;
+            }
+            
+            // Get up to 6 latest artefaks (3x2 grid)
+            const recentArtefaks = userData.artefacts.slice(-6).reverse();
+            
+            container.innerHTML = '';
+            recentArtefaks.forEach((artefak, index) => {
+                const date = new Date(artefak.date);
+                const dateStr = date.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short'
+                });
+                
+                // Truncate title if too long
+                let title = artefak.title;
+                if (title.length > 20) {
+                    title = title.substring(0, 20) + '...';
+                }
+                
+                const item = document.createElement('div');
+                item.className = 'artefak-grid-item';
+                item.onclick = () => viewArtefakDetails(userData.artefacts.length - 1 - index);
+                
+                item.innerHTML = `
+                    <div class="artefak-grid-image">
+                        <div class="artefak-grid-icon">📁</div>
+                    </div>
+                    <div class="artefak-grid-title">${title}</div>
+                    <div class="artefak-grid-date">${dateStr}</div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+        
+        function postRantFromBox() {
+            const content = document.getElementById('rantBox').value.trim();
+            const hashtag = document.getElementById('rantHashtagSelect').value;
+            
+            if (!content) {
+                alert('Tulis rant terlebih dahulu!');
+                return;
+            }
+            
+            if (!hashtag) {
+                alert('Pilih hashtag terlebih dahulu!');
+                return;
+            }
+            
+            if (!currentUser) return;
+            
+            const userData = getUserData(currentUser);
+            
+            // Add rant
+            if (!userData.rants) userData.rants = [];
+            
+            userData.rants.push({
+                content: content,
+                hashtag: hashtag,
+                date: Date.now()
+            });
+            
+            // Update last login
+            userData.lastLogin = Date.now();
+            
+            // Save
+            saveUserData(currentUser, userData);
+            
+            // Clear rant box
+            document.getElementById('rantBox').value = '';
+            document.getElementById('rantCounter').textContent = '0/300';
+            
+            // Refresh displays
+            renderRecentRants();
+            
+            // Update post count
+            const postCount = (userData.rants?.length || 0) + (userData.artefacts?.length || 0);
+            document.getElementById('postCount').textContent = postCount;
+            
+            // Show success message
+            showToast('Rant berhasil diposting!');
+        }
+        
+        function viewAllRants() {
+            showRantListModal();
+        }
+        
+        function viewAllArtefaks() {
+            showArtefakListModal();
+        }
+        
+        function viewRantDetails(rant) {
+            const date = new Date(rant.date);
+            const dateStr = date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const content = `
+                <div class="modal-header">
+                    <div class="modal-title">Rant</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div style="margin-bottom: 15px; color: rgba(255,255,255,0.6); font-size: 12px;">
+                    ${dateStr} • ${rant.hashtag || ''}
+                </div>
+                <div style="color: rgba(255,255,255,0.9); line-height: 1.6; font-size: 14px; white-space: pre-wrap;">
+                    ${rant.content}
+                </div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 20px;">Tutup</button>
+            `;
+            
+            showModal(content);
+        }
+        
+        function viewArtefakDetails(index) {
+            const userData = getUserData(currentUser);
+            if (!userData.artefacts || !userData.artefacts[index]) return;
+            
+            const artefak = userData.artefacts[index];
+            const date = new Date(artefak.date);
+            const dateStr = date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const content = `
+                <div class="modal-header">
+                    <div class="modal-title">Artefak</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div style="margin-bottom: 15px; color: #ff00ff; font-size: 16px; font-weight: 600;">
+                    ${artefak.title}
+                </div>
+                <div style="margin-bottom: 15px; color: rgba(255,255,255,0.6); font-size: 12px;">
+                    ${dateStr}
+                </div>
+                <div style="color: rgba(255,255,255,0.9); line-height: 1.6; font-size: 14px; white-space: pre-wrap;">
+                    ${artefak.content}
+                </div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 20px;">Tutup</button>
+            `;
+            
+            showModal(content);
+        }
+        
+        function viewArtefak(index) {
+            viewArtefakDetails(index);
         }
         
         // ===== PAGE: JALAN =====
@@ -1362,76 +1841,125 @@
             overlay.classList.remove('active');
         }
         
-        function showRantModal() {
+        function showRantListModal() {
             const userData = getUserData(currentUser);
-            if (!userData || !userData.selectedHashtags) {
-                alert('Harap pilih hashtag terlebih dahulu di onboarding!');
+            
+            if (!userData.rants || userData.rants.length === 0) {
+                showModal(`
+                    <div class="modal-header">
+                        <div class="modal-title">Semua Rant</div>
+                        <button class="modal-close" onclick="hideModal()">×</button>
+                    </div>
+                    <div style="text-align: center; color: rgba(255,255,255,0.4); padding: 40px 20px;">
+                        Belum ada rant
+                    </div>
+                `);
                 return;
             }
             
-            // Get user's selected hashtags
-            const hashtags = Object.values(userData.selectedHashtags).filter(h => h !== null);
+            // Sort by date (newest first)
+            const sortedRants = [...userData.rants].sort((a, b) => b.date - a.date);
             
-            let hashtagOptions = '';
-            hashtags.forEach(hashtag => {
-                hashtagOptions += `<option value="${hashtag}">${hashtag}</option>`;
+            let rantListHtml = '';
+            sortedRants.forEach((rant, index) => {
+                const date = new Date(rant.date);
+                const dateStr = date.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                // Truncate content if too long
+                let content = rant.content;
+                if (content.length > 80) {
+                    content = content.substring(0, 80) + '...';
+                }
+                
+                rantListHtml += `
+                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})" style="margin-bottom: 10px;">
+                        <div class="recent-rant-date">${dateStr} • ${rant.hashtag || ''}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
             });
             
             const content = `
                 <div class="modal-header">
-                    <div class="modal-title">Tambah Rant</div>
+                    <div class="modal-title">Semua Rant (${sortedRants.length})</div>
                     <button class="modal-close" onclick="hideModal()">×</button>
                 </div>
-                <textarea class="textarea-input" id="rantContent" placeholder="Tulis apa yang kamu pikirkan..." maxlength="500"></textarea>
-                <div class="char-counter" id="rantCounter">0/500</div>
-                <select class="text-input" id="rantHashtag">
-                    ${hashtagOptions}
-                </select>
-                <button class="action-btn" onclick="saveRant()">Simpan Rant</button>
+                <div class="recent-rants-list" style="max-height: 400px; overflow-y: auto;">
+                    ${rantListHtml}
+                </div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 20px;">Tutup</button>
             `;
             
             showModal(content);
-            
-            // Setup character counter
-            const textarea = document.getElementById('rantContent');
-            const counter = document.getElementById('rantCounter');
-            
-            textarea.addEventListener('input', function() {
-                counter.textContent = `${this.value.length}/500`;
-            });
         }
         
-        function saveRant() {
-            const content = document.getElementById('rantContent').value.trim();
-            const hashtag = document.getElementById('rantHashtag').value;
+        function showArtefakListModal() {
+            const userData = getUserData(currentUser);
             
-            if (!content) {
-                alert('Isi rant terlebih dahulu!');
+            if (!userData.artefacts || userData.artefacts.length === 0) {
+                showModal(`
+                    <div class="modal-header">
+                        <div class="modal-title">Semua Artefak</div>
+                        <button class="modal-close" onclick="hideModal()">×</button>
+                    </div>
+                    <div style="text-align: center; color: rgba(255,255,255,0.4); padding: 40px 20px;">
+                        Belum ada artefak
+                    </div>
+                `);
                 return;
             }
             
-            if (!currentUser) return;
+            // Sort by date (newest first)
+            const sortedArtefaks = [...userData.artefacts].sort((a, b) => b.date - a.date);
             
-            const userData = getUserData(currentUser);
-            
-            // Add rant
-            if (!userData.rants) userData.rants = [];
-            
-            userData.rants.push({
-                content: content,
-                hashtag: hashtag,
-                date: Date.now()
+            let artefakListHtml = '';
+            sortedArtefaks.forEach((artefak, index) => {
+                const date = new Date(artefak.date);
+                const dateStr = date.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                });
+                
+                // Truncate title if too long
+                let title = artefak.title;
+                if (title.length > 30) {
+                    title = title.substring(0, 30) + '...';
+                }
+                
+                // Truncate content if too long
+                let content = artefak.content;
+                if (content.length > 60) {
+                    content = content.substring(0, 60) + '...';
+                }
+                
+                artefakListHtml += `
+                    <div class="recent-rant-item" onclick="viewArtefakDetails(${userData.artefacts.length - 1 - index})" style="margin-bottom: 10px;">
+                        <div class="recent-rant-date">${dateStr}</div>
+                        <div style="color: #ff00ff; font-weight: 600; margin-bottom: 5px;">${title}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
             });
             
-            // Update last login
-            userData.lastLogin = Date.now();
+            const content = `
+                <div class="modal-header">
+                    <div class="modal-title">Semua Artefak (${sortedArtefaks.length})</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div class="recent-rants-list" style="max-height: 400px; overflow-y: auto;">
+                    ${artefakListHtml}
+                </div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 20px;">Tutup</button>
+            `;
             
-            // Save
-            saveUserData(currentUser, userData);
-            
-            // Close modal and refresh
-            hideModal();
-            initJejakPage();
+            showModal(content);
         }
         
         function showArtefakModal() {
@@ -1487,7 +2015,12 @@
             
             // Close modal and refresh
             hideModal();
+            
+            // Refresh displays
             initJejakPage();
+            
+            // Show success message
+            showToast('Artefak berhasil disimpan!');
         }
         
         function showHashtagsModal() {
@@ -1541,6 +2074,38 @@
             if (days < 7) return `${days} hari lalu`;
             
             return new Date(timestamp).toLocaleDateString('id-ID');
+        }
+        
+        function showToast(message) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(255, 0, 255, 0.9);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                z-index: 10000;
+                animation: fadeIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
         }
         
         function exportData() {
