@@ -594,7 +594,7 @@
     </div>
     
     <!-- LOGIN PAGE -->
-    <div id="login" class="page active">
+    <div id="login" class="page">
         <div class="logo">NOPE</div>
         
         <input type="text" 
@@ -830,17 +830,40 @@
             }
         };
         
+        // ===== STORAGE HELPERS =====
+        function getUsers() {
+            const usersJson = localStorage.getItem('nope_users');
+            return usersJson ? JSON.parse(usersJson) : {};
+        }
+        
+        function saveUsers(users) {
+            localStorage.setItem('nope_users', JSON.stringify(users));
+        }
+        
+        function getUserData(username) {
+            const users = getUsers();
+            return users[username] || null;
+        }
+        
+        function saveUserData(username, data) {
+            const users = getUsers();
+            users[username] = data;
+            saveUsers(users);
+        }
+        
         // ===== ROUTER & TAB SYSTEM =====
         function showPage(pageId) {
             // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
+                page.classList.remove('fade-in');
             });
             
             // Show target page
             const page = document.getElementById(pageId);
             if (page) {
                 page.classList.add('active');
+                page.classList.add('fade-in');
                 
                 // Show/hide bottom nav
                 const bottomNav = document.getElementById('bottomNav');
@@ -888,6 +911,35 @@
             }
         }
         
+        // ===== AUTO-LOGIN CHECK =====
+        function checkAutoLogin() {
+            // Check if there's a logged-in user
+            const savedUser = localStorage.getItem('nope_current_user');
+            
+            if (savedUser) {
+                const userData = getUserData(savedUser);
+                if (userData) {
+                    currentUser = savedUser;
+                    
+                    // Update last login
+                    userData.lastLogin = Date.now();
+                    saveUserData(savedUser, userData);
+                    
+                    // Check if user is onboarded
+                    if (userData.onboarded) {
+                        showPage('jejak');
+                    } else {
+                        showPage('onboarding');
+                    }
+                    return;
+                }
+            }
+            
+            // No saved user or user doesn't exist
+            currentUser = null;
+            showPage('login');
+        }
+        
         // ===== PAGE: LOGIN =====
         function initLoginPage() {
             const input = document.getElementById('usernameInput');
@@ -898,15 +950,22 @@
             input.focus();
             status.style.display = 'none';
             
+            // Clear any previous event listeners
+            const newInput = input.cloneNode(true);
+            input.parentNode.replaceChild(newInput, input);
+            
+            // Re-assign ID
+            const newInputElement = document.getElementById('usernameInput');
+            
             // Enter key listener
-            input.addEventListener('keydown', function(e) {
+            newInputElement.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     processLogin();
                 }
             });
             
             // Real-time validation
-            input.addEventListener('input', function() {
+            newInputElement.addEventListener('input', function() {
                 const username = this.value.trim().toLowerCase();
                 
                 if (username.length < 3) {
@@ -924,14 +983,19 @@
                 }
                 
                 // Check if user exists
-                const users = getUsers();
+                const userData = getUserData(formatted);
                 
-                if (users[formatted]) {
-                    status.style.display = 'block';
-                    status.textContent = `@${formatted} sudah ada • tekan enter untuk login`;
+                if (userData) {
+                    if (userData.onboarded) {
+                        status.style.display = 'block';
+                        status.textContent = `@${formatted} • tekan enter untuk login`;
+                    } else {
+                        status.style.display = 'block';
+                        status.textContent = `@${formatted} • lanjutkan onboarding`;
+                    }
                 } else {
                     status.style.display = 'block';
-                    status.textContent = `@${formatted} akan dibuat baru`;
+                    status.textContent = `@${formatted} • akan dibuat baru`;
                 }
             });
         }
@@ -958,14 +1022,37 @@
             currentUser = username;
             localStorage.setItem('nope_current_user', username);
             
-            // Check if user exists and is onboarded
-            const users = getUsers();
+            // Check if user exists
+            const userData = getUserData(username);
             
-            if (users[username] && users[username].onboarded) {
-                // KEMBALI KE STRUKTUR ASLI: LANGSUNG KE JEJAK
+            if (!userData) {
+                // User baru - buat data baru
+                const newUser = {
+                    username: username,
+                    created: Date.now(),
+                    lastLogin: Date.now(),
+                    selectedHashtags: null,
+                    onboarded: false,
+                    rants: [],
+                    artefacts: []
+                };
+                saveUserData(username, newUser);
+                
+                // Arahkan ke onboarding
+                showPage('onboarding');
+                return;
+            }
+            
+            // User sudah ada - update last login
+            userData.lastLogin = Date.now();
+            saveUserData(username, userData);
+            
+            // Check if user is onboarded
+            if (userData.onboarded) {
+                // User sudah onboarding - arahkan ke jejak
                 showPage('jejak');
             } else {
-                // Go to onboarding
+                // User belum selesai onboarding - arahkan ke onboarding
                 showPage('onboarding');
             }
         }
@@ -977,12 +1064,25 @@
                 return;
             }
             
+            const userData = getUserData(currentUser);
+            
+            // Jika user sudah onboarded, arahkan ke jejak
+            if (userData && userData.onboarded) {
+                showPage('jejak');
+                return;
+            }
+            
             // Reset selections
             selectedHashtags = {
                 popculture: null,
                 personalpain: null,
                 socialsickness: null
             };
+            
+            // Jika user sudah punya pilihan sebelumnya, load
+            if (userData && userData.selectedHashtags) {
+                selectedHashtags = userData.selectedHashtags;
+            }
             
             // Render hashtags for each zona
             renderHashtags('popculture');
@@ -1054,33 +1154,442 @@
         }
         
         function saveSelections() {
-            // Save user data
-            const users = getUsers();
+            if (!currentUser) return;
             
-            users[currentUser] = {
-                username: currentUser,
-                created: Date.now(),
-                lastLogin: Date.now(),
-                selectedHashtags: selectedHashtags,
-                onboarded: true,
-                rants: [],
-                artefacts: []
-            };
+            // Get user data
+            const userData = getUserData(currentUser);
             
-            localStorage.setItem('nope_users', JSON.stringify(users));
+            // Update user data
+            userData.selectedHashtags = selectedHashtags;
+            userData.onboarded = true;
+            userData.lastLogin = Date.now();
+            
+            // Save to localStorage
+            saveUserData(currentUser, userData);
             
             // Update button state
             const btn = document.getElementById('saveBtn');
             btn.textContent = 'Menyimpan...';
             btn.disabled = true;
             
-            // KEMBALI KE STRUKTUR ASLI: LANGSUNG KE JEJAK
+            // Redirect to jejak page
             setTimeout(() => {
                 showPage('jejak');
             }, 600);
         }
         
+        // ===== PAGE: JEJAK =====
+        function initJejakPage() {
+            if (!currentUser) {
+                showPage('login');
+                return;
+            }
+            
+            const userData = getUserData(currentUser);
+            
+            // Update post count
+            const postCount = (userData.rants?.length || 0) + (userData.artefacts?.length || 0);
+            document.getElementById('postCount').textContent = postCount;
+            
+            // Update last active
+            const lastActive = formatLastActive(userData.lastLogin);
+            document.getElementById('lastActive').textContent = lastActive;
+            
+            // Render timeline
+            renderTimeline();
+        }
+        
+        function renderTimeline() {
+            const timeline = document.getElementById('timeline');
+            const userData = getUserData(currentUser);
+            
+            if (!userData) {
+                timeline.innerHTML = '<div class="timeline-empty"><div class="empty-icon">📝</div>Belum ada jejak</div>';
+                return;
+            }
+            
+            // Combine rants and artefacts
+            const allPosts = [];
+            
+            if (userData.rants) {
+                userData.rants.forEach(rant => {
+                    allPosts.push({
+                        type: 'rant',
+                        content: rant.content,
+                        date: rant.date,
+                        hashtag: rant.hashtag
+                    });
+                });
+            }
+            
+            if (userData.artefacts) {
+                userData.artefacts.forEach(artefak => {
+                    allPosts.push({
+                        type: 'artefak',
+                        title: artefak.title,
+                        content: artefak.content,
+                        date: artefak.date
+                    });
+                });
+            }
+            
+            // Sort by date (newest first)
+            allPosts.sort((a, b) => b.date - a.date);
+            
+            if (allPosts.length === 0) {
+                timeline.innerHTML = '<div class="timeline-empty"><div class="empty-icon">📝</div>Belum ada jejak</div>';
+                return;
+            }
+            
+            timeline.innerHTML = '';
+            
+            allPosts.forEach(post => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                
+                const date = new Date(post.date);
+                const dateStr = date.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                if (post.type === 'rant') {
+                    item.innerHTML = `
+                        <div class="timeline-date">${dateStr} • ${post.hashtag || ''}</div>
+                        <div class="timeline-content">${post.content}</div>
+                    `;
+                } else {
+                    item.innerHTML = `
+                        <div class="timeline-date">${dateStr} • Artefak</div>
+                        <div class="timeline-content"><strong>${post.title}</strong><br>${post.content}</div>
+                    `;
+                }
+                
+                timeline.appendChild(item);
+            });
+        }
+        
+        // ===== PAGE: JALAN =====
+        function initJalanPage() {
+            if (!currentUser) {
+                showPage('login');
+                return;
+            }
+            
+            const userData = getUserData(currentUser);
+            
+            // Calculate stats
+            const joinDate = new Date(userData.created);
+            const now = new Date();
+            const daysDiff = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24));
+            
+            const rantsCount = userData.rants?.length || 0;
+            const artefactsCount = userData.artefacts?.length || 0;
+            const hashtagsCount = userData.selectedHashtags ? Object.values(userData.selectedHashtags).filter(h => h !== null).length : 0;
+            
+            // Update stats
+            document.getElementById('daysCount').textContent = Math.max(1, daysDiff);
+            document.getElementById('rantsCount').textContent = rantsCount;
+            document.getElementById('artefaksCount').textContent = artefactsCount;
+            document.getElementById('hashtagsCount').textContent = hashtagsCount;
+            
+            // Render selected hashtags
+            renderSelectedHashtags();
+        }
+        
+        function renderSelectedHashtags() {
+            const container = document.getElementById('selectedHashtagsList');
+            const userData = getUserData(currentUser);
+            
+            if (!userData.selectedHashtags) {
+                container.innerHTML = '<div class="hint">Belum memilih hashtag</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            Object.entries(userData.selectedHashtags).forEach(([zona, hashtag]) => {
+                if (hashtag) {
+                    const item = document.createElement('div');
+                    item.className = 'hashtag-item';
+                    item.innerHTML = `
+                        <div class="hashtag-name">${hashtag}</div>
+                        <div class="hashtag-microcopy">${zonaData[zona].description}</div>
+                    `;
+                    container.appendChild(item);
+                }
+            });
+        }
+        
+        // ===== PAGE: DUNIA =====
+        function initDuniaPage() {
+            if (!currentUser) {
+                showPage('login');
+                return;
+            }
+            
+            const userData = getUserData(currentUser);
+            
+            // Update profile
+            document.getElementById('profileUsername').textContent = `@${currentUser}`;
+            
+            const joinDate = new Date(userData.created);
+            const joinDateStr = joinDate.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('profileJoinDate').textContent = `Bergabung: ${joinDateStr}`;
+            
+            const postCount = (userData.rants?.length || 0) + (userData.artefacts?.length || 0);
+            document.getElementById('profileActivity').textContent = `Aktivitas: ${postCount} posting`;
+        }
+        
         // ===== MODAL SYSTEM =====
         function showModal(content) {
             const modal = document.querySelector('.modal');
-            const overlay = document.getElementById('modal
+            const overlay = document.getElementById('modalOverlay');
+            
+            modal.innerHTML = content;
+            overlay.classList.add('active');
+        }
+        
+        function hideModal() {
+            const overlay = document.getElementById('modalOverlay');
+            overlay.classList.remove('active');
+        }
+        
+        function showRantModal() {
+            const userData = getUserData(currentUser);
+            if (!userData || !userData.selectedHashtags) {
+                alert('Harap pilih hashtag terlebih dahulu di onboarding!');
+                return;
+            }
+            
+            // Get user's selected hashtags
+            const hashtags = Object.values(userData.selectedHashtags).filter(h => h !== null);
+            
+            let hashtagOptions = '';
+            hashtags.forEach(hashtag => {
+                hashtagOptions += `<option value="${hashtag}">${hashtag}</option>`;
+            });
+            
+            const content = `
+                <div class="modal-header">
+                    <div class="modal-title">Tambah Rant</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <textarea class="textarea-input" id="rantContent" placeholder="Tulis apa yang kamu pikirkan..." maxlength="500"></textarea>
+                <div class="char-counter" id="rantCounter">0/500</div>
+                <select class="text-input" id="rantHashtag">
+                    ${hashtagOptions}
+                </select>
+                <button class="action-btn" onclick="saveRant()">Simpan Rant</button>
+            `;
+            
+            showModal(content);
+            
+            // Setup character counter
+            const textarea = document.getElementById('rantContent');
+            const counter = document.getElementById('rantCounter');
+            
+            textarea.addEventListener('input', function() {
+                counter.textContent = `${this.value.length}/500`;
+            });
+        }
+        
+        function saveRant() {
+            const content = document.getElementById('rantContent').value.trim();
+            const hashtag = document.getElementById('rantHashtag').value;
+            
+            if (!content) {
+                alert('Isi rant terlebih dahulu!');
+                return;
+            }
+            
+            if (!currentUser) return;
+            
+            const userData = getUserData(currentUser);
+            
+            // Add rant
+            if (!userData.rants) userData.rants = [];
+            
+            userData.rants.push({
+                content: content,
+                hashtag: hashtag,
+                date: Date.now()
+            });
+            
+            // Update last login
+            userData.lastLogin = Date.now();
+            
+            // Save
+            saveUserData(currentUser, userData);
+            
+            // Close modal and refresh
+            hideModal();
+            initJejakPage();
+        }
+        
+        function showArtefakModal() {
+            const content = `
+                <div class="modal-header">
+                    <div class="modal-title">Tambah Artefak</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <input type="text" class="text-input" id="artefakTitle" placeholder="Judul artefak" maxlength="100">
+                <textarea class="textarea-input" id="artefakContent" placeholder="Deskripsi artefak..." maxlength="1000"></textarea>
+                <div class="char-counter" id="artefakCounter">0/1000</div>
+                <button class="action-btn" onclick="saveArtefak()">Simpan Artefak</button>
+            `;
+            
+            showModal(content);
+            
+            // Setup character counter
+            const textarea = document.getElementById('artefakContent');
+            const counter = document.getElementById('artefakCounter');
+            
+            textarea.addEventListener('input', function() {
+                counter.textContent = `${this.value.length}/1000`;
+            });
+        }
+        
+        function saveArtefak() {
+            const title = document.getElementById('artefakTitle').value.trim();
+            const content = document.getElementById('artefakContent').value.trim();
+            
+            if (!title || !content) {
+                alert('Isi judul dan deskripsi artefak terlebih dahulu!');
+                return;
+            }
+            
+            if (!currentUser) return;
+            
+            const userData = getUserData(currentUser);
+            
+            // Add artefak
+            if (!userData.artefacts) userData.artefacts = [];
+            
+            userData.artefacts.push({
+                title: title,
+                content: content,
+                date: Date.now()
+            });
+            
+            // Update last login
+            userData.lastLogin = Date.now();
+            
+            // Save
+            saveUserData(currentUser, userData);
+            
+            // Close modal and refresh
+            hideModal();
+            initJejakPage();
+        }
+        
+        function showHashtagsModal() {
+            const userData = getUserData(currentUser);
+            
+            if (!userData.selectedHashtags) {
+                alert('Belum memilih hashtag!');
+                return;
+            }
+            
+            let hashtagsHtml = '';
+            Object.entries(userData.selectedHashtags).forEach(([zona, hashtag]) => {
+                if (hashtag) {
+                    hashtagsHtml += `
+                        <div class="hashtag-item">
+                            <div class="hashtag-name">${hashtag}</div>
+                            <div class="hashtag-microcopy">${zonaData[zona].description}</div>
+                        </div>
+                    `;
+                }
+            });
+            
+            const content = `
+                <div class="modal-header">
+                    <div class="modal-title"># Terpilih</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div class="hashtag-list">
+                    ${hashtagsHtml}
+                </div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 20px;">Tutup</button>
+            `;
+            
+            showModal(content);
+        }
+        
+        // ===== UTILITY FUNCTIONS =====
+        function formatLastActive(timestamp) {
+            if (!timestamp) return 'baru bergabung';
+            
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / (1000 * 60));
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (minutes < 1) return 'baru saja';
+            if (minutes < 60) return `${minutes} menit lalu`;
+            if (hours < 24) return `${hours} jam lalu`;
+            if (days === 1) return 'kemarin';
+            if (days < 7) return `${days} hari lalu`;
+            
+            return new Date(timestamp).toLocaleDateString('id-ID');
+        }
+        
+        function exportData() {
+            if (!currentUser) return;
+            
+            const userData = getUserData(currentUser);
+            
+            // Create export object
+            const exportData = {
+                username: currentUser,
+                exportedAt: new Date().toISOString(),
+                userData: userData
+            };
+            
+            // Convert to JSON
+            const json = JSON.stringify(exportData, null, 2);
+            
+            // Create download link
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `nope-${currentUser}-${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function logout() {
+            if (confirm('Yakin ingin keluar?')) {
+                localStorage.removeItem('nope_current_user');
+                currentUser = null;
+                showPage('login');
+            }
+        }
+        
+        // ===== INITIALIZE APP =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize modal close button
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideModal();
+                }
+            });
+            
+            // Start with auto-login check
+            checkAutoLogin();
+        });
+    </script>
+</body>
+</html>
