@@ -1,7 +1,7 @@
 {
   "name": "NOPE",
   "short_name": "NOPE",
-  "description": "Jejak perjalanan digitalmu",
+  "description": "Pilih # mu, ekspresikan dirimu",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
