@@ -1,7 +1,7 @@
 {
   "name": "NOPE",
   "short_name": "NOPE",
-  "description": "Pilih # mu, ekspresikan dirimu",
+  "description": "Pilih # mu yang relate",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
