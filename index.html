@@ -628,7 +628,6 @@
             font-size: 11px;
             padding: 8px 10px;
             transition: all 0.2s;
-
             min-width: 70px;
         }
         .nav-item.active {
@@ -772,9 +771,7 @@
                 rows="5"
             ></textarea>
             <div class="rant-box-footer">
-                <select class="rant-hashtag-select" id="rantHashtagSelect">
-                    <!-- Hashtag options will be populated by JavaScript -->
-                </select>
+                <select class="rant-hashtag-select" id="rantHashtagSelect"></select>
                 <button class="action-btn" style="padding: 8px 16px; font-size: 14px;" onclick="postRantFromBox()">
                     Post Rant
                 </button>
@@ -1084,7 +1081,7 @@
             dummyUsers.forEach((user, i) => {
                 users[user.username] = {
                     username: user.username,
-                    created: now - (15 - i) * 24 * 60 * 60 * 1000, // 15 hari ke belakang
+                    created: now - (15 - i) * 24 * 60 * 60 * 1000,
                     lastLogin: now - (15 - i) * 24 * 60 * 60 * 1000,
                     onboarded: true,
                     selectedHashtags: {
@@ -1095,7 +1092,7 @@
                     },
                     rants: [{
                         content: user.rant,
-                        hashtag: user.hashtags[Math.floor(Math.random() * user.hashtags.length)],
+                        hashtag: user.hashtags[Math.floor(Math.random()*user.hashtags.length)],
                         date: now - (15 - i) * 24 * 60 * 60 * 1000
                     }],
                     artefacts: [{
@@ -1131,7 +1128,7 @@
             }
         }
 
-        // ===== ROUTER & TAB SYSTEM =====
+        // ===== SHOW PAGE & TAB =====
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active','fade-in'));
             const p = document.getElementById(pageId);
@@ -1155,7 +1152,7 @@
         }
         function showTab(tabId) { showPage(tabId); }
         function updateNavActive(activeTab) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const btn = document.querySelector(`.nav-item[onclick*="${activeTab}"]`);
             if (btn) btn.classList.add('active');
         }
@@ -1196,15 +1193,7 @@
             localStorage.setItem('nope_current_user', u);
             let d = getUserData(u);
             if (!d) {
-                d = {
-                    username: u,
-                    created: Date.now(),
-                    lastLogin: Date.now(),
-                    selectedHashtags: null,
-                    onboarded: false,
-                    rants: [],
-                    artefacts: []
-                };
+                d = { username: u, created: Date.now(), lastLogin: Date.now(), selectedHashtags: null, onboarded: false, rants: [], artefacts: [] };
                 saveUserData(u, d);
                 showPage('onboarding');
             } else {
@@ -1223,29 +1212,29 @@
             ['popculture','personalpain','socialsickness'].forEach(z => renderHashtags(z));
             updateCounters();
         }
-        function renderHashtags(zonaId) {
-            const c = document.getElementById(zonaId + 'List');
-            const zona = zonaData[zonaId];
+        function renderHashtags(z) {
+            const c = document.getElementById(z + 'List');
+            const zona = zonaData[z];
             c.innerHTML = '';
             zona.hashtags.forEach(h => {
-                const sel = selectedHashtags[zonaId] === h.name;
+                const sel = selectedHashtags[z] === h.name;
                 const div = document.createElement('div');
                 div.className = `hashtag-item ${sel ? 'selected' : ''}`;
-                div.onclick = () => selectHashtag(zonaId, h.name);
+                div.onclick = () => selectHashtag(z, h.name);
                 div.innerHTML = `<div class="hashtag-name">${h.name}</div><div class="hashtag-microcopy">${h.microcopy}</div>`;
                 c.appendChild(div);
             });
         }
-        function selectHashtag(zonaId, h) {
-            selectedHashtags[zonaId] = selectedHashtags[zonaId] === h ? null : h;
-            renderHashtags(zonaId);
+        function selectHashtag(z, h) {
+            selectedHashtags[z] = selectedHashtags[z] === h ? null : h;
+            renderHashtags(z);
             updateCounters();
         }
         function updateCounters() {
             document.getElementById('popcultureCounter').textContent = `${selectedHashtags.popculture ? '1' : '0'}/1`;
             document.getElementById('personalpainCounter').textContent = `${selectedHashtags.personalpain ? '1' : '0'}/1`;
             document.getElementById('socialsicknessCounter').textContent = `${selectedHashtags.socialsickness ? '1' : '0'}/1`;
-            const total = Object.values(selectedHashtags).filter(h => h !== null).length;
+            const total = Object.values(selectedHashtags).filter(h => h).length;
             document.getElementById('saveBtn').disabled = total !== 3;
         }
         function saveSelections() {
@@ -1306,13 +1295,12 @@
                 return;
             }
             const latest = d.artefacts[d.artefacts.length - 1];
-            const date = new Date(latest.date);
-            const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            const date = new Date(latest.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             c.innerHTML = `<div class="artefak-preview" onclick="viewArtefak(${d.artefacts.length - 1})">
                 <div class="artefak-preview-image"><div class="artefak-placeholder">📁</div></div>
                 <div class="artefak-preview-info">
                     <div class="artefak-preview-title">📁 ${latest.title}</div>
-                    <div class="artefak-preview-date">Ditambahkan: ${dateStr}</div>
+                    <div class="artefak-preview-date">Ditambahkan: ${date}</div>
                 </div>
             </div>`;
         }
@@ -1323,16 +1311,15 @@
                 c.innerHTML = `<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant. Mulai tulis di box di atas!</div>`;
                 return;
             }
-            const recentRants = d.rants.slice(-3).reverse();
+            const rants = d.rants.slice(-3).reverse();
             c.innerHTML = '';
-            recentRants.forEach(r => {
-                const date = new Date(r.date);
-                const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-                let content = r.content.length > 100 ? r.content.substring(0, 100) + '...' : r.content;
+            rants.forEach(r => {
+                const date = new Date(r.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                const content = r.content.length > 100 ? r.content.substring(0, 100) + '...' : r.content;
                 const div = document.createElement('div');
                 div.className = 'recent-rant-item';
                 div.onclick = () => viewRantDetails(r);
-                div.innerHTML = `<div class="recent-rant-date">${dateStr} • ${r.hashtag || ''}</div><div class="recent-rant-content">${content}</div>`;
+                div.innerHTML = `<div class="recent-rant-date">${date} • ${r.hashtag || ''}</div><div class="recent-rant-content">${content}</div>`;
                 c.appendChild(div);
             });
         }
@@ -1343,16 +1330,15 @@
                 c.innerHTML = `<div class="artefak-grid-item" style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.4);">Belum ada artefak. Tambah artefak untuk dokumentasi!</div>`;
                 return;
             }
-            const recentArtefaks = d.artefacts.slice(-6).reverse();
+            const artefaks = d.artefacts.slice(-6).reverse();
             c.innerHTML = '';
-            recentArtefaks.forEach((a, i) => {
-                const date = new Date(a.date);
-                const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                let title = a.title.length > 20 ? a.title.substring(0, 20) + '...' : a.title;
+            artefaks.forEach((a, i) => {
+                const date = new Date(a.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                const title = a.title.length > 20 ? a.title.substring(0, 20) + '...' : a.title;
                 const div = document.createElement('div');
                 div.className = 'artefak-grid-item';
                 div.onclick = () => viewArtefakDetails(d.artefacts.length - 1 - i);
-                div.innerHTML = `<div class="artefak-grid-image"><div class="artefak-grid-icon">📁</div></div><div class="artefak-grid-title">${title}</div><div class="artefak-grid-date">${dateStr}</div>`;
+                div.innerHTML = `<div class="artefak-grid-image"><div class="artefak-grid-icon">📁</div></div><div class="artefak-grid-title">${title}</div><div class="artefak-grid-date">${date}</div>`;
                 c.appendChild(div);
             });
         }
@@ -1370,8 +1356,7 @@
             document.getElementById('rantBox').value = '';
             document.getElementById('rantCounter').textContent = '0/300';
             renderRecentRants();
-            const postCount = (d.rants?.length || 0) + (d.artefacts?.length || 0);
-            document.getElementById('postCount').textContent = postCount;
+            document.getElementById('postCount').textContent = (d.rants?.length || 0) + (d.artefacts?.length || 0);
             showToast('Rant berhasil diposting!');
         }
 
