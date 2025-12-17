@@ -1678,6 +1678,136 @@
             });
             initializeApp();
         });
+        // ===== JALAN TAB SWITCHING =====
+function showJalanTab(tab) {
+    document.getElementById('jalan-frekuensi').style.display = 'none';
+    document.getElementById('jalan-gelombang').style.display = 'none';
+    document.getElementById('jalan-movement').style.display = 'none';
+    document.getElementById(`jalan-${tab}`).style.display = 'block';
+}
+
+// ===== RENDER FREKUENSI (personal feed) =====
+function renderFrekuensiFeed() {
+    const container = document.getElementById('frekuensiList');
+    const userData = getUserData(currentUser);
+    if (!userData || !userData.rants || userData.rants.length === 0) {
+        container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant.</div>';
+        return;
+    }
+    const userHashtags = new Set(Object.values(userData.selectedHashtags));
+    const matchingRants = userData.rants.filter(rant => userHashtags.has(rant.hashtag));
+    if (matchingRants.length === 0) {
+        container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant dengan # mu.</div>';
+        return;
+    }
+    const recent = matchingRants.slice(-5).reverse();
+    container.innerHTML = recent.map(rant => {
+        const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+        return `
+            <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
+                <div class="recent-rant-date">${date} • ${rant.hashtag}</div>
+                <div class="recent-rant-content">${content}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ===== RENDER GELOMBANG (global feed) =====
+function renderGelombangFeed() {
+    const container = document.getElementById('gelombangList');
+    const allUsers = getUsers();
+    let allRants = [];
+    for (const username in allUsers) {
+        const user = allUsers[username];
+        if (user.rants) {
+            user.rants.forEach(rant => allRants.push({ ...rant, username }));
+        }
+    }
+    if (allRants.length === 0) {
+        container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant global.</div>';
+        return;
+    }
+    allRants.sort((a, b) => b.date - a.date);
+    const recent = allRants.slice(0, 8);
+    container.innerHTML = recent.map(rant => {
+        const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+        return `
+            <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
+                <div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div>
+                <div class="recent-rant-content">${content}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ===== RENDER MOVEMENT (hanya Movement hashtag) =====
+function renderMovementFeed() {
+    const container = document.getElementById('movementList');
+    const movementHashtags = new Set([
+        "#PendidikanUntukSemua",
+        "#JanganExploitBuruh",
+        "#FUNDINGSolidaritasDiam",
+        "#PetisiTerbuka"
+    ]);
+    const allUsers = getUsers();
+    let movementRants = [];
+    for (const username in allUsers) {
+        const user = allUsers[username];
+        if (user.rants) {
+            user.rants.forEach(rant => {
+                if (movementHashtags.has(rant.hashtag)) {
+                    movementRants.push({ ...rant, username });
+                }
+            });
+        }
+    }
+    if (movementRants.length === 0) {
+        container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant Movement.</div>';
+        return;
+    }
+    movementRants.sort((a, b) => b.date - a.date);
+    const recent = movementRants.slice(0, 8);
+    container.innerHTML = recent.map(rant => {
+        const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+        const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+        return `
+            <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
+                <div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div>
+                <div class="recent-rant-content">${content}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ===== PERBARUI initJalanPage() =====
+function initJalanPage() {
+    if (!currentUser) {
+        showPage('login');
+        return;
+    }
+    // Hitung statistik
+    const userData = getUserData(currentUser);
+    const joinDate = new Date(userData.created);
+    const now = new Date();
+    const daysDiff = Math.max(1, Math.floor((now - joinDate) / (1000 * 60 * 60 * 24)));
+    const rantsCount = userData.rants?.length || 0;
+    const artefactsCount = userData.artefacts?.length || 0;
+    const hashtagsCount = userData.selectedHashtags ? Object.values(userData.selectedHashtags).filter(h => h !== null).length : 0;
+    document.getElementById('daysCount').textContent = daysDiff;
+    document.getElementById('rantsCount').textContent = rantsCount;
+    document.getElementById('artefaksCount').textContent = artefactsCount;
+    document.getElementById('hashtagsCount').textContent = hashtagsCount;
+
+    // Render ketiga feed
+    renderFrekuensiFeed();
+    renderGelombangFeed();
+    renderMovementFeed();
+
+    // Tampilkan tab Frekuensi pertama
+    showJalanTab('frekuensi');
+}
     </script>
 </body>
 </html>
