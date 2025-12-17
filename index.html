@@ -236,7 +236,7 @@
         .artefak-preview-image {
             width: 100%;
             height: 0;
-            padding-bottom: 80%;
+            padding-bottom: 80%; /* 80% dari lebar */
             background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 150, 255, 0.1));
             display: flex;
             align-items: center;
@@ -284,7 +284,7 @@
         }
         .rant-box {
             width: 100%;
-            min-height: 120px;
+            min-height: 120px; /* 5 baris x sekitar 24px */
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -430,7 +430,7 @@
         /* ===== JALAN PAGE ===== */
         .jalan-header {
             text-align: center;
-            margin: 20px 0 30px 0;
+            margin: 20px 0 20px 0;
         }
         .jalan-title {
             font-size: 20px;
@@ -442,6 +442,30 @@
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
         }
+        .jalan-tab-nav {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+        .jalan-tab-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .jalan-tab-btn.active {
+            color: #ff00ff;
+            background: rgba(255,0,255,0.1);
+        }
+        .jalan-tab-content {
+            margin-top: 15px;
+        }
+        /* Stats tetap di bawah */
         .jalan-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -749,9 +773,7 @@
             </div>
         </div>
         <!-- Artefak Preview (Latest Artefak) -->
-        <div class="artefak-preview-container" id="artefakPreviewContainer">
-            <!-- Artefak preview will be populated by JavaScript -->
-        </div>
+        <div class="artefak-preview-container" id="artefakPreviewContainer"></div>
         <!-- Rant Box -->
         <div class="rant-box-container">
             <div class="rant-box-header">
@@ -800,10 +822,36 @@
         <div class="logo">NOPE</div>
         <div class="jalan-header">
             <div class="jalan-title">Jalan mu</div>
-            <div class="jalan-subtitle">
-                Statistik perjalanan di NOPE
-            </div>
+            <div class="jalan-subtitle">Frekuensi • Gelombang • Movement</div>
         </div>
+        <!-- Tab Navigation -->
+        <div class="jalan-tab-nav">
+            <button class="jalan-tab-btn active" onclick="showJalanTab('frekuensi')">Frekuensi</button>
+            <button class="jalan-tab-btn" onclick="showJalanTab('gelombang')">Gelombang</button>
+            <button class="jalan-tab-btn" onclick="showJalanTab('movement')">Movement</button>
+        </div>
+        <!-- Frekuensi Tab -->
+        <div id="jalan-frekuensi" class="jalan-tab-content">
+            <div class="section-header">
+                <div class="section-title">Rant dari 3# mu</div>
+            </div>
+            <div class="recent-rants-list" id="frekuensiList"></div>
+        </div>
+        <!-- Gelombang Tab -->
+        <div id="jalan-gelombang" class="jalan-tab-content" style="display:none;">
+            <div class="section-header">
+                <div class="section-title">Gelombang Global</div>
+            </div>
+            <div class="recent-rants-list" id="gelombangList"></div>
+        </div>
+        <!-- Movement Tab -->
+        <div id="jalan-movement" class="jalan-tab-content" style="display:none;">
+            <div class="section-header">
+                <div class="section-title">Movement</div>
+            </div>
+            <div class="recent-rants-list" id="movementList"></div>
+        </div>
+        <!-- Stats di bawah -->
         <div class="jalan-stats">
             <div class="jalan-stat">
                 <div class="jalan-number" id="daysCount">0</div>
@@ -829,9 +877,7 @@
                     <div class="zona-card-desc">3# yang kamu pilih</div>
                 </div>
             </div>
-            <div id="selectedHashtagsList">
-                <!-- Selected hashtags will be shown here -->
-            </div>
+            <div id="selectedHashtagsList"></div>
         </div>
     </div>
     <!-- DUNIA PAGE -->
@@ -962,7 +1008,7 @@
             localStorage.removeItem('nope_current_user');
             showPage('login');
         }
-        // ===== LOGIN =====
+        // ===== PAGE: LOGIN =====
         function initLoginPage() {
             const input = document.getElementById('usernameInput');
             const status = document.getElementById('userStatus');
@@ -1032,16 +1078,19 @@
                 showPage('onboarding');
             }
         }
-        // ===== ONBOARDING =====
+        // ===== PAGE: ONBOARDING =====
         function initOnboardingPage() {
             if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
             if (userData && userData.onboarded) { showPage('jejak'); return; }
-            selectedHashtags = userData && userData.selectedHashtags ? { ...userData.selectedHashtags } : {
+            selectedHashtags = {
                 popculture: null,
                 personalpain: null,
                 socialsickness: null
             };
+            if (userData && userData.selectedHashtags) {
+                selectedHashtags = userData.selectedHashtags;
+            }
             ['popculture', 'personalpain', 'socialsickness'].forEach(z => renderHashtags(z));
             updateCounters();
         }
@@ -1089,7 +1138,7 @@
             document.getElementById('saveBtn').disabled = true;
             setTimeout(() => showPage('jejak'), 600);
         }
-        // ===== JEJAK =====
+        // ===== PAGE: JEJAK =====
         function initJejakPage() {
             if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
@@ -1246,12 +1295,9 @@
             `);
         }
         function viewArtefak(index) { viewArtefakDetails(index); }
-        // ===== JALAN =====
+        // ===== PAGE: JALAN =====
         function initJalanPage() {
-            if (!currentUser) {
-                showPage('login');
-                return;
-            }
+            if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
             const joinDate = new Date(userData.created);
             const now = new Date();
@@ -1264,6 +1310,10 @@
             document.getElementById('artefaksCount').textContent = artefactsCount;
             document.getElementById('hashtagsCount').textContent = hashtagsCount;
             renderSelectedHashtags();
+            renderFrekuensiFeed();
+            renderGelombangFeed();
+            renderMovementFeed();
+            showJalanTab('frekuensi');
         }
         function renderSelectedHashtags() {
             const container = document.getElementById('selectedHashtagsList');
@@ -1285,7 +1335,102 @@
                 }
             });
         }
-        // ===== DUNIA =====
+        function showJalanTab(tab) {
+            document.getElementById('jalan-frekuensi').style.display = 'none';
+            document.getElementById('jalan-gelombang').style.display = 'none';
+            document.getElementById('jalan-movement').style.display = 'none';
+            document.getElementById(`jalan-${tab}`).style.display = 'block';
+            document.querySelectorAll('.jalan-tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        function renderFrekuensiFeed() {
+            const container = document.getElementById('frekuensiList');
+            const userData = getUserData(currentUser);
+            if (!userData.rants || userData.rants.length === 0) {
+                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant.</div>';
+                return;
+            }
+            const userHashtags = new Set(Object.values(userData.selectedHashtags));
+            const matchingRants = userData.rants.filter(rant => userHashtags.has(rant.hashtag));
+            if (matchingRants.length === 0) {
+                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant dengan # mu.</div>';
+                return;
+            }
+            const recent = matchingRants.slice(-5).reverse();
+            container.innerHTML = recent.map(rant => {
+                const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                return `
+                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
+                        <div class="recent-rant-date">${date} • ${rant.hashtag}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        function renderGelombangFeed() {
+            const container = document.getElementById('gelombangList');
+            const allUsers = getUsers();
+            let allRants = [];
+            for (const username in allUsers) {
+                const user = allUsers[username];
+                if (user.rants) user.rants.forEach(rant => allRants.push({ ...rant, username }));
+            }
+            if (allRants.length === 0) {
+                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant global.</div>';
+                return;
+            }
+            allRants.sort((a, b) => b.date - a.date);
+            const recent = allRants.slice(0, 8);
+            container.innerHTML = recent.map(rant => {
+                const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                return `
+                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
+                        <div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        function renderMovementFeed() {
+            const container = document.getElementById('movementList');
+            const movementHashtags = new Set([
+                "#PendidikanUntukSemua",
+                "#JanganExploitBuruh",
+                "#FUNDINGSolidaritasDiam",
+                "#PetisiTerbuka"
+            ]);
+            const allUsers = getUsers();
+            let movementRants = [];
+            for (const username in allUsers) {
+                const user = allUsers[username];
+                if (user.rants) {
+                    user.rants.forEach(rant => {
+                        if (movementHashtags.has(rant.hashtag)) {
+                            movementRants.push({ ...rant, username });
+                        }
+                    });
+                }
+            }
+            if (movementRants.length === 0) {
+                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant Movement.</div>';
+                return;
+            }
+            movementRants.sort((a, b) => b.date - a.date);
+            const recent = movementRants.slice(0, 8);
+            container.innerHTML = recent.map(rant => {
+                const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                return `
+                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
+                        <div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        // ===== PAGE: DUNIA =====
         function initDuniaPage() {
             if (!currentUser) {
                 showPage('login');
