@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nope-compact-v1';
+const CACHE_NAME = 'nope-lowfriction-v1';
 
 self.addEventListener('install', event => {
   event.waitUntil(
