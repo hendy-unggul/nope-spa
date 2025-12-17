@@ -279,7 +279,7 @@
         }
         .rant-box {
             width: 100%;
-            min-height: 120px;
+            min-height: 120px; /* 5 baris x sekitar 24px */
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -460,7 +460,7 @@
         .jalan-tab-content {
             margin-top: 15px;
         }
-        /* Stats (opsional) */
+        /* Stats tetap ada di bawah */
         .jalan-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -971,14 +971,17 @@
         }
         // ===== ROUTER & TAB SYSTEM =====
         function showPage(pageId) {
+            // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
                 page.classList.remove('fade-in');
             });
+            // Show target page
             const page = document.getElementById(pageId);
             if (page) {
                 page.classList.add('active');
                 page.classList.add('fade-in');
+                // Show/hide bottom nav
                 const bottomNav = document.getElementById('bottomNav');
                 if (['jejak', 'jalan', 'dunia'].includes(pageId)) {
                     bottomNav.style.display = 'flex';
@@ -987,22 +990,37 @@
                 } else {
                     bottomNav.style.display = 'none';
                 }
+                // Initialize page
                 switch(pageId) {
-                    case 'login': initLoginPage(); break;
-                    case 'onboarding': initOnboardingPage(); break;
-                    case 'jejak': initJejakPage(); break;
-                    case 'jalan': initJalanPage(); break;
-                    case 'dunia': initDuniaPage(); break;
+                    case 'login':
+                        initLoginPage();
+                        break;
+                    case 'onboarding':
+                        initOnboardingPage();
+                        break;
+                    case 'jejak':
+                        initJejakPage();
+                        break;
+                    case 'jalan':
+                        initJalanPage();
+                        break;
+                    case 'dunia':
+                        initDuniaPage();
+                        break;
                 }
             }
         }
-        function showTab(tabId) { showPage(tabId); }
+        function showTab(tabId) {
+            showPage(tabId);
+        }
         function updateNavActive(activeTab) {
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             const activeItem = document.querySelector(`.nav-item[onclick*="${activeTab}"]`);
-            if (activeItem) activeItem.classList.add('active');
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
         }
         // ===== INITIAL LOAD =====
         function initializeApp() {
@@ -1010,10 +1028,6 @@
             localStorage.removeItem('nope_current_user');
             showPage('login');
         }
-        // ===== LOGIN, ONBOARDING, JEJAK, DUNIA: SESUAI FILE ANDA YANG SUDAH BERJALAN =====
-        // (kode lengkap tetap dipertahankan, hanya halaman JALAN yang diperbarui)
-
-        // [SEMUA FUNGSI DARI LOGIN SAMPAI DUNIA SAMA DENGAN FILE ANDA YANG SUDAH BERJALAN]
         // ===== PAGE: LOGIN =====
         function initLoginPage() {
             const input = document.getElementById('usernameInput');
@@ -1024,12 +1038,15 @@
             const newInput = input.cloneNode(true);
             input.parentNode.replaceChild(newInput, input);
             const newInputElement = document.getElementById('usernameInput');
-            newInputElement.addEventListener('keydown', function(e) {
+            newInputElement.addEventListener('keydown', e => {
                 if (e.key === 'Enter') processLogin();
             });
             newInputElement.addEventListener('input', function() {
-                const username = this.value.trim().toLowerCase();
-                if (username.length < 3) { status.style.display = 'none'; return; }
+                let username = this.value.trim().toLowerCase();
+                if (username.length < 3) {
+                    status.style.display = 'none';
+                    return;
+                }
                 let formatted = username.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
                 if (username !== formatted) this.value = formatted;
                 const userData = getUserData(formatted);
@@ -1045,29 +1062,50 @@
         }
         function processLogin() {
             let username = document.getElementById('usernameInput').value.trim().toLowerCase();
-            if (username.length < 3) { alert('Username minimal 3 karakter!'); return; }
+            if (username.length < 3) {
+                alert('Username minimal 3 karakter!');
+                return;
+            }
             username = username.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
-            if (username.length < 3) { alert('Username hanya boleh huruf, angka, underscore!'); return; }
+            if (username.length < 3) {
+                alert('Username hanya boleh huruf, angka, underscore!');
+                return;
+            }
             currentUser = username;
             localStorage.setItem('nope_current_user', username);
             let userData = getUserData(username);
             if (!userData) {
-                userData = { username: username, created: Date.now(), lastLogin: Date.now(), selectedHashtags: null, onboarded: false, rants: [], artefacts: [] };
+                userData = {
+                    username: username,
+                    created: Date.now(),
+                    lastLogin: Date.now(),
+                    selectedHashtags: null,
+                    onboarded: false,
+                    rants: [],
+                    artefacts: []
+                };
                 saveUserData(username, userData);
                 showPage('onboarding');
                 return;
             }
             userData.lastLogin = Date.now();
             saveUserData(username, userData);
-            if (userData.onboarded) showPage('jejak'); else showPage('onboarding');
+            if (userData.onboarded) {
+                showPage('jejak');
+            } else {
+                showPage('onboarding');
+            }
         }
         // ===== PAGE: ONBOARDING =====
         function initOnboardingPage() {
             if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
             if (userData && userData.onboarded) { showPage('jejak'); return; }
-            selectedHashtags = { popculture: null, personalpain: null, socialsickness: null };
-            if (userData && userData.selectedHashtags) selectedHashtags = userData.selectedHashtags;
+            selectedHashtags = userData && userData.selectedHashtags ? { ...userData.selectedHashtags } : {
+                popculture: null,
+                personalpain: null,
+                socialsickness: null
+            };
             ['popculture', 'personalpain', 'socialsickness'].forEach(z => renderHashtags(z));
             updateCounters();
         }
@@ -1080,7 +1118,10 @@
                 const item = document.createElement('div');
                 item.className = `hashtag-item ${isSelected ? 'selected' : ''}`;
                 item.onclick = () => selectHashtag(zonaId, hashtag.name);
-                item.innerHTML = `<div class="hashtag-name">${hashtag.name}</div><div class="hashtag-microcopy">${hashtag.microcopy}</div>`;
+                item.innerHTML = `
+                    <div class="hashtag-name">${hashtag.name}</div>
+                    <div class="hashtag-microcopy">${hashtag.microcopy}</div>
+                `;
                 container.appendChild(item);
             });
         }
@@ -1090,8 +1131,19 @@
             updateCounters();
         }
         function updateCounters() {
+            ['popculture', 'personalpain', 'socialsickness'].forEach(z => {
+                document.getElementById(z + 'Counter').textContent = `${selectedHashtags[z] ? '1' : '0'}/1`;
+            });
             const total = Object.values(selectedHashtags).filter(h => h !== null).length;
-            document.getElementById('saveBtn').disabled = total !== 3;
+            document.getElementById('totalCounter').textContent = total;
+            const btn = document.getElementById('saveBtn');
+            if (total === 3) {
+                btn.disabled = false;
+                btn.textContent = 'Temukan frekuensimu...';
+            } else {
+                btn.disabled = true;
+                btn.textContent = `Pilih ${3 - total} lagi...`;
+            }
         }
         function saveSelections() {
             if (!currentUser) return;
@@ -1141,25 +1193,29 @@
             const container = document.getElementById('artefakPreviewContainer');
             const userData = getUserData(currentUser);
             if (!userData.artefacts || userData.artefacts.length === 0) {
-                container.innerHTML = `<div class="artefak-preview" onclick="showArtefakModal()">
-                    <div class="artefak-preview-image"><div class="artefak-placeholder">🖼️</div></div>
-                    <div class="artefak-preview-info">
-                        <div class="artefak-preview-title">📁 Belum ada artefak</div>
-                        <div class="artefak-preview-date">Klik untuk menambahkan artefak pertama mu</div>
+                container.innerHTML = `
+                    <div class="artefak-preview" onclick="showArtefakModal()">
+                        <div class="artefak-preview-image"><div class="artefak-placeholder">🖼️</div></div>
+                        <div class="artefak-preview-info">
+                            <div class="artefak-preview-title">📁 Belum ada artefak</div>
+                            <div class="artefak-preview-date">Klik untuk menambahkan artefak pertama mu</div>
+                        </div>
                     </div>
-                </div>`;
+                `;
                 return;
             }
             const latestArtefak = userData.artefacts[userData.artefacts.length - 1];
             const date = new Date(latestArtefak.date);
             const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-            container.innerHTML = `<div class="artefak-preview" onclick="viewArtefak(${userData.artefacts.length - 1})">
-                <div class="artefak-preview-image"><div class="artefak-placeholder">📁</div></div>
-                <div class="artefak-preview-info">
-                    <div class="artefak-preview-title">📁 ${latestArtefak.title}</div>
-                    <div class="artefak-preview-date">Ditambahkan: ${dateStr}</div>
+            container.innerHTML = `
+                <div class="artefak-preview" onclick="viewArtefak(${userData.artefacts.length - 1})">
+                    <div class="artefak-preview-image"><div class="artefak-placeholder">📁</div></div>
+                    <div class="artefak-preview-info">
+                        <div class="artefak-preview-title">📁 ${latestArtefak.title}</div>
+                        <div class="artefak-preview-date">Ditambahkan: ${dateStr}</div>
+                    </div>
                 </div>
-            </div>`;
+            `;
         }
         function renderRecentRants() {
             const container = document.getElementById('recentRantsList');
@@ -1198,7 +1254,11 @@
                 const item = document.createElement('div');
                 item.className = 'artefak-grid-item';
                 item.onclick = () => viewArtefakDetails(userData.artefacts.length - 1 - index);
-                item.innerHTML = `<div class="artefak-grid-image"><div class="artefak-grid-icon">📁</div></div><div class="artefak-grid-title">${title}</div><div class="artefak-grid-date">${dateStr}</div>`;
+                item.innerHTML = `
+                    <div class="artefak-grid-image"><div class="artefak-grid-icon">📁</div></div>
+                    <div class="artefak-grid-title">${title}</div>
+                    <div class="artefak-grid-date">${dateStr}</div>
+                `;
                 container.appendChild(item);
             });
         }
@@ -1253,86 +1313,12 @@
             `);
         }
         function viewArtefak(index) { viewArtefakDetails(index); }
-        
-        // ===== JALAN TAB SYSTEM & RENDERING =====
-        function showJalanTab(tab) {
-            document.querySelectorAll('.jalan-tab-content').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.jalan-tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`jalan-${tab}`).style.display = 'block';
-            event.target.classList.add('active');
-        }
-        function renderFrekuensiFeed() {
-            const container = document.getElementById('frekuensiList');
-            const userData = getUserData(currentUser);
-            if (!userData || !userData.rants || userData.rants.length === 0) {
-                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant.</div>';
-                return;
-            }
-            const userHashtags = new Set(Object.values(userData.selectedHashtags));
-            const matchingRants = userData.rants.filter(rant => userHashtags.has(rant.hashtag));
-            if (matchingRants.length === 0) {
-                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant dengan # mu.</div>';
-                return;
-            }
-            const recent = matchingRants.slice(-5).reverse();
-            container.innerHTML = recent.map(rant => {
-                const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
-                return `<div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})"><div class="recent-rant-date">${date} • ${rant.hashtag}</div><div class="recent-rant-content">${content}</div></div>`;
-            }).join('');
-        }
-        function renderGelombangFeed() {
-            const container = document.getElementById('gelombangList');
-            const allUsers = getUsers();
-            let allRants = [];
-            for (const username in allUsers) {
-                const user = allUsers[username];
-                if (user.rants) user.rants.forEach(rant => allRants.push({ ...rant, username }));
-            }
-            if (allRants.length === 0) {
-                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant global.</div>';
-                return;
-            }
-            allRants.sort((a, b) => b.date - a.date);
-            const recent = allRants.slice(0, 8);
-            container.innerHTML = recent.map(rant => {
-                const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
-                return `<div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})"><div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div><div class="recent-rant-content">${content}</div></div>`;
-            }).join('');
-        }
-        function renderMovementFeed() {
-            const container = document.getElementById('movementList');
-            const movementHashtags = new Set([
-                "#PendidikanUntukSemua",
-                "#JanganExploitBuruh",
-                "#FUNDINGSolidaritasDiam",
-                "#PetisiTerbuka"
-            ]);
-            const allUsers = getUsers();
-            let movementRants = [];
-            for (const username in allUsers) {
-                const user = allUsers[username];
-                if (user.rants) {
-                    user.rants.forEach(rant => {
-                        if (movementHashtags.has(rant.hashtag)) movementRants.push({ ...rant, username });
-                    });
-                }
-            }
-            if (movementRants.length === 0) {
-                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant Movement.</div>';
-                return;
-            }
-            movementRants.sort((a, b) => b.date - a.date);
-            const recent = movementRants.slice(0, 8);
-            container.innerHTML = recent.map(rant => {
-                const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
-                return `<div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})"><div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div><div class="recent-rant-content">${content}</div></div>`;
-            }).join('');
-        }
+        // ===== PAGE: JALAN =====
         function initJalanPage() {
-            if (!currentUser) { showPage('login'); return; }
+            if (!currentUser) {
+                showPage('login');
+                return;
+            }
             const userData = getUserData(currentUser);
             const joinDate = new Date(userData.created);
             const now = new Date();
@@ -1362,14 +1348,118 @@
                 if (hashtag) {
                     const item = document.createElement('div');
                     item.className = 'hashtag-item';
-                    item.innerHTML = `<div class="hashtag-name">${hashtag}</div><div class="hashtag-microcopy">${zonaData[zona].description}</div>`;
+                    item.innerHTML = `
+                        <div class="hashtag-name">${hashtag}</div>
+                        <div class="hashtag-microcopy">${zonaData[zona].description}</div>
+                    `;
                     container.appendChild(item);
                 }
             });
         }
+        function showJalanTab(tab) {
+            document.getElementById('jalan-frekuensi').style.display = 'none';
+            document.getElementById('jalan-gelombang').style.display = 'none';
+            document.getElementById('jalan-movement').style.display = 'none';
+            document.getElementById(`jalan-${tab}`).style.display = 'block';
+            event.target.parentElement.querySelectorAll('.jalan-tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        function renderFrekuensiFeed() {
+            const container = document.getElementById('frekuensiList');
+            const userData = getUserData(currentUser);
+            if (!userData.rants || userData.rants.length === 0) {
+                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant.</div>';
+                return;
+            }
+            const userHashtags = new Set(Object.values(userData.selectedHashtags));
+            const matchingRants = userData.rants.filter(rant => userHashtags.has(rant.hashtag));
+            if (matchingRants.length === 0) {
+                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant dengan # mu.</div>';
+                return;
+            }
+            const recent = matchingRants.slice(-5).reverse();
+            container.innerHTML = recent.map(rant => {
+                const date = new Date(rant.date);
+                const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                return `
+                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
+                        <div class="recent-rant-date">${dateStr} • ${rant.hashtag}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        function renderGelombangFeed() {
+            const container = document.getElementById('gelombangList');
+            const allUsers = getUsers();
+            let allRants = [];
+            for (const username in allUsers) {
+                const user = allUsers[username];
+                if (user.rants) {
+                    user.rants.forEach(rant => allRants.push({ ...rant, username }));
+                }
+            }
+            if (allRants.length === 0) {
+                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant global.</div>';
+                return;
+            }
+            allRants.sort((a, b) => b.date - a.date);
+            const recent = allRants.slice(0, 8);
+            container.innerHTML = recent.map(rant => {
+                const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                return `
+                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
+                        <div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        function renderMovementFeed() {
+            const container = document.getElementById('movementList');
+            const movementHashtags = new Set([
+                "#PendidikanUntukSemua",
+                "#JanganExploitBuruh",
+                "#FUNDINGSolidaritasDiam",
+                "#PetisiTerbuka"
+            ]);
+            const allUsers = getUsers();
+            let movementRants = [];
+            for (const username in allUsers) {
+                const user = allUsers[username];
+                if (user.rants) {
+                    user.rants.forEach(rant => {
+                        if (movementHashtags.has(rant.hashtag)) {
+                            movementRants.push({ ...rant, username });
+                        }
+                    });
+                }
+            }
+            if (movementRants.length === 0) {
+                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant Movement.</div>';
+                return;
+            }
+            movementRants.sort((a, b) => b.date - a.date);
+            const recent = movementRants.slice(0, 8);
+            container.innerHTML = recent.map(rant => {
+                const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                return `
+                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
+                        <div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
+            }).join('');
+        }
         // ===== PAGE: DUNIA =====
         function initDuniaPage() {
-            if (!currentUser) { showPage('login'); return; }
+            if (!currentUser) {
+                showPage('login');
+                return;
+            }
             const userData = getUserData(currentUser);
             document.getElementById('profileUsername').textContent = `@${currentUser}`;
             const joinDate = new Date(userData.created);
@@ -1378,16 +1468,24 @@
             const postCount = (userData.rants?.length || 0) + (userData.artefacts?.length || 0);
             document.getElementById('profileActivity').textContent = `Aktivitas: ${postCount} posting`;
         }
-        // ===== MODAL & UTILITIES =====
+        // ===== MODAL SYSTEM =====
         function showModal(content) {
             document.querySelector('.modal').innerHTML = content;
             document.getElementById('modalOverlay').classList.add('active');
         }
-        function hideModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+        function hideModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
         function showRantListModal() {
             const userData = getUserData(currentUser);
             if (!userData.rants || userData.rants.length === 0) {
-                showModal(`<div class="modal-header"><div class="modal-title">Semua Rant</div><button class="modal-close" onclick="hideModal()">×</button></div><div style="text-align:center;color:rgba(255,255,255,0.4);padding:40px 20px;">Belum ada rant</div></div>`);
+                showModal(`
+                    <div class="modal-header">
+                        <div class="modal-title">Semua Rant</div>
+                        <button class="modal-close" onclick="hideModal()">×</button>
+                    </div>
+                    <div style="text-align:center;color:rgba(255,255,255,0.4);padding:40px 20px;">Belum ada rant</div>
+                `);
                 return;
             }
             const sortedRants = [...userData.rants].sort((a, b) => b.date - a.date);
@@ -1395,15 +1493,36 @@
             sortedRants.forEach((rant, index) => {
                 const date = new Date(rant.date);
                 const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                let content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
-                rantListHtml += `<div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})" style="margin-bottom:10px;"><div class="recent-rant-date">${dateStr} • ${rant.hashtag || ''}</div><div class="recent-rant-content">${content}</div></div>`;
+                let content = rant.content;
+                if (content.length > 80) {
+                    content = content.substring(0, 80) + '...';
+                }
+                rantListHtml += `
+                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})" style="margin-bottom:10px;">
+                        <div class="recent-rant-date">${dateStr} • ${rant.hashtag || ''}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
             });
-            showModal(`<div class="modal-header"><div class="modal-title">Semua Rant (${sortedRants.length})</div><button class="modal-close" onclick="hideModal()">×</button></div><div class="recent-rants-list" style="max-height:400px;overflow-y:auto;">${rantListHtml}</div><button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button></div>`);
+            showModal(`
+                <div class="modal-header">
+                    <div class="modal-title">Semua Rant (${sortedRants.length})</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div class="recent-rants-list" style="max-height:400px;overflow-y:auto;">${rantListHtml}</div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
+            `);
         }
         function showArtefakListModal() {
             const userData = getUserData(currentUser);
             if (!userData.artefacts || userData.artefacts.length === 0) {
-                showModal(`<div class="modal-header"><div class="modal-title">Semua Artefak</div><button class="modal-close" onclick="hideModal()">×</button></div><div style="text-align:center;color:rgba(255,255,255,0.4);padding:40px 20px;">Belum ada artefak</div></div>`);
+                showModal(`
+                    <div class="modal-header">
+                        <div class="modal-title">Semua Artefak</div>
+                        <button class="modal-close" onclick="hideModal()">×</button>
+                    </div>
+                    <div style="text-align:center;color:rgba(255,255,255,0.4);padding:40px 20px;">Belum ada artefak</div>
+                `);
                 return;
             }
             const sortedArtefaks = [...userData.artefacts].sort((a, b) => b.date - a.date);
@@ -1414,12 +1533,34 @@
                 const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
                 let title = artefak.title.length > 30 ? artefak.title.substring(0, 30) + '...' : artefak.title;
                 let content = artefak.content.length > 60 ? artefak.content.substring(0, 60) + '...' : artefak.content;
-                artefakListHtml += `<div class="recent-rant-item" onclick="viewArtefakDetails(${userData.artefacts.length - 1 - i})" style="margin-bottom:10px;"><div class="recent-rant-date">${dateStr}</div><div style="color:#ff00ff;font-weight:600;margin-bottom:5px;">${title}</div><div class="recent-rant-content">${content}</div></div>`;
+                artefakListHtml += `
+                    <div class="recent-rant-item" onclick="viewArtefakDetails(${userData.artefacts.length - 1 - i})" style="margin-bottom:10px;">
+                        <div class="recent-rant-date">${dateStr}</div>
+                        <div style="color:#ff00ff;font-weight:600;margin-bottom:5px;">${title}</div>
+                        <div class="recent-rant-content">${content}</div>
+                    </div>
+                `;
             });
-            showModal(`<div class="modal-header"><div class="modal-title">Semua Artefak (${sortedArtefaks.length})</div><button class="modal-close" onclick="hideModal()">×</button></div><div class="recent-rants-list" style="max-height:400px;overflow-y:auto;">${artefakListHtml}</div><button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button></div>`);
+            showModal(`
+                <div class="modal-header">
+                    <div class="modal-title">Semua Artefak (${sortedArtefaks.length})</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div class="recent-rants-list" style="max-height:400px;overflow-y:auto;">${artefakListHtml}</div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
+            `);
         }
         function showArtefakModal() {
-            showModal(`<div class="modal-header"><div class="modal-title">Tambah Artefak</div><button class="modal-close" onclick="hideModal()">×</button></div><input type="text" class="text-input" id="artefakTitle" placeholder="Judul artefak" maxlength="100"><textarea class="textarea-input" id="artefakContent" placeholder="Deskripsi artefak..." maxlength="1000"></textarea><div class="char-counter" id="artefakCounter">0/1000</div><button class="action-btn" onclick="saveArtefak()">Simpan Artefak</button></div>`);
+            showModal(`
+                <div class="modal-header">
+                    <div class="modal-title">Tambah Artefak</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <input type="text" class="text-input" id="artefakTitle" placeholder="Judul artefak" maxlength="100">
+                <textarea class="textarea-input" id="artefakContent" placeholder="Deskripsi artefak..." maxlength="1000"></textarea>
+                <div class="char-counter" id="artefakCounter">0/1000</div>
+                <button class="action-btn" onclick="saveArtefak()">Simpan Artefak</button>
+            `);
             const textarea = document.getElementById('artefakContent');
             const counter = document.getElementById('artefakCounter');
             textarea.addEventListener('input', () => counter.textContent = `${textarea.value.length}/1000`);
@@ -1443,10 +1584,20 @@
             if (!userData.selectedHashtags) { alert('Belum memilih hashtag!'); return; }
             let hashtagsHtml = '';
             Object.entries(userData.selectedHashtags).forEach(([zona, hashtag]) => {
-                if (hashtag) hashtagsHtml += `<div class="hashtag-item"><div class="hashtag-name">${hashtag}</div><div class="hashtag-microcopy">${zonaData[zona].description}</div></div>`;
+                if (hashtag) {
+                    hashtagsHtml += `<div class="hashtag-item"><div class="hashtag-name">${hashtag}</div><div class="hashtag-microcopy">${zonaData[zona].description}</div></div>`;
+                }
             });
-            showModal(`<div class="modal-header"><div class="modal-title"># Terpilih</div><button class="modal-close" onclick="hideModal()">×</button></div><div class="hashtag-list">${hashtagsHtml}</div><button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button></div>`);
+            showModal(`
+                <div class="modal-header">
+                    <div class="modal-title"># Terpilih</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div class="hashtag-list">${hashtagsHtml}</div>
+                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
+            `);
         }
+        // ===== UTILITY FUNCTIONS =====
         function formatLastActive(timestamp) {
             if (!timestamp) return 'baru bergabung';
             const now = Date.now();
@@ -1466,7 +1617,11 @@
             toast.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(255,0,255,0.9);color:white;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;z-index:10000;animation:fadeIn 0.3s ease;`;
             toast.textContent = message;
             document.body.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s ease'; setTimeout(() => document.body.removeChild(toast), 300); }, 3000);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
         }
         function exportData() {
             if (!currentUser) return;
@@ -1491,7 +1646,9 @@
         }
         // ===== INITIALIZE APP =====
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) hideModal(); });
+            document.getElementById('modalOverlay').addEventListener('click', e => {
+                if (e.target === e.currentTarget) hideModal();
+            });
             initializeApp();
         });
     </script>
