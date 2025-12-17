@@ -236,7 +236,7 @@
         .artefak-preview-image {
             width: 100%;
             height: 0;
-            padding-bottom: 80%; /* 80% dari lebar */
+            padding-bottom: 80%;
             background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 150, 255, 0.1));
             display: flex;
             align-items: center;
@@ -284,7 +284,7 @@
         }
         .rant-box {
             width: 100%;
-            min-height: 120px; /* 5 baris x sekitar 24px */
+            min-height: 120px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -438,10 +438,6 @@
             color: #ff00ff;
             margin-bottom: 10px;
         }
-        .jalan-subtitle {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-        }
         .jalan-tab-nav {
             display: flex;
             justify-content: space-around;
@@ -465,31 +461,60 @@
         .jalan-tab-content {
             margin-top: 15px;
         }
-        /* Stats tetap di bawah */
-        .jalan-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 30px 0;
+        /* COMPACT RANT LIST */
+        .recent-rants-list.compact {
+            gap: 10px !important;
+            margin-top: 12px;
         }
-        .jalan-stat {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
+        .recent-rant-item.compact {
+            padding: 10px !important;
+            border-radius: 8px !important;
         }
-        .jalan-number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ff00ff;
-            margin-bottom: 5px;
+        .recent-rant-date.compact {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 4px;
         }
-        .jalan-label {
+        .recent-rant-content.compact {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+        .rant-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .rant-emoji-bar {
+            display: flex;
+            gap: 6px;
+        }
+        .emoji-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 4px;
+        }
+        .emoji-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .emoji-btn.active {
+            color: #ff00ff;
+        }
+        .comment-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 1px;
+        }
+        .comment-link:hover {
+            color: #ff00ff;
+            border-bottom-color: #ff00ff;
         }
         /* ===== DUNIA PAGE ===== */
         .dunia-header {
@@ -822,7 +847,6 @@
         <div class="logo">NOPE</div>
         <div class="jalan-header">
             <div class="jalan-title">Jalan mu</div>
-            <div class="jalan-subtitle">Frekuensi • Gelombang • Movement</div>
         </div>
         <!-- Tab Navigation -->
         <div class="jalan-tab-nav">
@@ -833,51 +857,32 @@
         <!-- Frekuensi Tab -->
         <div id="jalan-frekuensi" class="jalan-tab-content">
             <div class="section-header">
-                <div class="section-title">Rant dari 3# mu</div>
+                <div class="section-title">3# pilihan mu</div>
             </div>
-            <div class="recent-rants-list" id="frekuensiList"></div>
+            <div class="recent-rants-list compact" id="frekuensiList"></div>
         </div>
         <!-- Gelombang Tab -->
         <div id="jalan-gelombang" class="jalan-tab-content" style="display:none;">
             <div class="section-header">
                 <div class="section-title">Gelombang Global</div>
             </div>
-            <div class="recent-rants-list" id="gelombangList"></div>
+            <div class="recent-rants-list compact" id="gelombangList"></div>
         </div>
         <!-- Movement Tab -->
         <div id="jalan-movement" class="jalan-tab-content" style="display:none;">
             <div class="section-header">
                 <div class="section-title">Movement</div>
             </div>
-            <div class="recent-rants-list" id="movementList"></div>
+            <div class="recent-rants-list compact" id="movementList"></div>
         </div>
-        <!-- Stats di bawah -->
-        <div class="jalan-stats">
-            <div class="jalan-stat">
-                <div class="jalan-number" id="daysCount">0</div>
-                <div class="jalan-label">Hari</div>
-            </div>
-            <div class="jalan-stat">
-                <div class="jalan-number" id="rantsCount">0</div>
-                <div class="jalan-label">Rant</div>
-            </div>
-            <div class="jalan-stat">
-                <div class="jalan-number" id="artefaksCount">0</div>
-                <div class="jalan-label">Artefak</div>
-            </div>
-            <div class="jalan-stat">
-                <div class="jalan-number" id="hashtagsCount">3</div>
-                <div class="jalan-label"># terpilih</div>
-            </div>
-        </div>
-        <div class="zona-card">
-            <div class="zona-card-header">
+        <!-- Hanya tampilkan hashtag terpilih (tanpa stats) -->
+        <div class="zona-card" style="margin-top: 20px;">
+            <div class="zona-card-header" style="padding-bottom:8px;margin-bottom:10px;">
                 <div>
-                    <div class="zona-card-name">Frekuensi mu</div>
-                    <div class="zona-card-desc">3# yang kamu pilih</div>
+                    <div class="zona-card-name" style="font-size:16px;">Frekuensi mu</div>
                 </div>
             </div>
-            <div id="selectedHashtagsList"></div>
+            <div id="selectedHashtagsList" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
         </div>
     </div>
     <!-- DUNIA PAGE -->
@@ -1008,7 +1013,7 @@
             localStorage.removeItem('nope_current_user');
             showPage('login');
         }
-        // ===== PAGE: LOGIN =====
+        // ===== LOGIN =====
         function initLoginPage() {
             const input = document.getElementById('usernameInput');
             const status = document.getElementById('userStatus');
@@ -1078,7 +1083,7 @@
                 showPage('onboarding');
             }
         }
-        // ===== PAGE: ONBOARDING =====
+        // ===== ONBOARDING =====
         function initOnboardingPage() {
             if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
@@ -1138,7 +1143,7 @@
             document.getElementById('saveBtn').disabled = true;
             setTimeout(() => showPage('jejak'), 600);
         }
-        // ===== PAGE: JEJAK =====
+        // ===== JEJAK =====
         function initJejakPage() {
             if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
@@ -1295,20 +1300,10 @@
             `);
         }
         function viewArtefak(index) { viewArtefakDetails(index); }
-        // ===== PAGE: JALAN =====
+        // ===== JALAN =====
         function initJalanPage() {
             if (!currentUser) { showPage('login'); return; }
             const userData = getUserData(currentUser);
-            const joinDate = new Date(userData.created);
-            const now = new Date();
-            const daysDiff = Math.max(1, Math.floor((now - joinDate) / (1000 * 60 * 60 * 24)));
-            const rantsCount = userData.rants?.length || 0;
-            const artefactsCount = userData.artefacts?.length || 0;
-            const hashtagsCount = userData.selectedHashtags ? Object.values(userData.selectedHashtags).filter(h => h !== null).length : 0;
-            document.getElementById('daysCount').textContent = daysDiff;
-            document.getElementById('rantsCount').textContent = rantsCount;
-            document.getElementById('artefaksCount').textContent = artefactsCount;
-            document.getElementById('hashtagsCount').textContent = hashtagsCount;
             renderSelectedHashtags();
             renderFrekuensiFeed();
             renderGelombangFeed();
@@ -1326,17 +1321,18 @@
             Object.entries(userData.selectedHashtags).forEach(([zona, hashtag]) => {
                 if (hashtag) {
                     const item = document.createElement('div');
-                    item.className = 'hashtag-item';
-                    item.innerHTML = `
-                        <div class="hashtag-name">${hashtag}</div>
-                        <div class="hashtag-microcopy">${zonaData[zona].description}</div>
-                    `;
+                    item.style.padding = '4px 8px';
+                    item.style.background = 'rgba(255,0,255,0.1)';
+                    item.style.borderRadius = '6px';
+                    item.style.fontSize = '12px';
+                    item.style.color = '#ff00ff';
+                    item.textContent = hashtag;
                     container.appendChild(item);
                 }
             });
         }
         function showJalanTab(tab) {
-            document.getElementById('jalan-frekuensi').style.display = 'none';
+            document.getElementById('jalan-frekuensi').style.display = 'block';
             document.getElementById('jalan-gelombang').style.display = 'none';
             document.getElementById('jalan-movement').style.display = 'none';
             document.getElementById(`jalan-${tab}`).style.display = 'block';
@@ -1345,25 +1341,54 @@
         }
         function renderFrekuensiFeed() {
             const container = document.getElementById('frekuensiList');
-            const userData = getUserData(currentUser);
-            if (!userData.rants || userData.rants.length === 0) {
-                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant.</div>';
+            const currentUserData = getUserData(currentUser);
+            if (!currentUserData || !currentUserData.selectedHashtags) {
+                container.innerHTML = '<div class="recent-rant-item compact" style="text-align:center;color:rgba(255,255,255,0.4);padding:16px;">Belum memilih frekuensi</div>';
                 return;
             }
-            const userHashtags = new Set(Object.values(userData.selectedHashtags));
-            const matchingRants = userData.rants.filter(rant => userHashtags.has(rant.hashtag));
-            if (matchingRants.length === 0) {
-                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant dengan # mu.</div>';
+
+            const userHashtags = new Set(Object.values(currentUserData.selectedHashtags).filter(h => h));
+            const allUsers = getUsers();
+            let sefrekuensiRants = [];
+
+            for (const username in allUsers) {
+                const user = allUsers[username];
+                if (!user.selectedHashtags) continue;
+                const theirHashtags = new Set(Object.values(user.selectedHashtags).filter(h => h));
+                if (userHashtags.size === 3 && 
+                    theirHashtags.size === 3 && 
+                    [...userHashtags].every(h => theirHashtags.has(h))) {
+                    if (user.rants) {
+                        user.rants.forEach(rant => {
+                            sefrekuensiRants.push({ ...rant, username });
+                        });
+                    }
+                }
+            }
+
+            if (sefrekuensiRants.length === 0) {
+                container.innerHTML = '<div class="recent-rant-item compact" style="text-align:center;color:rgba(255,255,255,0.4);padding:16px;">Belum ada rant dari frekuensi yang sama</div>';
                 return;
             }
-            const recent = matchingRants.slice(-5).reverse();
-            container.innerHTML = recent.map(rant => {
+
+            sefrekuensiRants.sort((a, b) => b.date - a.date);
+            const top7 = sefrekuensiRants.slice(0, 7);
+
+            container.innerHTML = top7.map(rant => {
                 const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                const content = rant.content.length > 100 ? rant.content.substring(0, 100) + '...' : rant.content;
                 return `
-                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
-                        <div class="recent-rant-date">${date} • ${rant.hashtag}</div>
-                        <div class="recent-rant-content">${content}</div>
+                    <div class="recent-rant-item compact">
+                        <div class="recent-rant-date compact">${date} • @${rant.username}</div>
+                        <div class="recent-rant-content compact">${content}</div>
+                        <div class="rant-actions">
+                            <div class="rant-emoji-bar">
+                                <button class="emoji-btn" onclick="reactToRant('${rant.username}', ${rant.date}, '😔')">😔</button>
+                                <button class="emoji-btn" onclick="reactToRant('${rant.username}', ${rant.date}, '🫂')">🫂</button>
+                                <button class="emoji-btn" onclick="reactToRant('${rant.username}', ${rant.date}, '🔥')">🔥</button>
+                            </div>
+                            <a href="#" class="comment-link" onclick="commentOnRant('${rant.username}', ${rant.date}); return false;">tulis komentar</a>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -1377,18 +1402,18 @@
                 if (user.rants) user.rants.forEach(rant => allRants.push({ ...rant, username }));
             }
             if (allRants.length === 0) {
-                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant global.</div>';
+                container.innerHTML = '<div class="recent-rant-item compact" style="text-align:center;color:rgba(255,255,255,0.4);padding:16px;">Belum ada rant global.</div>';
                 return;
             }
             allRants.sort((a, b) => b.date - a.date);
             const recent = allRants.slice(0, 8);
             container.innerHTML = recent.map(rant => {
                 const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                const content = rant.content.length > 100 ? rant.content.substring(0, 100) + '...' : rant.content;
                 return `
-                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
-                        <div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div>
-                        <div class="recent-rant-content">${content}</div>
+                    <div class="recent-rant-item compact">
+                        <div class="recent-rant-date compact">${date} • @${rant.username}</div>
+                        <div class="recent-rant-content compact">${content}</div>
                     </div>
                 `;
             }).join('');
@@ -1414,23 +1439,82 @@
                 }
             }
             if (movementRants.length === 0) {
-                container.innerHTML = '<div class="recent-rant-item" style="text-align:center;color:rgba(255,255,255,0.4);">Belum ada rant Movement.</div>';
+                container.innerHTML = '<div class="recent-rant-item compact" style="text-align:center;color:rgba(255,255,255,0.4);padding:16px;">Belum ada rant Movement.</div>';
                 return;
             }
             movementRants.sort((a, b) => b.date - a.date);
             const recent = movementRants.slice(0, 8);
             container.innerHTML = recent.map(rant => {
                 const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                const content = rant.content.length > 80 ? rant.content.substring(0, 80) + '...' : rant.content;
+                const content = rant.content.length > 100 ? rant.content.substring(0, 100) + '...' : rant.content;
                 return `
-                    <div class="recent-rant-item" onclick="viewRantDetails(${JSON.stringify(rant).replace(/"/g, '&quot;')})">
-                        <div class="recent-rant-date">${date} • @${rant.username} • ${rant.hashtag}</div>
-                        <div class="recent-rant-content">${content}</div>
+                    <div class="recent-rant-item compact">
+                        <div class="recent-rant-date compact">${date} • @${rant.username}</div>
+                        <div class="recent-rant-content compact">${content}</div>
                     </div>
                 `;
             }).join('');
         }
-        // ===== PAGE: DUNIA =====
+        // ===== REAKSI & KOMENTAR =====
+        function reactToRant(targetUser, rantDate, emoji) {
+            if (!currentUser) return;
+            const users = getUsers();
+            const targetUserData = users[targetUser];
+            if (!targetUserData || !targetUserData.rants) return;
+
+            const rant = targetUserData.rants.find(r => r.date === rantDate);
+            if (!rant) return;
+
+            if (!rant.reactions) rant.reactions = {};
+            rant.reactions[emoji] = (rant.reactions[emoji] || 0) + 1;
+            rant.reactedBy = rant.reactedBy || {};
+            rant.reactedBy[currentUser] = emoji;
+
+            saveUsers(users);
+            showToast(`Merespon dengan ${emoji}`);
+            renderFrekuensiFeed();
+        }
+        function commentOnRant(targetUser, rantDate) {
+            showModal(`
+                <div class="modal-header">
+                    <div class="modal-title">Tulis Komentar</div>
+                    <button class="modal-close" onclick="hideModal()">×</button>
+                </div>
+                <div style="margin-bottom:12px;color:rgba(255,255,255,0.6);font-size:13px;">Hanya kamu dan pemilik rant yang bisa melihat</div>
+                <textarea class="textarea-input" id="commentBox" placeholder="Komentarmu..." maxlength="200" style="min-height:100px;"></textarea>
+                <div style="text-align:right;font-size:11px;color:rgba(255,255,255,0.4);margin:6px 0;">0/200</div>
+                <button class="action-btn" onclick="saveComment('${targetUser}', ${rantDate})">Kirim Komentar</button>
+            `);
+            const textarea = document.getElementById('commentBox');
+            const counter = textarea.nextElementSibling;
+            textarea.addEventListener('input', () => {
+                counter.textContent = `${textarea.value.length}/200`;
+            });
+        }
+        function saveComment(targetUser, rantDate) {
+            const comment = document.getElementById('commentBox').value.trim();
+            if (!comment) { alert('Tulis komentar dulu!'); return; }
+            if (!currentUser) return;
+
+            const users = getUsers();
+            const targetUserData = users[targetUser];
+            if (!targetUserData || !targetUserData.rants) return;
+
+            const rant = targetUserData.rants.find(r => r.date === rantDate);
+            if (!rant) return;
+
+            if (!rant.comments) rant.comments = [];
+            rant.comments.push({
+                from: currentUser,
+                text: comment,
+                date: Date.now()
+            });
+
+            saveUsers(users);
+            hideModal();
+            showToast('Komentar terkirim!');
+        }
+        // ===== DUNIA =====
         function initDuniaPage() {
             if (!currentUser) {
                 showPage('login');
