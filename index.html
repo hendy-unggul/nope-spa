@@ -606,6 +606,38 @@
         .modal-close:hover {
             color: white;
         }
+        .textarea-input {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+        .textarea-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .text-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
         /* ===== BOTTOM NAV ===== */
         .bottom-nav {
             position: fixed;
@@ -641,6 +673,16 @@
             font-weight: 500;
             letter-spacing: 0.5px;
         }
+        /* ===== UTILITY ===== */
+        .mt-20 {
+            margin-top: 20px;
+        }
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+        .text-center {
+            text-align: center;
+        }
         /* ===== ANIMATION ===== */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -648,6 +690,13 @@
         }
         .fade-in {
             animation: fadeIn 0.3s ease;
+        }
+        /* ===== CHARACTER COUNTER ===== */
+        .char-counter {
+            text-align: right;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -917,8 +966,52 @@
             users[username] = data;
             saveUsers(users);
         }
-        // ===== AUTO-LOGIN SAFE INIT =====
+        // ===== DUMMY DATA INITIALIZATION =====
+        function initializeDummyData() {
+            const users = getUsers();
+            if (Object.keys(users).length > 0) return;
+            const now = Date.now();
+            const dummyUsers = [
+                // === FREKUENSI (5 user - mirip user nyata) ===
+                {u:"diamdiamaja", h:["#SayNOPE","#CapekPuraPura","#DiamDiamNangis"], r:"bilang gue baik-baik aja padahal hati lagi kacau. capek jadi tempat curhat tapi gak pernah boleh curhat.", a:{t:"kopi dingin",c:"minum sendirian jam 3 pagi. gajian belum turun, besok bayar kos."}},
+                {u:"ghosted_aja", h:["#DiGhostingGebetan","#CapekPuraPura","#FilmEndingGaje"], r:"udah 3 minggu dia ngilang. gue cek story-nya tiap malem. padahal cuma nanya 'udah makan?'", a:{t:"notifikasi kosong",c:"kotak chat belum terkirim. niat nanya kabar aja susah."}},
+                {u:"maganggratis", h:["#MagangDibayarSerifikat","#GajianSejamAbis","#HealingPayLater"], r:"kerja 9 jam, pulang bawa serifikat. ibu bilang 'itu investasi'. investasi buat apa, bu? buat bayar listrik?", a:{t:"serifikat gulung",c:"dikasih frame, tapi gak ada duit buat beli bingkai."}},
+                {u:"temenpalsu", h:["#TemenLambeTurah","#KeluarWAGroup","#InfluencerNgehek"], r:"curhat soal gebetan, eh besok jadi bahan gosip di grup. sekarang gue milih sendiri aja.", a:{t:"chat terhapus",c:"percaya itu mahal. gue udah bangkrut."}},
+                {u:"konserginjal", h:["#BeliTiketJualGinjal","#HealingPayLater","#FilmEndingGaje"], r:"tiket konser habis 1.2 juta. gaji magang 800rb. tapi malam itu gue nangis bahagia. worth it.", a:{t:"tiket sobek",c:"masih genggam erat pas pulang naik angkot."}},
+                // === GELOMBANG (5 user - acak) ===
+                {u:"fomo_gabut", h:["#FOMO","#GajianSejamAbis","#CapekPuraPura"], r:"liat temen pada liburan, gue diem di kos. bilangnya lagi hemat, padahal emang gak diajak.", a:{t:"layar gelap",c:"scroll story terus sampe mata perih."}},
+                {u:"kerja_tapi_sakit", h:["#MagangDibayarSerifikat","#PersonalPain","#DiamDiamNangis"], r:"kerja remote, boss bilang 'ini kesempatan'. gue nangis di kamar mandi tiap jam 10 pagi.", a:{t:"obat kadaluarsa",c:"gak sempat beli yang baru. minum aja dulu."}},
+                {u:"film_baper", h:["#FilmEndingGaje","#PersonalPain","#SayNOPE"], r:"ending film kocak tapi gue nangis. kayaknya ceritanya tentang gue yang takut ngomong jujur.", a:{t:"tisu basah",c:"nonton sendirian di kamar. malu sama suara nangis sendiri."}},
+                {u:"sosmedmakehappy", h:["#SocialSickness","#InfluencerNgehek","#HealingPayLater"], r:"posting 'hari bahagia!' padahal lagi bokek. biar dikira oke. padahal butuh peluk.", a:{t:"wajah tersenyum",c:"edit 10 kali biar keliatan bahagia."}},
+                {u:"keluargatausalah", h:["#PersonalPain","#CapekPuraPura","#DiamDiamNangis"], r:"pulang kampung, ditanya 'kapan nikah?'. gue jawab 'belom nemu'. padahal gue takut gak layak dicintai.", a:{t:"tiket pulang",c:"kembali ke kos setelah lebaran. sendirian lagi."}},
+                // === MOVEMENT (5 user - isu sosial) ===
+                {u:"edukasiuntuksemua", h:["#PendidikanUntukSemua","#Movement","#SayNOPE"], r:"temen gue putus sekolah karena orangtuanya gak mampu. gue bantu ngajar tiap minggu. ini bukan amal, ini hak.", a:{t:"buku coretan",c:"dikasih gratis. semoga cukup buat dia lulus."}},
+                {u:"buruhmuda", h:["#JanganExploitBuruh","#Movement","#MagangDibayarSerifikat"], r:"magang 6 bulan, gak dibayar, bilangnya 'kesempatan'. kesempatan buat siapa? buat perusahaan yang hemat gaji!", a:{t:"seragam kusut",c:"dipakai tiap hari selama 6 bulan. gak ganti, gak bayar."}},
+                {u:"fundingsolidaritas", h:["#FUNDINGSolidaritasDiam","#Movement","#PersonalPain"], r:"kumpulin uang buat temen yang kena PHK diam-diam. gak perlu pamer. yang penting dia bisa makan besok.", a:{t:"duit receh",c:"dikasih perlahan. gak perlu tau siapa yang kirim."}},
+                {u:"petisiantiras", h:["#PetisiTerbuka","#Movement","#SocialSickness"], r:"kampus gue tutup program beasiswa buat mahasiswa miskin. gue bikin petisi. tanda tangan aja, gak perlu komen.", a:{t:"print petisi",c:"ditempel di papan kos. semoga ada yang baca."}},
+                {u:"solidaritassistem", h:["#PendidikanUntukSemua","#Movement","#SocialSickness"], r:"gak semua orang punya privilege kuliah kayak gue. gue wajib bantu yang gak seberuntung gue.", a:{t:"modul fotokopi",c:"dikasih gratis ke adik angkatan. semoga dia gak putus kuliah."}}
+            ];
+            dummyUsers.forEach((user, i) => {
+                users[user.u] = {
+                    username: user.u,
+                    created: now - (15 - i) * 24 * 60 * 60 * 1000,
+                    lastLogin: now - (15 - i) * 24 * 60 * 60 * 1000,
+                    onboarded: true,
+                    selectedHashtags: {
+                        popculture: user.h.find(h => zonaData.popculture.hashtags.some(t => t.name === h)) || null,
+                        personalpain: user.h.find(h => zonaData.personalpain.hashtags.some(t => t.name === h)) || null,
+                        socialsickness: user.h.find(h => zonaData.socialsickness.hashtags.some(t => t.name === h)) || null,
+                        movement: user.h.find(h => ["#PendidikanUntukSemua","#JanganExploitBuruh","#FUNDINGSolidaritasDiam","#PetisiTerbuka"].includes(h)) || null
+                    },
+                    rants: [{content: user.r, hashtag: user.h[Math.floor(Math.random()*user.h.length)], date: now - (15 - i) * 24 * 60 * 60 * 1000}],
+                    artefacts: [{title: user.a.t, content: user.a.c, date: now - (15 - i) * 24 * 60 * 60 * 1000 + 10000}]
+                };
+            });
+            saveUsers(users);
+        }
+        // ===== SAFE INIT APP =====
         function initializeApp() {
+            initializeDummyData();
             const savedUser = localStorage.getItem('nope_current_user');
             if (savedUser) {
                 currentUser = savedUser;
@@ -958,9 +1051,7 @@
                 }
             }
         }
-        function showTab(tabId) {
-            showPage(tabId);
-        }
+        function showTab(tabId) { showPage(tabId); }
         function updateNavActive(activeTab) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const btn = document.querySelector(`.nav-item[onclick*="${activeTab}"]`);
@@ -1204,30 +1295,23 @@
             document.querySelectorAll('.jalan-tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
-        function renderFrekuensiFeed() {
-            const c = document.getElementById('frekuensiList');
-            const d = getUserData(currentUser);
-            if (!d || !d.selectedHashtags) {
-                c.innerHTML = '<div class="recent-rant-item compact" style="text-align:center;padding:16px;color:rgba(255,255,255,0.4);">Belum memilih frekuensi</div>';
-                return;
-            }
-            const userH = new Set(Object.values(d.selectedHashtags).filter(h => h));
+        function renderFeeds(feedId, containerId, filterFunc) {
+            const c = document.getElementById(containerId);
             const allUsers = getUsers();
-            let sefrekuensi = [];
+            let allRants = [];
             for (const u in allUsers) {
                 const user = allUsers[u];
-                if (!user.selectedHashtags) continue;
-                const theirH = new Set(Object.values(user.selectedHashtags).filter(h => h));
-                if (userH.size === 3 && theirH.size === 3 && [...userH].every(h => theirH.has(h))) {
-                    if (user.rants) user.rants.forEach(r => sefrekuensi.push({ ...r, username: u }));
-                }
+                if (user.rants) user.rants.forEach(r => {
+                    const rWithUser = {...r, username: u};
+                    if (!filterFunc || filterFunc(rWithUser, user)) allRants.push(rWithUser);
+                });
             }
-            if (sefrekuensi.length === 0) {
-                c.innerHTML = '<div class="recent-rant-item compact" style="text-align:center;padding:16px;color:rgba(255,255,255,0.4);">Belum ada rant dari frekuensi yang sama</div>';
+            if (allRants.length === 0) {
+                c.innerHTML = `<div class="recent-rant-item compact" style="text-align:center;padding:16px;color:rgba(255,255,255,0.4);">Belum ada rant di ${feedId}.</div>`;
                 return;
             }
-            sefrekuensi.sort((a, b) => b.date - a.date);
-            const top7 = sefrekuensi.slice(0, 7);
+            allRants.sort((a, b) => b.date - a.date);
+            const top7 = allRants.slice(0, 7);
             c.innerHTML = top7.map(r => {
                 const date = new Date(r.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
                 const content = r.content.length > 100 ? r.content.substring(0, 100) + '...' : r.content;
@@ -1247,58 +1331,25 @@
                 `;
             }).join('');
         }
-        function renderGelombangFeed() {
-            const c = document.getElementById('gelombangList');
-            const allUsers = getUsers();
-            let allRants = [];
-            for (const u in allUsers) {
-                const user = allUsers[u];
-                if (user.rants) user.rants.forEach(r => allRants.push({ ...r, username: u }));
-            }
-            if (allRants.length === 0) {
-                c.innerHTML = '<div class="recent-rant-item compact" style="text-align:center;padding:16px;color:rgba(255,255,255,0.4);">Belum ada rant global.</div>';
+        function renderFrekuensiFeed() {
+            const d = getUserData(currentUser);
+            if (!d || !d.selectedHashtags) {
+                document.getElementById('frekuensiList').innerHTML = '<div class="recent-rant-item compact" style="text-align:center;padding:16px;color:rgba(255,255,255,0.4);">Belum memilih frekuensi</div>';
                 return;
             }
-            allRants.sort((a, b) => b.date - a.date);
-            const recent = allRants.slice(0, 8);
-            c.innerHTML = recent.map(r => {
-                const date = new Date(r.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                const content = r.content.length > 100 ? r.content.substring(0, 100) + '...' : r.content;
-                return `
-                    <div class="recent-rant-item compact">
-                        <div class="recent-rant-date compact">${date} • @${r.username}</div>
-                        <div class="recent-rant-content compact">${content}</div>
-                    </div>
-                `;
-            }).join('');
+            const userH = new Set(Object.values(d.selectedHashtags).filter(h => h));
+            renderFeeds('Frekuensi', 'frekuensiList', (r, user) => {
+                if (!user.selectedHashtags) return false;
+                const theirH = new Set(Object.values(user.selectedHashtags).filter(h => h));
+                return userH.size === 3 && theirH.size === 3 && [...userH].every(h => theirH.has(h));
+            });
+        }
+        function renderGelombangFeed() {
+            renderFeeds('Gelombang', 'gelombangList');
         }
         function renderMovementFeed() {
-            const c = document.getElementById('movementList');
             const movementH = new Set(["#PendidikanUntukSemua","#JanganExploitBuruh","#FUNDINGSolidaritasDiam","#PetisiTerbuka"]);
-            const allUsers = getUsers();
-            let mRants = [];
-            for (const u in allUsers) {
-                const user = allUsers[u];
-                if (user.rants) user.rants.forEach(r => {
-                    if (movementH.has(r.hashtag)) mRants.push({ ...r, username: u });
-                });
-            }
-            if (mRants.length === 0) {
-                c.innerHTML = '<div class="recent-rant-item compact" style="text-align:center;padding:16px;color:rgba(255,255,255,0.4);">Belum ada rant Movement.</div>';
-                return;
-            }
-            mRants.sort((a, b) => b.date - a.date);
-            const recent = mRants.slice(0, 8);
-            c.innerHTML = recent.map(r => {
-                const date = new Date(r.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                const content = r.content.length > 100 ? r.content.substring(0, 100) + '...' : r.content;
-                return `
-                    <div class="recent-rant-item compact">
-                        <div class="recent-rant-date compact">${date} • @${r.username}</div>
-                        <div class="recent-rant-content compact">${content}</div>
-                    </div>
-                `;
-            }).join('');
+            renderFeeds('Movement', 'movementList', (r) => movementH.has(r.hashtag));
         }
         // ===== REAKSI & KOMENTAR =====
         function reactToRant(targetUser, rantDate, emoji) {
@@ -1392,53 +1443,6 @@
             `);
         }
         function viewArtefak(index) { viewArtefakDetails(index); }
-        function showRantListModal() { /* simplified */ alert('Fitur lihat semua rant belum diimplementasi'); }
-        function showArtefakListModal() { /* simplified */ alert('Fitur lihat semua artefak belum diimplementasi'); }
-        function showArtefakModal() {
-            showModal(`
-                <div class="modal-header">
-                    <div class="modal-title">Tambah Artefak</div>
-                    <button class="modal-close" onclick="hideModal()">×</button>
-                </div>
-                <input type="text" class="text-input" id="artefakTitle" placeholder="Judul artefak" maxlength="100">
-                <textarea class="textarea-input" id="artefakContent" placeholder="Deskripsi artefak..." maxlength="1000"></textarea>
-                <div style="text-align:right;font-size:11px;color:rgba(255,255,255,0.4);margin:6px 0;">0/1000</div>
-                <button class="action-btn" onclick="saveArtefak()">Simpan Artefak</button>
-            `);
-            const ta = document.getElementById('artefakContent');
-            const co = ta.nextElementSibling;
-            ta.addEventListener('input', () => co.textContent = `${ta.value.length}/1000`);
-        }
-        function saveArtefak() {
-            const title = document.getElementById('artefakTitle').value.trim();
-            const content = document.getElementById('artefakContent').value.trim();
-            if (!title || !content) { alert('Isi judul dan deskripsi artefak terlebih dahulu!'); return; }
-            if (!currentUser) return;
-            const d = getUserData(currentUser);
-            if (!d.artefacts) d.artefacts = [];
-            d.artefacts.push({ title, content, date: Date.now() });
-            d.lastLogin = Date.now();
-            saveUserData(currentUser, d);
-            hideModal();
-            initJejakPage();
-            showToast('Artefak berhasil disimpan!');
-        }
-        function showHashtagsModal() {
-            const d = getUserData(currentUser);
-            if (!d.selectedHashtags) { alert('Belum memilih hashtag!'); return; }
-            let html = '';
-            Object.entries(d.selectedHashtags).forEach(([z, h]) => {
-                if (h) html += `<div class="hashtag-item"><div class="hashtag-name">${h}</div><div class="hashtag-microcopy">${zonaData[z].description}</div></div>`;
-            });
-            showModal(`
-                <div class="modal-header">
-                    <div class="modal-title"># Terpilih</div>
-                    <button class="modal-close" onclick="hideModal()">×</button>
-                </div>
-                <div class="hashtag-list">${html}</div>
-                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
-            `);
-        }
         function formatLastActive(timestamp) {
             if (!timestamp) return 'baru bergabung';
             const now = Date.now();
@@ -1489,7 +1493,7 @@
             document.getElementById('modalOverlay').addEventListener('click', e => {
                 if (e.target === e.currentTarget) hideModal();
             });
-            initializeApp(); // ✅ INI YANG MEMPERBAIKI MASALAH LOGIN
+            initializeApp();
         });
     </script>
 </body>
