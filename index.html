@@ -260,68 +260,145 @@
             background: rgba(255, 255, 255, 0.1);
         }
         
-        /* ===== JEJAK PAGE - LOW FRICTION ===== */
-        .welcome-section {
+        /* ===== JEJAK PAGE ===== */
+        .jejak-header {
             text-align: center;
-            margin: 30px 0 40px 0;
+            margin: 20px 0 30px 0;
         }
         
-        .welcome-title {
-            font-size: 22px;
+        .jejak-title {
+            font-size: 20px;
             font-weight: 600;
             color: #ff00ff;
             margin-bottom: 10px;
         }
         
-        .welcome-subtitle {
+        .jejak-subtitle {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.6);
-            line-height: 1.5;
-            max-width: 300px;
-            margin: 0 auto;
         }
         
-        .quick-actions {
-            display: flex;
+        .timeline {
+            margin: 20px 0 100px 0;
+        }
+        
+        .timeline-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .timeline-item {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .timeline-date {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 5px;
+        }
+        
+        .timeline-content {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+        
+        /* ===== JALAN PAGE ===== */
+        .jalan-header {
+            text-align: center;
+            margin: 20px 0 30px 0;
+        }
+        
+        .jalan-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ff00ff;
+            margin-bottom: 10px;
+        }
+        
+        .jalan-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .jalan-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin: 30px 0;
         }
         
-        .quick-action {
-            flex: 1;
-            padding: 20px 15px;
+        .jalan-stat {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
+            padding: 20px;
             text-align: center;
         }
         
-        .quick-action:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-        }
-        
-        .quick-action-icon {
+        .jalan-number {
             font-size: 28px;
-            margin-bottom: 10px;
-            display: block;
+            font-weight: 700;
+            color: #ff00ff;
+            margin-bottom: 5px;
         }
         
-        .quick-action-label {
-            font-size: 14px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .quick-action-desc {
+        .jalan-label {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.5);
-            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        /* ===== MODAL FOR POSTING ===== */
+        /* ===== DUNIA PAGE ===== */
+        .dunia-header {
+            text-align: center;
+            margin: 20px 0 30px 0;
+        }
+        
+        .dunia-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ff00ff;
+            margin-bottom: 10px;
+        }
+        
+        .dunia-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .profile-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .profile-username {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff00ff;
+            margin-bottom: 10px;
+        }
+        
+        .profile-meta {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin: 5px 0;
+        }
+        
+        /* ===== POST MODAL ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -384,8 +461,7 @@
             color: white;
         }
         
-        /* ===== TEXTAREA FOR RANT ===== */
-        .rant-textarea {
+        .textarea-input {
             width: 100%;
             min-height: 150px;
             background: rgba(255, 255, 255, 0.03);
@@ -399,13 +475,12 @@
             margin-bottom: 15px;
         }
         
-        .rant-textarea:focus {
+        .textarea-input:focus {
             outline: none;
             border-color: #ff00ff;
         }
         
-        /* ===== ARTEFAK INPUT ===== */
-        .artefak-input {
+        .text-input {
             width: 100%;
             padding: 12px;
             background: rgba(255, 255, 255, 0.03);
@@ -417,7 +492,7 @@
             margin-bottom: 15px;
         }
         
-        .artefak-input:focus {
+        .text-input:focus {
             outline: none;
             border-color: #ff00ff;
         }
@@ -432,7 +507,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
+            padding: 10px 0;
             z-index: 1000;
         }
         
@@ -442,10 +517,10 @@
             align-items: center;
             color: rgba(255, 255, 255, 0.5);
             text-decoration: none;
-            font-size: 10px;
-            padding: 6px 8px;
+            font-size: 11px;
+            padding: 8px 10px;
             transition: all 0.2s;
-            min-width: 60px;
+            min-width: 70px;
         }
         
         .nav-item.active {
@@ -453,95 +528,13 @@
         }
         
         .nav-icon {
-            font-size: 16px;
-            margin-bottom: 2px;
+            font-size: 18px;
+            margin-bottom: 3px;
         }
         
         .nav-label {
             font-weight: 500;
-        }
-        
-        /* ===== TIMELINE ===== */
-        .timeline {
-            margin: 20px 0;
-        }
-        
-        .timeline-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(255, 255, 255, 0.4);
-        }
-        
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-        
-        .timeline-item {
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .timeline-date {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 5px;
-        }
-        
-        .timeline-content {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.4;
-        }
-        
-        /* ===== STATS PAGE ===== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 30px 0;
-        }
-        
-        .stat-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ff00ff;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
             letter-spacing: 0.5px;
-        }
-        
-        /* ===== PROFILE PAGE ===== */
-        .profile-section {
-            text-align: center;
-            margin: 30px 0;
-        }
-        
-        .profile-username {
-            font-size: 24px;
-            font-weight: 700;
-            color: #ff00ff;
-            margin-bottom: 10px;
-        }
-        
-        .profile-meta {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
-            margin: 5px 0;
         }
         
         /* ===== UTILITY ===== */
@@ -577,7 +570,7 @@
     </style>
 </head>
 <body>
-    <!-- MODAL FOR POSTING -->
+    <!-- POST MODAL -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <!-- Modal content will be injected here -->
@@ -590,13 +583,13 @@
             <div class="nav-icon">📝</div>
             <div class="nav-label">Jejak</div>
         </a>
-        <a href="#" class="nav-item" onclick="showTab('stats')">
-            <div class="nav-icon">📊</div>
-            <div class="nav-label">Stats</div>
+        <a href="#" class="nav-item" onclick="showTab('jalan')">
+            <div class="nav-icon">🚶</div>
+            <div class="nav-label">Jalan</div>
         </a>
-        <a href="#" class="nav-item" onclick="showTab('profil')">
-            <div class="nav-icon">👤</div>
-            <div class="nav-label">Profil</div>
+        <a href="#" class="nav-item" onclick="showTab('dunia')">
+            <div class="nav-icon">🌍</div>
+            <div class="nav-label">Dunia</div>
         </a>
     </div>
     
@@ -698,61 +691,57 @@
     <div id="jejak" class="page">
         <div class="logo">NOPE</div>
         
-        <div class="welcome-section" id="welcomeSection">
-            <div class="welcome-title" id="welcomeTitle">Selamat datang</div>
-            <div class="welcome-subtitle" id="welcomeSubtitle">
-                Pilih rant atau artefak untuk mulai jejak mu, atau lihat timeline
-            </div>
-        </div>
-        
-        <div class="quick-actions">
-            <div class="quick-action" onclick="showRantModal()">
-                <span class="quick-action-icon">💬</span>
-                <div class="quick-action-label">Rant</div>
-                <div class="quick-action-desc">Ungkapkan perasaan</div>
-            </div>
-            
-            <div class="quick-action" onclick="showArtefakModal()">
-                <span class="quick-action-icon">🎨</span>
-                <div class="quick-action-label">Artefak</div>
-                <div class="quick-action-desc">Simpan momen penting</div>
+        <div class="jejak-header">
+            <div class="jejak-title">Jejak mu</div>
+            <div class="jejak-subtitle">
+                <span id="postCount">0</span> posting • 
+                <span id="lastActive">baru bergabung</span>
             </div>
         </div>
         
         <div class="timeline" id="timeline">
             <!-- Timeline items will be populated by JavaScript -->
         </div>
+        
+        <div class="action-btn" onclick="showRantModal()">
+            + Tambah Rant
+        </div>
+        <div class="action-btn secondary" onclick="showArtefakModal()" style="margin-top: 10px;">
+            + Tambah Artefak
+        </div>
     </div>
     
-    <!-- STATS PAGE -->
-    <div id="stats" class="page">
+    <!-- JALAN PAGE -->
+    <div id="jalan" class="page">
         <div class="logo">NOPE</div>
         
-        <div class="profile-section">
-            <div class="profile-username" id="statsUsername">@username</div>
-            <div class="profile-meta" id="statsJoinDate">Bergabung: -</div>
-        </div>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="daysCount">0</div>
-                <div class="stat-label">Hari</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="rantsCount">0</div>
-                <div class="stat-label">Rant</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="artefaksCount">0</div>
-                <div class="stat-label">Artefak</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="hashtagsCount">3</div>
-                <div class="stat-label"># terpilih</div>
+        <div class="jalan-header">
+            <div class="jalan-title">Jalan mu</div>
+            <div class="jalan-subtitle">
+                Statistik perjalanan di NOPE
             </div>
         </div>
         
-        <div class="zona-card mt-20">
+        <div class="jalan-stats">
+            <div class="jalan-stat">
+                <div class="jalan-number" id="daysCount">0</div>
+                <div class="jalan-label">Hari</div>
+            </div>
+            <div class="jalan-stat">
+                <div class="jalan-number" id="rantsCount">0</div>
+                <div class="jalan-label">Rant</div>
+            </div>
+            <div class="jalan-stat">
+                <div class="jalan-number" id="artefaksCount">0</div>
+                <div class="jalan-label">Artefak</div>
+            </div>
+            <div class="jalan-stat">
+                <div class="jalan-number" id="hashtagsCount">3</div>
+                <div class="jalan-label"># terpilih</div>
+            </div>
+        </div>
+        
+        <div class="zona-card">
             <div class="zona-card-header">
                 <div>
                     <div class="zona-card-name">Frekuensi mu</div>
@@ -763,43 +752,35 @@
                 <!-- Selected hashtags will be shown here -->
             </div>
         </div>
-        
-        <button class="action-btn secondary mt-20" onclick="exportData()">
-            📤 Export Data
-        </button>
     </div>
     
-    <!-- PROFIL PAGE -->
-    <div id="profil" class="page">
+    <!-- DUNIA PAGE -->
+    <div id="dunia" class="page">
         <div class="logo">NOPE</div>
         
-        <div class="profile-section">
-            <div class="profile-username" id="profileUsername">@username</div>
-            <div class="profile-meta" id="profileJoinDate">Bergabung: -</div>
-            <div class="profile-meta" id="profileActivity">Aktivitas: 0</div>
+        <div class="dunia-header">
+            <div class="dunia-title">Dunia mu</div>
+            <div class="dunia-subtitle">
+                Profil dan pengaturan
+            </div>
         </div>
         
-        <div class="zona-card">
-            <div class="zona-card-header">
-                <div>
-                    <div class="zona-card-name">Pengaturan</div>
-                    <div class="zona-card-desc">Kelola akun dan data</div>
-                </div>
-            </div>
-            
-            <div style="padding: 10px 0;">
-                <button class="action-btn secondary" onclick="exportData()" style="margin-bottom: 10px;">
-                    📤 Export Data
-                </button>
-                
-                <button class="action-btn secondary" onclick="showHashtagsModal()">
-                    👁️ Lihat # terpilih
-                </button>
-                
-                <button class="action-btn secondary" onclick="logout()" style="background: rgba(255,50,50,0.1); border-color: rgba(255,50,50,0.3); margin-top: 20px;">
-                    🚪 Keluar
-                </button>
-            </div>
+        <div class="profile-card">
+            <div class="profile-username" id="profileUsername">@username</div>
+            <div class="profile-meta" id="profileJoinDate">Bergabung: -</div>
+            <div class="profile-meta" id="profileActivity">Aktivitas: 0 posting</div>
+        </div>
+        
+        <div class="action-btn secondary" onclick="exportData()">
+            📤 Export Data
+        </div>
+        
+        <div class="action-btn secondary" onclick="showHashtagsModal()" style="margin-top: 10px;">
+            👁️ Lihat # terpilih
+        </div>
+        
+        <div class="action-btn secondary" onclick="logout()" style="background: rgba(255,50,50,0.1); border-color: rgba(255,50,50,0.3); margin-top: 20px;">
+            🚪 Keluar
         </div>
     </div>
 
@@ -863,7 +844,7 @@
                 
                 // Show/hide bottom nav
                 const bottomNav = document.getElementById('bottomNav');
-                if (['jejak', 'stats', 'profil'].includes(pageId)) {
+                if (['jejak', 'jalan', 'dunia'].includes(pageId)) {
                     bottomNav.style.display = 'flex';
                     updateNavActive(pageId);
                     currentTab = pageId;
@@ -882,11 +863,11 @@
                     case 'jejak':
                         initJejakPage();
                         break;
-                    case 'stats':
-                        initStatsPage();
+                    case 'jalan':
+                        initJalanPage();
                         break;
-                    case 'profil':
-                        initProfilPage();
+                    case 'dunia':
+                        initDuniaPage();
                         break;
                 }
             }
@@ -981,7 +962,7 @@
             const users = getUsers();
             
             if (users[username] && users[username].onboarded) {
-                // Direct to Jejak page (LOW FRICTION - no forced first post)
+                // KEMBALI KE STRUKTUR ASLI: LANGSUNG KE JEJAK
                 showPage('jejak');
             } else {
                 // Go to onboarding
@@ -1093,7 +1074,7 @@
             btn.textContent = 'Menyimpan...';
             btn.disabled = true;
             
-            // LOW FRICTION: Direct to Jejak page (no forced first post)
+            // KEMBALI KE STRUKTUR ASLI: LANGSUNG KE JEJAK
             setTimeout(() => {
                 showPage('jejak');
             }, 600);
@@ -1102,460 +1083,4 @@
         // ===== MODAL SYSTEM =====
         function showModal(content) {
             const modal = document.querySelector('.modal');
-            const overlay = document.getElementById('modalOverlay');
-            
-            modal.innerHTML = content;
-            overlay.classList.add('active');
-            
-            // Prevent body scroll
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeModal() {
-            const overlay = document.getElementById('modalOverlay');
-            overlay.classList.remove('active');
-            
-            // Restore body scroll
-            document.body.style.overflow = 'auto';
-        }
-        
-        function showRantModal() {
-            const modalContent = `
-                <div class="modal-header">
-                    <div class="modal-title">Tulis Rant</div>
-                    <button class="modal-close" onclick="closeModal()">×</button>
-                </div>
-                
-                <textarea 
-                    class="rant-textarea" 
-                    id="rantInput"
-                    placeholder="Apa yang ingin kamu ungkapkan? Tulis di sini..."
-                    maxlength="500"></textarea>
-                
-                <div class="char-counter">
-                    <span id="charCount">0</span>/500 karakter
-                </div>
-                
-                <button class="action-btn" onclick="postRant()">
-                    Post Rant
-                </button>
-                
-                <button class="action-btn secondary" onclick="closeModal()" style="margin-top: 10px;">
-                    Batal
-                </button>
-            `;
-            
-            showModal(modalContent);
-            
-            // Setup character counter
-            const rantInput = document.getElementById('rantInput');
-            const charCount = document.getElementById('charCount');
-            
-            rantInput.focus();
-            
-            rantInput.addEventListener('input', function() {
-                charCount.textContent = this.value.length;
-            });
-        }
-        
-        function showArtefakModal() {
-            const modalContent = `
-                <div class="modal-header">
-                    <div class="modal-title">Simpan Artefak</div>
-                    <button class="modal-close" onclick="closeModal()">×</button>
-                </div>
-                
-                <input 
-                    type="text" 
-                    class="artefak-input" 
-                    id="artefakUrl"
-                    placeholder="URL gambar, video, atau link..."
-                >
-                
-                <textarea 
-                    class="rant-textarea" 
-                    id="artefakDesc"
-                    placeholder="Deskripsi artefak ini... (opsional)"
-                    rows="3"
-                    maxlength="200"></textarea>
-                
-                <div class="char-counter">
-                    <span id="artefakCharCount">0</span>/200 karakter
-                </div>
-                
-                <button class="action-btn" onclick="postArtefak()">
-                    Simpan Artefak
-                </button>
-                
-                <button class="action-btn secondary" onclick="closeModal()" style="margin-top: 10px;">
-                    Batal
-                </button>
-            `;
-            
-            showModal(modalContent);
-            
-            // Setup character counter
-            const artefakDesc = document.getElementById('artefakDesc');
-            const charCount = document.getElementById('artefakCharCount');
-            
-            document.getElementById('artefakUrl').focus();
-            
-            artefakDesc.addEventListener('input', function() {
-                charCount.textContent = this.value.length;
-            });
-        }
-        
-        function showHashtagsModal() {
-            const users = getUsers();
-            const user = users[currentUser];
-            
-            if (!user || !user.selectedHashtags) return;
-            
-            let hashtagsHTML = '';
-            Object.entries(user.selectedHashtags).forEach(([zonaId, hashtag]) => {
-                if (hashtag) {
-                    const zonaName = zonaData[zonaId]?.name || zonaId;
-                    hashtagsHTML += `
-                        <div style="padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 10px;">
-                            <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 5px;">${zonaName}</div>
-                            <div style="font-size: 16px; font-weight: 600; color: #ff00ff;">${hashtag}</div>
-                        </div>
-                    `;
-                }
-            });
-            
-            const modalContent = `
-                <div class="modal-header">
-                    <div class="modal-title"># Frekuensi mu</div>
-                    <button class="modal-close" onclick="closeModal()">×</button>
-                </div>
-                
-                <div style="margin: 20px 0;">
-                    ${hashtagsHTML || '<div class="hint text-center">Belum memilih #</div>'}
-                </div>
-                
-                <button class="action-btn secondary" onclick="closeModal()">
-                    Tutup
-                </button>
-            `;
-            
-            showModal(modalContent);
-        }
-        
-        // ===== POSTING FUNCTIONS =====
-        function postRant() {
-            const content = document.getElementById('rantInput').value.trim();
-            
-            if (!content) {
-                alert('Tulis rant dulu ya!');
-                return;
-            }
-            
-            const users = getUsers();
-            if (users[currentUser]) {
-                users[currentUser].rants.push({
-                    content: content,
-                    date: new Date().toISOString()
-                });
-                
-                // Update last login
-                users[currentUser].lastLogin = Date.now();
-                
-                localStorage.setItem('nope_users', JSON.stringify(users));
-                
-                // Close modal
-                closeModal();
-                
-                // Refresh timeline
-                loadTimeline();
-                
-                // Update welcome message if first post
-                const welcomeTitle = document.getElementById('welcomeTitle');
-                const welcomeSubtitle = document.getElementById('welcomeSubtitle');
-                
-                if (users[currentUser].rants.length === 1 && users[currentUser].artefacts.length === 0) {
-                    welcomeTitle.textContent = 'Rant pertama tersimpan!';
-                    welcomeSubtitle.textContent = 'Lanjutkan mengekspresikan dirimu';
-                }
-            }
-        }
-        
-        function postArtefak() {
-            const url = document.getElementById('artefakUrl').value.trim();
-            const desc = document.getElementById('artefakDesc').value.trim();
-            
-            if (!url) {
-                alert('Masukkan URL dulu!');
-                return;
-            }
-            
-            const users = getUsers();
-            if (users[currentUser]) {
-                users[currentUser].artefacts.push({
-                    url: url,
-                    description: desc || '',
-                    date: new Date().toISOString()
-                });
-                
-                // Update last login
-                users[currentUser].lastLogin = Date.now();
-                
-                localStorage.setItem('nope_users', JSON.stringify(users));
-                
-                // Close modal
-                closeModal();
-                
-                // Refresh timeline
-                loadTimeline();
-                
-                // Update welcome message if first post
-                const welcomeTitle = document.getElementById('welcomeTitle');
-                const welcomeSubtitle = document.getElementById('welcomeSubtitle');
-                
-                if (users[currentUser].artefacts.length === 1 && users[currentUser].rants.length === 0) {
-                    welcomeTitle.textContent = 'Artefak pertama tersimpan!';
-                    welcomeSubtitle.textContent = 'Lanjutkan menyimpan momen penting';
-                }
-            }
-        }
-        
-        // ===== PAGE: JEJAK =====
-        function initJejakPage() {
-            if (!currentUser) {
-                showPage('login');
-                return;
-            }
-            
-            loadTimeline();
-            
-            // Update welcome message based on activity
-            const users = getUsers();
-            const user = users[currentUser];
-            
-            const welcomeTitle = document.getElementById('welcomeTitle');
-            const welcomeSubtitle = document.getElementById('welcomeSubtitle');
-            
-            if (user) {
-                const totalPosts = (user.rants?.length || 0) + (user.artefacts?.length || 0);
-                
-                if (totalPosts === 0) {
-                    welcomeTitle.textContent = 'Selamat datang di Jejak';
-                    welcomeSubtitle.textContent = 'Pilih rant atau artefak untuk mulai jejak mu';
-                } else if (totalPosts === 1) {
-                    welcomeTitle.textContent = 'Jejak dimulai!';
-                    welcomeSubtitle.textContent = 'Lanjutkan mengekspresikan dirimu';
-                } else {
-                    welcomeTitle.textContent = 'Jejak mu';
-                    welcomeSubtitle.textContent = `${totalPosts} posting • Terus lanjutkan`;
-                }
-            }
-        }
-        
-        function loadTimeline() {
-            const container = document.getElementById('timeline');
-            const users = getUsers();
-            const user = users[currentUser];
-            
-            if (!user || ((user.rants?.length || 0) === 0 && (user.artefacts?.length || 0) === 0)) {
-                container.innerHTML = `
-                    <div class="timeline-empty">
-                        <div class="empty-icon">📝</div>
-                        <div>Belum ada jejak</div>
-                        <div class="hint mt-20">
-                            Gunakan tombol di atas untuk mulai
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '';
-            
-            // Combine rants and artefacts
-            const allItems = [
-                ...(user.rants || []).map(r => ({ ...r, type: 'rant', icon: '💬' })),
-                ...(user.artefacts || []).map(a => ({ ...a, type: 'artefak', icon: '🎨' }))
-            ].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            // Show all items (no limit in low friction design)
-            allItems.forEach(item => {
-                const date = new Date(item.date);
-                const now = new Date();
-                const diffHours = Math.floor((now - date) / (1000 * 60 * 60));
-                
-                let timeText = '';
-                if (diffHours < 1) {
-                    timeText = 'baru saja';
-                } else if (diffHours < 24) {
-                    timeText = `${diffHours} jam yang lalu`;
-                } else {
-                    timeText = date.toLocaleDateString('id-ID', { 
-                        day: 'numeric', 
-                        month: 'short'
-                    });
-                }
-                
-                html += `
-                    <div class="timeline-item fade-in">
-                        <div class="timeline-date">
-                            ${item.icon} • ${timeText}
-                        </div>
-                        <div class="timeline-content">
-                            ${item.type === 'rant' ? item.content : 
-                              `<div><strong>${item.url}</strong></div>
-                               ${item.description ? `<div style="margin-top: 8px; color: rgba(255,255,255,0.6);">${item.description}</div>` : ''}`}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-        
-        // ===== PAGE: STATS =====
-        function initStatsPage() {
-            if (!currentUser) {
-                showPage('login');
-                return;
-            }
-            
-            const users = getUsers();
-            const user = users[currentUser];
-            
-            if (!user) return;
-            
-            // Update username
-            document.getElementById('statsUsername').textContent = '@' + currentUser;
-            
-            // Calculate days since joined
-            const joinDate = new Date(user.created);
-            const today = new Date();
-            const daysDiff = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24));
-            
-            // Update stats
-            document.getElementById('daysCount').textContent = daysDiff + 1;
-            document.getElementById('rantsCount').textContent = user.rants?.length || 0;
-            document.getElementById('artefaksCount').textContent = user.artefacts?.length || 0;
-            
-            // Count selected hashtags
-            const hashtagsCount = user.selectedHashtags ? 
-                Object.values(user.selectedHashtags).filter(h => h !== null).length : 0;
-            document.getElementById('hashtagsCount').textContent = hashtagsCount;
-            
-            // Update join date
-            document.getElementById('statsJoinDate').textContent = 
-                `Bergabung: ${new Date(user.created).toLocaleDateString('id-ID')}`;
-            
-            // Show selected hashtags
-            const container = document.getElementById('selectedHashtagsList');
-            if (user.selectedHashtags && hashtagsCount > 0) {
-                let html = '';
-                Object.entries(user.selectedHashtags).forEach(([zonaId, hashtag]) => {
-                    if (hashtag) {
-                        const zonaName = zonaData[zonaId]?.name || zonaId;
-                        html += `
-                            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 10px;">
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.5);">${zonaName}</div>
-                                <div style="font-size: 14px; font-weight: 500; color: #ff00ff;">${hashtag}</div>
-                            </div>
-                        `;
-                    }
-                });
-                container.innerHTML = html;
-            } else {
-                container.innerHTML = '<div class="hint text-center">Belum memilih #</div>';
-            }
-        }
-        
-        // ===== PAGE: PROFIL =====
-        function initProfilPage() {
-            if (!currentUser) {
-                showPage('login');
-                return;
-            }
-            
-            const users = getUsers();
-            const user = users[currentUser];
-            
-            if (!user) return;
-            
-            // Update profile info
-            document.getElementById('profileUsername').textContent = '@' + currentUser;
-            
-            const joinDate = new Date(user.created);
-            const now = new Date();
-            const daysDiff = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24));
-            
-            document.getElementById('profileJoinDate').textContent = 
-                `Bergabung: ${daysDiff + 1} hari yang lalu`;
-            
-            const totalActivity = (user.rants?.length || 0) + (user.artefacts?.length || 0);
-            document.getElementById('profileActivity').textContent = 
-                `Aktivitas: ${totalActivity} posting`;
-        }
-        
-        // ===== UTILITIES =====
-        function getUsers() {
-            return JSON.parse(localStorage.getItem('nope_users') || '{}');
-        }
-        
-        function exportData() {
-            const users = getUsers();
-            const user = users[currentUser];
-            
-            if (!user) return;
-            
-            const dataStr = JSON.stringify(user, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = `nope-${currentUser}.json`;
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-            
-            alert('✓ Data berhasil di-export');
-        }
-        
-        function logout() {
-            if (confirm('Yakin ingin keluar?')) {
-                currentUser = null;
-                localStorage.removeItem('nope_current_user');
-                showPage('login');
-            }
-        }
-        
-        // ===== INITIALIZATION =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check for saved user session
-            const savedUser = localStorage.getItem('nope_current_user');
-            if (savedUser) {
-                currentUser = savedUser;
-                const users = getUsers();
-                if (users[savedUser] && users[savedUser].onboarded) {
-                    showPage('jejak');
-                } else {
-                    showPage('login');
-                }
-            } else {
-                showPage('login');
-            }
-            
-            // Register Service Worker for PWA
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                    .then(() => console.log('✓ NOPE ready'))
-                    .catch(err => console.log('Service Worker error:', err));
-            }
-            
-            // Close modal on overlay click
-            document.getElementById('modalOverlay').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeModal();
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+            const overlay = document.getElementById('modal
