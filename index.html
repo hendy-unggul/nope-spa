@@ -36,13 +36,15 @@
         }
         /* ===== LOGO NOPE ===== */
         .logo {
-            font-size: 70px;
+            font-size: 35px; /* Diperkecil 50% dari 70px */
             font-weight: 900;
-            text-align: center;
             color: #ff9999;
-            margin: 20px 0 10px 0;
+            margin: 0;
             line-height: 1;
             letter-spacing: -3px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
         }
         /* ===== INPUT STYLE ===== */
         .nope-input {
@@ -200,21 +202,9 @@
         .action-btn.secondary:hover {
             background: rgba(62, 50, 168, 0.1);
         }
-        /* ===== JEJAK PAGE - NEW STYLES ===== */
-        .jejak-header {
-            text-align: center;
-            margin: 0 0 20px 0;
-        }
-        .jejak-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #ff00ff;
-            margin-bottom: 10px;
-        }
-        .jejak-subtitle {
-            font-size: 14px;
-            color: rgba(62, 50, 168, 0.6);
-        }
+        /* ===== JEJAK PAGE - MODIFIED ===== */
+        /* (jejak-header dihapus, jadi tidak ada style khusus di sini) */
+
         /* Artefak Preview - Full Width Image */
         .artefak-preview-container {
             margin: 20px 0;
@@ -649,13 +639,6 @@
         .fade-in {
             animation: fadeIn 0.3s ease;
         }
-        /* ===== CHARACTER COUNTER ===== */
-        .char-counter {
-            text-align: right;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 15px;
-        }
     </style>
 </head>
 <body>
@@ -746,15 +729,8 @@
         </button>
     </div>
     <!-- JEJAK PAGE -->
-    <div id="jejak" class="page">
+    <div id="jejak" class="page" style="padding-top: 80px;">
         <div class="logo">NOPE</div>
-        <div class="jejak-header">
-            <div class="jejak-title">Jejak mu</div>
-            <div class="jejak-subtitle">
-                <span id="postCount">0</span> posting • 
-                <span id="lastActive">baru bergabung</span>
-            </div>
-        </div>
         <!-- Artefak Preview -->
         <div class="artefak-preview-container" id="artefakPreviewContainer"></div>
         <!-- Rant Box -->
@@ -932,7 +908,6 @@
         function initializeDummyData() {
             const users = getUsers();
             if (Object.keys(users).length > 0) return;
-
             const now = Date.now();
             const dummyUsers = [
                 // === FREKUENSI (5 user - mirip user nyata) ===
@@ -981,7 +956,6 @@
                         content: "masih genggam erat pas pulang naik angkot."
                     }
                 },
-
                 // === GELOMBANG (5 user - acak) ===
                 {
                     username: "fomo_gabut",
@@ -1028,7 +1002,6 @@
                         content: "kembali ke kos setelah lebaran. sendirian lagi."
                     }
                 },
-
                 // === MOVEMENT (5 user - isu sosial) ===
                 {
                     username: "edukasiuntuksemua",
@@ -1076,7 +1049,6 @@
                     }
                 }
             ];
-
             // Buat dummy user
             dummyUsers.forEach((user, i) => {
                 users[user.username] = {
@@ -1102,14 +1074,11 @@
                     }]
                 };
             });
-
             saveUsers(users);
         }
-
         // ===== SAFE INIT APP =====
         function initializeApp() {
             initializeDummyData();
-
             const savedUser = localStorage.getItem('nope_current_user');
             if (savedUser) {
                 currentUser = savedUser;
@@ -1127,7 +1096,6 @@
                 showPage('login');
             }
         }
-
         // ===== SHOW PAGE & TAB =====
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active','fade-in'));
@@ -1156,7 +1124,6 @@
             const btn = document.querySelector(`.nav-item[onclick*="${activeTab}"]`);
             if (btn) btn.classList.add('active');
         }
-
         // ===== LOGIN =====
         function initLoginPage() {
             const input = document.getElementById('usernameInput');
@@ -1202,7 +1169,6 @@
                 showPage(d.onboarded ? 'jejak' : 'onboarding');
             }
         }
-
         // ===== ONBOARDING =====
         function initOnboardingPage() {
             if (!currentUser) return showPage('login');
@@ -1248,13 +1214,11 @@
             document.getElementById('saveBtn').disabled = true;
             setTimeout(() => showPage('jejak'), 600);
         }
-
         // ===== JEJAK =====
         function initJejakPage() {
             if (!currentUser) return showPage('login');
             const d = getUserData(currentUser);
-            document.getElementById('postCount').textContent = (d.rants?.length || 0) + (d.artefacts?.length || 0);
-            document.getElementById('lastActive').textContent = formatLastActive(d.lastLogin);
+            // Counter dan lastActive dihapus → tidak perlu update DOM
             setupRantBox();
             renderArtefakPreview();
             renderRecentRants();
@@ -1356,10 +1320,8 @@
             document.getElementById('rantBox').value = '';
             document.getElementById('rantCounter').textContent = '0/300';
             renderRecentRants();
-            document.getElementById('postCount').textContent = (d.rants?.length || 0) + (d.artefacts?.length || 0);
             showToast('Rant berhasil diposting!');
         }
-
         // ===== JALAN =====
         function initJalanPage() {
             if (!currentUser) return showPage('login');
@@ -1454,7 +1416,6 @@
             const movementH = new Set(["#PendidikanUntukSemua","#JanganExploitBuruh","#FUNDINGSolidaritasDiam","#PetisiTerbuka"]);
             renderFeeds('Movement', 'movementList', (r) => movementH.has(r.hashtag));
         }
-
         // ===== REAKSI & KOMENTAR =====
         function reactToRant(targetUser, rantDate, emoji) {
             if (!currentUser) return;
@@ -1501,7 +1462,6 @@
             hideModal();
             showToast('Komentar terkirim!');
         }
-
         // ===== DUNIA & UTILITIES =====
         function initDuniaPage() {
             if (!currentUser) return showPage('login');
@@ -1593,7 +1553,6 @@
                 showPage('login');
             }
         }
-
         // ===== INITIALIZE =====
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('modalOverlay').addEventListener('click', e => {
