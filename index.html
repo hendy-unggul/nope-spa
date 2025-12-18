@@ -1076,28 +1076,29 @@
             });
             saveUsers(users);
         }
-        // ===== SAFE INIT APP =====
+        // ===== FIXED INIT APP - SELALU MULAI DARI LOGIN =====
         function initializeApp() {
             initializeDummyData();
-            const savedUser = localStorage.getItem('nope_current_user');
-            if (savedUser) {
-                currentUser = savedUser;
-                const userData = getUserData(currentUser);
-                if (userData && userData.onboarded) {
-                    showPage('jejak');
-                } else if (userData) {
-                    showPage('onboarding');
-                } else {
-                    currentUser = null;
-                    localStorage.removeItem('nope_current_user');
-                    showPage('login');
-                }
-            } else {
-                showPage('login');
-            }
+            
+            // SELALU mulai dari halaman login
+            // Hapus user yang sedang login untuk memastikan login ulang
+            localStorage.removeItem('nope_current_user');
+            currentUser = null;
+            
+            // Tampilkan halaman login
+            showPage('login');
+            
+            // Reset semua halaman lain agar tidak aktif
+            document.querySelectorAll('.page:not(#login)').forEach(p => p.classList.remove('active'));
         }
         // ===== SHOW PAGE & TAB =====
         function showPage(pageId) {
+            // Cek jika user belum login tapi mencoba akses halaman lain
+            if (pageId !== 'login' && pageId !== 'onboarding' && !currentUser) {
+                showPage('login');
+                return;
+            }
+            
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active','fade-in'));
             const p = document.getElementById(pageId);
             if (p) {
@@ -1118,7 +1119,13 @@
                 }
             }
         }
-        function showTab(tabId) { showPage(tabId); }
+        function showTab(tabId) { 
+            if (!currentUser) {
+                showPage('login');
+                return;
+            }
+            showPage(tabId); 
+        }
         function updateNavActive(activeTab) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const btn = document.querySelector(`.nav-item[onclick*="${activeTab}"]`);
@@ -1131,13 +1138,22 @@
             input.value = '';
             input.focus();
             status.style.display = 'none';
+            
+            // Pastikan event listener tidak duplikat
             const newInput = input.cloneNode(true);
             input.parentNode.replaceChild(newInput, input);
             const el = document.getElementById('usernameInput');
-            el.addEventListener('keydown', e => { if (e.key === 'Enter') processLogin(); });
+            
+            el.addEventListener('keydown', e => { 
+                if (e.key === 'Enter') processLogin(); 
+            });
+            
             el.addEventListener('input', function() {
                 let u = this.value.trim().toLowerCase();
-                if (u.length < 3) { status.style.display = 'none'; return; }
+                if (u.length < 3) { 
+                    status.style.display = 'none'; 
+                    return; 
+                }
                 let f = u.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
                 if (u !== f) this.value = f;
                 const d = getUserData(f);
@@ -1153,14 +1169,28 @@
         }
         function processLogin() {
             let u = document.getElementById('usernameInput').value.trim().toLowerCase();
-            if (u.length < 3) { alert('Username minimal 3 karakter!'); return; }
+            if (u.length < 3) { 
+                alert('Username minimal 3 karakter!'); 
+                return; 
+            }
             u = u.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
-            if (u.length < 3) { alert('Username hanya boleh huruf, angka, underscore!'); return; }
+            if (u.length < 3) { 
+                alert('Username hanya boleh huruf, angka, underscore!'); 
+                return; 
+            }
             currentUser = u;
             localStorage.setItem('nope_current_user', u);
             let d = getUserData(u);
             if (!d) {
-                d = { username: u, created: Date.now(), lastLogin: Date.now(), selectedHashtags: null, onboarded: false, rants: [], artefacts: [] };
+                d = { 
+                    username: u, 
+                    created: Date.now(), 
+                    lastLogin: Date.now(), 
+                    selectedHashtags: null, 
+                    onboarded: false, 
+                    rants: [], 
+                    artefacts: [] 
+                };
                 saveUserData(u, d);
                 showPage('onboarding');
             } else {
@@ -1174,7 +1204,13 @@
             if (!currentUser) return showPage('login');
             const d = getUserData(currentUser);
             if (d && d.onboarded) return showPage('jejak');
-            selectedHashtags = d && d.selectedHashtags ? { ...d.selectedHashtags } : { popculture: null, personalpain: null, socialsickness: null };
+            
+            selectedHashtags = d && d.selectedHashtags ? { ...d.selectedHashtags } : { 
+                popculture: null, 
+                personalpain: null, 
+                socialsickness: null 
+            };
+            
             ['popculture','personalpain','socialsickness'].forEach(z => renderHashtags(z));
             updateCounters();
         }
