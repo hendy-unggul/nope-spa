@@ -918,27 +918,43 @@
             <div class="nav-label">Dunia</div>
         </a>
     </div>
-    <!-- LOGIN PAGE -->
-    <div id="login" class="page active">
-        <div class="logo">NOPE</div>
-        <input type="text" 
-               class="nope-input" 
-               id="usernameInput"
-               placeholder="nama_kamu"
-               autocomplete="off"
-               autocapitalize="none"
-               spellcheck="false">
-        <div class="user-status" id="userStatus"></div>
-        <div class="hint">
+    <!-- LOGIN PAGE - NEW DESIGN -->
+<div id="login" class="page active">
+    <div class="logo-small">NOPE</div>
+    <div class="login-container">
+        <!-- Tagline sebagai pusat perhatian -->
+        <div class="soul-tagline fade-in">
+            Ga perlu followers,<br>
+            cuma butuh <span class="highlight">sefrekue<span style="letter-spacing: -1px;">nsi...</span></span>
+        </div>
+        
+        <div class="nope-input-group slide-in">
+            <input type="text" 
+                   class="nope-input" 
+                   id="usernameInput"
+                   placeholder="nama_kamu"
+                   autocomplete="off"
+                   autocapitalize="none"
+                   spellcheck="false"
+                   maxlength="20">
+            <div class="user-status" id="userStatus"></div>
+            <button class="enter-btn" onclick="processLogin()" id="loginBtn">
+                Enter
+            </button>
+        </div>
+        
+        <div class="hint slide-in" style="animation-delay: 0.1s;">
             gunakan huruf, angka, underscore • minimal 3 karakter
         </div>
-        <div class="hint">
-            tekan <strong>enter</strong> untuk masuk
+        <div class="hint slide-in" style="animation-delay: 0.2s;">
+            tekan <strong>enter</strong> atau klik tombol untuk masuk
         </div>
-        <div class="hint mt-20">
-            3#, jurnal, artefak tersimpan selamanya
+        
+        <div class="legal-hint">
+            3#, jurnal, artefak tersimpan selamanya • NOPE v1.0
         </div>
     </div>
+</div>
     <!-- ONBOARDING PAGE -->
     <div id="onboarding" class="page">
         <div class="logo">NOPE</div>
