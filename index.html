@@ -45,7 +45,7 @@
             letter-spacing: -3px;
             position: absolute;
             top: 20px;
-            left: 15px; /* Rata kiri dengan padding artefak */
+            left: 15px;
         }
         /* ===== INPUT STYLE ===== */
         .nope-input {
@@ -239,7 +239,8 @@
             height: 100%;
             object-fit: cover;
         }
-        .artefak-upload-btn {
+        /* HAPUS: Tombol unggah kanan atas */
+        /* .artefak-upload-btn {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -260,7 +261,7 @@
         .artefak-upload-btn:hover {
             background: rgba(73, 3, 252, 0.7);
             transform: scale(1.1);
-        }
+        } */
         .artefak-title-input {
             position: absolute;
             top: 10px;
@@ -297,6 +298,31 @@
         .artefak-preview-date {
             font-size: 10px;
             color: rgba(73, 3, 252, 0.4);
+        }
+        /* Tombol Folder Unggah */
+        .folder-upload-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(73, 3, 252, 0.1);
+            border: 1px solid rgba(73, 3, 252, 0.3);
+            color: #4903fc;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin: 10px 0;
+            width: 100%;
+            justify-content: center;
+        }
+        .folder-upload-btn:hover {
+            background: rgba(73, 3, 252, 0.2);
+            transform: translateY(-2px);
+        }
+        .folder-upload-btn .icon {
+            font-size: 18px;
         }
         /* Rant Box */
         .rant-box-container {
@@ -657,9 +683,10 @@
             display: none;
         }
         /* ===== EMOJI BAR BELOW ARTEFAK ===== */
+        /* HAPUS: Icon unggah dari emoji bar */
         .artefak-emoji-bar {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 8px 15px;
             margin-top: 6px;
@@ -813,6 +840,70 @@
             object-fit: cover;
             object-position: center;
         }
+        
+        /* Modal Unggah Artefak */
+        .upload-modal-content {
+            max-width: 100%;
+        }
+        .upload-preview {
+            width: 100%;
+            height: 200px;
+            background: rgba(73, 3, 252, 0.05);
+            border: 2px dashed rgba(73, 3, 252, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .upload-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .upload-placeholder {
+            font-size: 48px;
+            color: rgba(73, 3, 252, 0.2);
+        }
+        .upload-title-input {
+            width: 100%;
+            background: rgba(73, 3, 252, 0.05);
+            border: 1px solid rgba(73, 3, 252, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            font-family: inherit;
+            font-size: 14px;
+            margin: 10px 0;
+            outline: none;
+        }
+        .upload-title-input:focus {
+            border-color: #4903fc;
+        }
+        .upload-title-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .word-counter {
+            text-align: right;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 15px;
+        }
+        .warning-notice {
+            background: rgba(255, 50, 50, 0.1);
+            border: 1px solid rgba(255, 50, 50, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            line-height: 1.4;
+        }
+        .warning-notice strong {
+            color: #ff9999;
+        }
     </style>
 </head>
 <body>
@@ -905,8 +996,16 @@
     <!-- JEJAK PAGE -->
     <div id="jejak" class="page" style="padding-top: 80px;">
         <div class="logo">NOPE</div>
+        
+        <!-- Tombol Folder Unggah - MENGGANTI semua icon unggah yang tumpang tindih -->
+        <button class="folder-upload-btn" onclick="openArtefakUpload()">
+            <span class="icon">📁</span>
+            <span>Unggah proses</span>
+        </button>
+        
         <!-- Artefak Preview -->
         <div class="artefak-preview-container" id="artefakPreviewContainer"></div>
+        
         <!-- Rant Box -->
         <div class="rant-box-container">
             <div class="rant-box-header">
@@ -998,8 +1097,8 @@
             <div class="profile-meta" id="profileJoinDate">Bergabung: -</div>
             <div class="profile-meta" id="profileActivity">Aktivitas: 0 posting</div>
         </div>
-        <div class="action-btn" onclick="showArtefakModal()" style="margin-top: 8px;">
-            + Tambah Artefak
+        <div class="action-btn" onclick="openArtefakUpload()" style="margin-top: 8px;">
+            📁 Unggah Artefak
         </div>
         <div class="action-btn secondary" onclick="exportData()" style="margin-top: 8px;">
             📤 Export Data
@@ -1034,12 +1133,15 @@
                 count: 0,
                 users: [],
                 hasNew: false
-            },
-            unggah: {
-                count: 0,
-                users: [],
-                hasNew: false
             }
+            // HAPUS: unggah dari reactions
+        };
+        
+        // State untuk upload artefak
+        let artefakUploadState = {
+            image: null,
+            title: '',
+            step: 0 // 0: pilih gambar, 1: tulis judul, 2: konfirmasi
         };
         
         // ===== SELECTED HASHTAGS =====
@@ -1088,32 +1190,38 @@
             {
                 url: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                 title: "Late Night Vibes",
-                date: "15 Mar 2025"
+                date: "15 Mar 2025",
+                username: "diamdiamaja"
             },
             {
                 url: "https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                 title: "Studio Session",
-                date: "12 Mar 2025"
+                date: "12 Mar 2025",
+                username: "ghosted_aja"
             },
             {
                 url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                 title: "Gym Progress",
-                date: "10 Mar 2025"
+                date: "10 Mar 2025",
+                username: "maganggratis"
             },
             {
                 url: "https://images.unsplash.com/photo-1528702748617-c64d49f918af?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                 title: "Cafe Moments",
-                date: "08 Mar 2025"
+                date: "08 Mar 2025",
+                username: "temenpalsu"
             },
             {
                 url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                 title: "Concert Memory",
-                date: "05 Mar 2025"
+                date: "05 Mar 2025",
+                username: "konserginjal"
             },
             {
                 url: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                 title: "Skyline View",
-                date: "01 Mar 2025"
+                date: "01 Mar 2025",
+                username: "diamdiamaja"
             }
         ];
         
@@ -1154,6 +1262,15 @@
         
         function saveGlobalRants(rants) {
             localStorage.setItem('nope_global_rants', JSON.stringify(rants));
+        }
+        
+        function getGlobalArtefaks() {
+            const globalArtefaksJson = localStorage.getItem('nope_global_artefaks');
+            return globalArtefaksJson ? JSON.parse(globalArtefaksJson) : [];
+        }
+        
+        function saveGlobalArtefaks(artefaks) {
+            localStorage.setItem('nope_global_artefaks', JSON.stringify(artefaks));
         }
         
         // ===== DUMMY DATA INITIALIZATION =====
@@ -1231,7 +1348,8 @@
                     artefacts: [{
                         title: user.artefak.title,
                         content: user.artefak.content,
-                        date: now - (15 - i) * 24 * 60 * 60 * 1000 + 10000
+                        date: now - (15 - i) * 24 * 60 * 60 * 1000 + 10000,
+                        imageUrl: dummyArtefakPhotos[i] ? dummyArtefakPhotos[i].url : null
                     }]
                 };
             });
@@ -1243,8 +1361,8 @@
                 reactions['global'] = {
                     nangis: { count: 3, users: ["diamdiamaja", "ghosted_aja", "maganggratis"], hasNew: true },
                     api: { count: 2, users: ["temenpalsu", "konserginjal"], hasNew: true },
-                    badut: { count: 1, users: ["diamdiamaja"], hasNew: false },
-                    unggah: { count: 0, users: [], hasNew: false }
+                    badut: { count: 1, users: ["diamdiamaja"], hasNew: false }
+                    // HAPUS: unggah dari reactions
                 };
                 saveArtefakReactions(reactions);
             }
@@ -1260,6 +1378,18 @@
                 });
             });
             saveGlobalRants(globalRants);
+            
+            // Inisialisasi global artefaks
+            let globalArtefaks = [];
+            dummyArtefakPhotos.forEach((artefak, i) => {
+                globalArtefaks.push({
+                    username: artefak.username,
+                    title: artefak.title,
+                    imageUrl: artefak.url,
+                    date: now - (15 - i) * 24 * 60 * 60 * 1000
+                });
+            });
+            saveGlobalArtefaks(globalArtefaks);
         }
         
         // ===== FIXED INIT APP - SELALU MULAI DARI LOGIN =====
@@ -1498,20 +1628,11 @@
                     <div class="artefak-preview">
                         <div class="artefak-preview-image">
                             <div class="artefak-placeholder">🖼️</div>
-                            <!-- Upload Button -->
-                            <button class="artefak-upload-btn" onclick="document.getElementById('artefakFileInput').click()" title="Upload Artefak">
-                                📤
-                            </button>
-                            <!-- Title Input -->
-                            <input type="text" 
-                                   class="artefak-title-input" 
-                                   id="artefakTitleInput"
-                                   placeholder="maks 4 kata"
-                                   maxlength="30"
-                                   oninput="validateArtefakTitle()">
+                            <!-- HAPUS: Tombol unggah kanan atas -->
                         </div>
                         <div class="artefak-preview-info">
                             <div class="artefak-preview-title">📁 Belum ada artefak</div>
+                            <div class="artefak-preview-date">Klik "Unggah proses" untuk menambahkan artefak</div>
                         </div>
                         ${renderArtefakEmojiBar()}
                     </div>`;
@@ -1526,14 +1647,7 @@
                                 `<img src="${latest.imageUrl}" alt="${latest.title}" style="width:100%;height:100%;object-fit:cover;">` : 
                                 `<div class="artefak-placeholder">📁</div>`
                             }
-                            <!-- Upload Button -->
-                            <button class="artefak-upload-btn" onclick="document.getElementById('artefakFileInput').click()" title="Upload Artefak">
-                                📤
-                            </button>
-                            <!-- Title Display -->
-                            <div class="artefak-title-input" style="background: rgba(0,0,0,0.7); border: none; pointer-events: none;">
-                                ${latest.title}
-                            </div>
+                            <!-- HAPUS: Tombol unggah kanan atas -->
                         </div>
                         <div class="artefak-preview-info">
                             <div class="artefak-preview-title">📁 ${latest.title}</div>
@@ -1544,10 +1658,6 @@
             }
             
             c.innerHTML = artefakHtml;
-            
-            // Setup file input listener
-            const fileInput = document.getElementById('artefakFileInput');
-            fileInput.onchange = handleArtefakUpload;
         }
         
         function renderArtefakEmojiBar() {
@@ -1565,9 +1675,7 @@
                             </button>
                             <div class="reaction-peek-popup" id="nangisPeekPopup">
                                 <div class="reaction-peek-title">😭 Nangis</div>
-                                <div class="reaction-user-list" id="nangisUserList">
-                                    <!-- Users will be populated by JavaScript -->
-                                </div>
+                                <div class="reaction-user-list" id="nangisUserList"></div>
                             </div>
                         </div>
                         
@@ -1580,9 +1688,7 @@
                             </button>
                             <div class="reaction-peek-popup" id="apiPeekPopup">
                                 <div class="reaction-peek-title">🔥 Api</div>
-                                <div class="reaction-user-list" id="apiUserList">
-                                    <!-- Users will be populated by JavaScript -->
-                                </div>
+                                <div class="reaction-user-list" id="apiUserList"></div>
                             </div>
                         </div>
                         
@@ -1595,26 +1701,11 @@
                             </button>
                             <div class="reaction-peek-popup" id="badutPeekPopup">
                                 <div class="reaction-peek-title">🤡 Badut</div>
-                                <div class="reaction-user-list" id="badutUserList">
-                                    <!-- Users will be populated by JavaScript -->
-                                </div>
+                                <div class="reaction-user-list" id="badutUserList"></div>
                             </div>
                         </div>
                         
-                        <!-- Unggah -->
-                        <div class="reaction-peek">
-                            <button class="artefak-emoji-btn ${reactions.unggah.hasNew ? 'has-new' : ''}" 
-                                    onclick="reactToArtefak('unggah')" 
-                                    title="Unggah">
-                                📤
-                            </button>
-                            <div class="reaction-peek-popup" id="unggahPeekPopup">
-                                <div class="reaction-peek-title">📤 Unggah</div>
-                                <div class="reaction-user-list" id="unggahUserList">
-                                    <!-- Users will be populated by JavaScript -->
-                                </div>
-                            </div>
-                        </div>
+                        <!-- HAPUS: Unggah dari emoji bar -->
                     </div>
                 </div>`;
         }
@@ -1666,18 +1757,6 @@
                 }
             }
             
-            // Update unggah peek
-            const unggahUsers = currentArtefakReactions.unggah.users.slice(0, 5);
-            const unggahList = document.getElementById('unggahUserList');
-            if (unggahList) {
-                unggahList.innerHTML = unggahUsers.map(user => 
-                    `<div class="reaction-user-item">@${user}</div>`
-                ).join('');
-                if (unggahUsers.length === 0) {
-                    unggahList.innerHTML = '<div class="reaction-user-item" style="color: rgba(255,255,255,0.5); font-style: italic;">Belum ada reaksi</div>';
-                }
-            }
-            
             // Setup peek popup toggle
             setupPeekPopups();
         }
@@ -1714,151 +1793,98 @@
             });
         }
         
-        function validateArtefakTitle() {
-            const input = document.getElementById('artefakTitleInput');
-            if (!input) return;
-            
-            const value = input.value.trim();
-            
-            // Count words
-            const wordCount = value.split(/\s+/).filter(word => word.length > 0).length;
-            
-            if (wordCount > 4) {
-                input.style.borderColor = '#ff3333';
-                showToast('Maksimum 4 kata untuk judul artefak');
-                // Remove extra words
-                const words = value.split(/\s+/).slice(0, 4).join(' ');
-                input.value = words;
-            } else {
-                input.style.borderColor = 'rgba(73, 3, 252, 0.3)';
-            }
-        }
-        
-        function handleArtefakUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            // Check if file is an image
-            if (!file.type.match('image.*')) {
-                alert('Hanya file gambar yang diperbolehkan!');
-                return;
-            }
-            
-            // Check file size (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                alert('Ukuran file maksimal 5MB!');
-                return;
-            }
-            
-            // Get title from input
-            const titleInput = document.getElementById('artefakTitleInput');
-            let title = titleInput ? titleInput.value.trim() : '';
-            
-            // Validate title
-            if (!title) {
-                title = 'Artefak Baru';
-            }
-            
-            // Count words
-            const wordCount = title.split(/\s+/).filter(word => word.length > 0).length;
-            if (wordCount > 4) {
-                alert('Judul artefak maksimal 4 kata!');
-                return;
-            }
-            
-            // Create file reader
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                const imageUrl = e.target.result;
-                
-                // Save artefak to user data
-                const d = getUserData(currentUser);
-                if (!d.artefacts) d.artefacts = [];
-                
-                d.artefacts.push({
-                    title: title,
-                    imageUrl: imageUrl,
-                    date: Date.now(),
-                    content: `Artefak diupload: ${new Date().toLocaleDateString('id-ID')}`
-                });
-                
-                d.lastLogin = Date.now();
-                saveUserData(currentUser, d);
-                
-                // Reset file input
-                document.getElementById('artefakFileInput').value = '';
-                
-                // Re-render artefak preview
-                renderArtefakPreview();
-                showToast('Artefak berhasil diupload!');
-            };
-            
-            reader.onerror = function() {
-                alert('Gagal membaca file!');
-            };
-            
-            reader.readAsDataURL(file);
-        }
-        
-        function reactToArtefak(reactionType) {
-            if (!currentUser) return;
-            
-            const reactions = getArtefakReactions();
-            if (!reactions['global']) {
-                reactions['global'] = JSON.parse(JSON.stringify(currentArtefakReactions));
-            }
-            
-            const userReactions = reactions['global'];
-            
-            // Check if user already reacted
-            if (!userReactions[reactionType].users.includes(currentUser)) {
-                userReactions[reactionType].count++;
-                userReactions[reactionType].users.push(currentUser);
-                userReactions[reactionType].hasNew = true;
-                
-                // For demo, add some dummy users
-                if (userReactions[reactionType].users.length === 1) {
-                    const dummyUsers = ["diamdiamaja", "ghosted_aja", "maganggratis", "temenpalsu", "konserginjal"];
-                    dummyUsers.forEach(user => {
-                        if (user !== currentUser && !userReactions[reactionType].users.includes(user)) {
-                            userReactions[reactionType].users.push(user);
-                        }
-                    });
-                }
-                
-                saveArtefakReactions(reactions);
-                currentArtefakReactions = userReactions;
-                
-                // Update UI
-                renderArtefakPreview();
-                showToast(`Kamu bereaksi dengan ${reactionType}!`);
-            } else {
-                showToast(`Kamu sudah bereaksi dengan ${reactionType}`);
-            }
-        }
-        
         function renderArtefakGrid() {
             const c = document.getElementById('artefaksGrid');
             if (!c) return;
             
             c.innerHTML = '';
             
-            dummyArtefakPhotos.forEach(photo => {
-                const div = document.createElement('div');
-                div.className = 'artefak-grid-item';
-                div.onclick = () => showToast(`"${photo.title}" - ${photo.date}`);
-                div.innerHTML = `
-                    <div class="fixed-image-container">
-                        <img src="${photo.url}" alt="${photo.title}" class="artefak-grid-image" loading="lazy">
-                    </div>
-                    <div class="artefak-grid-overlay">
-                        <div class="artefak-grid-title">${photo.title}</div>
-                        <div class="artefak-grid-date">${photo.date}</div>
-                    </div>
-                `;
-                c.appendChild(div);
+            const d = getUserData(currentUser);
+            const userArtefaks = d.artefacts || [];
+            
+            if (userArtefaks.length === 0) {
+                // Tampilkan dummy artefaks jika user belum punya
+                dummyArtefakPhotos.forEach(photo => {
+                    const div = document.createElement('div');
+                    div.className = 'artefak-grid-item';
+                    div.onclick = () => showArtefakDetails(photo);
+                    div.innerHTML = `
+                        <div class="fixed-image-container">
+                            <img src="${photo.url}" alt="${photo.title}" class="artefak-grid-image" loading="lazy">
+                        </div>
+                        <div class="artefak-grid-overlay">
+                            <div class="artefak-grid-title">${photo.title}</div>
+                            <div class="artefak-grid-date">${photo.date}</div>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                });
+            } else {
+                // Tampilkan artefak user
+                userArtefaks.forEach(artefak => {
+                    const date = new Date(artefak.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                    const div = document.createElement('div');
+                    div.className = 'artefak-grid-item';
+                    div.onclick = () => showArtefakDetails(artefak);
+                    div.innerHTML = `
+                        <div class="fixed-image-container">
+                            ${artefak.imageUrl ? 
+                                `<img src="${artefak.imageUrl}" alt="${artefak.title}" class="artefak-grid-image" loading="lazy">` :
+                                `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(73,3,252,0.1);">📁</div>`
+                            }
+                        </div>
+                        <div class="artefak-grid-overlay">
+                            <div class="artefak-grid-title">${artefak.title}</div>
+                            <div class="artefak-grid-date">${date}</div>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                });
+            }
+        }
+        
+        function showArtefakDetails(artefak) {
+            const date = new Date(artefak.date).toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit' 
             });
+            
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            
+            modal.innerHTML = `
+                <div class="modal-header">
+                    <div class="modal-title">${artefak.title}</div>
+                    <button class="modal-close" onclick="hideModal()">&times;</button>
+                </div>
+                <div style="padding: 15px 0;">
+                    <div style="font-size: 11px; color: rgba(73,3,252,0.7); margin-bottom: 10px;">
+                        ${date} • @${artefak.username || currentUser}
+                    </div>
+                    ${artefak.imageUrl ? 
+                        `<div style="width:100%;height:200px;background:rgba(73,3,252,0.05);border-radius:10px;overflow:hidden;margin-bottom:15px;">
+                            <img src="${artefak.imageUrl}" alt="${artefak.title}" style="width:100%;height:100%;object-fit:contain;">
+                        </div>` : 
+                        ''
+                    }
+                    ${artefak.content ? 
+                        `<div style="font-size: 14px; line-height: 1.6; color: white; margin-bottom: 20px;">
+                            ${artefak.content}
+                        </div>` : 
+                        ''
+                    }
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="action-btn secondary" onclick="hideModal()" style="flex: 1;">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modalOverlay.classList.add('active');
         }
         
         function renderRecentRants() {
@@ -1953,6 +1979,252 @@
             showToast('Rant berhasil diposting!');
         }
         
+        // ===== SISTEM UNGGAH ARTEFAK YANG DISEDERHANAKAN =====
+        function openArtefakUpload() {
+            // Reset state
+            artefakUploadState = {
+                image: null,
+                title: '',
+                step: 0
+            };
+            
+            // Buka file picker
+            const fileInput = document.getElementById('artefakFileInput');
+            fileInput.onchange = handleImageSelect;
+            fileInput.click();
+        }
+        
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check if file is an image
+            if (!file.type.match('image.*')) {
+                alert('Hanya file gambar yang diperbolehkan!');
+                return;
+            }
+            
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Ukuran file maksimal 5MB!');
+                return;
+            }
+            
+            // Create file reader
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                artefakUploadState.image = e.target.result;
+                artefakUploadState.step = 1;
+                showArtefakUploadModal();
+            };
+            
+            reader.onerror = function() {
+                alert('Gagal membaca file!');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        function showArtefakUploadModal() {
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            
+            if (artefakUploadState.step === 1) {
+                // Step 1: Tulis judul (maks 4 kata)
+                modal.innerHTML = `
+                    <div class="modal-header">
+                        <div class="modal-title">Tulis tentang foto ini</div>
+                        <button class="modal-close" onclick="hideModal()">&times;</button>
+                    </div>
+                    <div class="upload-modal-content">
+                        <div class="upload-preview">
+                            ${artefakUploadState.image ? 
+                                `<img src="${artefakUploadState.image}" alt="Preview">` : 
+                                `<div class="upload-placeholder">🖼️</div>`
+                            }
+                        </div>
+                        <input type="text" 
+                               class="upload-title-input" 
+                               id="artefakTitleInputModal"
+                               placeholder="Maksimum 4 kata tentang foto ini"
+                               maxlength="50"
+                               value="${artefakUploadState.title}"
+                               oninput="updateArtefakTitle()">
+                        <div class="word-counter" id="wordCounter">0/4 kata</div>
+                        <div class="action-btn" onclick="proceedToConfirmation()" id="nextBtn" disabled>
+                            Lanjut
+                        </div>
+                        <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 8px;">
+                            Batal
+                        </button>
+                    </div>
+                `;
+                
+                // Setup word counter
+                const titleInput = document.getElementById('artefakTitleInputModal');
+                if (titleInput) {
+                    titleInput.focus();
+                    updateArtefakTitle();
+                }
+            } else if (artefakUploadState.step === 2) {
+                // Step 2: Konfirmasi upload dengan peringatan
+                modal.innerHTML = `
+                    <div class="modal-header">
+                        <div class="modal-title">Konfirmasi Unggah</div>
+                        <button class="modal-close" onclick="hideModal()">&times;</button>
+                    </div>
+                    <div class="upload-modal-content">
+                        <div class="warning-notice">
+                            <strong>⚠️ PERINGATAN</strong><br>
+                            Artefakmu akan tersimpan <strong>selamanya</strong> dan <strong>tidak bisa dihapus</strong>.
+                        </div>
+                        <div class="upload-preview">
+                            ${artefakUploadState.image ? 
+                                `<img src="${artefakUploadState.image}" alt="Preview">` : 
+                                `<div class="upload-placeholder">🖼️</div>`
+                            }
+                        </div>
+                        <div style="background: rgba(73,3,252,0.1); padding: 12px; border-radius: 8px; margin: 15px 0;">
+                            <div style="font-size: 14px; font-weight: 600; color: #4903fc; margin-bottom: 5px;">
+                                ${artefakUploadState.title || '(tanpa judul)'}
+                            </div>
+                        </div>
+                        <div class="action-btn" onclick="uploadArtefak()">
+                            ✅ Ya, Unggah Artefak
+                        </div>
+                        <button class="action-btn secondary" onclick="artefakUploadState.step = 1; showArtefakUploadModal()" style="margin-top: 8px;">
+                            ↶ Kembali
+                        </button>
+                    </div>
+                `;
+            }
+            
+            modalOverlay.classList.add('active');
+        }
+        
+        function updateArtefakTitle() {
+            const input = document.getElementById('artefakTitleInputModal');
+            if (!input) return;
+            
+            artefakUploadState.title = input.value.trim();
+            
+            // Count words
+            const words = artefakUploadState.title.split(/\s+/).filter(word => word.length > 0);
+            const wordCount = words.length;
+            
+            // Update counter
+            const counter = document.getElementById('wordCounter');
+            if (counter) {
+                counter.textContent = `${wordCount}/4 kata`;
+                counter.style.color = wordCount > 4 ? '#ff3333' : 'rgba(255, 255, 255, 0.4)';
+            }
+            
+            // Enable/disable next button
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.disabled = wordCount > 4 || wordCount === 0;
+            }
+            
+            // Trim if more than 4 words
+            if (wordCount > 4) {
+                const trimmed = words.slice(0, 4).join(' ');
+                input.value = trimmed;
+                artefakUploadState.title = trimmed;
+            }
+        }
+        
+        function proceedToConfirmation() {
+            if (artefakUploadState.title.trim() === '') {
+                showToast('Harap tulis judul untuk artefak!');
+                return;
+            }
+            
+            const words = artefakUploadState.title.split(/\s+/).filter(word => word.length > 0);
+            if (words.length > 4) {
+                showToast('Maksimum 4 kata untuk judul artefak!');
+                return;
+            }
+            
+            artefakUploadState.step = 2;
+            showArtefakUploadModal();
+        }
+        
+        function uploadArtefak() {
+            if (!currentUser || !artefakUploadState.image) return;
+            
+            const d = getUserData(currentUser);
+            if (!d.artefacts) d.artefacts = [];
+            
+            const newArtefak = {
+                title: artefakUploadState.title || 'Artefak Baru',
+                imageUrl: artefakUploadState.image,
+                date: Date.now(),
+                username: currentUser
+            };
+            
+            // Save to user data
+            d.artefacts.push(newArtefak);
+            d.lastLogin = Date.now();
+            saveUserData(currentUser, d);
+            
+            // Save to global artefaks
+            const globalArtefaks = getGlobalArtefaks();
+            globalArtefaks.push(newArtefak);
+            saveGlobalArtefaks(globalArtefaks);
+            
+            // Reset file input
+            document.getElementById('artefakFileInput').value = '';
+            
+            // Close modal
+            hideModal();
+            
+            // Update UI
+            renderArtefakPreview();
+            renderArtefakGrid();
+            
+            // Refresh feeds
+            if (currentTab === 'jalan') {
+                initJalanPage();
+            }
+            
+            showToast('Artefak berhasil diupload! Tersimpan selamanya.');
+            
+            // Reset state
+            artefakUploadState = {
+                image: null,
+                title: '',
+                step: 0
+            };
+        }
+        
+        function reactToArtefak(reactionType) {
+            if (!currentUser) return;
+            
+            const reactions = getArtefakReactions();
+            if (!reactions['global']) {
+                reactions['global'] = JSON.parse(JSON.stringify(currentArtefakReactions));
+            }
+            
+            const userReactions = reactions['global'];
+            
+            // Check if user already reacted
+            if (!userReactions[reactionType].users.includes(currentUser)) {
+                userReactions[reactionType].count++;
+                userReactions[reactionType].users.push(currentUser);
+                userReactions[reactionType].hasNew = true;
+                
+                saveArtefakReactions(reactions);
+                currentArtefakReactions = userReactions;
+                
+                // Update UI
+                renderArtefakPreview();
+                showToast(`Kamu bereaksi dengan ${reactionType}!`);
+            } else {
+                showToast(`Kamu sudah bereaksi dengan ${reactionType}`);
+            }
+        }
+        
         // ===== JALAN =====
         function initJalanPage() {
             if (!currentUser) return showPage('login');
@@ -2007,17 +2279,18 @@
             const d = getUserData(currentUser);
             if (!d.selectedHashtags) return;
             
-            // Ambil semua rant dari semua user yang menggunakan hashtag yang sama
+            // Gabungkan rant dan artefak
             const allUsers = getUsers();
-            let filteredRants = [];
+            let filteredItems = [];
             
+            // 1. Rant dengan hashtag yang sama
             Object.values(allUsers).forEach(user => {
                 if (user.rants) {
                     user.rants.forEach(rant => {
-                        // Cek apakah rant menggunakan hashtag yang dipilih user saat ini
                         Object.values(d.selectedHashtags).forEach(hashtag => {
                             if (hashtag && rant.hashtag === hashtag) {
-                                filteredRants.push({
+                                filteredItems.push({
+                                    type: 'rant',
                                     ...rant,
                                     username: user.username
                                 });
@@ -2027,90 +2300,172 @@
                 }
             });
             
-            // Urutkan berdasarkan tanggal terbaru
-            filteredRants.sort((a, b) => b.date - a.date);
+            // 2. Artefak dari user yang sama
+            const globalArtefaks = getGlobalArtefaks();
+            globalArtefaks.forEach(artefak => {
+                const user = getUserData(artefak.username);
+                if (user && user.selectedHashtags) {
+                    Object.values(user.selectedHashtags).forEach(hashtag => {
+                        Object.values(d.selectedHashtags).forEach(userHashtag => {
+                            if (hashtag && userHashtag && hashtag === userHashtag) {
+                                filteredItems.push({
+                                    type: 'artefak',
+                                    ...artefak
+                                });
+                            }
+                        });
+                    });
+                }
+            });
             
-            // Ambil maksimal 10 rant
-            const rants = filteredRants.slice(0, 10);
+            // Urutkan berdasarkan tanggal terbaru
+            filteredItems.sort((a, b) => b.date - a.date);
+            
+            // Ambil maksimal 10 item
+            const items = filteredItems.slice(0, 10);
             
             c.innerHTML = '';
             
-            if (rants.length === 0) {
-                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada rant dengan hashtag yang kamu pilih</div>';
+            if (items.length === 0) {
+                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada konten dengan hashtag yang kamu pilih</div>';
                 return;
             }
             
-            rants.forEach(r => {
-                const date = new Date(r.date).toLocaleDateString('id-ID', { 
+            items.forEach(item => {
+                const date = new Date(item.date).toLocaleDateString('id-ID', { 
                     day: 'numeric', 
                     month: 'short', 
                     hour: '2-digit', 
                     minute: '2-digit' 
                 });
-                const content = r.content.length > 120 ? r.content.substring(0, 120) + '...' : r.content;
                 
-                const div = document.createElement('div');
-                div.className = 'recent-rant-item compact';
-                div.innerHTML = `
-                    <div class="recent-rant-date compact">@${r.username} • ${date} • ${r.hashtag || ''}</div>
-                    <div class="recent-rant-content compact">${content}</div>
-                    <div class="rant-actions">
-                        <div class="rant-emoji-bar">
-                            <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
-                            <button class="emoji-btn" onclick="reactToRant('😂', this)">😂</button>
-                            <button class="emoji-btn" onclick="reactToRant('😭', this)">😭</button>
+                if (item.type === 'rant') {
+                    const content = item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'recent-rant-item compact';
+                    div.innerHTML = `
+                        <div class="recent-rant-date compact">📝 @${item.username} • ${date} • ${item.hashtag || ''}</div>
+                        <div class="recent-rant-content compact">${content}</div>
+                        <div class="rant-actions">
+                            <div class="rant-emoji-bar">
+                                <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
+                                <button class="emoji-btn" onclick="reactToRant('😂', this)">😂</button>
+                                <button class="emoji-btn" onclick="reactToRant('😭', this)">😭</button>
+                            </div>
+                            <span style="font-size:10px;color:rgba(255,255,255,0.5)">💬 0</span>
                         </div>
-                        <a href="#" class="comment-link" onclick="showComments('${r.username}', ${r.date})">💬 0</a>
-                    </div>
-                `;
-                c.appendChild(div);
+                    `;
+                    c.appendChild(div);
+                } else if (item.type === 'artefak') {
+                    const div = document.createElement('div');
+                    div.className = 'recent-rant-item compact';
+                    div.onclick = () => showArtefakDetails(item);
+                    div.innerHTML = `
+                        <div class="recent-rant-date compact">🖼️ @${item.username} • ${date}</div>
+                        <div class="recent-rant-content compact"><strong>${item.title}</strong></div>
+                        <div class="rant-actions">
+                            <div class="rant-emoji-bar">
+                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('nangis', event)">😭</button>
+                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('api', event)">🔥</button>
+                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('badut', event)">🤡</button>
+                            </div>
+                            <span style="font-size:10px;color:rgba(255,255,255,0.5)">🖼️ Artefak</span>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                }
             });
+        }
+        
+        function reactToArtefakFromFeed(reactionType, event) {
+            event.stopPropagation();
+            reactToArtefak(reactionType);
         }
         
         function renderGelombangFeed() {
             const c = document.getElementById('gelombangList');
             if (!c) return;
             
-            // Ambil semua rant dari semua user
+            // Gabungkan semua rant dan artefak
             const globalRants = getGlobalRants();
+            const globalArtefaks = getGlobalArtefaks();
+            
+            let allItems = [];
+            
+            // Tambahkan rants
+            globalRants.forEach(rant => {
+                allItems.push({
+                    type: 'rant',
+                    ...rant
+                });
+            });
+            
+            // Tambahkan artefaks
+            globalArtefaks.forEach(artefak => {
+                allItems.push({
+                    type: 'artefak',
+                    ...artefak
+                });
+            });
             
             // Urutkan berdasarkan tanggal terbaru
-            const sortedRants = [...globalRants].sort((a, b) => b.date - a.date);
+            allItems.sort((a, b) => b.date - a.date);
             
-            // Ambil 10 rant terbaru
-            const rants = sortedRants.slice(0, 10);
+            // Ambil 10 item terbaru
+            const items = allItems.slice(0, 10);
             
             c.innerHTML = '';
             
-            if (rants.length === 0) {
-                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada rant di gelombang</div>';
+            if (items.length === 0) {
+                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada konten di gelombang</div>';
                 return;
             }
             
-            rants.forEach(r => {
-                const date = new Date(r.date).toLocaleDateString('id-ID', { 
+            items.forEach(item => {
+                const date = new Date(item.date).toLocaleDateString('id-ID', { 
                     day: 'numeric', 
                     month: 'short', 
                     hour: '2-digit', 
                     minute: '2-digit' 
                 });
-                const content = r.content.length > 120 ? r.content.substring(0, 120) + '...' : r.content;
                 
-                const div = document.createElement('div');
-                div.className = 'recent-rant-item compact';
-                div.innerHTML = `
-                    <div class="recent-rant-date compact">@${r.username} • ${date} • ${r.hashtag || ''}</div>
-                    <div class="recent-rant-content compact">${content}</div>
-                    <div class="rant-actions">
-                        <div class="rant-emoji-bar">
-                            <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
-                            <button class="emoji-btn" onclick="reactToRant('😂', this)">😂</button>
-                            <button class="emoji-btn" onclick="reactToRant('😭', this)">😭</button>
+                if (item.type === 'rant') {
+                    const content = item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'recent-rant-item compact';
+                    div.innerHTML = `
+                        <div class="recent-rant-date compact">📝 @${item.username} • ${date} • ${item.hashtag || ''}</div>
+                        <div class="recent-rant-content compact">${content}</div>
+                        <div class="rant-actions">
+                            <div class="rant-emoji-bar">
+                                <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
+                                <button class="emoji-btn" onclick="reactToRant('😂', this)">😂</button>
+                                <button class="emoji-btn" onclick="reactToRant('😭', this)">😭</button>
+                            </div>
+                            <span style="font-size:10px;color:rgba(255,255,255,0.5)">💬 0</span>
                         </div>
-                        <a href="#" class="comment-link" onclick="showComments('${r.username}', ${r.date})">💬 0</a>
-                    </div>
-                `;
-                c.appendChild(div);
+                    `;
+                    c.appendChild(div);
+                } else if (item.type === 'artefak') {
+                    const div = document.createElement('div');
+                    div.className = 'recent-rant-item compact';
+                    div.onclick = () => showArtefakDetails(item);
+                    div.innerHTML = `
+                        <div class="recent-rant-date compact">🖼️ @${item.username} • ${date}</div>
+                        <div class="recent-rant-content compact"><strong>${item.title}</strong></div>
+                        <div class="rant-actions">
+                            <div class="rant-emoji-bar">
+                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('nangis', event)">😭</button>
+                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('api', event)">🔥</button>
+                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('badut', event)">🤡</button>
+                            </div>
+                            <span style="font-size:10px;color:rgba(255,255,255,0.5)">🖼️ Artefak</span>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                }
             });
         }
         
@@ -2120,13 +2475,16 @@
             
             const movementHashtags = ["#PendidikanUntukSemua", "#JanganExploitBuruh", "#FUNDINGSolidaritasDiam", "#PetisiTerbuka"];
             
-            // Ambil semua rant dari semua user dengan hashtag movement
+            // Ambil rant dengan hashtag movement
             const globalRants = getGlobalRants();
             let movementRants = [];
             
             globalRants.forEach(rant => {
                 if (movementHashtags.includes(rant.hashtag)) {
-                    movementRants.push(rant);
+                    movementRants.push({
+                        type: 'rant',
+                        ...rant
+                    });
                 }
             });
             
@@ -2134,28 +2492,28 @@
             movementRants.sort((a, b) => b.date - a.date);
             
             // Ambil 10 rant terbaru
-            const rants = movementRants.slice(0, 10);
+            const items = movementRants.slice(0, 10);
             
             c.innerHTML = '';
             
-            if (rants.length === 0) {
+            if (items.length === 0) {
                 c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada rant movement</div>';
                 return;
             }
             
-            rants.forEach(r => {
-                const date = new Date(r.date).toLocaleDateString('id-ID', { 
+            items.forEach(item => {
+                const date = new Date(item.date).toLocaleDateString('id-ID', { 
                     day: 'numeric', 
                     month: 'short', 
                     hour: '2-digit', 
                     minute: '2-digit' 
                 });
-                const content = r.content.length > 120 ? r.content.substring(0, 120) + '...' : r.content;
+                const content = item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content;
                 
                 const div = document.createElement('div');
                 div.className = 'recent-rant-item compact';
                 div.innerHTML = `
-                    <div class="recent-rant-date compact">@${r.username} • ${date} • ${r.hashtag || ''}</div>
+                    <div class="recent-rant-date compact">✊ @${item.username} • ${date} • ${item.hashtag || ''}</div>
                     <div class="recent-rant-content compact">${content}</div>
                     <div class="rant-actions">
                         <div class="rant-emoji-bar">
@@ -2163,7 +2521,7 @@
                             <button class="emoji-btn" onclick="reactToRant('👍', this)">👍</button>
                             <button class="emoji-btn" onclick="reactToRant('✊', this)">✊</button>
                         </div>
-                        <a href="#" class="comment-link" onclick="showComments('${r.username}', ${r.date})">💬 0</a>
+                        <span style="font-size:10px;color:rgba(255,255,255,0.5)">💬 0</span>
                     </div>
                 `;
                 c.appendChild(div);
@@ -2177,7 +2535,7 @@
             
             document.getElementById('profileUsername').textContent = '@' + currentUser;
             document.getElementById('profileJoinDate').textContent = 'Bergabung: ' + new Date(d.created).toLocaleDateString('id-ID');
-            document.getElementById('profileActivity').textContent = 'Aktivitas: ' + (d.rants ? d.rants.length : 0) + ' posting';
+            document.getElementById('profileActivity').textContent = 'Aktivitas: ' + (d.rants ? d.rants.length : 0) + ' posting, ' + (d.artefacts ? d.artefacts.length : 0) + ' artefak';
         }
         
         // ===== UTILITIES =====
@@ -2283,6 +2641,12 @@
         
         function hideModal() {
             document.getElementById('modalOverlay').classList.remove('active');
+            // Reset upload state jika modal diclose
+            artefakUploadState = {
+                image: null,
+                title: '',
+                step: 0
+            };
         }
         
         function reactToRant(emoji, button) {
@@ -2292,10 +2656,6 @@
             button.classList.toggle('active');
             
             showToast(`Kamu bereaksi ${emoji} pada rant ini`);
-        }
-        
-        function showComments(username, rantDate) {
-            showToast(`Komentar untuk rant @${username} akan ditampilkan`);
         }
         
         function exportData() {
@@ -2310,10 +2670,6 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        }
-        
-        function showArtefakModal() {
-            showToast('Fitur tambah artefak akan datang!');
         }
         
         function showHashtagsModal() {
