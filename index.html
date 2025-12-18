@@ -44,7 +44,7 @@
             letter-spacing: -3px;
             position: absolute;
             top: 20px;
-            left: 15px; /* Sesuai padding artefak screen */
+            left: 15px; /* Rata kiri dengan padding artefak */
         }
         /* ===== INPUT STYLE ===== */
         .nope-input {
@@ -206,6 +206,7 @@
         /* Artefak Preview - Full Width Image */
         .artefak-preview-container {
             margin: 15px 0;
+            position: relative;
         }
         .artefak-preview {
             width: 100%;
@@ -230,6 +231,51 @@
             align-items: center;
             justify-content: center;
             position: relative;
+        }
+        .artefak-preview-image img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .artefak-upload-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: white;
+            font-size: 18px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+        .artefak-upload-btn:hover {
+            background: rgba(73, 3, 252, 0.7);
+            transform: scale(1.1);
+        }
+        .artefak-title-input {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(73, 3, 252, 0.3);
+            color: white;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            max-width: 60%;
+            z-index: 10;
+            outline: none;
+        }
+        .artefak-title-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
         .artefak-placeholder {
             font-size: 48px;
@@ -269,7 +315,7 @@
         .rant-box-counter {
             font-size: 11px;
             color: rgba(73, 3, 252, 0.5);
-            display: none; /* Hapus counter huruf */
+            display: none;
         }
         .rant-box {
             width: 100%;
@@ -295,7 +341,7 @@
         }
         .rant-box-footer {
             display: flex;
-            justify-content: flex-end; /* Rata kanan */
+            justify-content: flex-end;
             align-items: center;
             margin-top: 10px;
         }
@@ -588,8 +634,16 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
         .fade-in {
             animation: fadeIn 0.3s ease;
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
         }
         /* ===== CHARACTER COUNTER ===== */
         .char-counter {
@@ -597,26 +651,31 @@
             font-size: 11px;
             color: rgba(255, 255, 255, 0.4);
             margin-bottom: 10px;
-            display: none; /* Hapus counter huruf */
+            display: none;
         }
         /* ===== EMOJI BAR BELOW ARTEFAK ===== */
         .artefak-emoji-bar {
             display: flex;
-            justify-content: flex-end;
-            gap: 15px; /* Lebih longgar */
-            padding: 8px 15px; /* Padding horizontal */
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
             margin-top: 6px;
             border-top: 1px solid rgba(73, 3, 252, 0.1);
+        }
+        .artefak-emoji-buttons {
+            display: flex;
+            gap: 15px;
         }
         .artefak-emoji-btn {
             background: none;
             border: none;
             color: rgba(255, 255, 255, 0.7);
-            font-size: 20px; /* Sedikit lebih besar */
+            font-size: 20px;
             cursor: pointer;
             padding: 4px 8px;
             border-radius: 6px;
             transition: all 0.2s;
+            position: relative;
         }
         .artefak-emoji-btn:hover {
             color: #4903fc;
@@ -624,6 +683,51 @@
         }
         .artefak-emoji-btn.active {
             color: #4903fc;
+        }
+        .artefak-emoji-btn.has-new {
+            animation: pulse 1.5s infinite;
+            color: #ff9999;
+        }
+        .reaction-peek {
+            position: relative;
+            cursor: pointer;
+        }
+        .reaction-peek-popup {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(73, 3, 252, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            min-width: 150px;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        .reaction-peek-popup.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        .reaction-peek-title {
+            font-size: 10px;
+            color: rgba(73, 3, 252, 0.7);
+            margin-bottom: 6px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .reaction-user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .reaction-user-item {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 3px 6px;
+            border-radius: 4px;
+            background: rgba(73, 3, 252, 0.1);
         }
         /* ===== ARTEFAK GRID 3 KOLOM ===== */
         .artefaks-grid {
@@ -675,9 +779,20 @@
             font-size: 9px;
             color: rgba(255, 255, 255, 0.6);
         }
-        /* ===== DUMMY ARTEFAK GRID (TIDAK DIGUNAKAN LAGI) ===== */
-        .dummy-artefaks-grid {
-            display: none;
+        /* ===== FILE UPLOAD ===== */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -775,9 +890,7 @@
         <div class="artefak-preview-container" id="artefakPreviewContainer"></div>
         <!-- Rant Box -->
         <div class="rant-box-container">
-            <!-- Judul "Tulis Rant mu" dihapus -->
             <div class="rant-box-header">
-                <!-- Judul dihapus -->
                 <div class="rant-box-counter" id="rantCounter">0/300</div>
             </div>
             <textarea 
@@ -788,7 +901,6 @@
                 rows="5"
             ></textarea>
             <div class="rant-box-footer">
-                <!-- Dropdown hashtag dihapus -->
                 <button class="gaskeun-btn" onclick="postRantFromBox()">
                     Gaskeun!
                 </button>
@@ -879,16 +991,44 @@
             🚪 Keluar
         </div>
     </div>
+    
+    <!-- Hidden file input for artefak upload -->
+    <input type="file" id="artefakFileInput" accept="image/*" style="display: none;">
+    
     <script>
         // ===== STATE =====
         let currentUser = null;
         let currentTab = 'jejak';
+        let currentArtefakReactions = {
+            nangis: {
+                count: 0,
+                users: [],
+                hasNew: false
+            },
+            api: {
+                count: 0,
+                users: [],
+                hasNew: false
+            },
+            badut: {
+                count: 0,
+                users: [],
+                hasNew: false
+            },
+            unggah: {
+                count: 0,
+                users: [],
+                hasNew: false
+            }
+        };
+        
         // ===== SELECTED HASHTAGS =====
         let selectedHashtags = {
             popculture: null,
             personalpain: null,
             socialsickness: null
         };
+        
         // ===== DATA STRUCTURE =====
         const zonaData = {
             popculture: {
@@ -923,7 +1063,7 @@
             }
         };
         
-        // Dummy foto artefak untuk Gen Z (URL placeholder dari Unsplash dengan tema Gen Z)
+        // Dummy foto artefak untuk Gen Z
         const dummyArtefakPhotos = [
             {
                 url: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
@@ -956,27 +1096,42 @@
                 date: "01 Mar 2025"
             }
         ];
+        
         // ===== STORAGE HELPERS =====
         function getUsers() {
             const usersJson = localStorage.getItem('nope_users');
             return usersJson ? JSON.parse(usersJson) : {};
         }
+        
         function saveUsers(users) {
             localStorage.setItem('nope_users', JSON.stringify(users));
         }
+        
         function getUserData(username) {
             const users = getUsers();
             return users[username] || null;
         }
+        
         function saveUserData(username, data) {
             const users = getUsers();
             users[username] = data;
             saveUsers(users);
         }
+        
+        function getArtefakReactions() {
+            const reactionsJson = localStorage.getItem('nope_artefak_reactions');
+            return reactionsJson ? JSON.parse(reactionsJson) : {};
+        }
+        
+        function saveArtefakReactions(reactions) {
+            localStorage.setItem('nope_artefak_reactions', JSON.stringify(reactions));
+        }
+        
         // ===== DUMMY DATA INITIALIZATION =====
         function initializeDummyData() {
             const users = getUsers();
             if (Object.keys(users).length > 0) return;
+            
             const now = Date.now();
             const dummyUsers = [
                 {
@@ -1023,98 +1178,9 @@
                         title: "tiket sobek",
                         content: "masih genggam erat pas pulang naik angkot."
                     }
-                },
-                {
-                    username: "fomo_gabut",
-                    hashtags: ["#FOMO", "#GajianSejamAbis", "#CapekPuraPura"],
-                    rant: "liat temen pada liburan, gue diem di kos. bilangnya lagi hemat, padahal emang gak diajak.",
-                    artefak: {
-                        title: "layar gelap",
-                        content: "scroll story terus sampe mata perih."
-                    }
-                },
-                {
-                    username: "kerja_tapi_sakit",
-                    hashtags: ["#MagangDibayarSerifikat", "#PersonalPain", "#DiamDiamNangis"],
-                    rant: "kerja remote, boss bilang 'ini kesempatan'. gue nangis di kamar mandi tiap jam 10 pagi.",
-                    artefak: {
-                        title: "obat kadaluarsa",
-                        content: "gak sempat beli yang baru. minum aja dulu."
-                    }
-                },
-                {
-                    username: "film_baper",
-                    hashtags: ["#FilmEndingGaje", "#PersonalPain", "#SayNOPE"],
-                    rant: "ending film kocak tapi gue nangis. kayaknya ceritanya tentang gue yang takut ngomong jujur.",
-                    artefak: {
-                        title: "tisu basah",
-                        content: "nonton sendirian di kamar. malu sama suara nangis sendiri."
-                    }
-                },
-                {
-                    username: "sosmedmakehappy",
-                    hashtags: ["#SocialSickness", "#InfluencerNgehek", "#HealingPayLater"],
-                    rant: "posting 'hari bahagia!' padahal lagi bokek. biar dikira oke. padahal butuh peluk.",
-                    artefak: {
-                        title: "wajah tersenyum",
-                        content: "edit 10 kali biar keliatan bahagia."
-                    }
-                },
-                {
-                    username: "keluargatausalah",
-                    hashtags: ["#PersonalPain", "#CapekPuraPura", "#DiamDiamNangis"],
-                    rant: "pulang kampung, ditanya 'kapan nikah?'. gue jawab 'belom nemu'. padahal gue takut gak layak dicintai.",
-                    artefak: {
-                        title: "tiket pulang",
-                        content: "kembali ke kos setelah lebaran. sendirian lagi."
-                    }
-                },
-                {
-                    username: "edukasiuntuksemua",
-                    hashtags: ["#PendidikanUntukSemua", "#Movement", "#SayNOPE"],
-                    rant: "temen gue putus sekolah karena orangtuanya gak mampu. gue bantu ngajar tiap minggu. ini bukan amal, ini hak.",
-                    artefak: {
-                        title: "buku coretan",
-                        content: "dikasih gratis. semoga cukup buat dia lulus."
-                    }
-                },
-                {
-                    username: "buruhmuda",
-                    hashtags: ["#JanganExploitBuruh", "#Movement", "#MagangDibayarSerifikat"],
-                    rant: "magang 6 bulan, gak dibayar, bilangnya 'kesempatan'. kesempatan buat siapa? buat perusahaan yang hemat gaji!",
-                    artefak: {
-                        title: "seragam kusut",
-                        content: "dipakai tiap hari selama 6 bulan. gak ganti, gak bayar."
-                    }
-                },
-                {
-                    username: "fundingsolidaritas",
-                    hashtags: ["#FUNDINGSolidaritasDiam", "#Movement", "#PersonalPain"],
-                    rant: "kumpulin uang buat temen yang kena PHK diam-diam. gak perlu pamer. yang penting dia bisa makan besok.",
-                    artefak: {
-                        title: "duit receh",
-                        content: "dikasih perlahan. gak perlu tau siapa yang kirim."
-                    }
-                },
-                {
-                    username: "petisiantiras",
-                    hashtags: ["#PetisiTerbuka", "#Movement", "#SocialSickness"],
-                    rant: "kampus gue tutup program beasiswa buat mahasiswa miskin. gue bikin petisi. tanda tangan aja, gak perlu komen.",
-                    artefak: {
-                        title: "print petisi",
-                        content: "ditempel di papan kos. semoga ada yang baca."
-                    }
-                },
-                {
-                    username: "solidaritassistem",
-                    hashtags: ["#PendidikanUntukSemua", "#Movement", "#SocialSickness"],
-                    rant: "gak semua orang punya privilege kuliah kayak gue. gue wajib bantu yang gak seberuntung gue.",
-                    artefak: {
-                        title: "modul fotokopi",
-                        content: "dikasih gratis ke adik angkatan. semoga dia gak putus kuliah."
-                    }
                 }
             ];
+            
             // Buat dummy user
             dummyUsers.forEach((user, i) => {
                 users[user.username] = {
@@ -1141,7 +1207,20 @@
                 };
             });
             saveUsers(users);
+            
+            // Inisialisasi dummy reactions
+            const reactions = getArtefakReactions();
+            if (!reactions[currentUser]) {
+                reactions[currentUser] = {
+                    nangis: { count: 3, users: ["diamdiamaja", "ghosted_aja", "maganggratis"], hasNew: true },
+                    api: { count: 2, users: ["temenpalsu", "konserginjal"], hasNew: true },
+                    badut: { count: 1, users: ["diamdiamaja"], hasNew: false },
+                    unggah: { count: 0, users: [], hasNew: false }
+                };
+                saveArtefakReactions(reactions);
+            }
         }
+        
         // ===== FIXED INIT APP - SELALU MULAI DARI LOGIN =====
         function initializeApp() {
             initializeDummyData();
@@ -1157,6 +1236,7 @@
             // Reset semua halaman lain agar tidak aktif
             document.querySelectorAll('.page:not(#login)').forEach(p => p.classList.remove('active'));
         }
+        
         // ===== SHOW PAGE & TAB =====
         function showPage(pageId) {
             // Cek jika user belum login tapi mencoba akses halaman lain
@@ -1185,6 +1265,7 @@
                 }
             }
         }
+        
         function showTab(tabId) { 
             if (!currentUser) {
                 showPage('login');
@@ -1192,11 +1273,13 @@
             }
             showPage(tabId); 
         }
+        
         function updateNavActive(activeTab) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const btn = document.querySelector(`.nav-item[onclick*="${activeTab}"]`);
             if (btn) btn.classList.add('active');
         }
+        
         // ===== LOGIN =====
         function initLoginPage() {
             const input = document.getElementById('usernameInput');
@@ -1233,6 +1316,7 @@
                 }
             });
         }
+        
         function processLogin() {
             let u = document.getElementById('usernameInput').value.trim().toLowerCase();
             if (u.length < 3) { 
@@ -1265,6 +1349,7 @@
                 showPage(d.onboarded ? 'jejak' : 'onboarding');
             }
         }
+        
         // ===== ONBOARDING =====
         function initOnboardingPage() {
             if (!currentUser) return showPage('login');
@@ -1280,6 +1365,7 @@
             ['popculture','personalpain','socialsickness'].forEach(z => renderHashtags(z));
             updateCounters();
         }
+        
         function renderHashtags(z) {
             const c = document.getElementById(z + 'List');
             const zona = zonaData[z];
@@ -1293,11 +1379,13 @@
                 c.appendChild(div);
             });
         }
+        
         function selectHashtag(z, h) {
             selectedHashtags[z] = selectedHashtags[z] === h ? null : h;
             renderHashtags(z);
             updateCounters();
         }
+        
         function updateCounters() {
             document.getElementById('popcultureCounter').textContent = `${selectedHashtags.popculture ? '1' : '0'}/1`;
             document.getElementById('personalpainCounter').textContent = `${selectedHashtags.personalpain ? '1' : '0'}/1`;
@@ -1305,6 +1393,7 @@
             const total = Object.values(selectedHashtags).filter(h => h).length;
             document.getElementById('saveBtn').disabled = total !== 3;
         }
+        
         function saveSelections() {
             if (!currentUser) return;
             const d = getUserData(currentUser);
@@ -1316,6 +1405,7 @@
             document.getElementById('saveBtn').disabled = true;
             setTimeout(() => showPage('jejak'), 600);
         }
+        
         // ===== JEJAK =====
         function initJejakPage() {
             if (!currentUser) return showPage('login');
@@ -1323,50 +1413,364 @@
             setupRantBox();
             renderArtefakPreview();
             renderRecentRants();
-            renderArtefakGrid(); // Render artefak grid 3x2
+            renderArtefakGrid();
+            loadArtefakReactions();
         }
+        
         function setupRantBox() {
-            const d = getUserData(currentUser);
             const box = document.getElementById('rantBox');
-            // Tidak perlu counter lagi
             box.value = '';
         }
+        
         function renderArtefakPreview() {
             const c = document.getElementById('artefakPreviewContainer');
             const d = getUserData(currentUser);
+            
+            let artefakHtml = '';
+            
             if (!d.artefacts || d.artefacts.length === 0) {
-                c.innerHTML = `<div class="artefak-preview" onclick="showArtefakModal()">
-                    <div class="artefak-preview-image"><div class="artefak-placeholder">🖼️</div></div>
-                    <div class="artefak-preview-info">
-                        <div class="artefak-preview-title">📁 Belum ada artefak</div>
-                    </div>
-                    <!-- Emoji Bar Below Artefak - Diperbarui -->
-                    <div class="artefak-emoji-bar">
-                        <button class="artefak-emoji-btn" onclick="reactToArtefak('nangis')" title="Nangis">😭</button>
-                        <button class="artefak-emoji-btn" onclick="reactToArtefak('api')" title="Api">🔥</button>
-                        <button class="artefak-emoji-btn" onclick="reactToArtefak('badut')" title="Badut">🤡</button>
-                        <button class="artefak-emoji-btn" onclick="reactToArtefak('unggah')" title="Unggah">📤</button>
+                artefakHtml = `
+                    <div class="artefak-preview">
+                        <div class="artefak-preview-image">
+                            <div class="artefak-placeholder">🖼️</div>
+                            <!-- Upload Button -->
+                            <button class="artefak-upload-btn" onclick="document.getElementById('artefakFileInput').click()" title="Upload Artefak">
+                                📤
+                            </button>
+                            <!-- Title Input -->
+                            <input type="text" 
+                                   class="artefak-title-input" 
+                                   id="artefakTitleInput"
+                                   placeholder="maks 4 kata"
+                                   maxlength="30"
+                                   oninput="validateArtefakTitle()">
+                        </div>
+                        <div class="artefak-preview-info">
+                            <div class="artefak-preview-title">📁 Belum ada artefak</div>
+                        </div>
+                        ${renderArtefakEmojiBar()}
+                    </div>`;
+            } else {
+                const latest = d.artefacts[d.artefacts.length - 1];
+                const date = new Date(latest.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                
+                artefakHtml = `
+                    <div class="artefak-preview">
+                        <div class="artefak-preview-image">
+                            ${latest.imageUrl ? 
+                                `<img src="${latest.imageUrl}" alt="${latest.title}">` : 
+                                `<div class="artefak-placeholder">📁</div>`
+                            }
+                            <!-- Upload Button -->
+                            <button class="artefak-upload-btn" onclick="document.getElementById('artefakFileInput').click()" title="Upload Artefak">
+                                📤
+                            </button>
+                            <!-- Title Display -->
+                            <div class="artefak-title-input" style="background: rgba(0,0,0,0.7); border: none; pointer-events: none;">
+                                ${latest.title}
+                            </div>
+                        </div>
+                        <div class="artefak-preview-info">
+                            <div class="artefak-preview-title">📁 ${latest.title}</div>
+                            <div class="artefak-preview-date">Ditambahkan: ${date}</div>
+                        </div>
+                        ${renderArtefakEmojiBar()}
+                    </div>`;
+            }
+            
+            c.innerHTML = artefakHtml;
+            
+            // Setup file input listener
+            const fileInput = document.getElementById('artefakFileInput');
+            fileInput.onchange = handleArtefakUpload;
+        }
+        
+        function renderArtefakEmojiBar() {
+            const reactions = getArtefakReactions()[currentUser] || currentArtefakReactions;
+            
+            return `
+                <div class="artefak-emoji-bar">
+                    <div class="artefak-emoji-buttons">
+                        <!-- Nangis -->
+                        <div class="reaction-peek">
+                            <button class="artefak-emoji-btn ${reactions.nangis.hasNew ? 'has-new' : ''}" 
+                                    onclick="reactToArtefak('nangis')" 
+                                    title="Nangis">
+                                😭
+                            </button>
+                            <div class="reaction-peek-popup" id="nangisPeekPopup">
+                                <div class="reaction-peek-title">😭 Nangis</div>
+                                <div class="reaction-user-list" id="nangisUserList">
+                                    <!-- Users will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Api -->
+                        <div class="reaction-peek">
+                            <button class="artefak-emoji-btn ${reactions.api.hasNew ? 'has-new' : ''}" 
+                                    onclick="reactToArtefak('api')" 
+                                    title="Api">
+                                🔥
+                            </button>
+                            <div class="reaction-peek-popup" id="apiPeekPopup">
+                                <div class="reaction-peek-title">🔥 Api</div>
+                                <div class="reaction-user-list" id="apiUserList">
+                                    <!-- Users will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Badut -->
+                        <div class="reaction-peek">
+                            <button class="artefak-emoji-btn ${reactions.badut.hasNew ? 'has-new' : ''}" 
+                                    onclick="reactToArtefak('badut')" 
+                                    title="Badut">
+                                🤡
+                            </button>
+                            <div class="reaction-peek-popup" id="badutPeekPopup">
+                                <div class="reaction-peek-title">🤡 Badut</div>
+                                <div class="reaction-user-list" id="badutUserList">
+                                    <!-- Users will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Unggah -->
+                        <div class="reaction-peek">
+                            <button class="artefak-emoji-btn ${reactions.unggah.hasNew ? 'has-new' : ''}" 
+                                    onclick="reactToArtefak('unggah')" 
+                                    title="Unggah">
+                                📤
+                            </button>
+                            <div class="reaction-peek-popup" id="unggahPeekPopup">
+                                <div class="reaction-peek-title">📤 Unggah</div>
+                                <div class="reaction-user-list" id="unggahUserList">
+                                    <!-- Users will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>`;
+        }
+        
+        function loadArtefakReactions() {
+            const reactions = getArtefakReactions();
+            if (reactions[currentUser]) {
+                currentArtefakReactions = reactions[currentUser];
+            }
+            
+            // Populate peek popups
+            updateReactionPeekPopups();
+        }
+        
+        function updateReactionPeekPopups() {
+            // Update nangis peek
+            const nangisUsers = currentArtefakReactions.nangis.users.slice(0, 5);
+            const nangisList = document.getElementById('nangisUserList');
+            if (nangisList) {
+                nangisList.innerHTML = nangisUsers.map(user => 
+                    `<div class="reaction-user-item">@${user}</div>`
+                ).join('');
+                if (nangisUsers.length === 0) {
+                    nangisList.innerHTML = '<div class="reaction-user-item" style="color: rgba(255,255,255,0.5); font-style: italic;">Belum ada reaksi</div>';
+                }
+            }
+            
+            // Update api peek
+            const apiUsers = currentArtefakReactions.api.users.slice(0, 5);
+            const apiList = document.getElementById('apiUserList');
+            if (apiList) {
+                apiList.innerHTML = apiUsers.map(user => 
+                    `<div class="reaction-user-item">@${user}</div>`
+                ).join('');
+                if (apiUsers.length === 0) {
+                    apiList.innerHTML = '<div class="reaction-user-item" style="color: rgba(255,255,255,0.5); font-style: italic;">Belum ada reaksi</div>';
+                }
+            }
+            
+            // Update badut peek
+            const badutUsers = currentArtefakReactions.badut.users.slice(0, 5);
+            const badutList = document.getElementById('badutUserList');
+            if (badutList) {
+                badutList.innerHTML = badutUsers.map(user => 
+                    `<div class="reaction-user-item">@${user}</div>`
+                ).join('');
+                if (badutUsers.length === 0) {
+                    badutList.innerHTML = '<div class="reaction-user-item" style="color: rgba(255,255,255,0.5); font-style: italic;">Belum ada reaksi</div>';
+                }
+            }
+            
+            // Update unggah peek
+            const unggahUsers = currentArtefakReactions.unggah.users.slice(0, 5);
+            const unggahList = document.getElementById('unggahUserList');
+            if (unggahList) {
+                unggahList.innerHTML = unggahUsers.map(user => 
+                    `<div class="reaction-user-item">@${user}</div>`
+                ).join('');
+                if (unggahUsers.length === 0) {
+                    unggahList.innerHTML = '<div class="reaction-user-item" style="color: rgba(255,255,255,0.5); font-style: italic;">Belum ada reaksi</div>';
+                }
+            }
+            
+            // Setup peek popup toggle
+            setupPeekPopups();
+        }
+        
+        function setupPeekPopups() {
+            // Add event listeners to all reaction buttons
+            document.querySelectorAll('.reaction-peek').forEach(peek => {
+                const btn = peek.querySelector('.artefak-emoji-btn');
+                const popup = peek.querySelector('.reaction-peek-popup');
+                
+                if (btn && popup) {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isShowing = popup.classList.contains('show');
+                        
+                        // Hide all other popups
+                        document.querySelectorAll('.reaction-peek-popup').forEach(p => {
+                            p.classList.remove('show');
+                        });
+                        
+                        // Toggle this popup
+                        if (!isShowing) {
+                            popup.classList.add('show');
+                        }
+                    });
+                    
+                    // Close when clicking outside
+                    document.addEventListener('click', (e) => {
+                        if (!peek.contains(e.target)) {
+                            popup.classList.remove('show');
+                        }
+                    });
+                }
+            });
+        }
+        
+        function validateArtefakTitle() {
+            const input = document.getElementById('artefakTitleInput');
+            const value = input.value.trim();
+            
+            // Count words
+            const wordCount = value.split(/\s+/).filter(word => word.length > 0).length;
+            
+            if (wordCount > 4) {
+                input.style.borderColor = '#ff3333';
+                showToast('Maksimum 4 kata untuk judul artefak');
+                // Remove extra words
+                const words = value.split(/\s+/).slice(0, 4).join(' ');
+                input.value = words;
+            } else {
+                input.style.borderColor = 'rgba(73, 3, 252, 0.3)';
+            }
+        }
+        
+        function handleArtefakUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check if file is an image
+            if (!file.type.match('image.*')) {
+                alert('Hanya file gambar yang diperbolehkan!');
                 return;
             }
-            const latest = d.artefacts[d.artefacts.length - 1];
-            const date = new Date(latest.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-            c.innerHTML = `<div class="artefak-preview" onclick="viewArtefak(${d.artefacts.length - 1})">
-                <div class="artefak-preview-image"><div class="artefak-placeholder">📁</div></div>
-                <div class="artefak-preview-info">
-                    <div class="artefak-preview-title">📁 ${latest.title}</div>
-                    <div class="artefak-preview-date">Ditambahkan: ${date}</div>
-                </div>
-                <!-- Emoji Bar Below Artefak - Diperbarui -->
-                <div class="artefak-emoji-bar">
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('nangis')" title="Nangis">😭</button>
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('api')" title="Api">🔥</button>
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('badut')" title="Badut">🤡</button>
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('unggah')" title="Unggah">📤</button>
-                </div>
-            </div>`;
+            
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Ukuran file maksimal 5MB!');
+                return;
+            }
+            
+            // Get title from input
+            const titleInput = document.getElementById('artefakTitleInput');
+            let title = titleInput ? titleInput.value.trim() : '';
+            
+            // Validate title
+            if (!title) {
+                title = 'Artefak Baru';
+            }
+            
+            // Count words
+            const wordCount = title.split(/\s+/).filter(word => word.length > 0).length;
+            if (wordCount > 4) {
+                alert('Judul artefak maksimal 4 kata!');
+                return;
+            }
+            
+            // Create file reader
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                
+                // Save artefak to user data
+                const d = getUserData(currentUser);
+                if (!d.artefacts) d.artefacts = [];
+                
+                d.artefacts.push({
+                    title: title,
+                    imageUrl: imageUrl,
+                    date: Date.now(),
+                    content: `Artefak diupload: ${new Date().toLocaleDateString('id-ID')}`
+                });
+                
+                d.lastLogin = Date.now();
+                saveUserData(currentUser, d);
+                
+                // Reset file input
+                document.getElementById('artefakFileInput').value = '';
+                
+                // Re-render artefak preview
+                renderArtefakPreview();
+                showToast('Artefak berhasil diupload!');
+            };
+            
+            reader.onerror = function() {
+                alert('Gagal membaca file!');
+            };
+            
+            reader.readAsDataURL(file);
         }
+        
+        function reactToArtefak(reactionType) {
+            if (!currentUser) return;
+            
+            const reactions = getArtefakReactions();
+            if (!reactions[currentUser]) {
+                reactions[currentUser] = JSON.parse(JSON.stringify(currentArtefakReactions));
+            }
+            
+            const userReactions = reactions[currentUser];
+            
+            // Check if user already reacted
+            if (!userReactions[reactionType].users.includes(currentUser)) {
+                userReactions[reactionType].count++;
+                userReactions[reactionType].users.push(currentUser);
+                userReactions[reactionType].hasNew = true;
+                
+                // For demo, add some dummy users
+                if (userReactions[reactionType].users.length === 1) {
+                    const dummyUsers = ["diamdiamaja", "ghosted_aja", "maganggratis", "temenpalsu", "konserginjal"];
+                    dummyUsers.forEach(user => {
+                        if (user !== currentUser && !userReactions[reactionType].users.includes(user)) {
+                            userReactions[reactionType].users.push(user);
+                        }
+                    });
+                }
+                
+                saveArtefakReactions(reactions);
+                currentArtefakReactions = userReactions;
+                
+                // Update UI
+                renderArtefakPreview();
+                showToast(`Kamu bereaksi dengan ${reactionType}!`);
+            } else {
+                showToast(`Kamu sudah bereaksi dengan ${reactionType}`);
+            }
+        }
+        
         function renderArtefakGrid() {
             const c = document.getElementById('artefaksGrid');
             c.innerHTML = '';
@@ -1385,15 +1789,16 @@
                 c.appendChild(div);
             });
         }
+        
         function renderRecentRants() {
             const c = document.getElementById('recentRantsList');
             const d = getUserData(currentUser);
             if (!d.rants || d.rants.length === 0) {
                 // Tampilkan 3 dummy rant jika belum ada postingan
                 const dummyRants = [
-                    { content: "Gue juga ngerasain... capek banget. Kadang pengen nangis aja.", date: Date.now() - 3600000, hashtag: "#CapekPuraPura" }, // Pendek
-                    { content: "Gue ngerasain kayak dijebak sama hidup. Kerjaan banyak, gaji kecil, bos galak, pacar ngilang. Kayaknya gue harus istirahat dulu.", date: Date.now() - 7200000, hashtag: "#SayNOPE" }, // Sedang
-                    { content: "Hari ini gue ngerasain semua emosi sekaligus. Senang karena dapet kerjaan baru, sedih karena harus tinggalin rumah, takut karena belum siap, dan marah karena gak ada yang ngerti. Mungkin ini namanya dewasa? Atau cuma kelelahan?", date: Date.now() - 10800000, hashtag: "#DiamDiamNangis" } // Panjang
+                    { content: "Gue juga ngerasain... capek banget. Kadang pengen nangis aja.", date: Date.now() - 3600000, hashtag: "#CapekPuraPura" },
+                    { content: "Gue ngerasain kayak dijebak sama hidup. Kerjaan banyak, gaji kecil, bos galak, pacar ngilang. Kayaknya gue harus istirahat dulu.", date: Date.now() - 7200000, hashtag: "#SayNOPE" },
+                    { content: "Hari ini gue ngerasain semua emosi sekaligus. Senang karena dapet kerjaan baru, sedih karena harus tinggalin rumah, takut karena belum siap, dan marah karena gak ada yang ngerti. Mungkin ini namanya dewasa? Atau cuma kelelahan?", date: Date.now() - 10800000, hashtag: "#DiamDiamNangis" }
                 ];
                 c.innerHTML = '';
                 dummyRants.forEach(r => {
@@ -1419,20 +1824,21 @@
                 c.appendChild(div);
             });
         }
+        
         function postRantFromBox() {
             const content = document.getElementById('rantBox').value.trim();
-            // Hashtag tidak digunakan karena dropdown dihapus
             if (!content) { alert('Tulis rant terlebih dahulu!'); return; }
             if (!currentUser) return;
             const d = getUserData(currentUser);
             if (!d.rants) d.rants = [];
-            d.rants.push({ content, date: Date.now() }); // Tidak menyertakan hashtag
+            d.rants.push({ content, date: Date.now() });
             d.lastLogin = Date.now();
             saveUserData(currentUser, d);
             document.getElementById('rantBox').value = '';
             renderRecentRants();
             showToast('Rant berhasil diposting!');
         }
+        
         // ===== JALAN =====
         function initJalanPage() {
             if (!currentUser) return showPage('login');
@@ -1443,6 +1849,7 @@
             renderMovementFeed();
             showJalanTab('frekuensi');
         }
+        
         function renderSelectedHashtags() {
             const c = document.getElementById('selectedHashtagsList');
             const d = getUserData(currentUser);
@@ -1464,6 +1871,7 @@
                 }
             });
         }
+        
         function showJalanTab(tab) {
             ['frekuensi','gelombang','movement'].forEach(t => {
                 document.getElementById(`jalan-${t}`).style.display = t === tab ? 'block' : 'none';
@@ -1471,171 +1879,8 @@
             document.querySelectorAll('.jalan-tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
-        function renderFeeds(feedId, containerId, filterFunc) {
-            const c = document.getElementById(containerId);
-            const allUsers = getUsers();
-            let allRants = [];
-            for (const u in allUsers) {
-                const user = allUsers[u];
-                if (user.rants) user.rants.forEach(r => {
-                    const rWithUser = {...r, username: u};
-                    if (!filterFunc || filterFunc(rWithUser, user)) allRants.push(rWithUser);
-                });
-            }
-            if (allRants.length === 0) {
-                c.innerHTML = `<div class="recent-rant-item compact" style="text-align:center;padding:16px;color:rgba(255,255,255,0.4);">Belum ada rant di ${feedId}.</div>`;
-                return;
-            }
-            allRants.sort((a, b) => b.date - a.date);
-            const top7 = allRants.slice(0, 7);
-            c.innerHTML = top7.map(r => {
-                const date = new Date(r.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                const content = r.content.length > 100 ? r.content.substring(0, 100) + '...' : r.content;
-                return `
-                    <div class="recent-rant-item compact">
-                        <div class="recent-rant-date compact">${date} • @${r.username}</div>
-                        <div class="recent-rant-content compact">${content}</div>
-                        <div class="rant-actions">
-                            <div class="rant-emoji-bar">
-                                <button class="emoji-btn" onclick="reactToRant('${r.username}', ${r.date}, '😔')">😔</button>
-                                <button class="emoji-btn" onclick="reactToRant('${r.username}', ${r.date}, '🫂')">🫂</button>
-                                <button class="emoji-btn" onclick="reactToRant('${r.username}', ${r.date}, '🔥')">🔥</button>
-                            </div>
-                            <a href="#" class="comment-link" onclick="commentOnRant('${r.username}', ${r.date}); return false;">tulis komentar</a>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        function renderFrekuensiFeed() {
-            const d = getUserData(currentUser);
-            if (!d || !d.selectedHashtags) {
-                document.getElementById('frekuensiList').innerHTML = '<div class="recent-rant-item compact" style="text-align:center;padding:16px;color:rgba(255,255,255,0.4);">Belum memilih frekuensi</div>';
-                return;
-            }
-            const userH = new Set(Object.values(d.selectedHashtags).filter(h => h));
-            renderFeeds('Frekuensi', 'frekuensiList', (r, user) => {
-                if (!user.selectedHashtags) return false;
-                const theirH = new Set(Object.values(user.selectedHashtags).filter(h => h));
-                return userH.size === 3 && theirH.size === 3 && [...userH].every(h => theirH.has(h));
-            });
-        }
-        function renderGelombangFeed() {
-            renderFeeds('Gelombang', 'gelombangList');
-        }
-        function renderMovementFeed() {
-            const movementH = new Set(["#PendidikanUntukSemua","#JanganExploitBuruh","#FUNDINGSolidaritasDiam","#PetisiTerbuka"]);
-            renderFeeds('Movement', 'movementList', (r) => movementH.has(r.hashtag));
-        }
-        // ===== REAKSI & KOMENTAR =====
-        function reactToArtefak(reaction) {
-            showToast(`Merespon artefak dengan ${reaction}`);
-        }
-        function reactToRant(targetUser, rantDate, emoji) {
-            if (!currentUser) return;
-            const users = getUsers();
-            const target = users[targetUser];
-            if (!target || !target.rants) return;
-            const rant = target.rants.find(r => r.date === rantDate);
-            if (!rant) return;
-            if (!rant.reactions) rant.reactions = {};
-            rant.reactions[emoji] = (rant.reactions[emoji] || 0) + 1;
-            rant.reactedBy = rant.reactedBy || {};
-            rant.reactedBy[currentUser] = emoji;
-            saveUsers(users);
-            showToast(`Merespon dengan ${emoji}`);
-            renderFrekuensiFeed();
-        }
-        function commentOnRant(targetUser, rantDate) {
-            showModal(`
-                <div class="modal-header">
-                    <div class="modal-title">Tulis Komentar</div>
-                    <button class="modal-close" onclick="hideModal()">×</button>
-                </div>
-                <div style="margin-bottom:12px;color:rgba(255,255,255,0.6);font-size:13px;">Hanya kamu dan pemilik rant yang bisa melihat</div>
-                <textarea class="textarea-input" id="commentBox" placeholder="Komentarmu..." maxlength="200" style="min-height:100px;"></textarea>
-                <div style="text-align:right;font-size:11px;color:rgba(255,255,255,0.4);margin:6px 0;">0/200</div>
-                <button class="action-btn" onclick="saveComment('${targetUser}', ${rantDate})">Kirim Komentar</button>
-            `);
-            const ta = document.getElementById('commentBox');
-            const co = ta.nextElementSibling;
-            ta.addEventListener('input', () => co.textContent = `${ta.value.length}/200`);
-        }
-        function saveComment(targetUser, rantDate) {
-            const comment = document.getElementById('commentBox').value.trim();
-            if (!comment) { alert('Tulis komentar dulu!'); return; }
-            if (!currentUser) return;
-            const users = getUsers();
-            const target = users[targetUser];
-            if (!target || !target.rants) return;
-            const rant = target.rants.find(r => r.date === rantDate);
-            if (!rant) return;
-            if (!rant.comments) rant.comments = [];
-            rant.comments.push({ from: currentUser, text: comment, date: Date.now() });
-            saveUsers(users);
-            hideModal();
-            showToast('Komentar terkirim!');
-        }
-        // ===== DUNIA & UTILITIES =====
-        function initDuniaPage() {
-            if (!currentUser) return showPage('login');
-            const d = getUserData(currentUser);
-            document.getElementById('profileUsername').textContent = `@${currentUser}`;
-            const joinDate = new Date(d.created).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-            document.getElementById('profileJoinDate').textContent = `Bergabung: ${joinDate}`;
-            const postCount = (d.rants?.length || 0) + (d.artefacts?.length || 0);
-            document.getElementById('profileActivity').textContent = `Aktivitas: ${postCount} posting`;
-        }
-        function showModal(content) {
-            document.querySelector('.modal').innerHTML = content;
-            document.getElementById('modalOverlay').classList.add('active');
-        }
-        function hideModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
-        }
-        function viewRantDetails(rant) {
-            const date = new Date(rant.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-            showModal(`
-                <div class="modal-header">
-                    <div class="modal-title">Rant</div>
-                    <button class="modal-close" onclick="hideModal()">×</button>
-                </div>
-                <div style="margin-bottom:15px;color:rgba(255,255,255,0.6);font-size:12px;">${date} • ${rant.hashtag || ''}</div>
-                <div style="color:rgba(255,255,255,0.9);line-height:1.6;font-size:14px;white-space:pre-wrap;">${rant.content}</div>
-                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
-            `);
-        }
-        function viewArtefakDetails(index) {
-            const d = getUserData(currentUser);
-            if (!d.artefacts || !d.artefacts[index]) return;
-            const a = d.artefacts[index];
-            const date = new Date(a.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-            showModal(`
-                <div class="modal-header">
-                    <div class="modal-title">Artefak</div>
-                    <button class="modal-close" onclick="hideModal()">×</button>
-                </div>
-                <div style="margin-bottom:15px;color:#4903fc;font-size:16px;font-weight:600;">${a.title}</div>
-                <div style="margin-bottom:15px;color:rgba(255,255,255,0.6);font-size:12px;">${date}</div>
-                <div style="color:rgba(255,255,255,0.9);line-height:1.6;font-size:14px;white-space:pre-wrap;">${a.content}</div>
-                <button class="action-btn secondary" onclick="hideModal()" style="margin-top:20px;">Tutup</button>
-            `);
-        }
-        function viewArtefak(index) { viewArtefakDetails(index); }
-        function formatLastActive(timestamp) {
-            if (!timestamp) return 'baru bergabung';
-            const now = Date.now();
-            const diff = now - timestamp;
-            const minutes = Math.floor(diff / (1000 * 60));
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            if (minutes < 1) return 'baru saja';
-            if (minutes < 60) return `${minutes} menit lalu`;
-            if (hours < 24) return `${hours} jam lalu`;
-            if (days === 1) return 'kemarin';
-            if (days < 7) return `${days} hari lalu`;
-            return new Date(timestamp).toLocaleDateString('id-ID');
-        }
+        
+        // ===== UTILITIES =====
         function showToast(message) {
             const t = document.createElement('div');
             t.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(73, 3, 252, 0.9);color:white;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;z-index:10000;animation:fadeIn 0.3s ease;`;
@@ -1647,6 +1892,7 @@
                 setTimeout(() => document.body.removeChild(t), 300);
             }, 3000);
         }
+        
         function exportData() {
             if (!currentUser) return;
             const d = getUserData(currentUser);
@@ -1660,6 +1906,7 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
+        
         function logout() {
             if (confirm('Yakin ingin keluar?')) {
                 localStorage.removeItem('nope_current_user');
@@ -1667,6 +1914,7 @@
                 showPage('login');
             }
         }
+        
         // ===== INITIALIZE =====
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('modalOverlay').addEventListener('click', e => {
