@@ -30,6 +30,7 @@
             margin: 0 auto;
             padding: 15px;
             min-height: 100vh;
+            padding-bottom: 70px; /* Untuk bottom nav */
         }
         .page.active {
             display: block;
@@ -315,7 +316,7 @@
         .rant-box-counter {
             font-size: 11px;
             color: rgba(73, 3, 252, 0.5);
-            display: none;
+            display: block;
         }
         .rant-box {
             width: 100%;
@@ -396,6 +397,7 @@
             border-radius: 6px;
             padding: 10px;
             transition: all 0.2s;
+            cursor: pointer;
         }
         .recent-rant-item:hover {
             background: rgba(73, 3, 252, 0.05);
@@ -602,7 +604,7 @@
             right: 0;
             background: rgba(0, 0, 0, 0.98);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
+            display: none;
             justify-content: space-around;
             padding: 8px 0;
             z-index: 1000;
@@ -617,6 +619,7 @@
             padding: 6px 8px;
             transition: all 0.2s;
             min-width: 60px;
+            cursor: pointer;
         }
         .nav-item.active {
             color: #4903fc;
@@ -794,17 +797,33 @@
             height: 100%;
             cursor: pointer;
         }
+        
+        /* Fix untuk gambar yang terpotong */
+        .fixed-image-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .fixed-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
     </style>
 </head>
 <body>
     <!-- POST MODAL -->
     <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
+        <div class="modal" id="modalContent">
             <!-- Modal content will be injected here -->
         </div>
     </div>
     <!-- BOTTOM NAVIGATION -->
-    <div class="bottom-nav" id="bottomNav" style="display: none;">
+    <div class="bottom-nav" id="bottomNav">
         <a href="#" class="nav-item active" onclick="showTab('jejak')">
             <div class="nav-icon">📝</div>
             <div class="nav-label">Jejak</div>
@@ -891,6 +910,7 @@
         <!-- Rant Box -->
         <div class="rant-box-container">
             <div class="rant-box-header">
+                <div class="rant-box-title">Rant Box</div>
                 <div class="rant-box-counter" id="rantCounter">0/300</div>
             </div>
             <textarea 
@@ -1063,7 +1083,7 @@
             }
         };
         
-        // Dummy foto artefak untuk Gen Z
+        // Dummy foto artefak untuk Gen Z - DIPERBAIKI dengan URL yang lebih stabil
         const dummyArtefakPhotos = [
             {
                 url: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
@@ -1125,6 +1145,15 @@
         
         function saveArtefakReactions(reactions) {
             localStorage.setItem('nope_artefak_reactions', JSON.stringify(reactions));
+        }
+        
+        function getGlobalRants() {
+            const globalRantsJson = localStorage.getItem('nope_global_rants');
+            return globalRantsJson ? JSON.parse(globalRantsJson) : [];
+        }
+        
+        function saveGlobalRants(rants) {
+            localStorage.setItem('nope_global_rants', JSON.stringify(rants));
         }
         
         // ===== DUMMY DATA INITIALIZATION =====
@@ -1196,7 +1225,7 @@
                     },
                     rants: [{
                         content: user.rant,
-                        hashtag: user.hashtags[Math.floor(Math.random()*user.hashtags.length)],
+                        hashtag: user.hashtags[0],
                         date: now - (15 - i) * 24 * 60 * 60 * 1000
                     }],
                     artefacts: [{
@@ -1210,8 +1239,8 @@
             
             // Inisialisasi dummy reactions
             const reactions = getArtefakReactions();
-            if (!reactions[currentUser]) {
-                reactions[currentUser] = {
+            if (!reactions['global']) {
+                reactions['global'] = {
                     nangis: { count: 3, users: ["diamdiamaja", "ghosted_aja", "maganggratis"], hasNew: true },
                     api: { count: 2, users: ["temenpalsu", "konserginjal"], hasNew: true },
                     badut: { count: 1, users: ["diamdiamaja"], hasNew: false },
@@ -1219,6 +1248,18 @@
                 };
                 saveArtefakReactions(reactions);
             }
+            
+            // Inisialisasi global rants
+            let globalRants = [];
+            dummyUsers.forEach((user, i) => {
+                globalRants.push({
+                    username: user.username,
+                    content: user.rant,
+                    hashtag: user.hashtags[0],
+                    date: now - (15 - i) * 24 * 60 * 60 * 1000
+                });
+            });
+            saveGlobalRants(globalRants);
         }
         
         // ===== FIXED INIT APP - SELALU MULAI DARI LOGIN =====
@@ -1235,6 +1276,22 @@
             
             // Reset semua halaman lain agar tidak aktif
             document.querySelectorAll('.page:not(#login)').forEach(p => p.classList.remove('active'));
+            
+            // Setup event listeners
+            setupEventListeners();
+        }
+        
+        function setupEventListeners() {
+            // Rant box character counter
+            const rantBox = document.getElementById('rantBox');
+            if (rantBox) {
+                rantBox.addEventListener('input', function() {
+                    const counter = document.getElementById('rantCounter');
+                    if (counter) {
+                        counter.textContent = `${this.value.length}/300`;
+                    }
+                });
+            }
         }
         
         // ===== SHOW PAGE & TAB =====
@@ -1289,15 +1346,14 @@
             status.style.display = 'none';
             
             // Pastikan event listener tidak duplikat
-            const newInput = input.cloneNode(true);
-            input.parentNode.replaceChild(newInput, input);
-            const el = document.getElementById('usernameInput');
+            input.onkeydown = null;
+            input.oninput = null;
             
-            el.addEventListener('keydown', e => { 
+            input.addEventListener('keydown', e => { 
                 if (e.key === 'Enter') processLogin(); 
             });
             
-            el.addEventListener('input', function() {
+            input.addEventListener('input', function() {
                 let u = this.value.trim().toLowerCase();
                 if (u.length < 3) { 
                     status.style.display = 'none'; 
@@ -1419,11 +1475,20 @@
         
         function setupRantBox() {
             const box = document.getElementById('rantBox');
-            box.value = '';
+            if (box) {
+                box.value = '';
+                // Reset counter
+                const counter = document.getElementById('rantCounter');
+                if (counter) {
+                    counter.textContent = '0/300';
+                }
+            }
         }
         
         function renderArtefakPreview() {
             const c = document.getElementById('artefakPreviewContainer');
+            if (!c) return;
+            
             const d = getUserData(currentUser);
             
             let artefakHtml = '';
@@ -1458,7 +1523,7 @@
                     <div class="artefak-preview">
                         <div class="artefak-preview-image">
                             ${latest.imageUrl ? 
-                                `<img src="${latest.imageUrl}" alt="${latest.title}">` : 
+                                `<img src="${latest.imageUrl}" alt="${latest.title}" style="width:100%;height:100%;object-fit:cover;">` : 
                                 `<div class="artefak-placeholder">📁</div>`
                             }
                             <!-- Upload Button -->
@@ -1486,7 +1551,7 @@
         }
         
         function renderArtefakEmojiBar() {
-            const reactions = getArtefakReactions()[currentUser] || currentArtefakReactions;
+            const reactions = getArtefakReactions()['global'] || currentArtefakReactions;
             
             return `
                 <div class="artefak-emoji-bar">
@@ -1556,8 +1621,8 @@
         
         function loadArtefakReactions() {
             const reactions = getArtefakReactions();
-            if (reactions[currentUser]) {
-                currentArtefakReactions = reactions[currentUser];
+            if (reactions['global']) {
+                currentArtefakReactions = reactions['global'];
             }
             
             // Populate peek popups
@@ -1651,6 +1716,8 @@
         
         function validateArtefakTitle() {
             const input = document.getElementById('artefakTitleInput');
+            if (!input) return;
+            
             const value = input.value.trim();
             
             // Count words
@@ -1738,11 +1805,11 @@
             if (!currentUser) return;
             
             const reactions = getArtefakReactions();
-            if (!reactions[currentUser]) {
-                reactions[currentUser] = JSON.parse(JSON.stringify(currentArtefakReactions));
+            if (!reactions['global']) {
+                reactions['global'] = JSON.parse(JSON.stringify(currentArtefakReactions));
             }
             
-            const userReactions = reactions[currentUser];
+            const userReactions = reactions['global'];
             
             // Check if user already reacted
             if (!userReactions[reactionType].users.includes(currentUser)) {
@@ -1773,6 +1840,8 @@
         
         function renderArtefakGrid() {
             const c = document.getElementById('artefaksGrid');
+            if (!c) return;
+            
             c.innerHTML = '';
             
             dummyArtefakPhotos.forEach(photo => {
@@ -1780,7 +1849,9 @@
                 div.className = 'artefak-grid-item';
                 div.onclick = () => showToast(`"${photo.title}" - ${photo.date}`);
                 div.innerHTML = `
-                    <img src="${photo.url}" alt="${photo.title}" class="artefak-grid-image" loading="lazy">
+                    <div class="fixed-image-container">
+                        <img src="${photo.url}" alt="${photo.title}" class="artefak-grid-image" loading="lazy">
+                    </div>
                     <div class="artefak-grid-overlay">
                         <div class="artefak-grid-title">${photo.title}</div>
                         <div class="artefak-grid-date">${photo.date}</div>
@@ -1792,6 +1863,8 @@
         
         function renderRecentRants() {
             const c = document.getElementById('recentRantsList');
+            if (!c) return;
+            
             const d = getUserData(currentUser);
             if (!d.rants || d.rants.length === 0) {
                 // Tampilkan 3 dummy rant jika belum ada postingan
@@ -1826,16 +1899,57 @@
         }
         
         function postRantFromBox() {
-            const content = document.getElementById('rantBox').value.trim();
-            if (!content) { alert('Tulis rant terlebih dahulu!'); return; }
+            const box = document.getElementById('rantBox');
+            if (!box) return;
+            
+            const content = box.value.trim();
+            if (!content) { 
+                showToast('Tulis rant terlebih dahulu!'); 
+                return; 
+            }
             if (!currentUser) return;
+            
             const d = getUserData(currentUser);
             if (!d.rants) d.rants = [];
-            d.rants.push({ content, date: Date.now() });
+            
+            // Pilih hashtag acak dari hashtag terpilih user
+            const hashtags = Object.values(d.selectedHashtags).filter(h => h);
+            const randomHashtag = hashtags.length > 0 ? 
+                hashtags[Math.floor(Math.random() * hashtags.length)] : 
+                null;
+            
+            const newRant = {
+                content, 
+                date: Date.now(),
+                hashtag: randomHashtag 
+            };
+            
+            d.rants.push(newRant);
             d.lastLogin = Date.now();
             saveUserData(currentUser, d);
-            document.getElementById('rantBox').value = '';
+            
+            // Tambah ke global rants
+            const globalRants = getGlobalRants();
+            globalRants.push({
+                username: currentUser,
+                ...newRant
+            });
+            saveGlobalRants(globalRants);
+            
+            box.value = '';
+            // Reset counter
+            const counter = document.getElementById('rantCounter');
+            if (counter) {
+                counter.textContent = '0/300';
+            }
+            
             renderRecentRants();
+            
+            // Refresh feed di tab Jalan jika sedang aktif
+            if (currentTab === 'jalan') {
+                initJalanPage();
+            }
+            
             showToast('Rant berhasil diposting!');
         }
         
@@ -1852,6 +1966,8 @@
         
         function renderSelectedHashtags() {
             const c = document.getElementById('selectedHashtagsList');
+            if (!c) return;
+            
             const d = getUserData(currentUser);
             if (!d.selectedHashtags) {
                 c.innerHTML = '<div class="hint">Belum memilih hashtag</div>';
@@ -1874,10 +1990,194 @@
         
         function showJalanTab(tab) {
             ['frekuensi','gelombang','movement'].forEach(t => {
-                document.getElementById(`jalan-${t}`).style.display = t === tab ? 'block' : 'none';
+                const element = document.getElementById(`jalan-${t}`);
+                if (element) {
+                    element.style.display = t === tab ? 'block' : 'none';
+                }
             });
             document.querySelectorAll('.jalan-tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
+        }
+        
+        function renderFrekuensiFeed() {
+            const c = document.getElementById('frekuensiList');
+            if (!c) return;
+            
+            // Ambil hashtag terpilih user
+            const d = getUserData(currentUser);
+            if (!d.selectedHashtags) return;
+            
+            // Ambil semua rant dari semua user yang menggunakan hashtag yang sama
+            const allUsers = getUsers();
+            let filteredRants = [];
+            
+            Object.values(allUsers).forEach(user => {
+                if (user.rants) {
+                    user.rants.forEach(rant => {
+                        // Cek apakah rant menggunakan hashtag yang dipilih user saat ini
+                        Object.values(d.selectedHashtags).forEach(hashtag => {
+                            if (hashtag && rant.hashtag === hashtag) {
+                                filteredRants.push({
+                                    ...rant,
+                                    username: user.username
+                                });
+                            }
+                        });
+                    });
+                }
+            });
+            
+            // Urutkan berdasarkan tanggal terbaru
+            filteredRants.sort((a, b) => b.date - a.date);
+            
+            // Ambil maksimal 10 rant
+            const rants = filteredRants.slice(0, 10);
+            
+            c.innerHTML = '';
+            
+            if (rants.length === 0) {
+                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada rant dengan hashtag yang kamu pilih</div>';
+                return;
+            }
+            
+            rants.forEach(r => {
+                const date = new Date(r.date).toLocaleDateString('id-ID', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                const content = r.content.length > 120 ? r.content.substring(0, 120) + '...' : r.content;
+                
+                const div = document.createElement('div');
+                div.className = 'recent-rant-item compact';
+                div.innerHTML = `
+                    <div class="recent-rant-date compact">@${r.username} • ${date} • ${r.hashtag || ''}</div>
+                    <div class="recent-rant-content compact">${content}</div>
+                    <div class="rant-actions">
+                        <div class="rant-emoji-bar">
+                            <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
+                            <button class="emoji-btn" onclick="reactToRant('😂', this)">😂</button>
+                            <button class="emoji-btn" onclick="reactToRant('😭', this)">😭</button>
+                        </div>
+                        <a href="#" class="comment-link" onclick="showComments('${r.username}', ${r.date})">💬 0</a>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
+        }
+        
+        function renderGelombangFeed() {
+            const c = document.getElementById('gelombangList');
+            if (!c) return;
+            
+            // Ambil semua rant dari semua user
+            const globalRants = getGlobalRants();
+            
+            // Urutkan berdasarkan tanggal terbaru
+            const sortedRants = [...globalRants].sort((a, b) => b.date - a.date);
+            
+            // Ambil 10 rant terbaru
+            const rants = sortedRants.slice(0, 10);
+            
+            c.innerHTML = '';
+            
+            if (rants.length === 0) {
+                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada rant di gelombang</div>';
+                return;
+            }
+            
+            rants.forEach(r => {
+                const date = new Date(r.date).toLocaleDateString('id-ID', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                const content = r.content.length > 120 ? r.content.substring(0, 120) + '...' : r.content;
+                
+                const div = document.createElement('div');
+                div.className = 'recent-rant-item compact';
+                div.innerHTML = `
+                    <div class="recent-rant-date compact">@${r.username} • ${date} • ${r.hashtag || ''}</div>
+                    <div class="recent-rant-content compact">${content}</div>
+                    <div class="rant-actions">
+                        <div class="rant-emoji-bar">
+                            <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
+                            <button class="emoji-btn" onclick="reactToRant('😂', this)">😂</button>
+                            <button class="emoji-btn" onclick="reactToRant('😭', this)">😭</button>
+                        </div>
+                        <a href="#" class="comment-link" onclick="showComments('${r.username}', ${r.date})">💬 0</a>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
+        }
+        
+        function renderMovementFeed() {
+            const c = document.getElementById('movementList');
+            if (!c) return;
+            
+            const movementHashtags = ["#PendidikanUntukSemua", "#JanganExploitBuruh", "#FUNDINGSolidaritasDiam", "#PetisiTerbuka"];
+            
+            // Ambil semua rant dari semua user dengan hashtag movement
+            const globalRants = getGlobalRants();
+            let movementRants = [];
+            
+            globalRants.forEach(rant => {
+                if (movementHashtags.includes(rant.hashtag)) {
+                    movementRants.push(rant);
+                }
+            });
+            
+            // Urutkan berdasarkan tanggal terbaru
+            movementRants.sort((a, b) => b.date - a.date);
+            
+            // Ambil 10 rant terbaru
+            const rants = movementRants.slice(0, 10);
+            
+            c.innerHTML = '';
+            
+            if (rants.length === 0) {
+                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada rant movement</div>';
+                return;
+            }
+            
+            rants.forEach(r => {
+                const date = new Date(r.date).toLocaleDateString('id-ID', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                const content = r.content.length > 120 ? r.content.substring(0, 120) + '...' : r.content;
+                
+                const div = document.createElement('div');
+                div.className = 'recent-rant-item compact';
+                div.innerHTML = `
+                    <div class="recent-rant-date compact">@${r.username} • ${date} • ${r.hashtag || ''}</div>
+                    <div class="recent-rant-content compact">${content}</div>
+                    <div class="rant-actions">
+                        <div class="rant-emoji-bar">
+                            <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
+                            <button class="emoji-btn" onclick="reactToRant('👍', this)">👍</button>
+                            <button class="emoji-btn" onclick="reactToRant('✊', this)">✊</button>
+                        </div>
+                        <a href="#" class="comment-link" onclick="showComments('${r.username}', ${r.date})">💬 0</a>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
+        }
+        
+        // ===== DUNIA =====
+        function initDuniaPage() {
+            if (!currentUser) return showPage('login');
+            const d = getUserData(currentUser);
+            
+            document.getElementById('profileUsername').textContent = '@' + currentUser;
+            document.getElementById('profileJoinDate').textContent = 'Bergabung: ' + new Date(d.created).toLocaleDateString('id-ID');
+            document.getElementById('profileActivity').textContent = 'Aktivitas: ' + (d.rants ? d.rants.length : 0) + ' posting';
         }
         
         // ===== UTILITIES =====
@@ -1891,6 +2191,111 @@
                 t.style.transition = 'opacity 0.3s ease';
                 setTimeout(() => document.body.removeChild(t), 300);
             }, 3000);
+        }
+        
+        function viewRantDetails(rant) {
+            const date = new Date(rant.date).toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            
+            modal.innerHTML = `
+                <div class="modal-header">
+                    <div class="modal-title">Detail Rant</div>
+                    <button class="modal-close" onclick="hideModal()">&times;</button>
+                </div>
+                <div style="padding: 15px 0;">
+                    <div style="font-size: 11px; color: rgba(73,3,252,0.7); margin-bottom: 10px;">
+                        ${date} ${rant.hashtag ? '• ' + rant.hashtag : ''}
+                    </div>
+                    <div style="font-size: 14px; line-height: 1.6; color: white; margin-bottom: 20px;">
+                        ${rant.content}
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="action-btn secondary" onclick="hideModal()" style="flex: 1;">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modalOverlay.classList.add('active');
+        }
+        
+        function viewAllRants() {
+            if (!currentUser) return;
+            
+            const d = getUserData(currentUser);
+            if (!d.rants || d.rants.length === 0) {
+                showToast('Belum ada rant untuk ditampilkan');
+                return;
+            }
+            
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            
+            let modalContent = `
+                <div class="modal-header">
+                    <div class="modal-title">Semua Jejakmu</div>
+                    <button class="modal-close" onclick="hideModal()">&times;</button>
+                </div>
+                <div style="max-height: 70vh; overflow-y: auto; padding: 10px 0;">
+            `;
+            
+            // Urutkan dari terbaru
+            const sortedRants = [...d.rants].sort((a, b) => b.date - a.date);
+            
+            if (sortedRants.length === 0) {
+                modalContent += `<div style="text-align:center;padding:40px;color:rgba(255,255,255,0.5);">Belum ada rant</div>`;
+            } else {
+                sortedRants.forEach((r, i) => {
+                    const date = new Date(r.date).toLocaleDateString('id-ID', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric',
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    
+                    modalContent += `
+                        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(73,3,252,0.1);">
+                            <div style="font-size: 11px; color: rgba(73,3,252,0.7); margin-bottom: 5px;">
+                                ${date} ${r.hashtag ? '• ' + r.hashtag : ''}
+                            </div>
+                            <div style="font-size: 14px; line-height: 1.5; color: white;">
+                                ${r.content}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            modalContent += `</div>`;
+            modal.innerHTML = modalContent;
+            modalOverlay.classList.add('active');
+        }
+        
+        function hideModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+        
+        function reactToRant(emoji, button) {
+            if (!currentUser) return;
+            
+            // Toggle active state
+            button.classList.toggle('active');
+            
+            showToast(`Kamu bereaksi ${emoji} pada rant ini`);
+        }
+        
+        function showComments(username, rantDate) {
+            showToast(`Komentar untuk rant @${username} akan ditampilkan`);
         }
         
         function exportData() {
@@ -1907,6 +2312,55 @@
             URL.revokeObjectURL(url);
         }
         
+        function showArtefakModal() {
+            showToast('Fitur tambah artefak akan datang!');
+        }
+        
+        function showHashtagsModal() {
+            if (!currentUser) return;
+            const d = getUserData(currentUser);
+            
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            
+            let modalContent = `
+                <div class="modal-header">
+                    <div class="modal-title">Hashtag Terpilih</div>
+                    <button class="modal-close" onclick="hideModal()">&times;</button>
+                </div>
+                <div style="padding: 15px 0;">
+            `;
+            
+            if (!d.selectedHashtags) {
+                modalContent += `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.5);">Belum memilih hashtag</div>`;
+            } else {
+                modalContent += `
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
+                `;
+                
+                Object.entries(d.selectedHashtags).forEach(([zona, hashtag]) => {
+                    if (hashtag) {
+                        modalContent += `
+                            <div style="background: rgba(73,3,252,0.1); padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #4903fc;">
+                                ${hashtag}
+                            </div>
+                        `;
+                    }
+                });
+                
+                modalContent += `</div>`;
+            }
+            
+            modalContent += `
+                <button class="action-btn secondary" onclick="hideModal()" style="width: 100%;">
+                    Tutup
+                </button>
+            </div>`;
+            
+            modal.innerHTML = modalContent;
+            modalOverlay.classList.add('active');
+        }
+        
         function logout() {
             if (confirm('Yakin ingin keluar?')) {
                 localStorage.removeItem('nope_current_user');
@@ -1917,9 +2371,6 @@
         
         // ===== INITIALIZE =====
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('modalOverlay').addEventListener('click', e => {
-                if (e.target === e.currentTarget) hideModal();
-            });
             initializeApp();
         });
     </script>
