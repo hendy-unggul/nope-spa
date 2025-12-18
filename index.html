@@ -203,11 +203,12 @@
         .action-btn.secondary:hover {
             background: rgba(73, 3, 252, 0.1);
         }
-        /* ===== JEJAK PAGE - NEW STYLES ===== */
-        /* Artefak Preview - Full Width Image */
+        /* ===== JEJAK PAGE - REVISI ===== */
+        /* Artefak Preview - FULL SCREEN */
         .artefak-preview-container {
             margin: 15px 0;
             position: relative;
+            width: 100%;
         }
         .artefak-preview {
             width: 100%;
@@ -216,68 +217,38 @@
             border: 1px solid rgba(73, 3, 252, 0.1);
             border-radius: 10px;
             overflow: hidden;
-            cursor: pointer;
             transition: all 0.3s;
-        }
-        .artefak-preview:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(73, 3, 252, 0.15);
         }
         .artefak-preview-image {
             width: 100%;
-            height: 0;
-            padding-bottom: 80%;
+            height: 300px; /* TINGGI FIXED UNTUK FULL SCREEN */
             background: linear-gradient(135deg, rgba(73, 3, 252, 0.1), rgba(73, 3, 252, 0.1));
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            overflow: hidden;
         }
         .artefak-preview-image img {
-            position: absolute;
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
         }
-        /* HAPUS: Tombol unggah kanan atas */
-        /* .artefak-upload-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            border: none;
-            color: white;
-            font-size: 18px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            transition: all 0.2s;
-        }
-        .artefak-upload-btn:hover {
-            background: rgba(73, 3, 252, 0.7);
-            transform: scale(1.1);
-        } */
-        .artefak-title-input {
+        /* Notasi "Nobar terakhir sama mantan" di kiri atas */
+        .artefak-nobar-badge {
             position: absolute;
             top: 10px;
             left: 10px;
             background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(73, 3, 252, 0.3);
-            color: white;
-            font-size: 11px;
+            border: 1px solid rgba(255, 100, 100, 0.5);
+            color: #ff9999;
+            font-size: 10px;
             padding: 4px 8px;
             border-radius: 6px;
-            max-width: 60%;
             z-index: 10;
-            outline: none;
-        }
-        .artefak-title-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .artefak-placeholder {
             font-size: 48px;
@@ -299,30 +270,30 @@
             font-size: 10px;
             color: rgba(73, 3, 252, 0.4);
         }
-        /* Tombol Folder Unggah */
-        .folder-upload-btn {
+        /* CTA Unggah Proses di kiri bawah */
+        .upload-process-cta {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(73, 3, 252, 0.9);
+            border: none;
+            color: white;
+            font-size: 11px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(73, 3, 252, 0.1);
-            border: 1px solid rgba(73, 3, 252, 0.3);
-            color: #4903fc;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
+            gap: 4px;
+            z-index: 10;
             transition: all 0.2s;
-            margin: 10px 0;
-            width: 100%;
-            justify-content: center;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
-        .folder-upload-btn:hover {
-            background: rgba(73, 3, 252, 0.2);
+        .upload-process-cta:hover {
+            background: rgba(73, 3, 252, 1);
             transform: translateY(-2px);
-        }
-        .folder-upload-btn .icon {
-            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(73, 3, 252, 0.3);
         }
         /* Rant Box */
         .rant-box-container {
@@ -477,14 +448,59 @@
         .jalan-tab-content {
             margin-top: 10px;
         }
+        /* ARTEFAK DI FEED - VISUAL PENUH */
+        .artefak-feed-item {
+            background: rgba(73, 3, 252, 0.03);
+            border: 1px solid rgba(73, 3, 252, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .artefak-feed-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(73, 3, 252, 0.15);
+        }
+        .artefak-feed-image {
+            width: 100%;
+            height: 200px; /* TINGGI FIXED UNTUK VISUAL PENUH */
+            overflow: hidden;
+            position: relative;
+        }
+        .artefak-feed-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .artefak-feed-info {
+            padding: 10px;
+        }
+        .artefak-feed-username {
+            font-size: 10px;
+            color: rgba(73, 3, 252, 0.7);
+            margin-bottom: 4px;
+        }
+        .artefak-feed-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .artefak-feed-date {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.4);
+        }
         /* COMPACT RANT LIST */
         .recent-rants-list.compact {
-            gap: 8px !important;
+            gap: 10px !important;
             margin-top: 10px;
         }
         .recent-rant-item.compact {
-            padding: 8px !important;
-            border-radius: 6px !important;
+            padding: 10px !important;
+            border-radius: 8px !important;
         }
         .recent-rant-date.compact {
             font-size: 9px;
@@ -521,16 +537,6 @@
         }
         .emoji-btn.active {
             color: #4903fc;
-        }
-        .comment-link {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            padding-bottom: 1px;
-        }
-        .comment-link:hover {
-            color: #4903fc;
-            border-bottom-color: #4903fc;
         }
         /* ===== DUNIA PAGE ===== */
         .dunia-header {
@@ -683,7 +689,6 @@
             display: none;
         }
         /* ===== EMOJI BAR BELOW ARTEFAK ===== */
-        /* HAPUS: Icon unggah dari emoji bar */
         .artefak-emoji-bar {
             display: flex;
             justify-content: center;
@@ -825,29 +830,13 @@
             cursor: pointer;
         }
         
-        /* Fix untuk gambar yang terpotong */
-        .fixed-image-container {
-            width: 100%;
-            height: 200px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-        
-        .fixed-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-        }
-        
         /* Modal Unggah Artefak */
         .upload-modal-content {
             max-width: 100%;
         }
         .upload-preview {
             width: 100%;
-            height: 200px;
+            height: 250px; /* TINGGI FIXED UNTUK MODAL */
             background: rgba(73, 3, 252, 0.05);
             border: 2px dashed rgba(73, 3, 252, 0.3);
             border-radius: 10px;
@@ -858,9 +847,10 @@
             overflow: hidden;
         }
         .upload-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
         }
         .upload-placeholder {
             font-size: 48px;
@@ -997,12 +987,6 @@
     <div id="jejak" class="page" style="padding-top: 80px;">
         <div class="logo">NOPE</div>
         
-        <!-- Tombol Folder Unggah - MENGGANTI semua icon unggah yang tumpang tindih -->
-        <button class="folder-upload-btn" onclick="openArtefakUpload()">
-            <span class="icon">📁</span>
-            <span>Unggah proses</span>
-        </button>
-        
         <!-- Artefak Preview -->
         <div class="artefak-preview-container" id="artefakPreviewContainer"></div>
         
@@ -1057,21 +1041,27 @@
             <div class="section-header">
                 <div class="section-title">3# pilihan mu</div>
             </div>
-            <div class="recent-rants-list compact" id="frekuensiList"></div>
+            <div id="frekuensiFeed" class="recent-rants-list compact">
+                <!-- Feed akan diisi dengan artefak visual penuh -->
+            </div>
         </div>
         <!-- Gelombang Tab -->
         <div id="jalan-gelombang" class="jalan-tab-content" style="display:none;">
             <div class="section-header">
                 <div class="section-title">Gelombang Global</div>
             </div>
-            <div class="recent-rants-list compact" id="gelombangList"></div>
+            <div id="gelombangFeed" class="recent-rants-list compact">
+                <!-- Feed akan diisi dengan artefak visual penuh -->
+            </div>
         </div>
         <!-- Movement Tab -->
         <div id="jalan-movement" class="jalan-tab-content" style="display:none;">
             <div class="section-header">
                 <div class="section-title">Movement</div>
             </div>
-            <div class="recent-rants-list compact" id="movementList"></div>
+            <div id="movementFeed" class="recent-rants-list compact">
+                <!-- Feed akan diisi dengan rant saja -->
+            </div>
         </div>
         <!-- Hashtag terpilih -->
         <div class="zona-card" style="margin-top: 15px;">
@@ -1134,7 +1124,6 @@
                 users: [],
                 hasNew: false
             }
-            // HAPUS: unggah dari reactions
         };
         
         // State untuk upload artefak
@@ -1185,7 +1174,7 @@
             }
         };
         
-        // Dummy foto artefak untuk Gen Z - DIPERBAIKI dengan URL yang lebih stabil
+        // Dummy foto artefak untuk Gen Z
         const dummyArtefakPhotos = [
             {
                 url: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
@@ -1362,7 +1351,6 @@
                     nangis: { count: 3, users: ["diamdiamaja", "ghosted_aja", "maganggratis"], hasNew: true },
                     api: { count: 2, users: ["temenpalsu", "konserginjal"], hasNew: true },
                     badut: { count: 1, users: ["diamdiamaja"], hasNew: false }
-                    // HAPUS: unggah dari reactions
                 };
                 saveArtefakReactions(reactions);
             }
@@ -1386,33 +1374,28 @@
                     username: artefak.username,
                     title: artefak.title,
                     imageUrl: artefak.url,
-                    date: now - (15 - i) * 24 * 60 * 60 * 1000
+                    date: now - (15 - i) * 24 * 60 * 60 * 1000,
+                    nobar: i === 0 // Hanya artefak pertama yang punya badge nobar
                 });
             });
             saveGlobalArtefaks(globalArtefaks);
         }
         
-        // ===== FIXED INIT APP - SELALU MULAI DARI LOGIN =====
+        // ===== FIXED INIT APP =====
         function initializeApp() {
             initializeDummyData();
             
-            // SELALU mulai dari halaman login
-            // Hapus user yang sedang login untuk memastikan login ulang
             localStorage.removeItem('nope_current_user');
             currentUser = null;
             
-            // Tampilkan halaman login
             showPage('login');
             
-            // Reset semua halaman lain agar tidak aktif
             document.querySelectorAll('.page:not(#login)').forEach(p => p.classList.remove('active'));
             
-            // Setup event listeners
             setupEventListeners();
         }
         
         function setupEventListeners() {
-            // Rant box character counter
             const rantBox = document.getElementById('rantBox');
             if (rantBox) {
                 rantBox.addEventListener('input', function() {
@@ -1426,7 +1409,6 @@
         
         // ===== SHOW PAGE & TAB =====
         function showPage(pageId) {
-            // Cek jika user belum login tapi mencoba akses halaman lain
             if (pageId !== 'login' && pageId !== 'onboarding' && !currentUser) {
                 showPage('login');
                 return;
@@ -1475,7 +1457,6 @@
             input.focus();
             status.style.display = 'none';
             
-            // Pastikan event listener tidak duplikat
             input.onkeydown = null;
             input.oninput = null;
             
@@ -1607,7 +1588,6 @@
             const box = document.getElementById('rantBox');
             if (box) {
                 box.value = '';
-                // Reset counter
                 const counter = document.getElementById('rantCounter');
                 if (counter) {
                     counter.textContent = '0/300';
@@ -1628,7 +1608,12 @@
                     <div class="artefak-preview">
                         <div class="artefak-preview-image">
                             <div class="artefak-placeholder">🖼️</div>
-                            <!-- HAPUS: Tombol unggah kanan atas -->
+                            <!-- Badge Nobar di kiri atas -->
+                            <div class="artefak-nobar-badge">Nobar terakhir sama mantan</div>
+                            <!-- CTA Unggah di kiri bawah -->
+                            <button class="upload-process-cta" onclick="openArtefakUpload()">
+                                Unggah proses
+                            </button>
                         </div>
                         <div class="artefak-preview-info">
                             <div class="artefak-preview-title">📁 Belum ada artefak</div>
@@ -1644,10 +1629,15 @@
                     <div class="artefak-preview">
                         <div class="artefak-preview-image">
                             ${latest.imageUrl ? 
-                                `<img src="${latest.imageUrl}" alt="${latest.title}" style="width:100%;height:100%;object-fit:cover;">` : 
+                                `<img src="${latest.imageUrl}" alt="${latest.title}">` : 
                                 `<div class="artefak-placeholder">📁</div>`
                             }
-                            <!-- HAPUS: Tombol unggah kanan atas -->
+                            <!-- Badge Nobar di kiri atas -->
+                            <div class="artefak-nobar-badge">Nobar terakhir sama mantan</div>
+                            <!-- CTA Unggah di kiri bawah -->
+                            <button class="upload-process-cta" onclick="openArtefakUpload()">
+                                Unggah proses
+                            </button>
                         </div>
                         <div class="artefak-preview-info">
                             <div class="artefak-preview-title">📁 ${latest.title}</div>
@@ -1704,8 +1694,6 @@
                                 <div class="reaction-user-list" id="badutUserList"></div>
                             </div>
                         </div>
-                        
-                        <!-- HAPUS: Unggah dari emoji bar -->
                     </div>
                 </div>`;
         }
@@ -1716,12 +1704,10 @@
                 currentArtefakReactions = reactions['global'];
             }
             
-            // Populate peek popups
             updateReactionPeekPopups();
         }
         
         function updateReactionPeekPopups() {
-            // Update nangis peek
             const nangisUsers = currentArtefakReactions.nangis.users.slice(0, 5);
             const nangisList = document.getElementById('nangisUserList');
             if (nangisList) {
@@ -1733,7 +1719,6 @@
                 }
             }
             
-            // Update api peek
             const apiUsers = currentArtefakReactions.api.users.slice(0, 5);
             const apiList = document.getElementById('apiUserList');
             if (apiList) {
@@ -1745,7 +1730,6 @@
                 }
             }
             
-            // Update badut peek
             const badutUsers = currentArtefakReactions.badut.users.slice(0, 5);
             const badutList = document.getElementById('badutUserList');
             if (badutList) {
@@ -1757,12 +1741,10 @@
                 }
             }
             
-            // Setup peek popup toggle
             setupPeekPopups();
         }
         
         function setupPeekPopups() {
-            // Add event listeners to all reaction buttons
             document.querySelectorAll('.reaction-peek').forEach(peek => {
                 const btn = peek.querySelector('.artefak-emoji-btn');
                 const popup = peek.querySelector('.reaction-peek-popup');
@@ -1772,18 +1754,15 @@
                         e.stopPropagation();
                         const isShowing = popup.classList.contains('show');
                         
-                        // Hide all other popups
                         document.querySelectorAll('.reaction-peek-popup').forEach(p => {
                             p.classList.remove('show');
                         });
                         
-                        // Toggle this popup
                         if (!isShowing) {
                             popup.classList.add('show');
                         }
                     });
                     
-                    // Close when clicking outside
                     document.addEventListener('click', (e) => {
                         if (!peek.contains(e.target)) {
                             popup.classList.remove('show');
@@ -1803,15 +1782,12 @@
             const userArtefaks = d.artefacts || [];
             
             if (userArtefaks.length === 0) {
-                // Tampilkan dummy artefaks jika user belum punya
                 dummyArtefakPhotos.forEach(photo => {
                     const div = document.createElement('div');
                     div.className = 'artefak-grid-item';
                     div.onclick = () => showArtefakDetails(photo);
                     div.innerHTML = `
-                        <div class="fixed-image-container">
-                            <img src="${photo.url}" alt="${photo.title}" class="artefak-grid-image" loading="lazy">
-                        </div>
+                        <img src="${photo.url}" alt="${photo.title}" class="artefak-grid-image" loading="lazy">
                         <div class="artefak-grid-overlay">
                             <div class="artefak-grid-title">${photo.title}</div>
                             <div class="artefak-grid-date">${photo.date}</div>
@@ -1820,19 +1796,16 @@
                     c.appendChild(div);
                 });
             } else {
-                // Tampilkan artefak user
                 userArtefaks.forEach(artefak => {
                     const date = new Date(artefak.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
                     const div = document.createElement('div');
                     div.className = 'artefak-grid-item';
                     div.onclick = () => showArtefakDetails(artefak);
                     div.innerHTML = `
-                        <div class="fixed-image-container">
-                            ${artefak.imageUrl ? 
-                                `<img src="${artefak.imageUrl}" alt="${artefak.title}" class="artefak-grid-image" loading="lazy">` :
-                                `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(73,3,252,0.1);">📁</div>`
-                            }
-                        </div>
+                        ${artefak.imageUrl ? 
+                            `<img src="${artefak.imageUrl}" alt="${artefak.title}" class="artefak-grid-image" loading="lazy">` :
+                            `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(73,3,252,0.1);">📁</div>`
+                        }
                         <div class="artefak-grid-overlay">
                             <div class="artefak-grid-title">${artefak.title}</div>
                             <div class="artefak-grid-date">${date}</div>
@@ -1865,8 +1838,8 @@
                         ${date} • @${artefak.username || currentUser}
                     </div>
                     ${artefak.imageUrl ? 
-                        `<div style="width:100%;height:200px;background:rgba(73,3,252,0.05);border-radius:10px;overflow:hidden;margin-bottom:15px;">
-                            <img src="${artefak.imageUrl}" alt="${artefak.title}" style="width:100%;height:100%;object-fit:contain;">
+                        `<div style="width:100%;height:250px;background:rgba(73,3,252,0.05);border-radius:10px;overflow:hidden;margin-bottom:15px;">
+                            <img src="${artefak.imageUrl}" alt="${artefak.title}" style="width:100%;height:100%;object-fit:cover;">
                         </div>` : 
                         ''
                     }
@@ -1893,7 +1866,6 @@
             
             const d = getUserData(currentUser);
             if (!d.rants || d.rants.length === 0) {
-                // Tampilkan 3 dummy rant jika belum ada postingan
                 const dummyRants = [
                     { content: "Gue juga ngerasain... capek banget. Kadang pengen nangis aja.", date: Date.now() - 3600000, hashtag: "#CapekPuraPura" },
                     { content: "Gue ngerasain kayak dijebak sama hidup. Kerjaan banyak, gaji kecil, bos galak, pacar ngilang. Kayaknya gue harus istirahat dulu.", date: Date.now() - 7200000, hashtag: "#SayNOPE" },
@@ -1938,7 +1910,6 @@
             const d = getUserData(currentUser);
             if (!d.rants) d.rants = [];
             
-            // Pilih hashtag acak dari hashtag terpilih user
             const hashtags = Object.values(d.selectedHashtags).filter(h => h);
             const randomHashtag = hashtags.length > 0 ? 
                 hashtags[Math.floor(Math.random() * hashtags.length)] : 
@@ -1954,7 +1925,6 @@
             d.lastLogin = Date.now();
             saveUserData(currentUser, d);
             
-            // Tambah ke global rants
             const globalRants = getGlobalRants();
             globalRants.push({
                 username: currentUser,
@@ -1963,7 +1933,6 @@
             saveGlobalRants(globalRants);
             
             box.value = '';
-            // Reset counter
             const counter = document.getElementById('rantCounter');
             if (counter) {
                 counter.textContent = '0/300';
@@ -1971,7 +1940,6 @@
             
             renderRecentRants();
             
-            // Refresh feed di tab Jalan jika sedang aktif
             if (currentTab === 'jalan') {
                 initJalanPage();
             }
@@ -1979,16 +1947,14 @@
             showToast('Rant berhasil diposting!');
         }
         
-        // ===== SISTEM UNGGAH ARTEFAK YANG DISEDERHANAKAN =====
+        // ===== SISTEM UNGGAH ARTEFAK =====
         function openArtefakUpload() {
-            // Reset state
             artefakUploadState = {
                 image: null,
                 title: '',
                 step: 0
             };
             
-            // Buka file picker
             const fileInput = document.getElementById('artefakFileInput');
             fileInput.onchange = handleImageSelect;
             fileInput.click();
@@ -1998,19 +1964,16 @@
             const file = event.target.files[0];
             if (!file) return;
             
-            // Check if file is an image
             if (!file.type.match('image.*')) {
                 alert('Hanya file gambar yang diperbolehkan!');
                 return;
             }
             
-            // Check file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
                 alert('Ukuran file maksimal 5MB!');
                 return;
             }
             
-            // Create file reader
             const reader = new FileReader();
             
             reader.onload = function(e) {
@@ -2031,7 +1994,6 @@
             const modal = document.getElementById('modalContent');
             
             if (artefakUploadState.step === 1) {
-                // Step 1: Tulis judul (maks 4 kata)
                 modal.innerHTML = `
                     <div class="modal-header">
                         <div class="modal-title">Tulis tentang foto ini</div>
@@ -2061,14 +2023,12 @@
                     </div>
                 `;
                 
-                // Setup word counter
                 const titleInput = document.getElementById('artefakTitleInputModal');
                 if (titleInput) {
                     titleInput.focus();
                     updateArtefakTitle();
                 }
             } else if (artefakUploadState.step === 2) {
-                // Step 2: Konfirmasi upload dengan peringatan
                 modal.innerHTML = `
                     <div class="modal-header">
                         <div class="modal-title">Konfirmasi Unggah</div>
@@ -2109,24 +2069,20 @@
             
             artefakUploadState.title = input.value.trim();
             
-            // Count words
             const words = artefakUploadState.title.split(/\s+/).filter(word => word.length > 0);
             const wordCount = words.length;
             
-            // Update counter
             const counter = document.getElementById('wordCounter');
             if (counter) {
                 counter.textContent = `${wordCount}/4 kata`;
                 counter.style.color = wordCount > 4 ? '#ff3333' : 'rgba(255, 255, 255, 0.4)';
             }
             
-            // Enable/disable next button
             const nextBtn = document.getElementById('nextBtn');
             if (nextBtn) {
                 nextBtn.disabled = wordCount > 4 || wordCount === 0;
             }
             
-            // Trim if more than 4 words
             if (wordCount > 4) {
                 const trimmed = words.slice(0, 4).join(' ');
                 input.value = trimmed;
@@ -2160,37 +2116,31 @@
                 title: artefakUploadState.title || 'Artefak Baru',
                 imageUrl: artefakUploadState.image,
                 date: Date.now(),
-                username: currentUser
+                username: currentUser,
+                nobar: true // Selalu ada badge nobar untuk artefak baru
             };
             
-            // Save to user data
             d.artefacts.push(newArtefak);
             d.lastLogin = Date.now();
             saveUserData(currentUser, d);
             
-            // Save to global artefaks
             const globalArtefaks = getGlobalArtefaks();
             globalArtefaks.push(newArtefak);
             saveGlobalArtefaks(globalArtefaks);
             
-            // Reset file input
             document.getElementById('artefakFileInput').value = '';
             
-            // Close modal
             hideModal();
             
-            // Update UI
             renderArtefakPreview();
             renderArtefakGrid();
             
-            // Refresh feeds
             if (currentTab === 'jalan') {
                 initJalanPage();
             }
             
             showToast('Artefak berhasil diupload! Tersimpan selamanya.');
             
-            // Reset state
             artefakUploadState = {
                 image: null,
                 title: '',
@@ -2208,7 +2158,6 @@
             
             const userReactions = reactions['global'];
             
-            // Check if user already reacted
             if (!userReactions[reactionType].users.includes(currentUser)) {
                 userReactions[reactionType].count++;
                 userReactions[reactionType].users.push(currentUser);
@@ -2217,7 +2166,6 @@
                 saveArtefakReactions(reactions);
                 currentArtefakReactions = userReactions;
                 
-                // Update UI
                 renderArtefakPreview();
                 showToast(`Kamu bereaksi dengan ${reactionType}!`);
             } else {
@@ -2272,35 +2220,16 @@
         }
         
         function renderFrekuensiFeed() {
-            const c = document.getElementById('frekuensiList');
+            const c = document.getElementById('frekuensiFeed');
             if (!c) return;
             
-            // Ambil hashtag terpilih user
             const d = getUserData(currentUser);
             if (!d.selectedHashtags) return;
             
-            // Gabungkan rant dan artefak
             const allUsers = getUsers();
             let filteredItems = [];
             
-            // 1. Rant dengan hashtag yang sama
-            Object.values(allUsers).forEach(user => {
-                if (user.rants) {
-                    user.rants.forEach(rant => {
-                        Object.values(d.selectedHashtags).forEach(hashtag => {
-                            if (hashtag && rant.hashtag === hashtag) {
-                                filteredItems.push({
-                                    type: 'rant',
-                                    ...rant,
-                                    username: user.username
-                                });
-                            }
-                        });
-                    });
-                }
-            });
-            
-            // 2. Artefak dari user yang sama
+            // 1. Artefak dari user dengan hashtag yang sama (VISUAL PENUH)
             const globalArtefaks = getGlobalArtefaks();
             globalArtefaks.forEach(artefak => {
                 const user = getUserData(artefak.username);
@@ -2318,10 +2247,24 @@
                 }
             });
             
-            // Urutkan berdasarkan tanggal terbaru
-            filteredItems.sort((a, b) => b.date - a.date);
+            // 2. Rant dengan hashtag yang sama
+            Object.values(allUsers).forEach(user => {
+                if (user.rants) {
+                    user.rants.forEach(rant => {
+                        Object.values(d.selectedHashtags).forEach(hashtag => {
+                            if (hashtag && rant.hashtag === hashtag) {
+                                filteredItems.push({
+                                    type: 'rant',
+                                    ...rant,
+                                    username: user.username
+                                });
+                            }
+                        });
+                    });
+                }
+            });
             
-            // Ambil maksimal 10 item
+            filteredItems.sort((a, b) => b.date - a.date);
             const items = filteredItems.slice(0, 10);
             
             c.innerHTML = '';
@@ -2339,7 +2282,31 @@
                     minute: '2-digit' 
                 });
                 
-                if (item.type === 'rant') {
+                if (item.type === 'artefak') {
+                    // ARTEFAK VISUAL PENUH
+                    const div = document.createElement('div');
+                    div.className = 'artefak-feed-item';
+                    div.onclick = () => showArtefakDetails(item);
+                    div.innerHTML = `
+                        <div class="artefak-feed-image">
+                            <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'}" alt="${item.title}">
+                            ${item.nobar ? '<div class="artefak-nobar-badge" style="top:10px;left:10px;">Nobar terakhir sama mantan</div>' : ''}
+                        </div>
+                        <div class="artefak-feed-info">
+                            <div class="artefak-feed-username">🖼️ @${item.username} • ${date}</div>
+                            <div class="artefak-feed-title">${item.title}</div>
+                            <div class="rant-actions">
+                                <div class="rant-emoji-bar">
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('nangis', event)">😭</button>
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('api', event)">🔥</button>
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('badut', event)">🤡</button>
+                                </div>
+                                <span style="font-size:10px;color:rgba(255,255,255,0.5)">🖼️ Artefak</span>
+                            </div>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                } else if (item.type === 'rant') {
                     const content = item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content;
                     
                     const div = document.createElement('div');
@@ -2354,23 +2321,6 @@
                                 <button class="emoji-btn" onclick="reactToRant('😭', this)">😭</button>
                             </div>
                             <span style="font-size:10px;color:rgba(255,255,255,0.5)">💬 0</span>
-                        </div>
-                    `;
-                    c.appendChild(div);
-                } else if (item.type === 'artefak') {
-                    const div = document.createElement('div');
-                    div.className = 'recent-rant-item compact';
-                    div.onclick = () => showArtefakDetails(item);
-                    div.innerHTML = `
-                        <div class="recent-rant-date compact">🖼️ @${item.username} • ${date}</div>
-                        <div class="recent-rant-content compact"><strong>${item.title}</strong></div>
-                        <div class="rant-actions">
-                            <div class="rant-emoji-bar">
-                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('nangis', event)">😭</button>
-                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('api', event)">🔥</button>
-                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('badut', event)">🤡</button>
-                            </div>
-                            <span style="font-size:10px;color:rgba(255,255,255,0.5)">🖼️ Artefak</span>
                         </div>
                     `;
                     c.appendChild(div);
@@ -2384,24 +2334,15 @@
         }
         
         function renderGelombangFeed() {
-            const c = document.getElementById('gelombangList');
+            const c = document.getElementById('gelombangFeed');
             if (!c) return;
             
-            // Gabungkan semua rant dan artefak
-            const globalRants = getGlobalRants();
             const globalArtefaks = getGlobalArtefaks();
+            const globalRants = getGlobalRants();
             
             let allItems = [];
             
-            // Tambahkan rants
-            globalRants.forEach(rant => {
-                allItems.push({
-                    type: 'rant',
-                    ...rant
-                });
-            });
-            
-            // Tambahkan artefaks
+            // ARTEFAK VISUAL PENUH di atas
             globalArtefaks.forEach(artefak => {
                 allItems.push({
                     type: 'artefak',
@@ -2409,11 +2350,15 @@
                 });
             });
             
-            // Urutkan berdasarkan tanggal terbaru
-            allItems.sort((a, b) => b.date - a.date);
+            globalRants.forEach(rant => {
+                allItems.push({
+                    type: 'rant',
+                    ...rant
+                });
+            });
             
-            // Ambil 10 item terbaru
-            const items = allItems.slice(0, 10);
+            allItems.sort((a, b) => b.date - a.date);
+            const items = allItems.slice(0, 15); // Ambil lebih banyak untuk mix yang baik
             
             c.innerHTML = '';
             
@@ -2422,7 +2367,16 @@
                 return;
             }
             
-            items.forEach(item => {
+            // Urutkan dengan artefak lebih prioritas
+            items.sort((a, b) => {
+                if (a.type === 'artefak' && b.type !== 'artefak') return -1;
+                if (a.type !== 'artefak' && b.type === 'artefak') return 1;
+                return b.date - a.date;
+            });
+            
+            const displayItems = items.slice(0, 10);
+            
+            displayItems.forEach(item => {
                 const date = new Date(item.date).toLocaleDateString('id-ID', { 
                     day: 'numeric', 
                     month: 'short', 
@@ -2430,7 +2384,31 @@
                     minute: '2-digit' 
                 });
                 
-                if (item.type === 'rant') {
+                if (item.type === 'artefak') {
+                    // ARTEFAK VISUAL PENUH
+                    const div = document.createElement('div');
+                    div.className = 'artefak-feed-item';
+                    div.onclick = () => showArtefakDetails(item);
+                    div.innerHTML = `
+                        <div class="artefak-feed-image">
+                            <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'}" alt="${item.title}">
+                            ${item.nobar ? '<div class="artefak-nobar-badge" style="top:10px;left:10px;">Nobar terakhir sama mantan</div>' : ''}
+                        </div>
+                        <div class="artefak-feed-info">
+                            <div class="artefak-feed-username">🖼️ @${item.username} • ${date}</div>
+                            <div class="artefak-feed-title">${item.title}</div>
+                            <div class="rant-actions">
+                                <div class="rant-emoji-bar">
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('nangis', event)">😭</button>
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('api', event)">🔥</button>
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('badut', event)">🤡</button>
+                                </div>
+                                <span style="font-size:10px;color:rgba(255,255,255,0.5)">🖼️ Artefak</span>
+                            </div>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                } else if (item.type === 'rant') {
                     const content = item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content;
                     
                     const div = document.createElement('div');
@@ -2448,34 +2426,16 @@
                         </div>
                     `;
                     c.appendChild(div);
-                } else if (item.type === 'artefak') {
-                    const div = document.createElement('div');
-                    div.className = 'recent-rant-item compact';
-                    div.onclick = () => showArtefakDetails(item);
-                    div.innerHTML = `
-                        <div class="recent-rant-date compact">🖼️ @${item.username} • ${date}</div>
-                        <div class="recent-rant-content compact"><strong>${item.title}</strong></div>
-                        <div class="rant-actions">
-                            <div class="rant-emoji-bar">
-                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('nangis', event)">😭</button>
-                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('api', event)">🔥</button>
-                                <button class="emoji-btn" onclick="reactToArtefakFromFeed('badut', event)">🤡</button>
-                            </div>
-                            <span style="font-size:10px;color:rgba(255,255,255,0.5)">🖼️ Artefak</span>
-                        </div>
-                    `;
-                    c.appendChild(div);
                 }
             });
         }
         
         function renderMovementFeed() {
-            const c = document.getElementById('movementList');
+            const c = document.getElementById('movementFeed');
             if (!c) return;
             
             const movementHashtags = ["#PendidikanUntukSemua", "#JanganExploitBuruh", "#FUNDINGSolidaritasDiam", "#PetisiTerbuka"];
             
-            // Ambil rant dengan hashtag movement
             const globalRants = getGlobalRants();
             let movementRants = [];
             
@@ -2488,10 +2448,7 @@
                 }
             });
             
-            // Urutkan berdasarkan tanggal terbaru
             movementRants.sort((a, b) => b.date - a.date);
-            
-            // Ambil 10 rant terbaru
             const items = movementRants.slice(0, 10);
             
             c.innerHTML = '';
@@ -2606,7 +2563,6 @@
                 <div style="max-height: 70vh; overflow-y: auto; padding: 10px 0;">
             `;
             
-            // Urutkan dari terbaru
             const sortedRants = [...d.rants].sort((a, b) => b.date - a.date);
             
             if (sortedRants.length === 0) {
@@ -2641,7 +2597,6 @@
         
         function hideModal() {
             document.getElementById('modalOverlay').classList.remove('active');
-            // Reset upload state jika modal diclose
             artefakUploadState = {
                 image: null,
                 title: '',
@@ -2652,9 +2607,7 @@
         function reactToRant(emoji, button) {
             if (!currentUser) return;
             
-            // Toggle active state
             button.classList.toggle('active');
-            
             showToast(`Kamu bereaksi ${emoji} pada rant ini`);
         }
         
