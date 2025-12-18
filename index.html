@@ -28,7 +28,7 @@
             width: 100%;
             max-width: 500px;
             margin: 0 auto;
-            padding: 15px; /* Dikurangi dari 20px */
+            padding: 15px;
             min-height: 100vh;
         }
         .page.active {
@@ -44,7 +44,7 @@
             letter-spacing: -3px;
             position: absolute;
             top: 20px;
-            left: 20px; /* Rata kiri */
+            left: 15px; /* Sesuai padding artefak screen */
         }
         /* ===== INPUT STYLE ===== */
         .nope-input {
@@ -55,10 +55,10 @@
             color: white;
             font-size: 22px;
             text-align: center;
-            padding: 10px 0; /* Dikurangi */
+            padding: 10px 0;
             outline: none;
             font-weight: 300;
-            margin: 25px 0 15px 0; /* Dikurangi */
+            margin: 25px 0 15px 0;
         }
         .nope-input:focus {
             border-bottom-color: #4903fc;
@@ -67,8 +67,8 @@
         .hint {
             text-align: center;
             color: rgba(73, 3, 252, 0.4);
-            font-size: 12px; /* Dikurangi */
-            margin: 6px 0; /* Dikurangi */
+            font-size: 12px;
+            margin: 6px 0;
             line-height: 1.4;
         }
         .hint strong {
@@ -77,9 +77,9 @@
         /* ===== USER STATUS ===== */
         .user-status {
             text-align: center;
-            margin: 10px 0; /* Dikurangi */
-            padding: 10px; /* Dikurangi */
-            font-size: 13px; /* Dikurangi */
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 13px;
             line-height: 1.4;
             background: rgba(73, 3, 252, 0.05);
             color: rgba(73, 3, 252, 0.7);
@@ -92,45 +92,45 @@
         /* ===== ZONA SELECTION HEADER ===== */
         .zona-header {
             text-align: center;
-            margin: 15px 0 25px 0; /* Dikurangi */
+            margin: 15px 0 25px 0;
         }
         .zona-title {
-            font-size: 16px; /* Dikurangi */
+            font-size: 16px;
             font-weight: 600;
             color: #4903fc;
             margin-bottom: 5px;
         }
         .zona-subtitle {
-            font-size: 12px; /* Dikurangi */
+            font-size: 12px;
             color: rgba(73, 3, 252, 0.5);
         }
         /* ===== ZONA CARD ===== */
         .zona-card {
             background: rgba(73, 3, 252, 0.03);
             border: 1px solid rgba(73, 3, 252, 0.1);
-            border-radius: 10px; /* Dikurangi */
-            padding: 15px; /* Dikurangi */
-            margin-bottom: 15px; /* Dikurangi */
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
         .zona-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px; /* Dikurangi */
-            padding-bottom: 8px; /* Dikurangi */
+            margin-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 1px solid rgba(73, 3, 252, 0.1);
         }
         .zona-card-name {
-            font-size: 16px; /* Dikurangi */
+            font-size: 16px;
             font-weight: 600;
             color: #4903fc;
         }
         .zona-card-desc {
-            font-size: 11px; /* Dikurangi */
+            font-size: 11px;
             color: rgba(73, 3, 252, 0.5);
         }
         .zona-card-counter {
-            font-size: 13px; /* Dikurangi */
+            font-size: 13px;
             color: #4903fc;
             font-weight: 600;
         }
@@ -138,13 +138,13 @@
         .hashtag-list {
             display: flex;
             flex-direction: column;
-            gap: 8px; /* Dikurangi */
+            gap: 8px;
         }
         .hashtag-item {
-            padding: 10px; /* Dikurangi */
+            padding: 10px;
             background: rgba(73, 3, 252, 0.05);
             border: 1px solid rgba(73, 3, 252, 0.08);
-            border-radius: 6px; /* Dikurangi */
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -157,13 +157,13 @@
             box-shadow: 0 2px 6px rgba(73, 3, 252, 0.1);
         }
         .hashtag-name {
-            font-size: 14px; /* Dikurangi */
+            font-size: 14px;
             font-weight: 500;
             color: rgba(73, 3, 252, 0.9);
-            margin-bottom: 3px; /* Dikurangi */
+            margin-bottom: 3px;
         }
         .hashtag-microcopy {
-            font-size: 10px; /* Dikurangi */
+            font-size: 10px;
             color: rgba(73, 3, 252, 0.5);
             line-height: 1.3;
             font-style: italic;
@@ -171,15 +171,15 @@
         /* ===== ACTION BUTTONS ===== */
         .action-btn {
             width: 100%;
-            padding: 12px; /* Dikurangi */
-            margin: 8px 0; /* Dikurangi */
+            padding: 12px;
+            margin: 8px 0;
             background: rgba(73, 3, 252, 0.15);
             border: 1px solid #4903fc;
             color: white;
             font-family: inherit;
-            font-size: 16px; /* Dikurangi */
+            font-size: 16px;
             font-weight: 600;
-            border-radius: 8px; /* Dikurangi */
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
@@ -205,20 +205,20 @@
         /* ===== JEJAK PAGE - NEW STYLES ===== */
         /* Artefak Preview - Full Width Image */
         .artefak-preview-container {
-            margin: 15px 0; /* Dikurangi */
+            margin: 15px 0;
         }
         .artefak-preview {
             width: 100%;
             position: relative;
             background: rgba(73, 3, 252, 0.03);
             border: 1px solid rgba(73, 3, 252, 0.1);
-            border-radius: 10px; /* Dikurangi */
+            border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
         }
         .artefak-preview:hover {
-            transform: translateY(-3px); /* Dikurangi */
+            transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(73, 3, 252, 0.15);
         }
         .artefak-preview-image {
@@ -236,53 +236,54 @@
             color: rgba(73, 3, 252, 0.2);
         }
         .artefak-preview-info {
-            padding: 10px; /* Dikurangi */
+            padding: 10px;
         }
         .artefak-preview-title {
-            font-size: 14px; /* Dikurangi */
+            font-size: 14px;
             font-weight: 600;
             color: #fff;
-            margin-bottom: 3px; /* Dikurangi */
+            margin-bottom: 3px;
             display: flex;
             align-items: center;
-            gap: 6px; /* Dikurangi */
+            gap: 6px;
         }
         .artefak-preview-date {
-            font-size: 10px; /* Dikurangi */
+            font-size: 10px;
             color: rgba(73, 3, 252, 0.4);
         }
         /* Rant Box */
         .rant-box-container {
-            margin: 20px 0; /* Dikurangi */
+            margin: 20px 0;
         }
         .rant-box-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px; /* Dikurangi */
+            margin-bottom: 8px;
         }
         .rant-box-title {
-            font-size: 14px; /* Dikurangi */
+            font-size: 14px;
             font-weight: 600;
             color: #4903fc;
         }
         .rant-box-counter {
-            font-size: 11px; /* Dikurangi */
+            font-size: 11px;
             color: rgba(73, 3, 252, 0.5);
+            display: none; /* Hapus counter huruf */
         }
         .rant-box {
             width: 100%;
-            min-height: 100px; /* Dikurangi */
+            min-height: 100px;
             background: rgba(73, 3, 252, 0.03);
             border: 1px solid rgba(73, 3, 252, 0.1);
-            border-radius: 8px; /* Dikurangi */
-            padding: 12px; /* Dikurangi */
+            border-radius: 8px;
+            padding: 12px;
             color: white;
             font-family: inherit;
-            font-size: 13px; /* Dikurangi */
+            font-size: 13px;
             line-height: 1.4;
             resize: none;
-            margin-bottom: 8px; /* Dikurangi */
+            margin-bottom: 8px;
         }
         .rant-box:focus {
             outline: none;
@@ -294,26 +295,43 @@
         }
         .rant-box-footer {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end; /* Rata kanan */
             align-items: center;
+            margin-top: 10px;
+        }
+        .rant-box-footer .gaskeun-btn {
+            background: transparent;
+            border: none;
+            color: #4903fc;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .rant-box-footer .gaskeun-btn:hover {
+            background: rgba(73, 3, 252, 0.1);
         }
         /* Recent Rants Section */
         .recent-rants {
-            margin: 20px 0; /* Dikurangi */
+            margin: 20px 0;
         }
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px; /* Dikurangi */
+            margin-bottom: 10px;
         }
         .section-title {
-            font-size: 14px; /* Dikurangi */
+            font-size: 14px;
             font-weight: 600;
             color: #4903fc;
         }
         .section-view-all {
-            font-size: 11px; /* Dikurangi */
+            font-size: 11px;
             color: rgba(73, 3, 252, 0.5);
             cursor: pointer;
             transition: color 0.2s;
@@ -324,13 +342,13 @@
         .recent-rants-list {
             display: flex;
             flex-direction: column;
-            gap: 8px; /* Dikurangi */
+            gap: 8px;
         }
         .recent-rant-item {
             background: rgba(73, 3, 252, 0.03);
             border: 1px solid rgba(73, 3, 252, 0.08);
-            border-radius: 6px; /* Dikurangi */
-            padding: 10px; /* Dikurangi */
+            border-radius: 6px;
+            padding: 10px;
             transition: all 0.2s;
         }
         .recent-rant-item:hover {
@@ -338,12 +356,12 @@
             transform: translateY(-2px);
         }
         .recent-rant-date {
-            font-size: 10px; /* Dikurangi */
+            font-size: 10px;
             color: rgba(73, 3, 252, 0.4);
-            margin-bottom: 3px; /* Dikurangi */
+            margin-bottom: 3px;
         }
         .recent-rant-content {
-            font-size: 12px; /* Dikurangi */
+            font-size: 12px;
             color: rgba(73, 3, 252, 0.8);
             line-height: 1.4;
             display: -webkit-box;
@@ -354,28 +372,28 @@
         /* ===== JALAN PAGE ===== */
         .jalan-header {
             text-align: center;
-            margin: 15px 0 15px 0; /* Dikurangi */
+            margin: 15px 0 15px 0;
         }
         .jalan-title {
-            font-size: 18px; /* Dikurangi */
+            font-size: 18px;
             font-weight: 600;
             color: #4903fc;
-            margin-bottom: 8px; /* Dikurangi */
+            margin-bottom: 8px;
         }
         .jalan-tab-nav {
             display: flex;
             justify-content: space-around;
-            margin: 10px 0; /* Dikurangi */
+            margin: 10px 0;
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 6px; /* Dikurangi */
+            padding-bottom: 6px;
         }
         .jalan-tab-btn {
             background: none;
             border: none;
             color: rgba(255,255,255,0.6);
-            font-size: 12px; /* Dikurangi */
-            padding: 5px 10px; /* Dikurangi */
-            border-radius: 5px; /* Dikurangi */
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 5px;
             cursor: pointer;
         }
         .jalan-tab-btn.active {
@@ -383,43 +401,43 @@
             background: rgba(73, 3, 252, 0.1);
         }
         .jalan-tab-content {
-            margin-top: 10px; /* Dikurangi */
+            margin-top: 10px;
         }
         /* COMPACT RANT LIST */
         .recent-rants-list.compact {
             gap: 8px !important;
-            margin-top: 10px; /* Dikurangi */
+            margin-top: 10px;
         }
         .recent-rant-item.compact {
             padding: 8px !important;
             border-radius: 6px !important;
         }
         .recent-rant-date.compact {
-            font-size: 9px; /* Dikurangi */
+            font-size: 9px;
             color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 3px; /* Dikurangi */
+            margin-bottom: 3px;
         }
         .recent-rant-content.compact {
-            font-size: 12px; /* Dikurangi */
+            font-size: 12px;
             line-height: 1.4;
-            margin-bottom: 5px; /* Dikurangi */
+            margin-bottom: 5px;
         }
         .rant-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 10px; /* Dikurangi */
+            font-size: 10px;
             color: rgba(255, 255, 255, 0.6);
         }
         .rant-emoji-bar {
             display: flex;
-            gap: 5px; /* Dikurangi */
+            gap: 5px;
         }
         .emoji-btn {
             background: none;
             border: none;
             color: rgba(255, 255, 255, 0.7);
-            font-size: 13px; /* Dikurangi */
+            font-size: 13px;
             cursor: pointer;
             padding: 2px;
             border-radius: 4px;
@@ -443,34 +461,34 @@
         /* ===== DUNIA PAGE ===== */
         .dunia-header {
             text-align: center;
-            margin: 15px 0 25px 0; /* Dikurangi */
+            margin: 15px 0 25px 0;
         }
         .dunia-title {
-            font-size: 18px; /* Dikurangi */
+            font-size: 18px;
             font-weight: 600;
             color: #4903fc;
-            margin-bottom: 8px; /* Dikurangi */
+            margin-bottom: 8px;
         }
         .dunia-subtitle {
-            font-size: 12px; /* Dikurangi */
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.6);
         }
         .profile-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px; /* Dikurangi */
-            padding: 20px; /* Dikurangi */
-            margin: 20px 0; /* Dikurangi */
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
             text-align: center;
         }
         .profile-username {
-            font-size: 20px; /* Dikurangi */
+            font-size: 20px;
             font-weight: 700;
             color: #4903fc;
-            margin-bottom: 8px; /* Dikurangi */
+            margin-bottom: 8px;
         }
         .profile-meta {
-            font-size: 12px; /* Dikurangi */
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.5);
             margin: 5px 0;
         }
@@ -486,7 +504,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            padding: 15px; /* Dikurangi */
+            padding: 15px;
         }
         .modal-overlay.active {
             display: flex;
@@ -494,8 +512,8 @@
         .modal {
             background: rgba(0, 0, 0, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; /* Dikurangi */
-            padding: 20px; /* Dikurangi */
+            border-radius: 12px;
+            padding: 20px;
             width: 100%;
             max-width: 450px;
             max-height: 90vh;
@@ -505,12 +523,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px; /* Dikurangi */
-            padding-bottom: 10px; /* Dikurangi */
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         .modal-title {
-            font-size: 18px; /* Dikurangi */
+            font-size: 18px;
             font-weight: 600;
             color: #4903fc;
         }
@@ -518,11 +536,11 @@
             background: none;
             border: none;
             color: rgba(255, 255, 255, 0.5);
-            font-size: 22px; /* Dikurangi */
+            font-size: 22px;
             cursor: pointer;
             padding: 0;
-            width: 28px; /* Dikurangi */
-            height: 28px; /* Dikurangi */
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -540,7 +558,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-around;
-            padding: 8px 0; /* Dikurangi */
+            padding: 8px 0;
             z-index: 1000;
         }
         .nav-item {
@@ -549,17 +567,17 @@
             align-items: center;
             color: rgba(255, 255, 255, 0.5);
             text-decoration: none;
-            font-size: 10px; /* Dikurangi */
-            padding: 6px 8px; /* Dikurangi */
+            font-size: 10px;
+            padding: 6px 8px;
             transition: all 0.2s;
-            min-width: 60px; /* Dikurangi */
+            min-width: 60px;
         }
         .nav-item.active {
             color: #4903fc;
         }
         .nav-icon {
-            font-size: 16px; /* Dikurangi */
-            margin-bottom: 2px; /* Dikurangi */
+            font-size: 16px;
+            margin-bottom: 2px;
         }
         .nav-label {
             font-weight: 500;
@@ -576,73 +594,90 @@
         /* ===== CHARACTER COUNTER ===== */
         .char-counter {
             text-align: right;
-            font-size: 11px; /* Dikurangi */
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 10px; /* Dikurangi */
+            margin-bottom: 10px;
+            display: none; /* Hapus counter huruf */
         }
         /* ===== EMOJI BAR BELOW ARTEFAK ===== */
         .artefak-emoji-bar {
             display: flex;
             justify-content: flex-end;
-            gap: 8px; /* Dikurangi */
-            padding: 6px 0; /* Dikurangi */
-            margin-top: 6px; /* Dikurangi */
+            gap: 15px; /* Lebih longgar */
+            padding: 8px 15px; /* Padding horizontal */
+            margin-top: 6px;
             border-top: 1px solid rgba(73, 3, 252, 0.1);
         }
         .artefak-emoji-btn {
             background: none;
             border: none;
             color: rgba(255, 255, 255, 0.7);
-            font-size: 16px; /* Dikurangi */
+            font-size: 20px; /* Sedikit lebih besar */
             cursor: pointer;
-            padding: 3px 6px; /* Dikurangi */
-            border-radius: 4px;
-            transition: color 0.2s;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
         .artefak-emoji-btn:hover {
             color: #4903fc;
+            transform: scale(1.1);
         }
         .artefak-emoji-btn.active {
             color: #4903fc;
         }
-        /* ===== DUMMY ARTEFAK GRID ===== */
-        .dummy-artefaks-grid {
+        /* ===== ARTEFAK GRID 3 KOLOM ===== */
+        .artefaks-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px; /* Dikurangi */
-            margin: 15px 0; /* Dikurangi */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
         }
-        .dummy-artefak-item {
+        .artefak-grid-item {
             background: rgba(73, 3, 252, 0.03);
             border: 1px solid rgba(73, 3, 252, 0.08);
-            border-radius: 6px; /* Dikurangi */
-            padding: 8px; /* Dikurangi */
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-        .dummy-artefak-item:hover {
-            background: rgba(73, 3, 252, 0.05);
-            transform: translateY(-2px);
-        }
-        .dummy-artefak-icon {
-            font-size: 20px; /* Dikurangi */
-            color: rgba(73, 3, 252, 0.2);
-            margin-bottom: 4px; /* Dikurangi */
-        }
-        .dummy-artefak-title {
-            font-size: 10px; /* Dikurangi */
-            font-weight: 500;
-            color: rgba(73, 3, 252, 0.9);
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
+            border-radius: 8px;
             overflow: hidden;
-            margin-bottom: 2px; /* Dikurangi */
+            cursor: pointer;
+            transition: all 0.3s;
+            aspect-ratio: 1;
+            position: relative;
         }
-        .dummy-artefak-date {
-            font-size: 8px; /* Dikurangi */
-            color: rgba(73, 3, 252, 0.4);
+        .artefak-grid-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(73, 3, 252, 0.15);
+        }
+        .artefak-grid-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .artefak-grid-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        .artefak-grid-item:hover .artefak-grid-overlay {
+            transform: translateY(0);
+        }
+        .artefak-grid-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 2px;
+        }
+        .artefak-grid-date {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        /* ===== DUMMY ARTEFAK GRID (TIDAK DIGUNAKAN LAGI) ===== */
+        .dummy-artefaks-grid {
+            display: none;
         }
     </style>
 </head>
@@ -754,7 +789,7 @@
             ></textarea>
             <div class="rant-box-footer">
                 <!-- Dropdown hashtag dihapus -->
-                <button class="action-btn" style="padding: 6px 12px; font-size: 14px; background: transparent; border: 1px solid #4903fc; margin-left: auto;" onclick="postRantFromBox()">
+                <button class="gaskeun-btn" onclick="postRantFromBox()">
                     Gaskeun!
                 </button>
             </div>
@@ -769,8 +804,8 @@
                 <!-- Recent rants will be populated by JavaScript -->
             </div>
         </div>
-        <!-- Dummy Artefaks Grid (Menggantikan "Artefak Terbaru") -->
-        <div class="dummy-artefaks-grid" id="dummyArtefaksGrid">
+        <!-- Artefak Grid 3x2 -->
+        <div class="artefaks-grid" id="artefaksGrid">
             <!-- Akan diisi oleh JavaScript -->
         </div>
     </div>
@@ -861,7 +896,7 @@
                 description: "Film, musik, meme, tren viral",
                 hashtags: [
                     { name: "#FilmEndingGaje", microcopy: "capek nunggu akhir yang masuk akal. hidup aja nggak pernah adil." },
-                    { name: "#InfluencerNgehek", microcopy: "liat konten ‘hidup sempurna’, pas DM minta endorse malah auto read." },
+                    { name: "#InfluencerNgehek", microcopy: "liat konten 'hidup sempurna', pas DM minta endorse malah auto read." },
                     { name: "#BeliTiketJualGinjal", microcopy: "harga tiket konser = 3 bulan gaji magang. tapi hati bilang: worth it." },
                     { name: "#HealingPayLater", microcopy: "self-care pakai cicilan. besok stres, hari ini bahagia dulu." }
                 ]
@@ -883,10 +918,44 @@
                     { name: "#MagangDibayarSerifikat", microcopy: "kerja 8 jam, upahnya cuma kertas yang nggak bisa bayar kos." },
                     { name: "#KeluarWAGroup", microcopy: "tinggalkan grup yang bikin anxiety, bukan kehilangan teman." },
                     { name: "#TemenLambeTurah", microcopy: "curhat dikira rahasia, eh besok jadi bahan gosip." },
-                    { name: "#GajianSejamAbis", microcopy: "gajian pagi, siang udah nol. tapi tetap dipanggil ‘pelit’." }
+                    { name: "#GajianSejamAbis", microcopy: "gajian pagi, siang udah nol. tapi tetap dipanggil 'pelit'." }
                 ]
             }
         };
+        
+        // Dummy foto artefak untuk Gen Z (URL placeholder dari Unsplash dengan tema Gen Z)
+        const dummyArtefakPhotos = [
+            {
+                url: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Late Night Vibes",
+                date: "15 Mar 2025"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Studio Session",
+                date: "12 Mar 2025"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Gym Progress",
+                date: "10 Mar 2025"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1528702748617-c64d49f918af?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Cafe Moments",
+                date: "08 Mar 2025"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Concert Memory",
+                date: "05 Mar 2025"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Skyline View",
+                date: "01 Mar 2025"
+            }
+        ];
         // ===== STORAGE HELPERS =====
         function getUsers() {
             const usersJson = localStorage.getItem('nope_users');
@@ -910,7 +979,6 @@
             if (Object.keys(users).length > 0) return;
             const now = Date.now();
             const dummyUsers = [
-                // === FREKUENSI (5 user - mirip user nyata) ===
                 {
                     username: "diamdiamaja",
                     hashtags: ["#SayNOPE", "#CapekPuraPura", "#DiamDiamNangis"],
@@ -956,7 +1024,6 @@
                         content: "masih genggam erat pas pulang naik angkot."
                     }
                 },
-                // === GELOMBANG (5 user - acak) ===
                 {
                     username: "fomo_gabut",
                     hashtags: ["#FOMO", "#GajianSejamAbis", "#CapekPuraPura"],
@@ -1002,7 +1069,6 @@
                         content: "kembali ke kos setelah lebaran. sendirian lagi."
                     }
                 },
-                // === MOVEMENT (5 user - isu sosial) ===
                 {
                     username: "edukasiuntuksemua",
                     hashtags: ["#PendidikanUntukSemua", "#Movement", "#SayNOPE"],
@@ -1257,15 +1323,13 @@
             setupRantBox();
             renderArtefakPreview();
             renderRecentRants();
-            renderDummyArtefaks(); // Render dummy artefaks grid
+            renderArtefakGrid(); // Render artefak grid 3x2
         }
         function setupRantBox() {
             const d = getUserData(currentUser);
             const box = document.getElementById('rantBox');
-            const counter = document.getElementById('rantCounter');
-            box.addEventListener('input', () => counter.textContent = `${box.value.length}/300`);
+            // Tidak perlu counter lagi
             box.value = '';
-            counter.textContent = '0/300';
         }
         function renderArtefakPreview() {
             const c = document.getElementById('artefakPreviewContainer');
@@ -1275,13 +1339,12 @@
                     <div class="artefak-preview-image"><div class="artefak-placeholder">🖼️</div></div>
                     <div class="artefak-preview-info">
                         <div class="artefak-preview-title">📁 Belum ada artefak</div>
-                        <!-- Teks "Klik untuk menambahkan..." dihapus -->
                     </div>
-                    <!-- Emoji Bar Below Artefak -->
+                    <!-- Emoji Bar Below Artefak - Diperbarui -->
                     <div class="artefak-emoji-bar">
-                        <button class="artefak-emoji-btn" onclick="reactToArtefak('guejuga')" title="GueJuga">👍</button>
-                        <button class="artefak-emoji-btn" onclick="reactToArtefak('peluk')" title="Peluk">🫂</button>
-                        <button class="artefak-emoji-btn" onclick="reactToArtefak('bangga')" title="Bangga">👏</button>
+                        <button class="artefak-emoji-btn" onclick="reactToArtefak('nangis')" title="Nangis">😭</button>
+                        <button class="artefak-emoji-btn" onclick="reactToArtefak('api')" title="Api">🔥</button>
+                        <button class="artefak-emoji-btn" onclick="reactToArtefak('badut')" title="Badut">🤡</button>
                         <button class="artefak-emoji-btn" onclick="reactToArtefak('unggah')" title="Unggah">📤</button>
                     </div>
                 </div>`;
@@ -1295,14 +1358,32 @@
                     <div class="artefak-preview-title">📁 ${latest.title}</div>
                     <div class="artefak-preview-date">Ditambahkan: ${date}</div>
                 </div>
-                <!-- Emoji Bar Below Artefak -->
+                <!-- Emoji Bar Below Artefak - Diperbarui -->
                 <div class="artefak-emoji-bar">
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('guejuga')" title="GueJuga">👍</button>
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('peluk')" title="Peluk">🫂</button>
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('bangga')" title="Bangga">👏</button>
+                    <button class="artefak-emoji-btn" onclick="reactToArtefak('nangis')" title="Nangis">😭</button>
+                    <button class="artefak-emoji-btn" onclick="reactToArtefak('api')" title="Api">🔥</button>
+                    <button class="artefak-emoji-btn" onclick="reactToArtefak('badut')" title="Badut">🤡</button>
                     <button class="artefak-emoji-btn" onclick="reactToArtefak('unggah')" title="Unggah">📤</button>
                 </div>
             </div>`;
+        }
+        function renderArtefakGrid() {
+            const c = document.getElementById('artefaksGrid');
+            c.innerHTML = '';
+            
+            dummyArtefakPhotos.forEach(photo => {
+                const div = document.createElement('div');
+                div.className = 'artefak-grid-item';
+                div.onclick = () => showToast(`"${photo.title}" - ${photo.date}`);
+                div.innerHTML = `
+                    <img src="${photo.url}" alt="${photo.title}" class="artefak-grid-image" loading="lazy">
+                    <div class="artefak-grid-overlay">
+                        <div class="artefak-grid-title">${photo.title}</div>
+                        <div class="artefak-grid-date">${photo.date}</div>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
         }
         function renderRecentRants() {
             const c = document.getElementById('recentRantsList');
@@ -1338,26 +1419,6 @@
                 c.appendChild(div);
             });
         }
-        function renderDummyArtefaks() {
-            const c = document.getElementById('dummyArtefaksGrid');
-            // Dummy data for 6 emotional items for GenZ
-            const dummyItems = [
-                { icon: "📱", title: "HP Lama", date: "12 Mar 2025" },
-                { icon: "🎧", title: "Headset Favorit", date: "15 Feb 2025" },
-                { icon: "📚", title: "Buku Catatan", date: "08 Jan 2025" },
-                { icon: "☕", title: "Gelas Kopi", date: "20 Des 2024" },
-                { icon: "📸", title: "Foto Polaroid", date: "05 Nov 2024" },
-                { icon: "🧸", title: "Boneka Tua", date: "10 Okt 2024" }
-            ];
-            c.innerHTML = '';
-            dummyItems.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'dummy-artefak-item';
-                div.onclick = () => showToast(`Kamu memilih "${item.title}"`);
-                div.innerHTML = `<div class="dummy-artefak-icon">${item.icon}</div><div class="dummy-artefak-title">${item.title}</div><div class="dummy-artefak-date">${item.date}</div>`;
-                c.appendChild(div);
-            });
-        }
         function postRantFromBox() {
             const content = document.getElementById('rantBox').value.trim();
             // Hashtag tidak digunakan karena dropdown dihapus
@@ -1369,7 +1430,6 @@
             d.lastLogin = Date.now();
             saveUserData(currentUser, d);
             document.getElementById('rantBox').value = '';
-            document.getElementById('rantCounter').textContent = '0/300';
             renderRecentRants();
             showToast('Rant berhasil diposting!');
         }
@@ -1468,6 +1528,9 @@
             renderFeeds('Movement', 'movementList', (r) => movementH.has(r.hashtag));
         }
         // ===== REAKSI & KOMENTAR =====
+        function reactToArtefak(reaction) {
+            showToast(`Merespon artefak dengan ${reaction}`);
+        }
         function reactToRant(targetUser, rantDate, emoji) {
             if (!currentUser) return;
             const users = getUsers();
