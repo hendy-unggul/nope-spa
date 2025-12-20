@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iamME · Mulai Jejak</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="icons/icon-72.png">
+    
+    <!-- iOS PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="iamME">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <!-- Android Chrome -->
+    <meta name="theme-color" content="#5d6afb">
+    <meta name="mobile-web-app-capable" content="yes">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <!-- Logo & Tagline -->
+        <div class="login-header">
+            <h1 class="login-logo">iam<span class="logo-me">ME</span></h1>
+            <p class="login-tagline">Jejak digitalmu, ruang privatmu</p>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="login-card">
+            <h2 class="login-title">Mulai Jejak</h2>
+            <p class="login-subtitle">Tanpa email, tanpa password. Cuma kamu.</p>
+            
+            <div class="input-group">
+                <div class="input-icon">👤</div>
+                <input 
+                    type="text" 
+                    id="usernameInput"
+                    class="login-input"
+                    placeholder="pilih username (min. 3 karakter)"
+                    maxlength="20"
+                    autocomplete="off"
+                    autocapitalize="none"
+                    spellcheck="false">
+                <div class="input-helper" id="usernameHelper"></div>
+            </div>
+            
+            <div class="login-rules">
+                <div class="rule-item">
+                    <span class="rule-icon">✓</span>
+                    <span class="rule-text">Anonim total - tidak ada email</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-icon">✓</span>
+                    <span class="rule-text">Data tersimpan di perangkatmu</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-icon">✓</span>
+                    <span class="rule-text">Hapus cache = hapus semua data</span>
+                </div>
+            </div>
+            
+            <button class="btn-login" id="loginBtn" onclick="registerUser()">
+                <span class="btn-icon">🚀</span>
+                <span class="btn-text">Mulai Jejak</span>
+            </button>
+            
+            <div class="login-warning">
+                <span class="warning-icon">⚠️</span>
+                <p>Ini bukan platform sosial. Jejakmu hanya untukmu.</p>
+            </div>
+        </div>
+        
+        <!-- App Features Preview -->
+        <div class="features-preview">
+            <div class="feature-item">
+                <div class="feature-icon">🖼️</div>
+                <div class="feature-content">
+                    <h3>Artefak Visual</h3>
+                    <p>Unggah 1 foto setiap 30 hari dengan 4 kata caption</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">📝</div>
+                <div class="feature-content">
+                    <h3>Rant Box</h3>
+                    <p>Curahkan perasaan, auto-categorize ke 3 zona</p>
+                </div>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">🔍</div>
+                <div class="feature-content">
+                    <h3>Jejak Pribadi</h3>
+                    <p>Lihat pola emosi dan growth-mu sendiri</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="login-footer">
+            <p class="footer-text">v1.0 · Jejak sementara untuk refleksi abadi</p>
+            <p class="footer-hint">Buka di Chrome/Edge untuk install sebagai app</p>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="auth.js"></script>
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW registered:', reg))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>
