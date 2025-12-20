@@ -636,8 +636,6 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: none;
             justify-content: space-around;
-            max-width: 500px;
-            margin: 0 auto;
             padding: 10px 5px;
             z-index: 1000;
         }
@@ -1047,7 +1045,6 @@
         </div>
     </div>
 </div>
-
     <!-- JEJAK PAGE -->
     <div id="jejak" class="page" style="padding-top: 80px;">
         <div class="logo">NOPE</div>
@@ -1192,8 +1189,7 @@
             title: '',
             step: 0 // 0: pilih gambar, 1: tulis judul, 2: konfirmasi
         };
-        // ===== SELECTED HASHTAGS (INTERNAL ONLY) =====
-        // Tidak ada UI onboarding, tapi tetap disimpan untuk inferensi
+        // ===== SELECTED HASHTAGS =====
         let selectedHashtags = {
             popculture: null,
             personalpain: null,
@@ -1422,36 +1418,10 @@
             });
             saveGlobalArtefaks(globalArtefaks);
         }
-        // ===== INFERENCE FROM 3 RANTS =====
-        function inferHashtagsFromRants(rants) {
-            if (rants.length < 3) return null;
-            const text = rants.map(r => r.content.toLowerCase()).join(" ");
-            const score = {};
-            // Gunakan hashtagRules dari zonaData
-            for (const [zona, data] of Object.entries(zonaData)) {
-                for (const h of data.hashtags) {
-                    score[h.name] = h.microcopy.split(" ").reduce((sum, kw) => {
-                        return sum + (text.includes(kw.toLowerCase()) ? 1 : 0);
-                    }, 0) + (text.includes(h.name.toLowerCase().replace("#", "")) ? 1 : 0);
-                }
-            }
-            const result = {};
-            for (const [zona, data] of Object.entries(zonaData)) {
-                let best = null, max = -1;
-                for (const h of data.hashtags) {
-                    if (score[h.name] > max) {
-                        max = score[h.name];
-                        best = h.name;
-                    }
-                }
-                result[zona] = max > 0 ? best : data.hashtags[0].name;
-            }
-            return result;
-        }
         // ===== FIXED INIT APP =====
         function initializeApp() {
             initializeDummyData();
-            // JANGAN hapus current user — biarkan login tetap aktif
+            // currentUser = null; // biarkan sesi lama, tapi login ulang jika perlu
             const saved = localStorage.getItem('nope_current_user');
             if (saved) {
                 currentUser = saved;
@@ -1560,17 +1530,17 @@
                     created: Date.now(), 
                     lastLogin: Date.now(), 
                     selectedHashtags: null, 
-                    onboarded: false, // tetap false, tapi tidak pakai onboarding form
+                    onboarded: false, 
                     rants: [], 
                     artefacts: [] 
                 };
                 saveUserData(u, d);
-                // LANGSUNG KE JEJAK, TANPA ONBOARDING
+                // LANGSUNG KE JEJAK — TANPA ONBOARDING
                 showPage('jejak');
             } else {
                 d.lastLogin = Date.now();
                 saveUserData(u, d);
-                // LANGSUNG KE JEJAK, BAIK UNTUK USER BARU MAUPUN LAMA
+                // SELALU KE JEJAK SETELAH LOGIN
                 showPage('jejak');
             }
         }
@@ -1875,27 +1845,34 @@
             if (!currentUser) return;
             const d = getUserData(currentUser);
             if (!d.rants) d.rants = [];
-            const newRant = {
-                content, 
-                date: Date.now(),
-                hashtag: null // Akan diisi saat inferensi
-            };
-            d.rants.push(newRant);
-            // LAKUKAN INFERENSI SETELAH 3 RANT
-            if (d.rants.length === 3 && !d.selectedHashtags) {
-                const inferred = inferHashtagsFromRants(d.rants);
-                if (inferred) {
-                    d.selectedHashtags = inferred;
-                    d.onboarded = true;
-                    showToast('Frekuensi mu telah diatur secara diam-diam ✨');
-                }
+            // JIKA BELUM ADA HASHTAG, TUNGGU SAMPAI 3 RANT → LALU INFERENSI
+            if (!d.selectedHashtags && d.rants.length === 2) {
+                // Ini rant ke-3 → lakukan inferensi
+                d.rants.push({ content, date: Date.now(), hashtag: null });
+                inferHashtagsFromRants(d.rants);
+                d.onboarded = true;
+                saveUserData(currentUser, d);
+            } else if (!d.selectedHashtags) {
+                // Rant 1 atau 2 → simpan tanpa hashtag
+                d.rants.push({ content, date: Date.now(), hashtag: null });
+                saveUserData(currentUser, d);
+            } else {
+                // Sudah ada hashtag → pilih random dari 3
+                const hashtags = Object.values(d.selectedHashtags).filter(h => h);
+                const randomHashtag = hashtags.length > 0 ? 
+                    hashtags[Math.floor(Math.random() * hashtags.length)] : 
+                    null;
+                d.rants.push({ content, date: Date.now(), hashtag: randomHashtag });
+                saveUserData(currentUser, d);
             }
-            d.lastLogin = Date.now();
-            saveUserData(currentUser, d);
             const globalRants = getGlobalRants();
+            const hashtags = d.selectedHashtags ? Object.values(d.selectedHashtags).filter(h => h) : [];
+            const randomHashtag = hashtags.length > 0 ? hashtags[Math.floor(Math.random() * hashtags.length)] : null;
             globalRants.push({
                 username: currentUser,
-                ...newRant
+                content,
+                date: Date.now(),
+                hashtag: randomHashtag
             });
             saveGlobalRants(globalRants);
             box.value = '';
@@ -1908,6 +1885,45 @@
                 initJalanPage();
             }
             showToast('Rant berhasil diposting!');
+        }
+        // ===== INFERENCE LOGIC (BARU DITAMBAHKAN) =====
+        function inferHashtagsFromRants(rants) {
+            if (rants.length < 3) return null;
+            const text = rants.map(r => r.content.toLowerCase()).join(" ");
+            const score = {};
+            for (const [hashtag, keywords] of Object.entries(zonaHashtagKeywords())) {
+                score[hashtag] = keywords.reduce((sum, kw) => sum + (text.includes(kw) ? 1 : 0), 0);
+            }
+            const result = {};
+            for (const [zona, tags] of Object.entries({
+                popculture: ["#FilmEndingGaje", "#InfluencerNgehek", "#BeliTiketJualGinjal", "#HealingPayLater"],
+                personalpain: ["#SayNOPE", "#DiGhostingGebetan", "#CapekPuraPura", "#DiamDiamNangis"],
+                socialsickness: ["#MagangDibayarSerifikat", "#KeluarWAGroup", "#TemenLambeTurah", "#GajianSejamAbis"]
+            })) {
+                let best = null, max = -1;
+                for (const tag of tags) {
+                    if (score[tag] > max) {
+                        max = score[tag];
+                        best = tag;
+                    }
+                }
+                result[zona] = max > 0 ? best : tags[0]; // fallback ke opsi pertama
+            }
+            const d = getUserData(currentUser);
+            d.selectedHashtags = result;
+            saveUserData(currentUser, d);
+            return result;
+        }
+        function zonaHashtagKeywords() {
+            const map = {};
+            for (const [zona, data] of Object.entries(zonaData)) {
+                data.hashtags.forEach(h => {
+                    // Ekstrak kata kunci dari microcopy
+                    const keywords = h.microcopy.toLowerCase().replace(/[.,!?]/g, '').split(' ');
+                    map[h.name] = keywords;
+                });
+            }
+            return map;
         }
         // ===== SISTEM UNGGAH ARTEFAK =====
         function openArtefakUpload() {
@@ -1945,4 +1961,603 @@
         function showArtefakUploadModal() {
             const modalOverlay = document.getElementById('modalOverlay');
             const modal = document.getElementById('modalContent');
-            if (artefakUpload
+            if (artefakUploadState.step === 1) {
+                modal.innerHTML = `
+                    <div class="modal-header">
+                        <div class="modal-title">Tulis tentang foto ini</div>
+                        <button class="modal-close" onclick="hideModal()">&times;</button>
+                    </div>
+                    <div class="upload-modal-content">
+                        <div class="upload-preview">
+                            ${artefakUploadState.image ? 
+                                `<img src="${artefakUploadState.image}" alt="Preview">` : 
+                                `<div class="upload-placeholder">🖼️</div>`
+                            }
+                        </div>
+                        <input type="text" 
+                               class="upload-title-input" 
+                               id="artefakTitleInputModal"
+                               placeholder="Maksimum 4 kata tentang foto ini"
+                               maxlength="50"
+                               value="${artefakUploadState.title}"
+                               oninput="updateArtefakTitle()">
+                        <div class="word-counter" id="wordCounter">0/4 kata</div>
+                        <div class="action-btn" onclick="proceedToConfirmation()" id="nextBtn" disabled>
+                            Lanjut
+                        </div>
+                        <button class="action-btn secondary" onclick="hideModal()" style="margin-top: 8px;">
+                            Batal
+                        </button>
+                    </div>
+                `;
+                const titleInput = document.getElementById('artefakTitleInputModal');
+                if (titleInput) {
+                    titleInput.focus();
+                    updateArtefakTitle();
+                }
+            } else if (artefakUploadState.step === 2) {
+                modal.innerHTML = `
+                    <div class="modal-header">
+                        <div class="modal-title">Konfirmasi Unggah</div>
+                        <button class="modal-close" onclick="hideModal()">&times;</button>
+                    </div>
+                    <div class="upload-modal-content">
+                        <div class="warning-notice">
+                            <strong>⚠️ PERINGATAN</strong><br>
+                            Artefakmu akan tersimpan <strong>selamanya</strong> dan <strong>tidak bisa dihapus</strong>.
+                        </div>
+                        <div class="upload-preview">
+                            ${artefakUploadState.image ? 
+                                `<img src="${artefakUploadState.image}" alt="Preview">` : 
+                                `<div class="upload-placeholder">🖼️</div>`
+                            }
+                        </div>
+                        <div style="background: rgba(73,3,252,0.1); padding: 12px; border-radius: 8px; margin: 15px 0;">
+                            <div style="font-size: 14px; font-weight: 600; color: #4903fc; margin-bottom: 5px;">
+                                ${artefakUploadState.title || '(tanpa judul)'}
+                            </div>
+                        </div>
+                        <div class="action-btn" onclick="uploadArtefak()">
+                            ✅ Ya, Unggah Artefak
+                        </div>
+                        <button class="action-btn secondary" onclick="artefakUploadState.step = 1; showArtefakUploadModal()" style="margin-top: 8px;">
+                            ↶ Kembali
+                        </button>
+                    </div>
+                `;
+            }
+            modalOverlay.classList.add('active');
+        }
+        function updateArtefakTitle() {
+            const input = document.getElementById('artefakTitleInputModal');
+            if (!input) return;
+            artefakUploadState.title = input.value.trim();
+            const words = artefakUploadState.title.split(/\s+/).filter(word => word.length > 0);
+            const wordCount = words.length;
+            const counter = document.getElementById('wordCounter');
+            if (counter) {
+                counter.textContent = `${wordCount}/4 kata`;
+                counter.style.color = wordCount > 4 ? '#ff3333' : 'rgba(255, 255, 255, 0.4)';
+            }
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.disabled = wordCount > 4 || wordCount === 0;
+            }
+            if (wordCount > 4) {
+                const trimmed = words.slice(0, 4).join(' ');
+                input.value = trimmed;
+                artefakUploadState.title = trimmed;
+            }
+        }
+        function proceedToConfirmation() {
+            if (artefakUploadState.title.trim() === '') {
+                showToast('Harap tulis judul untuk artefak!');
+                return;
+            }
+            const words = artefakUploadState.title.split(/\s+/).filter(word => word.length > 0);
+            if (words.length > 4) {
+                showToast('Maksimum 4 kata untuk judul artefak!');
+                return;
+            }
+            artefakUploadState.step = 2;
+            showArtefakUploadModal();
+        }
+        function uploadArtefak() {
+            if (!currentUser || !artefakUploadState.image) return;
+            const d = getUserData(currentUser);
+            if (!d.artefacts) d.artefacts = [];
+            const newArtefak = {
+                title: artefakUploadState.title || 'Artefak Baru',
+                imageUrl: artefakUploadState.image,
+                date: Date.now(),
+                username: currentUser,
+                nobar: true // Selalu ada badge nobar untuk artefak baru
+            };
+            d.artefacts.push(newArtefak);
+            d.lastLogin = Date.now();
+            saveUserData(currentUser, d);
+            const globalArtefaks = getGlobalArtefaks();
+            globalArtefaks.push(newArtefak);
+            saveGlobalArtefaks(globalArtefaks);
+            document.getElementById('artefakFileInput').value = '';
+            hideModal();
+            renderArtefakPreview();
+            renderArtefakGrid();
+            if (currentTab === 'jalan') {
+                initJalanPage();
+            }
+            showToast('Artefak berhasil diupload! Tersimpan selamanya.');
+            artefakUploadState = {
+                image: null,
+                title: '',
+                step: 0
+            };
+        }
+        function reactToArtefak(reactionType) {
+            if (!currentUser) return;
+            const reactions = getArtefakReactions();
+            if (!reactions['global']) {
+                reactions['global'] = JSON.parse(JSON.stringify(currentArtefakReactions));
+            }
+            const userReactions = reactions['global'];
+            if (!userReactions[reactionType].users.includes(currentUser)) {
+                userReactions[reactionType].count++;
+                userReactions[reactionType].users.push(currentUser);
+                userReactions[reactionType].hasNew = true;
+                saveArtefakReactions(reactions);
+                currentArtefakReactions = userReactions;
+                renderArtefakPreview();
+                showToast(`Kamu bereaksi dengan ${reactionType}!`);
+            } else {
+                showToast(`Kamu sudah bereaksi dengan ${reactionType}`);
+            }
+        }
+        // ===== JALAN =====
+        function initJalanPage() {
+            if (!currentUser) return showPage('login');
+            const d = getUserData(currentUser);
+            renderSelectedHashtags();
+            renderFrekuensiFeed();
+            renderGelombangFeed();
+            renderMovementFeed();
+            showJalanTab('frekuensi');
+        }
+        function renderSelectedHashtags() {
+            const c = document.getElementById('selectedHashtagsList');
+            if (!c) return;
+            const d = getUserData(currentUser);
+            if (!d.selectedHashtags) {
+                c.innerHTML = '<div class="hint">Belum memilih hashtag</div>';
+                return;
+            }
+            c.innerHTML = '';
+            Object.entries(d.selectedHashtags).forEach(([z, h]) => {
+                if (h) {
+                    const span = document.createElement('span');
+                    span.style.padding = '4px 8px';
+                    span.style.background = 'rgba(73, 3, 252, 0.1)';
+                    span.style.borderRadius = '6px';
+                    span.style.fontSize = '12px';
+                    span.style.color = '#4903fc';
+                    span.textContent = h;
+                    c.appendChild(span);
+                }
+            });
+        }
+        function showJalanTab(tab) {
+            ['frekuensi','gelombang','movement'].forEach(t => {
+                const element = document.getElementById(`jalan-${t}`);
+                if (element) {
+                    element.style.display = t === tab ? 'block' : 'none';
+                }
+            });
+            document.querySelectorAll('.jalan-tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        function renderFrekuensiFeed() {
+            const c = document.getElementById('frekuensiFeed');
+            if (!c) return;
+            const d = getUserData(currentUser);
+            if (!d.selectedHashtags) {
+                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum memilih hashtag. Posting 3 rant terlebih dahulu.</div>';
+                return;
+            }
+            const allUsers = getUsers();
+            let filteredItems = [];
+            // 1. Artefak dari user dengan hashtag yang sama (VISUAL PENUH)
+            const globalArtefaks = getGlobalArtefaks();
+            globalArtefaks.forEach(artefak => {
+                const user = getUserData(artefak.username);
+                if (user && user.selectedHashtags) {
+                    Object.values(user.selectedHashtags).forEach(hashtag => {
+                        Object.values(d.selectedHashtags).forEach(userHashtag => {
+                            if (hashtag && userHashtag && hashtag === userHashtag) {
+                                filteredItems.push({
+                                    type: 'artefak',
+                                    ...artefak
+                                });
+                            }
+                        });
+                    });
+                }
+            });
+            // 2. Rant dengan hashtag yang sama
+            Object.values(allUsers).forEach(user => {
+                if (user.rants) {
+                    user.rants.forEach(rant => {
+                        Object.values(d.selectedHashtags).forEach(hashtag => {
+                            if (hashtag && rant.hashtag === hashtag) {
+                                filteredItems.push({
+                                    type: 'rant',
+                                    ...rant,
+                                    username: user.username
+                                });
+                            }
+                        });
+                    });
+                }
+            });
+            filteredItems.sort((a, b) => b.date - a.date);
+            const items = filteredItems.slice(0, 10);
+            c.innerHTML = '';
+            if (items.length === 0) {
+                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada konten dengan hashtag yang kamu pilih</div>';
+                return;
+            }
+            items.forEach(item => {
+                const date = new Date(item.date).toLocaleDateString('id-ID', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                if (item.type === 'artefak') {
+                    // ARTEFAK VISUAL PENUH
+                    const div = document.createElement('div');
+                    div.className = 'artefak-feed-item';
+                    div.onclick = () => showArtefakDetails(item);
+                    div.innerHTML = `
+                        <div class="artefak-feed-image">
+                            <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'}" alt="${item.title}">
+                            ${item.nobar ? '<div class="artefak-nobar-badge" style="top:10px;left:10px;">Nobar terakhir sama mantan</div>' : ''}
+                        </div>
+                        <div class="artefak-feed-info">
+                            <div class="artefak-feed-username">🖼️ @${item.username} • ${date}</div>
+                            <div class="artefak-feed-title">${item.title}</div>
+                            <div class="rant-actions">
+                                <div class="rant-emoji-bar">
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('nangis', event)">😭</button>
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('api', event)">🔥</button>
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('badut', event)">🤡</button>
+                                </div>
+                                <span style="font-size:10px;color:rgba(255,255,255,0.5)">🖼️ Artefak</span>
+                            </div>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                } else if (item.type === 'rant') {
+                    const content = item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content;
+                    const div = document.createElement('div');
+                    div.className = 'recent-rant-item compact';
+                    div.innerHTML = `
+                        <div class="recent-rant-date compact">📝 @${item.username} • ${date} • ${item.hashtag || ''}</div>
+                        <div class="recent-rant-content compact">${content}</div>
+                        <div class="rant-actions">
+                            <div class="rant-emoji-bar">
+                                <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
+                                <button class="emoji-btn" onclick="reactToRant('😂', this)">😂</button>
+                                <button class="emoji-btn" onclick="reactToRant('😭', this)">😭</button>
+                            </div>
+                            <span style="font-size:10px;color:rgba(255,255,255,0.5)">💬 0</span>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                }
+            });
+        }
+        function reactToArtefakFromFeed(reactionType, event) {
+            event.stopPropagation();
+            reactToArtefak(reactionType);
+        }
+        function renderGelombangFeed() {
+            const c = document.getElementById('gelombangFeed');
+            if (!c) return;
+            const globalArtefaks = getGlobalArtefaks();
+            const globalRants = getGlobalRants();
+            let allItems = [];
+            // ARTEFAK VISUAL PENUH di atas
+            globalArtefaks.forEach(artefak => {
+                allItems.push({
+                    type: 'artefak',
+                    ...artefak
+                });
+            });
+            globalRants.forEach(rant => {
+                allItems.push({
+                    type: 'rant',
+                    ...rant
+                });
+            });
+            allItems.sort((a, b) => b.date - a.date);
+            const items = allItems.slice(0, 15); // Ambil lebih banyak untuk mix yang baik
+            c.innerHTML = '';
+            if (items.length === 0) {
+                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada konten di gelombang</div>';
+                return;
+            }
+            // Urutkan dengan artefak lebih prioritas
+            items.sort((a, b) => {
+                if (a.type === 'artefak' && b.type !== 'artefak') return -1;
+                if (a.type !== 'artefak' && b.type === 'artefak') return 1;
+                return b.date - a.date;
+            });
+            const displayItems = items.slice(0, 10);
+            displayItems.forEach(item => {
+                const date = new Date(item.date).toLocaleDateString('id-ID', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                if (item.type === 'artefak') {
+                    // ARTEFAK VISUAL PENUH
+                    const div = document.createElement('div');
+                    div.className = 'artefak-feed-item';
+                    div.onclick = () => showArtefakDetails(item);
+                    div.innerHTML = `
+                        <div class="artefak-feed-image">
+                            <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'}" alt="${item.title}">
+                            ${item.nobar ? '<div class="artefak-nobar-badge" style="top:10px;left:10px;">Nobar terakhir sama mantan</div>' : ''}
+                        </div>
+                        <div class="artefak-feed-info">
+                            <div class="artefak-feed-username">🖼️ @${item.username} • ${date}</div>
+                            <div class="artefak-feed-title">${item.title}</div>
+                            <div class="rant-actions">
+                                <div class="rant-emoji-bar">
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('nangis', event)">😭</button>
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('api', event)">🔥</button>
+                                    <button class="emoji-btn" onclick="reactToArtefakFromFeed('badut', event)">🤡</button>
+                                </div>
+                                <span style="font-size:10px;color:rgba(255,255,255,0.5)">🖼️ Artefak</span>
+                            </div>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                } else if (item.type === 'rant') {
+                    const content = item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content;
+                    const div = document.createElement('div');
+                    div.className = 'recent-rant-item compact';
+                    div.innerHTML = `
+                        <div class="recent-rant-date compact">📝 @${item.username} • ${date} • ${item.hashtag || ''}</div>
+                        <div class="recent-rant-content compact">${content}</div>
+                        <div class="rant-actions">
+                            <div class="rant-emoji-bar">
+                                <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
+                                <button class="emoji-btn" onclick="reactToRant('😂', this)">😂</button>
+                                <button class="emoji-btn" onclick="reactToRant('😭', this)">😭</button>
+                            </div>
+                            <span style="font-size:10px;color:rgba(255,255,255,0.5)">💬 0</span>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                }
+            });
+        }
+        function renderMovementFeed() {
+            const c = document.getElementById('movementFeed');
+            if (!c) return;
+            const movementHashtags = ["#PendidikanUntukSemua", "#JanganExploitBuruh", "#FUNDINGSolidaritasDiam", "#PetisiTerbuka"];
+            const globalRants = getGlobalRants();
+            let movementRants = [];
+            globalRants.forEach(rant => {
+                if (movementHashtags.includes(rant.hashtag)) {
+                    movementRants.push({
+                        type: 'rant',
+                        ...rant
+                    });
+                }
+            });
+            movementRants.sort((a, b) => b.date - a.date);
+            const items = movementRants.slice(0, 10);
+            c.innerHTML = '';
+            if (items.length === 0) {
+                c.innerHTML = '<div class="hint" style="text-align:center;padding:20px;color:rgba(73,3,252,0.5)">Belum ada rant movement</div>';
+                return;
+            }
+            items.forEach(item => {
+                const date = new Date(item.date).toLocaleDateString('id-ID', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                const content = item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content;
+                const div = document.createElement('div');
+                div.className = 'recent-rant-item compact';
+                div.innerHTML = `
+                    <div class="recent-rant-date compact">✊ @${item.username} • ${date} • ${item.hashtag || ''}</div>
+                    <div class="recent-rant-content compact">${content}</div>
+                    <div class="rant-actions">
+                        <div class="rant-emoji-bar">
+                            <button class="emoji-btn" onclick="reactToRant('❤️', this)">❤️</button>
+                            <button class="emoji-btn" onclick="reactToRant('👍', this)">👍</button>
+                            <button class="emoji-btn" onclick="reactToRant('✊', this)">✊</button>
+                        </div>
+                        <span style="font-size:10px;color:rgba(255,255,255,0.5)">💬 0</span>
+                    </div>
+                `;
+                c.appendChild(div);
+            });
+        }
+        // ===== DUNIA =====
+        function initDuniaPage() {
+            if (!currentUser) return showPage('login');
+            const d = getUserData(currentUser);
+            document.getElementById('profileUsername').textContent = '@' + currentUser;
+            document.getElementById('profileJoinDate').textContent = 'Bergabung: ' + new Date(d.created).toLocaleDateString('id-ID');
+            document.getElementById('profileActivity').textContent = 'Aktivitas: ' + (d.rants ? d.rants.length : 0) + ' posting, ' + (d.artefacts ? d.artefacts.length : 0) + ' artefak';
+        }
+        // ===== UTILITIES =====
+        function showToast(message) {
+            const t = document.createElement('div');
+            t.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(73, 3, 252, 0.9);color:white;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;z-index:10000;animation:fadeIn 0.3s ease;`;
+            t.textContent = message;
+            document.body.appendChild(t);
+            setTimeout(() => {
+                t.style.opacity = '0';
+                t.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => document.body.removeChild(t), 300);
+            }, 3000);
+        }
+        function viewRantDetails(rant) {
+            const date = new Date(rant.date).toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            modal.innerHTML = `
+                <div class="modal-header">
+                    <div class="modal-title">Detail Rant</div>
+                    <button class="modal-close" onclick="hideModal()">&times;</button>
+                </div>
+                <div style="padding: 15px 0;">
+                    <div style="font-size: 11px; color: rgba(73,3,252,0.7); margin-bottom: 10px;">
+                        ${date} ${rant.hashtag ? '• ' + rant.hashtag : ''}
+                    </div>
+                    <div style="font-size: 14px; line-height: 1.6; color: white; margin-bottom: 20px;">
+                        ${rant.content}
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="action-btn secondary" onclick="hideModal()" style="flex: 1;">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+            modalOverlay.classList.add('active');
+        }
+        function viewAllRants() {
+            if (!currentUser) return;
+            const d = getUserData(currentUser);
+            if (!d.rants || d.rants.length === 0) {
+                showToast('Belum ada rant untuk ditampilkan');
+                return;
+            }
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            let modalContent = `
+                <div class="modal-header">
+                    <div class="modal-title">Semua Jejakmu</div>
+                    <button class="modal-close" onclick="hideModal()">&times;</button>
+                </div>
+                <div style="max-height: 70vh; overflow-y: auto; padding: 10px 0;">
+            `;
+            const sortedRants = [...d.rants].sort((a, b) => b.date - a.date);
+            if (sortedRants.length === 0) {
+                modalContent += `<div style="text-align:center;padding:40px;color:rgba(255,255,255,0.5);">Belum ada rant</div>`;
+            } else {
+                sortedRants.forEach((r, i) => {
+                    const date = new Date(r.date).toLocaleDateString('id-ID', { 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric',
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    modalContent += `
+                        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(73,3,252,0.1);">
+                            <div style="font-size: 11px; color: rgba(73,3,252,0.7); margin-bottom: 5px;">
+                                ${date} ${r.hashtag ? '• ' + r.hashtag : ''}
+                            </div>
+                            <div style="font-size: 14px; line-height: 1.5; color: white;">
+                                ${r.content}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            modalContent += `</div>`;
+            modal.innerHTML = modalContent;
+            modalOverlay.classList.add('active');
+        }
+        function hideModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            artefakUploadState = {
+                image: null,
+                title: '',
+                step: 0
+            };
+        }
+        function reactToRant(emoji, button) {
+            if (!currentUser) return;
+            button.classList.toggle('active');
+            showToast(`Kamu bereaksi ${emoji} pada rant ini`);
+        }
+        function exportData() {
+            if (!currentUser) return;
+            const d = getUserData(currentUser);
+            const blob = new Blob([JSON.stringify({ username: currentUser, exportedAt: new Date().toISOString(), userData: d }, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `nope-${currentUser}-${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        function showHashtagsModal() {
+            if (!currentUser) return;
+            const d = getUserData(currentUser);
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            let modalContent = `
+                <div class="modal-header">
+                    <div class="modal-title">Hashtag Terpilih</div>
+                    <button class="modal-close" onclick="hideModal()">&times;</button>
+                </div>
+                <div style="padding: 15px 0;">
+            `;
+            if (!d.selectedHashtags) {
+                modalContent += `<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.5);">Belum memilih hashtag</div>`;
+            } else {
+                modalContent += `
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
+                `;
+                Object.entries(d.selectedHashtags).forEach(([zona, hashtag]) => {
+                    if (hashtag) {
+                        modalContent += `
+                            <div style="background: rgba(73,3,252,0.1); padding: 8px 12px; border-radius: 6px; font-size: 12px; color: #4903fc;">
+                                ${hashtag}
+                            </div>
+                        `;
+                    }
+                });
+                modalContent += `</div>`;
+            }
+            modalContent += `
+                <button class="action-btn secondary" onclick="hideModal()" style="width: 100%;">
+                    Tutup
+                </button>
+            </div>`;
+            modal.innerHTML = modalContent;
+            modalOverlay.classList.add('active');
+        }
+        function logout() {
+            if (confirm('Yakin ingin keluar?')) {
+                localStorage.removeItem('nope_current_user');
+                currentUser = null;
+                showPage('login');
+            }
+        }
+        // ===== INITIALIZE =====
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+        });
+    </script>
+</body>
+</html>
