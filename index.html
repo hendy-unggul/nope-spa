@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOPE</title>
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
     <style>
@@ -21,6 +22,7 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
+        /* ===== PAGES ===== */
         .page {
             display: none;
             width: 100%;
@@ -28,94 +30,288 @@
             margin: 0 auto;
             padding: 15px;
             min-height: 100vh;
-            padding-bottom: 70px;
+            padding-bottom: 70px; /* Untuk bottom nav */
         }
         .page.active {
             display: block;
         }
-        .logo {
-            font-size: 25px;
-            font-weight: 900;
-            color: #ff9999;
-            margin: 200px 0 0 20px;
-            line-height: 1;
-            letter-spacing: -3px;
-        }
-        /* ===== LOGIN ===== */
-        .login-container {
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - 40px);
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        .soul-tagline {
-            font-size: 22px;
-            font-weight: 700;
-            line-height: 1.3;
-            color: #fff;
-            margin-bottom: 40px;
-            max-width: 280px;
-        }
-        .soul-tagline .highlight {
-            color: #4903fc;
-            font-weight: 800;
-            text-shadow: 0 0 10px rgba(73, 3, 252, 0.3);
-        }
+        /* ===== LOGO NOPE ===== */
+       .logo {
+    font-size: 25px;
+    font-weight: 900;
+    color: #ff9999;
+    margin: 200px 0 0px 20px; /* sesuaikan */
+    line-height: 1;
+    letter-spacing: -3px;
+    display: block;
+}
+        /* ===== INPUT STYLE ===== */
         .nope-input {
             width: 100%;
-            max-width: 300px;
-            background: rgba(20, 20, 20, 0.8);
-            border: 1px solid rgba(73, 3, 252, 0.3);
-            border-radius: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(73, 3, 252, 0.2);
             color: white;
-            font-size: 16px;
-            padding: 16px 20px;
+            font-size: 22px;
+            text-align: center;
+            padding: 10px 0;
             outline: none;
-            font-weight: 400;
-            margin-bottom: 15px;
-            backdrop-filter: blur(10px);
+            font-weight: 300;
+            margin: 25px 0 15px 0;
         }
         .nope-input:focus {
+            border-bottom-color: #4903fc;
+        }
+        /* ===== HINT TEXT ===== */
+        .hint {
+            text-align: center;
+            color: rgba(73, 3, 252, 0.4);
+            font-size: 12px;
+            margin: 6px 0;
+            line-height: 1.4;
+        }
+        .hint strong {
+            color: rgba(73, 3, 252, 0.7);
+        }
+        /* ===== USER STATUS ===== */
+        .user-status {
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+            background: rgba(73, 3, 252, 0.05);
+            color: rgba(73, 3, 252, 0.7);
+            display: none;
+            border-radius: 6px;
+        }
+        .user-status.show {
+            display: block;
+        }
+        /* ===== ZONA SELECTION HEADER ===== */
+        .zona-header {
+            text-align: center;
+            margin: 15px 0 25px 0;
+        }
+        .zona-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4903fc;
+            margin-bottom: 5px;
+        }
+        .zona-subtitle {
+            font-size: 12px;
+            color: rgba(73, 3, 252, 0.5);
+        }
+        /* ===== ZONA CARD ===== */
+        .zona-card {
+            background: rgba(73, 3, 252, 0.03);
+            border: 1px solid rgba(73, 3, 252, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .zona-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(73, 3, 252, 0.1);
+        }
+        .zona-card-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4903fc;
+        }
+        .zona-card-desc {
+            font-size: 11px;
+            color: rgba(73, 3, 252, 0.5);
+        }
+        .zona-card-counter {
+            font-size: 13px;
+            color: #4903fc;
+            font-weight: 600;
+        }
+        /* ===== HASHTAG SELECTION ===== */
+        .hashtag-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .hashtag-item {
+            padding: 10px;
+            background: rgba(73, 3, 252, 0.05);
+            border: 1px solid rgba(73, 3, 252, 0.08);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .hashtag-item:hover {
+            background: rgba(73, 3, 252, 0.08);
+        }
+        .hashtag-item.selected {
+            background: rgba(73, 3, 252, 0.15);
             border-color: #4903fc;
-            box-shadow: 0 0 0 2px rgba(73, 3, 252, 0.2);
-            background: rgba(30, 30, 30, 0.9);
+            box-shadow: 0 2px 6px rgba(73, 3, 252, 0.1);
         }
-        .nope-input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+        .hashtag-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(73, 3, 252, 0.9);
+            margin-bottom: 3px;
         }
-        .enter-btn {
+        .hashtag-microcopy {
+            font-size: 10px;
+            color: rgba(73, 3, 252, 0.5);
+            line-height: 1.3;
+            font-style: italic;
+        }
+        /* ===== ACTION BUTTONS ===== */
+        .action-btn {
             width: 100%;
-            max-width: 300px;
-            background: linear-gradient(135deg, #4903fc 0%, #7b3fe4 100%);
-            border: none;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(73, 3, 252, 0.15);
+            border: 1px solid #4903fc;
             color: white;
             font-family: inherit;
             font-size: 16px;
-            font-weight: 700;
-            padding: 16px;
-            border-radius: 10px;
+            font-weight: 600;
+            border-radius: 8px;
             cursor: pointer;
-            margin-top: 10px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .enter-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(73, 3, 252, 0.3);
-        }
-        .legal-hint {
-            position: absolute;
-            bottom: 30px;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 10px;
+            transition: all 0.2s;
             text-align: center;
-            max-width: 300px;
         }
-        /* ===== JEJAK (POST SAJA) ===== */
-        .artefak-preview-container, .rant-box-container, .recent-rants, .artefaks-grid {
+        .action-btn:hover:not(:disabled) {
+            background: rgba(73, 3, 252, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(73, 3, 252, 0.2);
+        }
+        .action-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .action-btn.secondary {
+            background: rgba(73, 3, 252, 0.05);
+            border-color: rgba(73, 3, 252, 0.1);
+        }
+        .action-btn.secondary:hover {
+            background: rgba(73, 3, 252, 0.1);
+        }
+        /* ===== JEJAK PAGE - REVISI ===== */
+        /* Artefak Preview - FULL SCREEN */
+        .artefak-preview-container {
+            margin: 15px 0;
+            position: relative;
+            width: 100%;
+        }
+        .artefak-preview {
+            width: 100%;
+            position: relative;
+            background: rgba(73, 3, 252, 0.03);
+            border: 1px solid rgba(73, 3, 252, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .artefak-preview-image {
+            width: 100%;
+            height: 300px; /* TINGGI FIXED UNTUK FULL SCREEN */
+            background: linear-gradient(135deg, rgba(73, 3, 252, 0.1), rgba(73, 3, 252, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .artefak-preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        /* Notasi "Nobar terakhir sama mantan" di kiri atas */
+        .artefak-nobar-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 100, 100, 0.5);
+            color: #ff9999;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            z-index: 10;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .artefak-placeholder {
+            font-size: 48px;
+            color: rgba(73, 3, 252, 0.2);
+        }
+        .artefak-preview-info {
+            padding: 10px;
+        }
+        .artefak-preview-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .artefak-preview-date {
+            font-size: 10px;
+            color: rgba(73, 3, 252, 0.4);
+        }
+        /* CTA Unggah Proses di kiri bawah */
+        .upload-process-cta {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(73, 3, 252, 0.9);
+            border: none;
+            color: white;
+            font-size: 11px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 10;
+            transition: all 0.2s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .upload-process-cta:hover {
+            background: rgba(73, 3, 252, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(73, 3, 252, 0.3);
+        }
+        /* Rant Box */
+        .rant-box-container {
             margin: 20px 0;
+        }
+        .rant-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .rant-box-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4903fc;
+        }
+        .rant-box-counter {
+            font-size: 11px;
+            color: rgba(73, 3, 252, 0.5);
+            display: block;
         }
         .rant-box {
             width: 100%;
@@ -134,11 +330,18 @@
         .rant-box:focus {
             outline: none;
             border-color: #4903fc;
+            background: rgba(73, 3, 252, 0.05);
         }
         .rant-box::placeholder {
             color: rgba(73, 3, 252, 0.3);
         }
-        .gaskeun-btn {
+        .rant-box-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .rant-box-footer .gaskeun-btn {
             background: transparent;
             border: none;
             color: #4903fc;
@@ -148,64 +351,445 @@
             cursor: pointer;
             padding: 8px 16px;
             border-radius: 6px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .rant-box-footer .gaskeun-btn:hover {
+            background: rgba(73, 3, 252, 0.1);
+        }
+        /* Recent Rants Section */
+        .recent-rants {
+            margin: 20px 0;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4903fc;
+        }
+        .section-view-all {
+            font-size: 11px;
+            color: rgba(73, 3, 252, 0.5);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .section-view-all:hover {
+            color: #4903fc;
+        }
+        .recent-rants-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
         .recent-rant-item {
             background: rgba(73, 3, 252, 0.03);
             border: 1px solid rgba(73, 3, 252, 0.08);
             border-radius: 6px;
             padding: 10px;
+            transition: all 0.2s;
             cursor: pointer;
         }
-        .artefak-preview {
-            background: rgba(73, 3, 252, 0.03);
-            border: 1px solid rgba(73, 3, 252, 0.1);
-            border-radius: 10px;
+        .recent-rant-item:hover {
+            background: rgba(73, 3, 252, 0.05);
+            transform: translateY(-2px);
+        }
+        .recent-rant-date {
+            font-size: 10px;
+            color: rgba(73, 3, 252, 0.4);
+            margin-bottom: 3px;
+        }
+        .recent-rant-content {
+            font-size: 12px;
+            color: rgba(73, 3, 252, 0.8);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        .artefak-preview-image {
+        /* ===== JALAN PAGE ===== */
+        .jalan-header {
+            text-align: center;
+            margin: 15px 0 15px 0;
+        }
+        .jalan-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4903fc;
+            margin-bottom: 8px;
+        }
+        .jalan-tab-nav {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 6px;
+        }
+        .jalan-tab-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .jalan-tab-btn.active {
+            color: #4903fc;
+            background: rgba(73, 3, 252, 0.1);
+        }
+        .jalan-tab-content {
+            margin-top: 10px;
+        }
+        /* ARTEFAK DI FEED - VISUAL PENUH */
+        .artefak-feed-item {
+            background: rgba(73, 3, 252, 0.03);
+            border: 1px solid rgba(73, 3, 252, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .artefak-feed-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(73, 3, 252, 0.15);
+        }
+        .artefak-feed-image {
             width: 100%;
-            height: 300px;
+            height: 200px; /* TINGGI FIXED UNTUK VISUAL PENUH */
+            overflow: hidden;
+            position: relative;
+        }
+        .artefak-feed-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .artefak-feed-info {
+            padding: 10px;
+        }
+        .artefak-feed-username {
+            font-size: 10px;
+            color: rgba(73, 3, 252, 0.7);
+            margin-bottom: 4px;
+        }
+        .artefak-feed-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .artefak-feed-date {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        /* COMPACT RANT LIST */
+        .recent-rants-list.compact {
+            gap: 10px !important;
+            margin-top: 10px;
+        }
+        .recent-rant-item.compact {
+            padding: 10px !important;
+            border-radius: 8px !important;
+        }
+        .recent-rant-date.compact {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 3px;
+        }
+        .recent-rant-content.compact {
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+        .rant-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .rant-emoji-bar {
+            display: flex;
+            gap: 5px;
+        }
+        .emoji-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 4px;
+        }
+        .emoji-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .emoji-btn.active {
+            color: #4903fc;
+        }
+        /* ===== DUNIA PAGE ===== */
+        .dunia-header {
+            text-align: center;
+            margin: 15px 0 25px 0;
+        }
+        .dunia-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4903fc;
+            margin-bottom: 8px;
+        }
+        .dunia-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .profile-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .profile-username {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4903fc;
+            margin-bottom: 8px;
+        }
+        .profile-meta {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin: 5px 0;
+        }
+        /* ===== POST MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4903fc;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 0;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            background: linear-gradient(135deg, rgba(73, 3, 252, 0.05), rgba(73, 3, 252, 0.02));
         }
-        .artefak-nobar-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: #ff9999;
+        .modal-close:hover {
+            color: white;
+        }
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.98);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+            justify-content: space-around;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px 5px;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
             font-size: 10px;
+            padding: 6px 8px;
+            transition: all 0.2s;
+            min-width: 60px;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: #4903fc;
+        }
+        .nav-icon {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+        .nav-label {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        /* ===== ANIMATION ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        /* ===== CHARACTER COUNTER ===== */
+        .char-counter {
+            text-align: right;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 10px;
+            display: none;
+        }
+        /* ===== EMOJI BAR BELOW ARTEFAK ===== */
+        .artefak-emoji-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 15px;
+            margin-top: 6px;
+            border-top: 1px solid rgba(73, 3, 252, 0.1);
+        }
+        .artefak-emoji-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .artefak-emoji-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 20px;
+            cursor: pointer;
             padding: 4px 8px;
             border-radius: 6px;
-            z-index: 10;
+            transition: all 0.2s;
+            position: relative;
         }
-        .upload-process-cta {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(73, 3, 252, 0.9);
-            color: white;
-            font-size: 11px;
-            padding: 6px 10px;
-            border: none;
-            border-radius: 6px;
+        .artefak-emoji-btn:hover {
+            color: #4903fc;
+            transform: scale(1.1);
+        }
+        .artefak-emoji-btn.active {
+            color: #4903fc;
+        }
+        .artefak-emoji-btn.has-new {
+            animation: pulse 1.5s infinite;
+            color: #ff9999;
+        }
+        .reaction-peek {
+            position: relative;
             cursor: pointer;
-            z-index: 10;
         }
+        .reaction-peek-popup {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(73, 3, 252, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            min-width: 150px;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        .reaction-peek-popup.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        .reaction-peek-title {
+            font-size: 10px;
+            color: rgba(73, 3, 252, 0.7);
+            margin-bottom: 6px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .reaction-user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .reaction-user-item {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 3px 6px;
+            border-radius: 4px;
+            background: rgba(73, 3, 252, 0.1);
+        }
+        /* ===== ARTEFAK GRID 3 KOLOM ===== */
         .artefaks-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
+            margin: 20px 0;
         }
         .artefak-grid-item {
-            aspect-ratio: 1;
             background: rgba(73, 3, 252, 0.03);
+            border: 1px solid rgba(73, 3, 252, 0.08);
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
+            transition: all 0.3s;
+            aspect-ratio: 1;
+            position: relative;
+        }
+        .artefak-grid-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(73, 3, 252, 0.15);
+        }
+        .artefak-grid-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
         .artefak-grid-overlay {
             position: absolute;
@@ -220,665 +804,1145 @@
         .artefak-grid-item:hover .artefak-grid-overlay {
             transform: translateY(0);
         }
-        /* ===== ZONA FEED (3 TAB UTAMA) ===== */
-        .section-title {
-            font-size: 14px;
+        .artefak-grid-title {
+            font-size: 11px;
             font-weight: 600;
-            color: #4903fc;
-            margin-bottom: 12px;
+            color: white;
+            margin-bottom: 2px;
         }
-        .artefak-feed-item {
-            background: rgba(73, 3, 252, 0.03);
-            border: 1px solid rgba(73, 3, 252, 0.08);
-            border-radius: 10px;
+        .artefak-grid-date {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        /* ===== FILE UPLOAD ===== */
+        .file-input-wrapper {
+            position: relative;
             overflow: hidden;
-            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
             cursor: pointer;
         }
-        .artefak-feed-image {
+        /* Modal Unggah Artefak */
+        .upload-modal-content {
+            max-width: 100%;
+        }
+        .upload-preview {
             width: 100%;
-            height: 200px;
+            height: 250px; /* TINGGI FIXED UNTUK MODAL */
+            background: rgba(73, 3, 252, 0.05);
+            border: 2px dashed rgba(73, 3, 252, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
             overflow: hidden;
         }
-        .artefak-feed-image img {
+        .upload-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
         }
-        .artefak-feed-info {
-            padding: 10px;
+        .upload-placeholder {
+            font-size: 48px;
+            color: rgba(73, 3, 252, 0.2);
         }
-        .artefak-feed-username {
-            font-size: 10px;
-            color: rgba(73, 3, 252, 0.7);
-            margin-bottom: 4px;
-        }
-        /* ===== JELAJAH PAGE (TAB KE-4) ===== */
-        .jelajah-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .jelajah-card:hover {
-            background: rgba(73, 3, 252, 0.1);
-            transform: translateY(-2px);
-        }
-        .jelajah-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #4903fc;
-        }
-        .jelajah-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 5px;
-        }
-        .jelajah-desc {
-            font-size: 12px;
-            color: rgba(255,255,255,0.6);
-        }
-        /* ===== BOTTOM NAV (4 TAB — Opsi 3) ===== */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-width: 500px;
-            margin: 0 auto;
-            background: rgba(0, 0, 0, 0.98);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: none;
-            justify-content: space-around;
-            padding: 10px 5px;
-            z-index: 1000;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 10px;
-            padding: 6px 8px;
-            cursor: pointer;
-            min-width: 70px;
-        }
-        .nav-item.active {
-            color: #4903fc;
-        }
-        .nav-icon {
-            font-size: 18px;
-            margin-bottom: 2px;
-        }
-        /* ===== MODAL & TOAST ===== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 15px;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal {
-            background: rgba(10, 10, 10, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
+        .upload-title-input {
             width: 100%;
-            max-width: 450px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(73, 3, 252, 0.9);
-            color: white;
-            padding: 12px 20px;
+            background: rgba(73, 3, 252, 0.05);
+            border: 1px solid rgba(73, 3, 252, 0.2);
             border-radius: 8px;
+            padding: 12px;
+            color: white;
+            font-family: inherit;
             font-size: 14px;
-            font-weight: 500;
-            z-index: 10000;
-            animation: fadeIn 0.3s ease;
+            margin: 10px 0;
+            outline: none;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .upload-title-input:focus {
+            border-color: #4903fc;
         }
-        /* ===== EMOJI REACTION (3 EMOJI GEN Z) ===== */
-        .artefak-emoji-bar {
-            display: flex;
-            justify-content: center;
-            padding: 8px 15px;
-            margin-top: 6px;
-            border-top: 1px solid rgba(73, 3, 252, 0.1);
+        .upload-title-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
-        .artefak-emoji-btn {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 6px;
-            margin: 0 12px;
+        .word-counter {
+            text-align: right;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 15px;
         }
-        .artefak-emoji-btn:hover {
-            color: #4903fc;
-            transform: scale(1.15);
+        .warning-notice {
+            background: rgba(255, 50, 50, 0.1);
+            border: 1px solid rgba(255, 50, 50, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            line-height: 1.4;
         }
+        .warning-notice strong {
+            color: #ff9999;
+        }
+        /* ===== LOGIN/REGISTER REDESIGN - ADD THESE LINES ===== */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 40px);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.logo-small {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 28px;
+    font-weight: 900;
+    color: #ff9999;
+    letter-spacing: -2px;
+}
+.soul-tagline {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #fff;
+    margin-bottom: 40px;
+    text-align: center;
+    max-width: 280px;
+}
+.soul-tagline .highlight {
+    color: #4903fc;
+    font-weight: 800;
+    text-shadow: 0 0 10px rgba(73, 3, 252, 0.3);
+}
+.nope-input-group {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+.nope-input {
+    width: 100%;
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(73, 3, 252, 0.3);
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    padding: 16px 20px;
+    outline: none;
+    font-weight: 400;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+.nope-input:focus {
+    border-color: #4903fc;
+    box-shadow: 0 0 0 2px rgba(73, 3, 252, 0.2);
+    background: rgba(30, 30, 30, 0.9);
+}
+.nope-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 300;
+}
+.enter-btn {
+    width: 100%;
+    max-width: 300px;
+    background: linear-gradient(135deg, #4903fc 0%, #7b3fe4 100%);
+    border: none;
+    color: white;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+.enter-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(73, 3, 252, 0.3);
+    background: linear-gradient(135deg, #5a1cff 0%, #8c50f0 100%);
+}
+.enter-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+.legal-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 10px;
+    padding: 0 20px;
+    line-height: 1.4;
+    font-weight: 300;
+}
     </style>
 </head>
 <body>
-    <!-- MODAL -->
+    <!-- POST MODAL -->
     <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modalContent"></div>
-    </div>
-
-    <!-- BOTTOM NAV (4 TAB — Opsi 3) -->
-    <div class="bottom-nav" id="bottomNav">
-        <a class="nav-item active" onclick="showTab('popculture')">
-            <div class="nav-icon">🎬</div>
-            <div>PopCulture</div>
-        </a>
-        <a class="nav-item" onclick="showTab('personalpain')">
-            <div class="nav-icon">💔</div>
-            <div>PersonalPain</div>
-        </a>
-        <a class="nav-item" onclick="showTab('socialsickness')">
-            <div class="nav-icon">🤒</div>
-            <div>SocialSickness</div>
-        </a>
-        <a class="nav-item" onclick="showTab('jelajah')">
-            <div class="nav-icon">➕</div>
-            <div>Jelajah</div>
-        </a>
-    </div>
-
-    <!-- LOGIN -->
-    <div id="login" class="page active">
-        <div class="login-container">
-            <div class="soul-tagline">
-                Ga perlu followers,<br>
-                cuma butuh <span class="highlight">sefrekuensi...</span>
-            </div>
-            <div class="logo">NOPE</div>
-            <input type="text" class="nope-input" id="usernameInput" placeholder="nama_kamu" maxlength="20">
-            <div class="user-status" id="userStatus" style="display:none;margin:10px 0;color:rgba(73,3,252,0.7);font-size:12px;"></div>
-            <button class="enter-btn" onclick="processLogin()">Gaskeun!</button>
+        <div class="modal" id="modalContent">
+            <!-- Modal content will be injected here -->
         </div>
-        <div class="legal-hint">Anonim, jangan gunakan nama aslimu</div>
     </div>
+    <!-- BOTTOM NAVIGATION -->
+    <div class="bottom-nav" id="bottomNav">
+        <a href="#" class="nav-item active" onclick="showTab('jejak')">
+            <div class="nav-icon">📝</div>
+            <div class="nav-label">Jejak</div>
+        </a>
+        <a href="#" class="nav-item" onclick="showTab('jalan')">
+            <div class="nav-icon">🚶</div>
+            <div class="nav-label">Jalan</div>
+        </a>
+        <a href="#" class="nav-item" onclick="showTab('dunia')">
+            <div class="nav-icon">🌍</div>
+            <div class="nav-label">Dunia</div>
+        </a>
+    </div>
+      <!-- LOGIN PAGE - NEW DESIGN -->
+<div id="login" class="page active">
+    <div class="login-container">
+        <!-- Tagline sebagai pusat perhatian -->
+        <div class="soul-tagline fade-in">
+            Ga perlu followers,<br>
+            cuma butuh <span class="highlight">sefrekue<span style="letter-spacing: -1px;">nsi...</span></span>
+        </div>
+        <!-- Logo NOPE di tengah -->
+        <div class="logo-center">NOPE</div>
+        <!-- Input dan tombol -->
+        <div class="nope-input-group slide-in">
+            <input type="text" 
+                   class="nope-input" 
+                   id="usernameInput"
+                   placeholder="nama_kamu"
+                   autocomplete="off"
+                   autocapitalize="none"
+                   spellcheck="false"
+                   maxlength="20">
+            <div class="user-status" id="userStatus"></div>
+            <button class="enter-btn" onclick="processLogin()" id="loginBtn">
+                Gaskeun!
+            </button>
+        </div>
+                <!-- Footer legal -->
+        <div class="legal-hint">
+            Anonim, jangan gunakan nama aslimu
+        </div>
+    </div>
+</div>
 
-    <!-- JEJAK (POST ONLY) -->
+    <!-- JEJAK PAGE -->
     <div id="jejak" class="page" style="padding-top: 80px;">
         <div class="logo">NOPE</div>
+        <!-- Artefak Preview -->
         <div class="artefak-preview-container" id="artefakPreviewContainer"></div>
+        <!-- Rant Box -->
         <div class="rant-box-container">
-            <div class="rant-box-header" style="display:flex;justify-content:space-between;margin-bottom:8px;">
-                <div class="rant-box-title" style="font-size:14px;font-weight:600;color:#4903fc;">Rant Box</div>
-                <div class="rant-box-counter" id="rantCounter" style="font-size:11px;color:rgba(73,3,252,0.5);">0/300</div>
+            <div class="rant-box-header">
+                <div class="rant-box-title">Rant Box</div>
+                <div class="rant-box-counter" id="rantCounter">0/300</div>
             </div>
-            <textarea class="rant-box" id="rantBox" placeholder="Perasaanmu dalam 300 huruf" maxlength="300"></textarea>
+            <textarea 
+                class="rant-box" 
+                id="rantBox" 
+                placeholder="Perasaanmu dalam 300 huruf" 
+                maxlength="300" 
+                rows="5"
+            ></textarea>
             <div class="rant-box-footer">
-                <button class="gaskeun-btn" onclick="postRantFromBox()">Gaskeun!</button>
+                <button class="gaskeun-btn" onclick="postRantFromBox()">
+                    Gaskeun!
+                </button>
             </div>
         </div>
+        <!-- Recent Rants -->
         <div class="recent-rants">
-            <div class="section-header" style="display:flex;justify-content:space-between;margin-bottom:10px;">
-                <div class="section-title" style="font-size:14px;font-weight:600;color:#4903fc;">Jejakmu</div>
-                <div class="section-view-all" onclick="viewAllRants()" style="font-size:11px;color:rgba(73,3,252,0.5);cursor:pointer;">Lihat semua</div>
+            <div class="section-header">
+                <div class="section-title">Jejakmu</div>
+                <div class="section-view-all" onclick="viewAllRants()">Lihat semua</div>
             </div>
-            <div class="recent-rants-list" id="recentRantsList"></div>
+            <div class="recent-rants-list" id="recentRantsList">
+                <!-- Recent rants will be populated by JavaScript -->
+            </div>
         </div>
-        <div class="artefaks-grid" id="artefaksGrid"></div>
-    </div>
-
-    <!-- ZONA FEEDS -->
-    <div id="popculture" class="page" style="padding-top: 80px;">
-        <div class="logo">NOPE</div>
-        <div class="section-title">🎬 PopCulture</div>
-        <div id="feed-popculture" class="feed-container"></div>
-    </div>
-    <div id="personalpain" class="page" style="padding-top: 80px;">
-        <div class="logo">NOPE</div>
-        <div class="section-title">💔 PersonalPain</div>
-        <div id="feed-personalpain" class="feed-container"></div>
-    </div>
-    <div id="socialsickness" class="page" style="padding-top: 80px;">
-        <div class="logo">NOPE</div>
-        <div class="section-title">🤒 SocialSickness</div>
-        <div id="feed-socialsickness" class="feed-container"></div>
-    </div>
-
-    <!-- JELAJAH (TAB KE-4) -->
-    <div id="jelajah" class="page" style="padding-top: 80px;">
-        <div class="logo">NOPE</div>
-        <div class="section-title">➕ Jelajah</div>
-        
-        <div class="jelajah-card" onclick="showDuniaPage()">
-            <div class="jelajah-icon">🌍</div>
-            <div class="jelajah-title">Dunia</div>
-            <div class="jelajah-desc">Resensi buku, film, musik, podcast, hangout</div>
-        </div>
-        
-        <div class="jelajah-card" onclick="showMovementPage()">
-            <div class="jelajah-icon">✊</div>
-            <div class="jelajah-title">Movement</div>
-            <div class="jelajah-desc">Solidaritas, aksi, isu sosial</div>
-        </div>
-        
-        <div class="jelajah-card" onclick="showPage('jejak')">
-            <div class="jelajah-icon">📝</div>
-            <div class="jelajah-title">Jejakmu</div>
-            <div class="jelajah-desc">Rant & artefak pribadimu</div>
-        </div>
-        
-        <div class="jelajah-card" onclick="showProfilPage()">
-            <div class="jelajah-icon">👤</div>
-            <div class="jelajah-title">Profil</div>
-            <div class="jelajah-desc">Pengaturan & ekspor data</div>
+        <!-- Artefak Grid 3x2 -->
+        <div class="artefaks-grid" id="artefaksGrid">
+            <!-- Akan diisi oleh JavaScript -->
         </div>
     </div>
-
-    <!-- DUNIA (FULL PAGE - RESSENSI) -->
-    <div id="dunia-page" class="page" style="padding-top: 80px;">
+    <!-- JALAN PAGE -->
+    <div id="jalan" class="page">
         <div class="logo">NOPE</div>
-        <div class="section-title">🌍 Dunia</div>
-        <div class="profile-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:20px;margin:20px 0;text-align:center;">
+        <div class="jalan-header">
+            <div class="jalan-title">Jalan mu</div>
+        </div>
+        <!-- Tab Navigation -->
+        <div class="jalan-tab-nav">
+            <button class="jalan-tab-btn active" onclick="showJalanTab('frekuensi')">Frekuensi</button>
+            <button class="jalan-tab-btn" onclick="showJalanTab('gelombang')">Gelombang</button>
+            <button class="jalan-tab-btn" onclick="showJalanTab('movement')">Movement</button>
+        </div>
+        <!-- Frekuensi Tab -->
+        <div id="jalan-frekuensi" class="jalan-tab-content">
+            <div class="section-header">
+                <div class="section-title">3# pilihan mu</div>
+            </div>
+            <div id="frekuensiFeed" class="recent-rants-list compact">
+                <!-- Feed akan diisi dengan artefak visual penuh -->
+            </div>
+        </div>
+        <!-- Gelombang Tab -->
+        <div id="jalan-gelombang" class="jalan-tab-content" style="display:none;">
+            <div class="section-header">
+                <div class="section-title">Gelombang Global</div>
+            </div>
+            <div id="gelombangFeed" class="recent-rants-list compact">
+                <!-- Feed akan diisi dengan artefak visual penuh -->
+            </div>
+        </div>
+        <!-- Movement Tab -->
+        <div id="jalan-movement" class="jalan-tab-content" style="display:none;">
+            <div class="section-header">
+                <div class="section-title">Movement</div>
+            </div>
+            <div id="movementFeed" class="recent-rants-list compact">
+                <!-- Feed akan diisi dengan rant saja -->
+            </div>
+        </div>
+        <!-- Hashtag terpilih -->
+        <div class="zona-card" style="margin-top: 15px;">
+            <div class="zona-card-header" style="padding-bottom:6px;margin-bottom:8px;">
+                <div>
+                    <div class="zona-card-name" style="font-size:14px;">Frekuensi mu</div>
+                </div>
+            </div>
+            <div id="selectedHashtagsList" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+        </div>
+    </div>
+    <!-- DUNIA PAGE -->
+    <div id="dunia" class="page">
+        <div class="logo">NOPE</div>
+        <div class="dunia-header">
+            <div class="dunia-title">Dunia mu</div>
+            <div class="dunia-subtitle">
+                Profil dan pengaturan
+            </div>
+        </div>
+        <div class="profile-card">
             <div class="profile-username" id="profileUsername">@username</div>
             <div class="profile-meta" id="profileJoinDate">Bergabung: -</div>
-            <div class="profile-meta" id="profileActivity">Aktivitas: 0 resensi</div>
+            <div class="profile-meta" id="profileActivity">Aktivitas: 0 posting</div>
         </div>
-        <div style="background:rgba(73,3,252,0.05);padding:12px;border-radius:8px;font-size:12px;margin-bottom:20px;">
-            Belum ada resensi. Unggah lewat rant dengan hashtag #ResensiBuku, #ResensiFilm, dll.
+        <div class="action-btn" onclick="openArtefakUpload()" style="margin-top: 8px;">
+            📁 Unggah Artefak
         </div>
-        <button class="action-btn" onclick="openArtefakUpload()">📁 Unggah Artefak</button>
-        <button class="action-btn secondary" onclick="exportData()">📤 Export Data</button>
-        <button class="action-btn secondary" onclick="showPage('jelajah')" style="margin-top:10px;">⬅️ Kembali ke Jelajah</button>
-    </div>
-
-    <!-- MOVEMENT (FULL PAGE) -->
-    <div id="movement-page" class="page" style="padding-top: 80px;">
-        <div class="logo">NOPE</div>
-        <div class="section-title">✊ Movement</div>
-        <div id="movement-content" style="font-size:12px;line-height:1.5;"></div>
-        <button class="action-btn secondary" onclick="showPage('jelajah')" style="margin-top:20px;">⬅️ Kembali ke Jelajah</button>
-    </div>
-
-    <!-- PROFIL -->
-    <div id="profil-page" class="page" style="padding-top: 80px;">
-        <div class="logo">NOPE</div>
-        <div class="section-title">👤 Profil</div>
-        <div class="profile-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:20px;margin:20px 0;text-align:center;">
-            <div class="profile-username" id="profil-username">@username</div>
-            <div class="profile-meta" id="profil-join">Bergabung: -</div>
-            <div class="profile-meta" id="profil-activity">Aktivitas: -</div>
+        <div class="action-btn secondary" onclick="exportData()" style="margin-top: 8px;">
+            📤 Export Data
         </div>
-        <button class="action-btn secondary" onclick="logout()" style="background:rgba(255,50,50,0.1);border-color:rgba(255,50,50,0.3);">🚪 Keluar</button>
-        <button class="action-btn secondary" onclick="showPage('jelajah')" style="margin-top:10px;">⬅️ Kembali ke Jelajah</button>
+        <div class="action-btn secondary" onclick="showHashtagsModal()" style="margin-top: 8px;">
+            👁️ Lihat # terpilih
+        </div>
+        <div class="action-btn secondary" onclick="logout()" style="background: rgba(255,50,50,0.1); border-color: rgba(255,50,50,0.3); margin-top: 15px;">
+            🚪 Keluar
+        </div>
     </div>
-
-    <input type="file" id="artefakFileInput" accept="image/*" style="display:none;">
-
+    <!-- Hidden file input for artefak upload -->
+    <input type="file" id="artefakFileInput" accept="image/*" style="display: none;">
     <script>
+        // ===== STATE =====
         let currentUser = null;
-        const reactionTypes = ['guejuga', 'nangis', 'api'];
-        const hashtagRules = {
-            "#FilmEndingGaje": ["ending gaje", "film jelek", "nggak masuk akal"],
-            "#CapekPuraPura": ["senyum di luar", "nangis di dalam", "capek jadi tempat curhat"],
-            "#MagangDibayarSerifikat": ["magang gratis", "dibayar sertifikat", "kerja tanpa gaji"],
-            "#SayNOPE": ["bilang nope", "butuh ruang"],
-            "#DiamDiamNangis": ["nangis sendiri", "diam-diam nangis"],
-            "#KeluarWAGroup": ["keluar grup", "wagroup", "toxic group"],
-            "#TemenLambeTurah": ["gosip", "curhat bocor"],
-            "#BeliTiketJualGinjal": ["tiket konser", "jual ginjal"],
-            "#HealingPayLater": ["healing cicilan", "self-care hutang"],
-            "#GajianSejamAbis": ["gajian habis", "uang cepet abis"],
-            "#InfluencerNgehek": ["influencer palsu", "konten fake"]
+        let currentTab = 'jejak';
+        let currentArtefakReactions = {
+            nangis: {
+                count: 0,
+                users: [],
+                hasNew: false
+            },
+            api: {
+                count: 0,
+                users: [],
+                hasNew: false
+            },
+            badut: {
+                count: 0,
+                users: [],
+                hasNew: false
+            }
         };
-        const zonaMapping = {
-            popculture: ["#FilmEndingGaje", "#BeliTiketJualGinjal", "#HealingPayLater", "#InfluencerNgehek"],
-            personalpain: ["#SayNOPE", "#DiGhostingGebetan", "#CapekPuraPura", "#DiamDiamNangis"],
-            socialsickness: ["#MagangDibayarSerifikat", "#KeluarWAGroup", "#TemenLambeTurah", "#GajianSejamAbis"]
+        // State untuk upload artefak
+        let artefakUploadState = {
+            image: null,
+            title: '',
+            step: 0 // 0: pilih gambar, 1: tulis judul, 2: konfirmasi
         };
-        const movementHashtags = ["#PendidikanUntukSemua", "#JanganExploitBuruh", "#FUNDINGSolidaritasDiam", "#PetisiTerbuka"];
-
-        const save = (key, data) => localStorage.setItem('nope_' + key, JSON.stringify(data));
-        const load = (key) => localStorage.getItem('nope_' + key) ? JSON.parse(localStorage.getItem('nope_' + key)) : null;
-
-        function initDummyData() {
-            if (load('users')) return;
-            const now = Date.now();
-            const dummy = {
-                "diamdiamaja": {
-                    username: "diamdiamaja",
-                    created: now - 86400000 * 10,
-                    lastLogin: now,
-                    selectedHashtags: { popculture: "#FilmEndingGaje", personalpain: "#CapekPuraPura", socialsickness: "#GajianSejamAbis" },
-                    onboarded: true,
-                    rants: [{ content: "senyum di WA, nangis di kamar mandi.", date: now - 86400000 * 5, hashtag: "#CapekPuraPura" }],
-                    artefacts: [{ title: "kopi dingin", date: now - 86400000 * 3, imageUrl: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" }]
-                }
-            };
-            save('users', dummy);
-            save('global_rants', [
-                { username: "diamdiamaja", content: "senyum di WA, nangis di kamar mandi.", date: now - 86400000 * 5, hashtag: "#CapekPuraPura" },
-                { username: "maganggratis", content: "kerja 9 jam, pulang bawa serifikat.", date: now - 86400000 * 3, hashtag: "#MagangDibayarSerifikat" }
-            ]);
-            save('global_artefaks', [
-                { username: "diamdiamaja", title: "kopi dingin", date: now - 86400000 * 3, imageUrl: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80", nobar: true }
-            ]);
+        // ===== SELECTED HASHTAGS (INTERNAL ONLY) =====
+        // Tidak ada UI onboarding, tapi tetap disimpan untuk inferensi
+        let selectedHashtags = {
+            popculture: null,
+            personalpain: null,
+            socialsickness: null
+        };
+        // ===== DATA STRUCTURE =====
+        const zonaData = {
+            popculture: {
+                name: "PopCulture",
+                description: "Film, musik, meme, tren viral",
+                hashtags: [
+                    { name: "#FilmEndingGaje", microcopy: "capek nunggu akhir yang masuk akal. hidup aja nggak pernah adil." },
+                    { name: "#InfluencerNgehek", microcopy: "liat konten 'hidup sempurna', pas DM minta endorse malah auto read." },
+                    { name: "#BeliTiketJualGinjal", microcopy: "harga tiket konser = 3 bulan gaji magang. tapi hati bilang: worth it." },
+                    { name: "#HealingPayLater", microcopy: "self-care pakai cicilan. besok stres, hari ini bahagia dulu." }
+                ]
+            },
+            personalpain: {
+                name: "PersonalPain",
+                description: "Kecemasan, trauma, healing, self-care",
+                hashtags: [
+                    { name: "#SayNOPE", microcopy: "bukan sombong. cuma lagi butuh ruang untuk pulih." },
+                    { name: "#DiGhostingGebetan", microcopy: "ditinggal tanpa kabar, tapi masih ngecek story-nya tiap malam." },
+                    { name: "#CapekPuraPura", microcopy: "senyum di WA, nangis di kamar mandi." },
+                    { name: "#DiamDiamNangis", microcopy: "nangis tanpa suara, biar nggak jadi beban buat orang." }
+                ]
+            },
+            socialsickness: {
+                name: "SocialSickness",
+                description: "Toxic relationship, FOMO, loneliness",
+                hashtags: [
+                    { name: "#MagangDibayarSerifikat", microcopy: "kerja 8 jam, upahnya cuma kertas yang nggak bisa bayar kos." },
+                    { name: "#KeluarWAGroup", microcopy: "tinggalkan grup yang bikin anxiety, bukan kehilangan teman." },
+                    { name: "#TemenLambeTurah", microcopy: "curhat dikira rahasia, eh besok jadi bahan gosip." },
+                    { name: "#GajianSejamAbis", microcopy: "gajian pagi, siang udah nol. tapi tetap dipanggil 'pelit'." }
+                ]
+            }
+        };
+        // Dummy foto artefak untuk Gen Z
+        const dummyArtefakPhotos = [
+            {
+                url: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Late Night Vibes",
+                date: "15 Mar 2025",
+                username: "diamdiamaja"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Studio Session",
+                date: "12 Mar 2025",
+                username: "ghosted_aja"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Gym Progress",
+                date: "10 Mar 2025",
+                username: "maganggratis"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1528702748617-c64d49f918af?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Cafe Moments",
+                date: "08 Mar 2025",
+                username: "temenpalsu"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Concert Memory",
+                date: "05 Mar 2025",
+                username: "konserginjal"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                title: "Skyline View",
+                date: "01 Mar 2025",
+                username: "diamdiamaja"
+            }
+        ];
+        // ===== STORAGE HELPERS =====
+        function getUsers() {
+            const usersJson = localStorage.getItem('nope_users');
+            return usersJson ? JSON.parse(usersJson) : {};
         }
-
+        function saveUsers(users) {
+            localStorage.setItem('nope_users', JSON.stringify(users));
+        }
+        function getUserData(username) {
+            const users = getUsers();
+            return users[username] || null;
+        }
+        function saveUserData(username, data) {
+            const users = getUsers();
+            users[username] = data;
+            saveUsers(users);
+        }
+        function getArtefakReactions() {
+            const reactionsJson = localStorage.getItem('nope_artefak_reactions');
+            return reactionsJson ? JSON.parse(reactionsJson) : {};
+        }
+        function saveArtefakReactions(reactions) {
+            localStorage.setItem('nope_artefak_reactions', JSON.stringify(reactions));
+        }
+        function getGlobalRants() {
+            const globalRantsJson = localStorage.getItem('nope_global_rants');
+            return globalRantsJson ? JSON.parse(globalRantsJson) : [];
+        }
+        function saveGlobalRants(rants) {
+            localStorage.setItem('nope_global_rants', JSON.stringify(rants));
+        }
+        function getGlobalArtefaks() {
+            const globalArtefaksJson = localStorage.getItem('nope_global_artefaks');
+            return globalArtefaksJson ? JSON.parse(globalArtefaksJson) : [];
+        }
+        function saveGlobalArtefaks(artefaks) {
+            localStorage.setItem('nope_global_artefaks', JSON.stringify(artefaks));
+        }
+        // ===== DUMMY DATA INITIALIZATION =====
+        function initializeDummyData() {
+            const users = getUsers();
+            if (Object.keys(users).length > 0) return;
+            const now = Date.now();
+            const dummyUsers = [
+                {
+                    username: "diamdiamaja",
+                    hashtags: ["#SayNOPE", "#CapekPuraPura", "#DiamDiamNangis"],
+                    rant: "bilang gue baik-baik aja padahal hati lagi kacau. capek jadi tempat curhat tapi gak pernah boleh curhat.",
+                    artefak: {
+                        title: "kopi dingin",
+                        content: "minum sendirian jam 3 pagi. gajian belum turun, besok bayar kos."
+                    }
+                },
+                {
+                    username: "ghosted_aja",
+                    hashtags: ["#DiGhostingGebetan", "#CapekPuraPura", "#FilmEndingGaje"],
+                    rant: "udah 3 minggu dia ngilang. gue cek story-nya tiap malem. padahal cuma nanya 'udah makan?'",
+                    artefak: {
+                        title: "notifikasi kosong",
+                        content: "kotak chat belum terkirim. niat nanya kabar aja susah."
+                    }
+                },
+                {
+                    username: "maganggratis",
+                    hashtags: ["#MagangDibayarSerifikat", "#GajianSejamAbis", "#HealingPayLater"],
+                    rant: "kerja 9 jam, pulang bawa serifikat. ibu bilang 'itu investasi'. investasi buat apa, bu? buat bayar listrik?",
+                    artefak: {
+                        title: "serifikat gulung",
+                        content: "dikasih frame, tapi gak ada duit buat beli bingkai."
+                    }
+                },
+                {
+                    username: "temenpalsu",
+                    hashtags: ["#TemenLambeTurah", "#KeluarWAGroup", "#InfluencerNgehek"],
+                    rant: "curhat soal gebetan, eh besok jadi bahan gosip di grup. sekarang gue milih sendiri aja.",
+                    artefak: {
+                        title: "chat terhapus",
+                        content: "percaya itu mahal. gue udah bangkrut."
+                    }
+                },
+                {
+                    username: "konserginjal",
+                    hashtags: ["#BeliTiketJualGinjal", "#HealingPayLater", "#FilmEndingGaje"],
+                    rant: "tiket konser habis 1.2 juta. gaji magang 800rb. tapi malam itu gue nangis bahagia. worth it.",
+                    artefak: {
+                        title: "tiket sobek",
+                        content: "masih genggam erat pas pulang naik angkot."
+                    }
+                }
+            ];
+            // Buat dummy user
+            dummyUsers.forEach((user, i) => {
+                users[user.username] = {
+                    username: user.username,
+                    created: now - (15 - i) * 24 * 60 * 60 * 1000,
+                    lastLogin: now - (15 - i) * 24 * 60 * 60 * 1000,
+                    onboarded: true,
+                    selectedHashtags: {
+                        popculture: user.hashtags.find(h => zonaData.popculture.hashtags.some(t => t.name === h)) || null,
+                        personalpain: user.hashtags.find(h => zonaData.personalpain.hashtags.some(t => t.name === h)) || null,
+                        socialsickness: user.hashtags.find(h => zonaData.socialsickness.hashtags.some(t => t.name === h)) || null,
+                        movement: user.hashtags.find(h => ["#PendidikanUntukSemua","#JanganExploitBuruh","#FUNDINGSolidaritasDiam","#PetisiTerbuka"].includes(h)) || null
+                    },
+                    rants: [{
+                        content: user.rant,
+                        hashtag: user.hashtags[0],
+                        date: now - (15 - i) * 24 * 60 * 60 * 1000
+                    }],
+                    artefacts: [{
+                        title: user.artefak.title,
+                        content: user.artefak.content,
+                        date: now - (15 - i) * 24 * 60 * 60 * 1000 + 10000,
+                        imageUrl: dummyArtefakPhotos[i] ? dummyArtefakPhotos[i].url : null
+                    }]
+                };
+            });
+            saveUsers(users);
+            // Inisialisasi dummy reactions
+            const reactions = getArtefakReactions();
+            if (!reactions['global']) {
+                reactions['global'] = {
+                    nangis: { count: 3, users: ["diamdiamaja", "ghosted_aja", "maganggratis"], hasNew: true },
+                    api: { count: 2, users: ["temenpalsu", "konserginjal"], hasNew: true },
+                    badut: { count: 1, users: ["diamdiamaja"], hasNew: false }
+                };
+                saveArtefakReactions(reactions);
+            }
+            // Inisialisasi global rants
+            let globalRants = [];
+            dummyUsers.forEach((user, i) => {
+                globalRants.push({
+                    username: user.username,
+                    content: user.rant,
+                    hashtag: user.hashtags[0],
+                    date: now - (15 - i) * 24 * 60 * 60 * 1000
+                });
+            });
+            saveGlobalRants(globalRants);
+            // Inisialisasi global artefaks
+            let globalArtefaks = [];
+            dummyArtefakPhotos.forEach((artefak, i) => {
+                globalArtefaks.push({
+                    username: artefak.username,
+                    title: artefak.title,
+                    imageUrl: artefak.url,
+                    date: now - (15 - i) * 24 * 60 * 60 * 1000,
+                    nobar: i === 0 // Hanya artefak pertama yang punya badge nobar
+                });
+            });
+            saveGlobalArtefaks(globalArtefaks);
+        }
+        // ===== INFERENCE FROM 3 RANTS =====
         function inferHashtagsFromRants(rants) {
             if (rants.length < 3) return null;
             const text = rants.map(r => r.content.toLowerCase()).join(" ");
             const score = {};
-            for (const [hashtag, keywords] of Object.entries(hashtagRules)) {
-                score[hashtag] = keywords.reduce((sum, kw) => sum + (text.includes(kw) ? 1 : 0), 0);
+            // Gunakan hashtagRules dari zonaData
+            for (const [zona, data] of Object.entries(zonaData)) {
+                for (const h of data.hashtags) {
+                    score[h.name] = h.microcopy.split(" ").reduce((sum, kw) => {
+                        return sum + (text.includes(kw.toLowerCase()) ? 1 : 0);
+                    }, 0) + (text.includes(h.name.toLowerCase().replace("#", "")) ? 1 : 0);
+                }
             }
             const result = {};
-            for (const [zona, tags] of Object.entries(zonaMapping)) {
+            for (const [zona, data] of Object.entries(zonaData)) {
                 let best = null, max = -1;
-                for (const tag of tags) {
-                    if (score[tag] > max) {
-                        max = score[tag];
-                        best = tag;
+                for (const h of data.hashtags) {
+                    if (score[h.name] > max) {
+                        max = score[h.name];
+                        best = h.name;
                     }
                 }
-                result[zona] = max > 0 ? best : tags[0];
+                result[zona] = max > 0 ? best : data.hashtags[0].name;
             }
             return result;
         }
-
-        function processLogin() {
-            let u = document.getElementById('usernameInput').value.trim().toLowerCase();
-            if (u.length < 3) { alert('Minimal 3 karakter'); return; }
-            u = u.replace(/[^a-z0-9_]/g, '').substring(0, 20);
-            currentUser = u;
-            localStorage.setItem('nope_current_user', u);
-            let users = load('users') || {};
-            if (!users[u]) {
-                users[u] = { username: u, created: Date.now(), lastLogin: Date.now(), selectedHashtags: null, onboarded: false, rants: [], artefacts: [] };
-                save('users', users);
+        // ===== FIXED INIT APP =====
+        function initializeApp() {
+            initializeDummyData();
+            // JANGAN hapus current user — biarkan login tetap aktif
+            const saved = localStorage.getItem('nope_current_user');
+            if (saved) {
+                currentUser = saved;
+                showPage('jejak');
             } else {
-                users[u].lastLogin = Date.now();
-                save('users', users);
+                showPage('login');
             }
-            showPage('popculture');
+            setupEventListeners();
         }
-
-        function postRantFromBox() {
-            const content = document.getElementById('rantBox').value.trim();
-            if (!content) return showToast('Tulis rant dulu');
-            const users = load('users') || {};
-            const user = users[currentUser];
-            if (!user.rants) user.rants = [];
-            user.rants.push({ content, date: Date.now(), hashtag: null });
-            if (user.rants.length === 3 && !user.selectedHashtags) {
-                const inferred = inferHashtagsFromRants(user.rants);
-                if (inferred) {
-                    user.selectedHashtags = inferred;
-                    user.onboarded = true;
-                    showToast('Frekuensi mu telah diatur secara diam-diam ✨');
-                }
+        function setupEventListeners() {
+            const rantBox = document.getElementById('rantBox');
+            if (rantBox) {
+                rantBox.addEventListener('input', function() {
+                    const counter = document.getElementById('rantCounter');
+                    if (counter) {
+                        counter.textContent = `${this.value.length}/300`;
+                    }
+                });
             }
-            user.lastLogin = Date.now();
-            save('users', users);
-            const global = load('global_rants') || [];
-            global.push({ username: currentUser, content, date: Date.now(), hashtag: null });
-            save('global_rants', global);
-            document.getElementById('rantBox').value = '';
-            document.getElementById('rantCounter').textContent = '0/300';
-            if (document.getElementById('jelajah').classList.contains('active')) initJelajahPage();
-            showToast('Rant berhasil diposting!');
         }
-
-        function renderZonaFeed(zonaKey) {
-            const feed = document.getElementById(`feed-${zonaKey}`);
-            const globalRants = load('global_rants') || [];
-            const globalArtefaks = load('global_artefaks') || [];
-            const validHashtags = zonaMapping[zonaKey] || [];
-            let filtered = [];
-            globalRants.forEach(r => {
-                if (validHashtags.includes(r.hashtag)) {
-                    filtered.push({ type: 'rant', ...r });
-                }
-            });
-            globalArtefaks.forEach(a => {
-                const user = load('users')?.[a.username];
-                if (user?.selectedHashtags?.[zonaKey] && validHashtags.includes(user.selectedHashtags[zonaKey])) {
-                    filtered.push({ type: 'artefak', ...a });
-                }
-            });
-            filtered.sort((a, b) => b.date - a.date);
-            feed.innerHTML = '';
-            if (filtered.length === 0) {
-                feed.innerHTML = `<div style="color:rgba(73,3,252,0.5);padding:20px;text-align:center;">Belum ada konten di ${zonaKey}</div>`;
+        // ===== SHOW PAGE & TAB =====
+        function showPage(pageId) {
+            if (pageId !== 'login' && pageId !== 'jejak' && pageId !== 'jalan' && pageId !== 'dunia' && !currentUser) {
+                showPage('login');
                 return;
             }
-            filtered.slice(0, 10).forEach(item => {
-                const date = new Date(item.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-                if (item.type === 'artefak') {
-                    feed.innerHTML += `<div class="artefak-feed-item">
-                        <div class="artefak-feed-image"><img src="${item.imageUrl}"></div>
-                        <div class="artefak-feed-info">
-                            <div class="artefak-feed-username">@${item.username} • ${date}</div>
-                            <div>${item.title}</div>
-                        </div>
-                    </div>`;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active','fade-in'));
+            const p = document.getElementById(pageId);
+            if (p) {
+                p.classList.add('active','fade-in');
+                const nav = document.getElementById('bottomNav');
+                if (['jejak','jalan','dunia'].includes(pageId)) {
+                    nav.style.display = 'flex';
+                    updateNavActive(pageId);
                 } else {
-                    feed.innerHTML += `<div class="recent-rant-item" style="margin-bottom:10px;padding:10px;background:rgba(73,3,252,0.03);border-radius:8px;">
-                        <div style="font-size:10px;color:rgba(73,3,252,0.7);">@${item.username} • ${date}</div>
-                        <div>${item.content.length > 100 ? item.content.substring(0,100)+'...' : item.content}</div>
-                    </div>`;
+                    nav.style.display = 'none';
                 }
-            });
-        }
-
-        function initJelajahPage() {
-            // Tidak perlu render khusus — sudah statis
-        }
-
-        function showDuniaPage() {
-            const users = load('users') || {};
-            const user = users[currentUser];
-            if (user) {
-                document.getElementById('profileUsername').textContent = '@' + currentUser;
-                document.getElementById('profileJoinDate').textContent = 'Bergabung: ' + new Date(user.created).toLocaleDateString('id-ID');
-                document.getElementById('profileActivity').textContent = `Aktivitas: ${user.rants?.length || 0} resensi`;
-            }
-            showPage('dunia-page');
-        }
-
-        function showMovementPage() {
-            const movementList = document.getElementById('movement-content');
-            const globalRants = load('global_rants') || [];
-            const movementRants = globalRants.filter(r => movementHashtags.includes(r.hashtag)).slice(0, 5);
-            movementList.innerHTML = '';
-            if (movementRants.length > 0) {
-                movementRants.forEach(r => {
-                    movementList.innerHTML += `<div style="margin-bottom:15px;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,0.1);">@${r.username}: ${r.content.length > 120 ? r.content.substring(0,120)+'...' : r.content}</div>`;
-                });
-            } else {
-                movementList.innerHTML = '<div style="color:rgba(255,255,255,0.4);">Belum ada gerakan</div>';
-            }
-            showPage('movement-page');
-        }
-
-        function showProfilPage() {
-            const users = load('users') || {};
-            const user = users[currentUser];
-            if (user) {
-                document.getElementById('profil-username').textContent = '@' + currentUser;
-                document.getElementById('profil-join').textContent = 'Bergabung: ' + new Date(user.created).toLocaleDateString('id-ID');
-                document.getElementById('profil-activity').textContent = `Aktivitas: ${user.rants?.length || 0} posting, ${user.artefacts?.length || 0} artefak`;
-            }
-            showPage('profil-page');
-        }
-
-        function renderArtefakPreview() {
-            const c = document.getElementById('artefakPreviewContainer');
-            const users = load('users') || {};
-            const user = users[currentUser];
-            if (!user || !user.artefacts || user.artefacts.length === 0) {
-                c.innerHTML = `
-                    <div class="artefak-preview">
-                        <div class="artefak-preview-image">
-                            <div style="font-size:48px;color:rgba(73,3,252,0.2)">🖼️</div>
-                            <div class="artefak-nobar-badge">Nobar terakhir sama mantan</div>
-                            <button class="upload-process-cta" onclick="openArtefakUpload()">Unggah proses</button>
-                        </div>
-                        <div style="padding:12px;"><div>📁 Belum ada artefak</div></div>
-                        ${renderArtefakEmojiBar()}
-                    </div>`;
-            } else {
-                const latest = user.artefacts[user.artefacts.length - 1];
-                c.innerHTML = `
-                    <div class="artefak-preview">
-                        <div class="artefak-preview-image">
-                            <img src="${latest.imageUrl}" style="width:100%;height:100%;object-fit:cover;">
-                            <div class="artefak-nobar-badge">Nobar terakhir sama mantan</div>
-                            <button class="upload-process-cta" onclick="openArtefakUpload()">Unggah proses</button>
-                        </div>
-                        <div style="padding:12px;"><div>📁 ${latest.title}</div></div>
-                        ${renderArtefakEmojiBar()}
-                    </div>`;
+                switch(pageId) {
+                    case 'login': initLoginPage(); break;
+                    case 'jejak': initJejakPage(); break;
+                    case 'jalan': initJalanPage(); break;
+                    case 'dunia': initDuniaPage(); break;
+                }
             }
         }
-
-        function renderArtefakEmojiBar() {
-            return `
-                <div class="artefak-emoji-bar">
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('guejuga')" title="GueJuga">🤝</button>
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('nangis')" title="Nangis">😭</button>
-                    <button class="artefak-emoji-btn" onclick="reactToArtefak('api')" title="Api">🔥</button>
-                </div>`;
+        function showTab(tabId) { 
+            if (!currentUser) {
+                showPage('login');
+                return;
+            }
+            showPage(tabId); 
         }
-
-        function reactToArtefak(type) {
-            showToast(`Kamu bereaksi: ${type}!`);
-        }
-
-        function showPage(pageId) {
-            if (pageId !== 'login' && !currentUser) return showPage('login');
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            document.getElementById('bottomNav').style.display = ['popculture','personalpain','socialsickness','jelajah'].includes(pageId) ? 'flex' : 'none';
-            if (pageId === 'jejak') initJejakPage();
-            if (['popculture','personalpain','socialsickness'].includes(pageId)) renderZonaFeed(pageId);
-            if (pageId === 'jelajah') initJelajahPage();
-            updateNavActive(pageId);
-        }
-
-        function showTab(tabId) {
-            if (!currentUser) return showPage('login');
-            showPage(tabId);
-        }
-
         function updateNavActive(activeTab) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const btn = document.querySelector(`.nav-item[onclick*="${activeTab}"]`);
             if (btn) btn.classList.add('active');
         }
-
-        function initJejakPage() {
-            if (!currentUser) return;
-            const box = document.getElementById('rantBox');
-            if (box) {
-                box.value = '';
-                document.getElementById('rantCounter').textContent = '0/300';
-                box.oninput = () => document.getElementById('rantCounter').textContent = `${box.value.length}/300`;
+        // ===== LOGIN =====
+        function initLoginPage() {
+            const input = document.getElementById('usernameInput');
+            const status = document.getElementById('userStatus');
+            input.value = '';
+            input.focus();
+            status.style.display = 'none';
+            input.onkeydown = null;
+            input.oninput = null;
+            input.addEventListener('keydown', e => { 
+                if (e.key === 'Enter') processLogin(); 
+            });
+            input.addEventListener('input', function() {
+                let u = this.value.trim().toLowerCase();
+                if (u.length < 3) { 
+                    status.style.display = 'none'; 
+                    return; 
+                }
+                let f = u.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+                if (u !== f) this.value = f;
+                const d = getUserData(f);
+                status.style.display = 'block';
+                if (d) {
+                    status.textContent = d.onboarded ? 
+                        `@${f} sudah ada • tekan enter untuk login` : 
+                        `@${f} belum onboarding • tekan enter untuk lanjut`;
+                } else {
+                    status.textContent = `@${f} akan dibuat baru`;
+                }
+            });
+        }
+        function processLogin() {
+            let u = document.getElementById('usernameInput').value.trim().toLowerCase();
+            if (u.length < 3) { 
+                alert('Username minimal 3 karakter!'); 
+                return; 
             }
+            u = u.replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+            if (u.length < 3) { 
+                alert('Username hanya boleh huruf, angka, underscore!'); 
+                return; 
+            }
+            currentUser = u;
+            localStorage.setItem('nope_current_user', u);
+            let d = getUserData(u);
+            if (!d) {
+                d = { 
+                    username: u, 
+                    created: Date.now(), 
+                    lastLogin: Date.now(), 
+                    selectedHashtags: null, 
+                    onboarded: false, // tetap false, tapi tidak pakai onboarding form
+                    rants: [], 
+                    artefacts: [] 
+                };
+                saveUserData(u, d);
+                // LANGSUNG KE JEJAK, TANPA ONBOARDING
+                showPage('jejak');
+            } else {
+                d.lastLogin = Date.now();
+                saveUserData(u, d);
+                // LANGSUNG KE JEJAK, BAIK UNTUK USER BARU MAUPUN LAMA
+                showPage('jejak');
+            }
+        }
+        // ===== JEJAK =====
+        function initJejakPage() {
+            if (!currentUser) return showPage('login');
+            const d = getUserData(currentUser);
+            setupRantBox();
             renderArtefakPreview();
             renderRecentRants();
             renderArtefakGrid();
+            loadArtefakReactions();
         }
-
-        function renderRecentRants() {
-            const c = document.getElementById('recentRantsList');
-            const users = load('users') || {};
-            const user = users[currentUser];
-            if (!user || !user.rants || user.rants.length === 0) {
-                c.innerHTML = '<div style="color:rgba(73,3,252,0.5);text-align:center;padding:20px;">Belum ada rant</div>';
-                return;
+        function setupRantBox() {
+            const box = document.getElementById('rantBox');
+            if (box) {
+                box.value = '';
+                const counter = document.getElementById('rantCounter');
+                if (counter) {
+                    counter.textContent = '0/300';
+                }
             }
-            const rants = user.rants.slice(-3).reverse();
-            c.innerHTML = '';
-            rants.forEach(r => {
-                const div = document.createElement('div');
-                div.className = 'recent-rant-item';
-                div.innerHTML = `<div style="font-size:10px;color:rgba(73,3,252,0.6);margin-bottom:3px;">${new Date(r.date).toLocaleDateString()}</div><div>${r.content.length > 100 ? r.content.substring(0,100)+'...' : r.content}</div>`;
-                c.appendChild(div);
+        }
+        function renderArtefakPreview() {
+            const c = document.getElementById('artefakPreviewContainer');
+            if (!c) return;
+            const d = getUserData(currentUser);
+            let artefakHtml = '';
+            if (!d.artefacts || d.artefacts.length === 0) {
+                artefakHtml = `
+                    <div class="artefak-preview">
+                        <div class="artefak-preview-image">
+                            <div class="artefak-placeholder">🖼️</div>
+                            <!-- Badge Nobar di kiri atas -->
+                            <div class="artefak-nobar-badge">Nobar terakhir sama mantan</div>
+                            <!-- CTA Unggah di kiri bawah -->
+                            <button class="upload-process-cta" onclick="openArtefakUpload()">
+                                Unggah proses
+                            </button>
+                        </div>
+                        <div class="artefak-preview-info">
+                            <div class="artefak-preview-title">📁 Belum ada artefak</div>
+                            <div class="artefak-preview-date">Klik "Unggah proses" untuk menambahkan artefak</div>
+                        </div>
+                        ${renderArtefakEmojiBar()}
+                    </div>`;
+            } else {
+                const latest = d.artefacts[d.artefacts.length - 1];
+                const date = new Date(latest.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                artefakHtml = `
+                    <div class="artefak-preview">
+                        <div class="artefak-preview-image">
+                            ${latest.imageUrl ? 
+                                `<img src="${latest.imageUrl}" alt="${latest.title}">` : 
+                                `<div class="artefak-placeholder">📁</div>`
+                            }
+                            <!-- Badge Nobar di kiri atas -->
+                            <div class="artefak-nobar-badge">Nobar terakhir sama mantan</div>
+                            <!-- CTA Unggah di kiri bawah -->
+                            <button class="upload-process-cta" onclick="openArtefakUpload()">
+                                Unggah proses
+                            </button>
+                        </div>
+                        <div class="artefak-preview-info">
+                            <div class="artefak-preview-title">📁 ${latest.title}</div>
+                            <div class="artefak-preview-date">Ditambahkan: ${date}</div>
+                        </div>
+                        ${renderArtefakEmojiBar()}
+                    </div>`;
+            }
+            c.innerHTML = artefakHtml;
+        }
+        function renderArtefakEmojiBar() {
+            const reactions = getArtefakReactions()['global'] || currentArtefakReactions;
+            return `
+                <div class="artefak-emoji-bar">
+                    <div class="artefak-emoji-buttons">
+                        <!-- Nangis -->
+                        <div class="reaction-peek">
+                            <button class="artefak-emoji-btn ${reactions.nangis.hasNew ? 'has-new' : ''}" 
+                                    onclick="reactToArtefak('nangis')" 
+                                    title="Nangis">
+                                😭
+                            </button>
+                            <div class="reaction-peek-popup" id="nangisPeekPopup">
+                                <div class="reaction-peek-title">😭 Nangis</div>
+                                <div class="reaction-user-list" id="nangisUserList"></div>
+                            </div>
+                        </div>
+                        <!-- Api -->
+                        <div class="reaction-peek">
+                            <button class="artefak-emoji-btn ${reactions.api.hasNew ? 'has-new' : ''}" 
+                                    onclick="reactToArtefak('api')" 
+                                    title="Api">
+                                🔥
+                            </button>
+                            <div class="reaction-peek-popup" id="apiPeekPopup">
+                                <div class="reaction-peek-title">🔥 Api</div>
+                                <div class="reaction-user-list" id="apiUserList"></div>
+                            </div>
+                        </div>
+                        <!-- Badut -->
+                        <div class="reaction-peek">
+                            <button class="artefak-emoji-btn ${reactions.badut.hasNew ? 'has-new' : ''}" 
+                                    onclick="reactToArtefak('badut')" 
+                                    title="Badut">
+                                🤡
+                            </button>
+                            <div class="reaction-peek-popup" id="badutPeekPopup">
+                                <div class="reaction-peek-title">🤡 Badut</div>
+                                <div class="reaction-user-list" id="badutUserList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+        function loadArtefakReactions() {
+            const reactions = getArtefakReactions();
+            if (reactions['global']) {
+                currentArtefakReactions = reactions['global'];
+            }
+            updateReactionPeekPopups();
+        }
+        function updateReactionPeekPopups() {
+            const nangisUsers = currentArtefakReactions.nangis.users.slice(0, 5);
+            const nangisList = document.getElementById('nangisUserList');
+            if (nangisList) {
+                nangisList.innerHTML = nangisUsers.map(user => 
+                    `<div class="reaction-user-item">@${user}</div>`
+                ).join('');
+                if (nangisUsers.length === 0) {
+                    nangisList.innerHTML = '<div class="reaction-user-item" style="color: rgba(255,255,255,0.5); font-style: italic;">Belum ada reaksi</div>';
+                }
+            }
+            const apiUsers = currentArtefakReactions.api.users.slice(0, 5);
+            const apiList = document.getElementById('apiUserList');
+            if (apiList) {
+                apiList.innerHTML = apiUsers.map(user => 
+                    `<div class="reaction-user-item">@${user}</div>`
+                ).join('');
+                if (apiUsers.length === 0) {
+                    apiList.innerHTML = '<div class="reaction-user-item" style="color: rgba(255,255,255,0.5); font-style: italic;">Belum ada reaksi</div>';
+                }
+            }
+            const badutUsers = currentArtefakReactions.badut.users.slice(0, 5);
+            const badutList = document.getElementById('badutUserList');
+            if (badutList) {
+                badutList.innerHTML = badutUsers.map(user => 
+                    `<div class="reaction-user-item">@${user}</div>`
+                ).join('');
+                if (badutUsers.length === 0) {
+                    badutList.innerHTML = '<div class="reaction-user-item" style="color: rgba(255,255,255,0.5); font-style: italic;">Belum ada reaksi</div>';
+                }
+            }
+            setupPeekPopups();
+        }
+        function setupPeekPopups() {
+            document.querySelectorAll('.reaction-peek').forEach(peek => {
+                const btn = peek.querySelector('.artefak-emoji-btn');
+                const popup = peek.querySelector('.reaction-peek-popup');
+                if (btn && popup) {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isShowing = popup.classList.contains('show');
+                        document.querySelectorAll('.reaction-peek-popup').forEach(p => {
+                            p.classList.remove('show');
+                        });
+                        if (!isShowing) {
+                            popup.classList.add('show');
+                        }
+                    });
+                    document.addEventListener('click', (e) => {
+                        if (!peek.contains(e.target)) {
+                            popup.classList.remove('show');
+                        }
+                    });
+                }
             });
         }
-
         function renderArtefakGrid() {
             const c = document.getElementById('artefaksGrid');
-            const source = [
-                { title: "Late Night", imageUrl: "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" },
-                { title: "Studio", imageUrl: "https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" },
-                { title: "Gym", imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" },
-                { title: "Cafe", imageUrl: "https://images.unsplash.com/photo-1528702748617-c64d49f918af?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" },
-                { title: "Concert", imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" },
-                { title: "Skyline", imageUrl: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" }
-            ];
+            if (!c) return;
             c.innerHTML = '';
-            source.forEach(item => {
+            const d = getUserData(currentUser);
+            const userArtefaks = d.artefacts || [];
+            if (userArtefaks.length === 0) {
+                dummyArtefakPhotos.forEach(photo => {
+                    const div = document.createElement('div');
+                    div.className = 'artefak-grid-item';
+                    div.onclick = () => showArtefakDetails(photo);
+                    div.innerHTML = `
+                        <img src="${photo.url}" alt="${photo.title}" class="artefak-grid-image" loading="lazy">
+                        <div class="artefak-grid-overlay">
+                            <div class="artefak-grid-title">${photo.title}</div>
+                            <div class="artefak-grid-date">${photo.date}</div>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                });
+            } else {
+                userArtefaks.forEach(artefak => {
+                    const date = new Date(artefak.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                    const div = document.createElement('div');
+                    div.className = 'artefak-grid-item';
+                    div.onclick = () => showArtefakDetails(artefak);
+                    div.innerHTML = `
+                        ${artefak.imageUrl ? 
+                            `<img src="${artefak.imageUrl}" alt="${artefak.title}" class="artefak-grid-image" loading="lazy">` :
+                            `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(73,3,252,0.1);">📁</div>`
+                        }
+                        <div class="artefak-grid-overlay">
+                            <div class="artefak-grid-title">${artefak.title}</div>
+                            <div class="artefak-grid-date">${date}</div>
+                        </div>
+                    `;
+                    c.appendChild(div);
+                });
+            }
+        }
+        function showArtefakDetails(artefak) {
+            const date = new Date(artefak.date).toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            modal.innerHTML = `
+                <div class="modal-header">
+                    <div class="modal-title">${artefak.title}</div>
+                    <button class="modal-close" onclick="hideModal()">&times;</button>
+                </div>
+                <div style="padding: 15px 0;">
+                    <div style="font-size: 11px; color: rgba(73,3,252,0.7); margin-bottom: 10px;">
+                        ${date} • @${artefak.username || currentUser}
+                    </div>
+                    ${artefak.imageUrl ? 
+                        `<div style="width:100%;height:250px;background:rgba(73,3,252,0.05);border-radius:10px;overflow:hidden;margin-bottom:15px;">
+                            <img src="${artefak.imageUrl}" alt="${artefak.title}" style="width:100%;height:100%;object-fit:cover;">
+                        </div>` : 
+                        ''
+                    }
+                    ${artefak.content ? 
+                        `<div style="font-size: 14px; line-height: 1.6; color: white; margin-bottom: 20px;">
+                            ${artefak.content}
+                        </div>` : 
+                        ''
+                    }
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="action-btn secondary" onclick="hideModal()" style="flex: 1;">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+            modalOverlay.classList.add('active');
+        }
+        function renderRecentRants() {
+            const c = document.getElementById('recentRantsList');
+            if (!c) return;
+            const d = getUserData(currentUser);
+            if (!d.rants || d.rants.length === 0) {
+                const dummyRants = [
+                    { content: "Gue juga ngerasain... capek banget. Kadang pengen nangis aja.", date: Date.now() - 3600000, hashtag: "#CapekPuraPura" },
+                    { content: "Gue ngerasain kayak dijebak sama hidup. Kerjaan banyak, gaji kecil, bos galak, pacar ngilang. Kayaknya gue harus istirahat dulu.", date: Date.now() - 7200000, hashtag: "#SayNOPE" },
+                    { content: "Hari ini gue ngerasain semua emosi sekaligus. Senang karena dapet kerjaan baru, sedih karena harus tinggalin rumah, takut karena belum siap, dan marah karena gak ada yang ngerti. Mungkin ini namanya dewasa? Atau cuma kelelahan?", date: Date.now() - 10800000, hashtag: "#DiamDiamNangis" }
+                ];
+                c.innerHTML = '';
+                dummyRants.forEach(r => {
+                    const date = new Date(r.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                    const content = r.content.length > 100 ? r.content.substring(0, 100) + '...' : r.content;
+                    const div = document.createElement('div');
+                    div.className = 'recent-rant-item';
+                    div.onclick = () => viewRantDetails(r);
+                    div.innerHTML = `<div class="recent-rant-date">${date} • ${r.hashtag || ''}</div><div class="recent-rant-content">${content}</div>`;
+                    c.appendChild(div);
+                });
+                return;
+            }
+            const rants = d.rants.slice(-3).reverse();
+            c.innerHTML = '';
+            rants.forEach(r => {
+                const date = new Date(r.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                const content = r.content.length > 100 ? r.content.substring(0, 100) + '...' : r.content;
                 const div = document.createElement('div');
-                div.className = 'artefak-grid-item';
-                div.innerHTML = `<img src="${item.imageUrl}" style="width:100%;height:100%;object-fit:cover;"><div class="artefak-grid-overlay"><div style="font-size:11px;color:white;">${item.title}</div></div>`;
+                div.className = 'recent-rant-item';
+                div.onclick = () => viewRantDetails(r);
+                div.innerHTML = `<div class="recent-rant-date">${date} • ${r.hashtag || ''}</div><div class="recent-rant-content">${content}</div>`;
                 c.appendChild(div);
             });
         }
-
-        function openArtefakUpload() { showToast('Fitur unggah artefak (simulasi)'); }
-        function exportData() { showToast('Data diekspor (simulasi)'); }
-        function viewAllRants() { showToast('Lihat semua rant (simulasi)'); }
-        function logout() {
-            if (confirm('Keluar?')) {
-                currentUser = null;
-                localStorage.removeItem('nope_current_user');
-                showPage('login');
+        function postRantFromBox() {
+            const box = document.getElementById('rantBox');
+            if (!box) return;
+            const content = box.value.trim();
+            if (!content) { 
+                showToast('Tulis rant terlebih dahulu!'); 
+                return; 
             }
-        }
-        function showToast(msg) {
-            const t = document.createElement('div');
-            t.className = 'toast';
-            t.textContent = msg;
-            document.body.appendChild(t);
-            setTimeout(() => document.body.removeChild(t), 3000);
-        }
-
-        function initializeApp() {
-            initDummyData();
-            const saved = localStorage.getItem('nope_current_user');
-            if (saved) {
-                currentUser = saved;
-                showPage('popculture');
-            } else {
-                showPage('login');
+            if (!currentUser) return;
+            const d = getUserData(currentUser);
+            if (!d.rants) d.rants = [];
+            const newRant = {
+                content, 
+                date: Date.now(),
+                hashtag: null // Akan diisi saat inferensi
+            };
+            d.rants.push(newRant);
+            // LAKUKAN INFERENSI SETELAH 3 RANT
+            if (d.rants.length === 3 && !d.selectedHashtags) {
+                const inferred = inferHashtagsFromRants(d.rants);
+                if (inferred) {
+                    d.selectedHashtags = inferred;
+                    d.onboarded = true;
+                    showToast('Frekuensi mu telah diatur secara diam-diam ✨');
+                }
             }
+            d.lastLogin = Date.now();
+            saveUserData(currentUser, d);
+            const globalRants = getGlobalRants();
+            globalRants.push({
+                username: currentUser,
+                ...newRant
+            });
+            saveGlobalRants(globalRants);
+            box.value = '';
+            const counter = document.getElementById('rantCounter');
+            if (counter) {
+                counter.textContent = '0/300';
+            }
+            renderRecentRants();
+            if (currentTab === 'jalan') {
+                initJalanPage();
+            }
+            showToast('Rant berhasil diposting!');
         }
-        document.addEventListener('DOMContentLoaded', initializeApp);
-    </script>
-</body>
-</html>
-
-Simpan sebagai `index.html` dan jalankan. Siap digunakan!
+        // ===== SISTEM UNGGAH ARTEFAK =====
+        function openArtefakUpload() {
+            artefakUploadState = {
+                image: null,
+                title: '',
+                step: 0
+            };
+            const fileInput = document.getElementById('artefakFileInput');
+            fileInput.onchange = handleImageSelect;
+            fileInput.click();
+        }
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!file.type.match('image.*')) {
+                alert('Hanya file gambar yang diperbolehkan!');
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Ukuran file maksimal 5MB!');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                artefakUploadState.image = e.target.result;
+                artefakUploadState.step = 1;
+                showArtefakUploadModal();
+            };
+            reader.onerror = function() {
+                alert('Gagal membaca file!');
+            };
+            reader.readAsDataURL(file);
+        }
+        function showArtefakUploadModal() {
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modalContent');
+            if (artefakUpload
