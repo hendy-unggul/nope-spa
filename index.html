@@ -53,14 +53,11 @@
       flex-direction: column;
       gap: 20px;
     }
-    .notification {
-      background: rgba(255, 107, 107, 0.1);
-      border: 1px solid var(--accent);
+    .subheader {
       color: var(--accent);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      display: inline-block;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
     }
     .artefak-container {
       position: relative;
@@ -95,13 +92,11 @@
       font-weight: bold;
       backdrop-filter: blur(2px);
       opacity: 0.9;
-      pointer-events: none; /* biar tidak mengganggu klik */
+      pointer-events: none;
     }
     .cta-row {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
+      justify-content: flex-end;
       margin-top: 8px;
     }
     .upload-btn, .choose-photo-btn {
@@ -139,6 +134,11 @@
     }
     .rant-box textarea::placeholder {
       color: #777;
+    }
+    .rant-upload-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
     }
     .feed-title {
       color: var(--accent);
@@ -225,9 +225,8 @@
 
   <!-- Konten Utama -->
   <div class="container">
-    <div class="notification">
-      Nobar terakhir sama mantan
-    </div>
+    <!-- Subjudul: Jejak @username -->
+    <div class="subheader" id="jejak-title">Jejakmu</div>
 
     <!-- Artefak -->
     <div class="artefak-container">
@@ -235,10 +234,9 @@
       <div class="artefak-notasi">Gue mau simpen momen ini.</div>
     </div>
 
-    <!-- CTA Row -->
+    <!-- CTA Ubah Artefak (rata kanan di bawah artefak) -->
     <div class="cta-row">
       <button id="choose-photo" class="choose-photo-btn">Ubah Artefak</button>
-      <button class="upload-btn">Unggah</button>
     </div>
 
     <!-- Rant Box -->
@@ -246,8 +244,8 @@
       <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..."></textarea>
     </div>
 
-    <!-- Unggah Rant (rata kanan, di bawah rantbox) -->
-    <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+    <!-- Tombol Unggah Rant (rata kanan di bawah rantbox) -->
+    <div class="rant-upload-row">
       <button class="upload-btn" id="submit-rant">Unggah</button>
     </div>
 
@@ -292,6 +290,21 @@
       SocialSickness: ['politik', 'korupsi', 'hukum', 'polisi', 'pajak', 'demo', 'pemerintah', 'sistem', 'keadilan', 'rasisme', 'diskriminasi', 'toxic', 'media', 'hoax', 'berita', 'uang', 'kelas'],
       Movement: ['kita', 'bareng', 'ubah', 'lawan', 'solidaritas', 'gerakan', 'aksi', 'perubahan', 'bangkit', 'bersama', 'suara', 'jujur', 'keadilan', 'kesetaraan', 'melawan', 'bangun', 'melangkah']
     };
+
+    // ========== INIT USERNAME ==========
+    function getOrCreateUsername() {
+      let username = localStorage.getItem('nope_username');
+      if (!username) {
+        // Auto-generate username 2 kata (sesuai permintaan kamu)
+        const adjectives = ['sunyi', 'malam', 'bisu', 'redup', 'diam', 'abu', 'dingin', 'rapuh'];
+        const nouns = ['jiwa', 'langit', 'awan', 'senja', 'rintik', 'cermin', 'bayangan', 'napas'];
+        const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+        const noun = nouns[Math.floor(Math.random() * nouns.length)];
+        username = `${adj}${noun}`;
+        localStorage.setItem('nope_username', username);
+      }
+      return username;
+    }
 
     // ========== FREQUENCY DETECTION ==========
     function calculateZoneScores(rant) {
@@ -387,10 +400,14 @@
 
     // ========== INIT ==========
     document.addEventListener('DOMContentLoaded', () => {
+      // Set subjudul dengan username
+      const username = getOrCreateUsername();
+      document.getElementById('jejak-title').textContent = `Jejak @${username}`;
+
       loadArtefak();
       renderFeed();
 
-      // Tombol unggah rant (di bawah rantbox)
+      // Tombol unggah rant
       const submitBtn = document.getElementById('submit-rant');
       if (submitBtn) submitBtn.addEventListener('click', submitRant);
 
@@ -418,7 +435,6 @@
               const url = URL.createObjectURL(file);
               saveArtefakUrl(url);
               document.querySelector('.artefak-image').src = url;
-              // Update notasi default
               document.querySelector('.artefak-notasi').textContent = "Gue mau simpen momen ini.";
             }
           };
