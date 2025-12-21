@@ -127,7 +127,7 @@
             margin-top: 10px;
         }
         
-        /* Jejak Header */
+        /* Jejak Header - Diubah menjadi bar dengan username */
         .jejak-header {
             display: flex;
             justify-content: space-between;
@@ -135,35 +135,33 @@
             padding: 20px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .user-info {
+        .jejak-header-left {
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: white;
-            color: #667eea;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
+        .jejak-icon {
+            font-size: 1.5rem;
+        }
+        
+        .jejak-user-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
         }
         
         .user-status {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             opacity: 0.8;
         }
         
-        /* Artefak Unggahan Utama */
+        /* Main Artefak Container */
         .main-artefak-container {
             padding: 20px;
+            background: rgba(0, 0, 0, 0.05);
         }
         
         .main-artefak-box {
@@ -238,61 +236,41 @@
             cursor: not-allowed;
         }
         
-        /* Artefak Reactions */
-        .artefak-reactions {
+        /* Artefak Actions Bar - REVISI: satu baris rata kanan */
+        .artefak-actions-bar {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            justify-content: flex-end;
+            gap: 10px;
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .reaction-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-            padding: 5px;
-        }
-        
-        .reaction-btn:hover {
-            transform: scale(1.2);
-        }
-        
-        .reaction-count {
-            font-size: 0.8rem;
-            text-align: center;
-            margin-top: 3px;
-            opacity: 0.8;
-        }
-        
-        /* Jejak Stats */
-        .jejak-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 0 20px;
-            margin: 20px 0;
-        }
-        
-        .stat-card {
+        .action-btn {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.2rem;
         }
         
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            display: block;
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
         }
         
-        .stat-label {
-            font-size: 0.8rem;
-            opacity: 0.8;
+        .action-btn.upload {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        
+        .action-btn.upload:hover {
+            background: rgba(102, 126, 234, 0.3);
         }
         
         /* Jejak Form */
@@ -460,6 +438,129 @@
             font-weight: 500;
         }
         
+        /* Setting Screen (Movement diubah jadi Setting) */
+        .setting-screen {
+            padding: 20px;
+        }
+        
+        .setting-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .setting-avatar {
+            width: 60px;
+            height: 60px;
+            background: white;
+            color: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        
+        .setting-user-info h2 {
+            margin-bottom: 5px;
+        }
+        
+        .setting-user-status {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Jejak Stats di Setting */
+        .setting-stats {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .setting-stats-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .setting-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .setting-stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .setting-stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+            color: white;
+        }
+        
+        .setting-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        /* Setting Actions */
+        .setting-actions {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .setting-action-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .setting-action-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-action-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .setting-action-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: translateY(-2px);
+        }
+        
         /* Modal */
         .modal {
             display: none;
@@ -504,7 +605,7 @@
         
         /* Responsive */
         @media (max-width: 480px) {
-            .jejak-header, .main-artefak-container, .jejak-stats, .jejak-form-container, .jejak-list, .artefak-grid-section {
+            .jejak-header, .main-artefak-container, .jejak-form-container, .jejak-list, .artefak-grid-section, .setting-screen {
                 padding: 15px;
             }
             
@@ -527,6 +628,10 @@
             
             .nav-icon {
                 font-size: 1.3rem;
+            }
+            
+            .setting-stats-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -563,21 +668,19 @@
         
         <!-- Main App (after login) -->
         <div id="mainApp" class="screen">
-            <!-- Jejak Header -->
+            <!-- Jejak Header - REVISI: Jejak @username -->
             <div class="jejak-header">
-                <div class="user-info">
-                    <div id="userAvatar" class="user-avatar">A</div>
-                    <div>
-                        <h3 id="userName">ALIYAKH</h3>
+                <div class="jejak-header-left">
+                    <div class="jejak-icon">📝</div>
+                    <div class="jejak-user-info">
+                        <h3 id="jejakTitle">Jejak <span id="jejakUsername">ALIYAKH</span></h3>
                         <div id="userStatus" class="user-status">Online</div>
                     </div>
                 </div>
-                <button id="logoutBtn" class="btn btn-secondary" style="width: auto; padding: 10px 20px;">Keluar</button>
             </div>
             
-            <!-- Main Artefak Upload -->
+            <!-- Main Artefak Container -->
             <div class="main-artefak-container">
-                <h3 style="margin-bottom: 10px;">Artefak Bulan Ini</h3>
                 <div class="main-artefak-box">
                     <div id="mainArtefakUpload" class="main-artefak-upload">
                         <div id="mainArtefakPreview"></div>
@@ -593,19 +696,20 @@
                         <div style="text-align: center; margin-top: 5px; font-size: 0.8rem; opacity: 0.7;">Artefak ini bersifat abadi</div>
                     </div>
                     
-                    <div id="artefakReactions" class="artefak-reactions" style="display: none;">
-                        <div class="reaction-item">
-                            <button class="reaction-btn" data-reaction="guejuga">👍</button>
-                            <div id="guejugaCount" class="reaction-count">0</div>
-                        </div>
-                        <div class="reaction-item">
-                            <button class="reaction-btn" data-reaction="nangis">😢</button>
-                            <div id="nangisCount" class="reaction-count">0</div>
-                        </div>
-                        <div class="reaction-item">
-                            <button class="reaction-btn" data-reaction="api">🔥</button>
-                            <div id="apiCount" class="reaction-count">0</div>
-                        </div>
+                    <!-- REVISI: Actions bar satu baris rata kanan -->
+                    <div id="artefakActionsBar" class="artefak-actions-bar" style="display: none;">
+                        <button class="action-btn upload" id="uploadActionBtn" title="Unggah Artefak">
+                            📸
+                        </button>
+                        <button class="action-btn" data-reaction="guejuga" title="GueJuga">
+                            👍
+                        </button>
+                        <button class="action-btn" data-reaction="nangis" title="Nangis">
+                            😢
+                        </button>
+                        <button class="action-btn" data-reaction="api" title="Api">
+                            🔥
+                        </button>
                     </div>
                 </div>
             </div>
@@ -617,22 +721,6 @@
                     <input type="text" id="newJejak" class="form-input" placeholder="Apa yang sedang Anda lakukan?">
                 </div>
                 <button id="addJejakBtn" class="btn">Tambah Jejak</button>
-            </div>
-            
-            <!-- Jejak Stats -->
-            <div class="jejak-stats">
-                <div class="stat-card">
-                    <span id="totalJejak" class="stat-value">3</span>
-                    <span class="stat-label">Total Jejak</span>
-                </div>
-                <div class="stat-card">
-                    <span id="todayJejak" class="stat-value">2</span>
-                    <span class="stat-label">Hari Ini</span>
-                </div>
-                <div class="stat-card">
-                    <span id="activeDays" class="stat-value">2</span>
-                    <span class="stat-label">Hari Aktif</span>
-                </div>
             </div>
             
             <!-- Jejak List -->
@@ -654,9 +742,92 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Setting Screen (Movement diubah jadi Setting) -->
+        <div id="settingScreen" class="screen-content" style="display: none;">
+            <div class="setting-screen">
+                <div class="setting-header">
+                    <div class="setting-avatar" id="settingAvatar">A</div>
+                    <div class="setting-user-info">
+                        <h2 id="settingUsername">ALIYAKH</h2>
+                        <div class="setting-user-status">Online</div>
+                    </div>
+                </div>
+                
+                <!-- REVISI: Statistik Jejak dipindahkan ke Setting -->
+                <div class="setting-stats">
+                    <div class="setting-stats-title">
+                        <span>📊</span> Statistik Jejak
+                    </div>
+                    <div class="setting-stats-grid">
+                        <div class="setting-stat-card">
+                            <span id="settingTotalJejak" class="setting-stat-value">0</span>
+                            <span class="setting-stat-label">Total Jejak</span>
+                        </div>
+                        <div class="setting-stat-card">
+                            <span id="settingTodayJejak" class="setting-stat-value">0</span>
+                            <span class="setting-stat-label">Hari Ini</span>
+                        </div>
+                        <div class="setting-stat-card">
+                            <span id="settingActiveDays" class="setting-stat-value">0</span>
+                            <span class="setting-stat-label">Hari Aktif</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- REVISI: Logout dipindahkan ke Setting -->
+                <div class="setting-actions">
+                    <div class="setting-action-item">
+                        <div class="setting-action-left">
+                            <div class="setting-action-icon">👤</div>
+                            <div>
+                                <div style="font-weight: 500;">Akun</div>
+                                <div style="font-size: 0.9rem; opacity: 0.8;">Kelola profil dan preferensi</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-action-item">
+                        <div class="setting-action-left">
+                            <div class="setting-action-icon">🔔</div>
+                            <div>
+                                <div style="font-weight: 500;">Notifikasi</div>
+                                <div style="font-size: 0.9rem; opacity: 0.8;">Atur pemberitahuan</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-action-item">
+                        <div class="setting-action-left">
+                            <div class="setting-action-icon">🛡️</div>
+                            <div>
+                                <div style="font-weight: 500;">Privasi</div>
+                                <div style="font-size: 0.9rem; opacity: 0.8;">Pengaturan privasi</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-action-item">
+                        <div class="setting-action-left">
+                            <div class="setting-action-icon">❓</div>
+                            <div>
+                                <div style="font-weight: 500;">Bantuan</div>
+                                <div style="font-size: 0.9rem; opacity: 0.8;">Pusat bantuan</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button id="settingLogoutBtn" class="logout-btn">
+                            Keluar dari Akun
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation - Movement diubah jadi Setting -->
     <div id="bottomNav" class="bottom-nav" style="display: none;">
         <a href="#" class="nav-item active" data-screen="jejak">
             <div class="nav-icon">📝</div>
@@ -674,9 +845,9 @@
             <div class="nav-icon">🌐</div>
             <div class="nav-label">SocialSickness</div>
         </a>
-        <a href="#" class="nav-item" data-screen="movement">
-            <div class="nav-icon">🚶</div>
-            <div class="nav-label">Movement</div>
+        <a href="#" class="nav-item" data-screen="setting">
+            <div class="nav-icon">⚙️</div>
+            <div class="nav-label">Setting</div>
         </a>
     </div>
     
@@ -690,19 +861,10 @@
             <div id="modalArtefakCaption" style="text-align: center; font-style: italic; margin-bottom: 15px; color: #666;"></div>
             <div id="modalArtefakDate" style="text-align: center; font-size: 0.9rem; color: #999; margin-bottom: 20px;"></div>
             
-            <div class="artefak-reactions" style="justify-content: center;">
-                <div class="reaction-item">
-                    <button class="reaction-btn" data-reaction="guejuga" onclick="addReaction('guejuga', true)">👍</button>
-                    <div id="modalGuejugaCount" class="reaction-count">0</div>
-                </div>
-                <div class="reaction-item">
-                    <button class="reaction-btn" data-reaction="nangis" onclick="addReaction('nangis', true)">😢</button>
-                    <div id="modalNangisCount" class="reaction-count">0</div>
-                </div>
-                <div class="reaction-item">
-                    <button class="reaction-btn" data-reaction="api" onclick="addReaction('api', true)">🔥</button>
-                    <div id="modalApiCount" class="reaction-count">0</div>
-                </div>
+            <div class="artefak-actions-bar" style="justify-content: center; border-top: none; padding-top: 0;">
+                <button class="action-btn" data-reaction="guejuga" onclick="addReaction('guejuga', true)">👍</button>
+                <button class="action-btn" data-reaction="nangis" onclick="addReaction('nangis', true)">😢</button>
+                <button class="action-btn" data-reaction="api" onclick="addReaction('api', true)">🔥</button>
             </div>
             
             <div class="modal-footer">
@@ -720,9 +882,10 @@
         const passwordInput = document.getElementById('password');
         const loginBtn = document.getElementById('loginBtn');
         const guestBtn = document.getElementById('guestBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const userName = document.getElementById('userName');
-        const userAvatar = document.getElementById('userAvatar');
+        
+        // Header elements
+        const jejakTitle = document.getElementById('jejakTitle');
+        const jejakUsername = document.getElementById('jejakUsername');
         const userStatus = document.getElementById('userStatus');
         
         // Artefak elements
@@ -732,15 +895,22 @@
         const artefakFileInput = document.getElementById('artefakFileInput');
         const artefakCaption = document.getElementById('artefakCaption');
         const captionInput = document.getElementById('captionInput');
-        const artefakReactions = document.getElementById('artefakReactions');
+        const artefakActionsBar = document.getElementById('artefakActionsBar');
+        const uploadActionBtn = document.getElementById('uploadActionBtn');
         
         // Jejak elements
         const newJejakInput = document.getElementById('newJejak');
         const addJejakBtn = document.getElementById('addJejakBtn');
         const jejakList = document.getElementById('jejakList');
-        const totalJejak = document.getElementById('totalJejak');
-        const todayJejak = document.getElementById('todayJejak');
-        const activeDays = document.getElementById('activeDays');
+        
+        // Setting elements
+        const settingScreen = document.getElementById('settingScreen');
+        const settingAvatar = document.getElementById('settingAvatar');
+        const settingUsername = document.getElementById('settingUsername');
+        const settingTotalJejak = document.getElementById('settingTotalJejak');
+        const settingTodayJejak = document.getElementById('settingTodayJejak');
+        const settingActiveDays = document.getElementById('settingActiveDays');
+        const settingLogoutBtn = document.getElementById('settingLogoutBtn');
         
         // Artefak Grid
         const artefakGrid = document.getElementById('artefakGrid');
@@ -796,7 +966,6 @@
 
         // Initialize
         function init() {
-            // Load data from localStorage
             loadFromLocalStorage();
             
             if (localStorage.getItem('currentUser')) {
@@ -804,7 +973,6 @@
                 showMainApp();
             }
             
-            // Setup event listeners
             setupEventListeners();
         }
 
@@ -829,15 +997,21 @@
         function setupEventListeners() {
             loginBtn.addEventListener('click', () => login(usernameInput.value));
             guestBtn.addEventListener('click', () => login("", true));
-            logoutBtn.addEventListener('click', logout);
+            settingLogoutBtn.addEventListener('click', logout);
             
             addJejakBtn.addEventListener('click', () => addJejak(newJejakInput.value));
             newJejakInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') addJejak(newJejakInput.value);
             });
             
-            // Artefak upload
+            // Artefak upload - REVISI: menggunakan action button
             mainArtefakUpload.addEventListener('click', () => {
+                if (!currentArtefak && canUploadArtefak()) {
+                    artefakFileInput.click();
+                }
+            });
+            
+            uploadActionBtn.addEventListener('click', () => {
                 if (!currentArtefak && canUploadArtefak()) {
                     artefakFileInput.click();
                 }
@@ -846,8 +1020,8 @@
             artefakFileInput.addEventListener('change', handleArtefakUpload);
             captionInput.addEventListener('keyup', saveArtefakCaption);
             
-            // Reaction buttons
-            document.querySelectorAll('.reaction-btn').forEach(btn => {
+            // Action buttons for reactions
+            document.querySelectorAll('#artefakActionsBar .action-btn[data-reaction]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     if (currentArtefak) {
                         addReaction(e.target.dataset.reaction, false);
@@ -891,23 +1065,62 @@
             mainApp.classList.add('active');
             bottomNav.style.display = 'flex';
             
-            userName.textContent = currentUser.username || "ALIYAKH";
-            userAvatar.textContent = (currentUser.username || "A").charAt(0).toUpperCase();
+            const username = currentUser.username || "ALIYAKH";
+            const firstLetter = username.charAt(0).toUpperCase();
+            
+            // Update Jejak header
+            jejakUsername.textContent = username;
             userStatus.textContent = "Online";
             
+            // Update Setting screen
+            settingAvatar.textContent = firstLetter;
+            settingUsername.textContent = username;
+            
             updateJejakDisplay();
+            updateSettingStats();
             updateArtefakDisplay();
             checkArtefakUploadStatus();
         }
 
         function logout() {
-            currentUser = null;
-            localStorage.removeItem('currentUser');
-            mainApp.classList.remove('active');
-            bottomNav.style.display = 'none';
-            loginScreen.classList.add('active');
-            usernameInput.value = "";
-            passwordInput.value = "";
+            if (confirm("Yakin ingin keluar?")) {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                mainApp.classList.remove('active');
+                bottomNav.style.display = 'none';
+                loginScreen.classList.add('active');
+                usernameInput.value = "";
+                passwordInput.value = "";
+                
+                // Reset to Jejak screen
+                switchScreen('jejak');
+            }
+        }
+
+        // Navigation
+        function switchScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen-content').forEach(screen => {
+                screen.style.display = 'none';
+            });
+            
+            // Hide main app if showing setting
+            if (screenId === 'setting') {
+                mainApp.style.display = 'none';
+                settingScreen.style.display = 'block';
+                updateSettingStats();
+            } else {
+                mainApp.style.display = 'block';
+                settingScreen.style.display = 'none';
+            }
+            
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.screen === screenId) {
+                    item.classList.add('active');
+                }
+            });
         }
 
         // Jejak Functions
@@ -929,6 +1142,7 @@
             jejakData.unshift(newJejak);
             saveToLocalStorage();
             updateJejakDisplay();
+            updateSettingStats();
             newJejakInput.value = "";
         }
 
@@ -938,25 +1152,18 @@
                 jejak.completed = !jejak.completed;
                 saveToLocalStorage();
                 updateJejakDisplay();
+                updateSettingStats();
             }
         }
 
         function updateJejakDisplay() {
-            totalJejak.textContent = jejakData.length;
-            
-            const today = new Date().toISOString().split('T')[0];
-            const todayCount = jejakData.filter(j => j.date === today).length;
-            todayJejak.textContent = todayCount;
-            
-            const uniqueDays = new Set(jejakData.map(j => j.date)).size;
-            activeDays.textContent = uniqueDays;
-            
             jejakList.innerHTML = "";
             
             jejakData.slice(0, 5).forEach(jejak => {
                 const jejakItem = document.createElement('div');
                 jejakItem.className = 'jejak-item';
                 
+                const today = new Date().toISOString().split('T')[0];
                 const displayDate = jejak.date === today ? 'Hari ini' : jejak.date;
                 
                 jejakItem.innerHTML = `
@@ -976,6 +1183,21 @@
                 `;
                 jejakList.appendChild(jejakItem);
             });
+        }
+
+        function updateSettingStats() {
+            // Calculate stats
+            const total = jejakData.length;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const todayCount = jejakData.filter(j => j.date === today).length;
+            
+            const uniqueDays = new Set(jejakData.map(j => j.date)).size;
+            
+            // Update setting stats
+            settingTotalJejak.textContent = total;
+            settingTodayJejak.textContent = todayCount;
+            settingActiveDays.textContent = uniqueDays;
         }
 
         // Artefak Functions
@@ -1000,7 +1222,6 @@
             
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Create new artefak
                 currentArtefak = {
                     id: Date.now(),
                     imageUrl: e.target.result,
@@ -1009,14 +1230,11 @@
                     reactions: { guejuga: 0, nangis: 0, api: 0 }
                 };
                 
-                // Update display
                 updateMainArtefakDisplay();
                 
-                // Save upload date
                 lastArtefakUpload = new Date().toISOString();
                 saveToLocalStorage();
                 
-                // Show caption input
                 artefakCaption.style.display = 'block';
                 captionInput.disabled = false;
                 captionInput.focus();
@@ -1037,9 +1255,8 @@
                 currentArtefak.caption = caption;
                 captionInput.disabled = true;
                 
-                // Add to artefak collection
                 if (artefakData.length >= 6) {
-                    artefakData.shift(); // Remove oldest if full
+                    artefakData.shift();
                 }
                 artefakData.push({...currentArtefak});
                 
@@ -1047,7 +1264,6 @@
                 updateArtefakDisplay();
                 updateMainArtefakDisplay();
                 
-                // Hide caption input after saving
                 setTimeout(() => {
                     artefakCaption.style.display = 'none';
                 }, 2000);
@@ -1059,18 +1275,17 @@
                 mainArtefakPreview.innerHTML = `<img src="${currentArtefak.imageUrl}" class="main-artefak-image" alt="Artefak">`;
                 mainArtefakPlaceholder.style.display = 'none';
                 
-                // Update caption if exists
                 if (currentArtefak.caption) {
                     captionInput.value = currentArtefak.caption;
                 }
                 
-                // Show reactions
-                artefakReactions.style.display = 'flex';
-                updateReactionCounts();
+                // REVISI: Show action bar
+                artefakActionsBar.style.display = 'flex';
+                uploadActionBtn.style.display = 'none'; // Hide upload button if already has artefak
             } else {
                 mainArtefakPreview.innerHTML = '';
                 mainArtefakPlaceholder.style.display = 'flex';
-                artefakReactions.style.display = 'none';
+                artefakActionsBar.style.display = 'none';
                 
                 // Check upload status
                 if (!canUploadArtefak() && lastArtefakUpload) {
@@ -1084,18 +1299,21 @@
                             <div class="artefak-upload-text">Bisa unggah lagi dalam ${daysLeft} hari</div>
                         `;
                     }
+                } else {
+                    // Show action bar with only upload button if can upload
+                    artefakActionsBar.style.display = 'flex';
+                    uploadActionBtn.style.display = 'flex';
+                    document.querySelectorAll('#artefakActionsBar .action-btn[data-reaction]').forEach(btn => {
+                        btn.style.display = 'none';
+                    });
                 }
             }
         }
 
         function updateArtefakDisplay() {
-            // Update count
             artefakCount.textContent = `${artefakData.length}/6`;
-            
-            // Clear grid
             artefakGrid.innerHTML = '';
             
-            // Add artefak items
             for (let i = 0; i < 6; i++) {
                 const artefakItem = document.createElement('div');
                 artefakItem.className = 'artefak-grid-item';
@@ -1111,14 +1329,6 @@
             }
         }
 
-        function updateReactionCounts() {
-            if (!currentArtefak) return;
-            
-            document.getElementById('guejugaCount').textContent = currentArtefak.reactions.guejuga;
-            document.getElementById('nangisCount').textContent = currentArtefak.reactions.nangis;
-            document.getElementById('apiCount').textContent = currentArtefak.reactions.api;
-        }
-
         function addReaction(reactionType, fromModal = false) {
             let targetArtefak = fromModal ? window.currentModalArtefak : currentArtefak;
             
@@ -1127,24 +1337,14 @@
             targetArtefak.reactions[reactionType]++;
             
             if (fromModal) {
-                // Update modal counts
-                document.getElementById('modalGuejugaCount').textContent = targetArtefak.reactions.guejuga;
-                document.getElementById('modalNangisCount').textContent = targetArtefak.reactions.nangis;
-                document.getElementById('modalApiCount').textContent = targetArtefak.reactions.api;
-                
-                // Find and update in artefakData
                 const index = artefakData.findIndex(a => a.id === targetArtefak.id);
                 if (index !== -1) {
                     artefakData[index] = {...targetArtefak};
                 }
-            } else {
-                // Update main display
-                updateReactionCounts();
             }
             
             saveToLocalStorage();
             
-            // Visual feedback
             const btn = event.target;
             btn.style.transform = 'scale(1.5)';
             setTimeout(() => {
@@ -1161,30 +1361,11 @@
             modalArtefakCaption.textContent = artefak.caption || "(Tidak ada notasi)";
             modalArtefakDate.textContent = `Diunggah: ${artefak.date}`;
             
-            document.getElementById('modalGuejugaCount').textContent = artefak.reactions.guejuga;
-            document.getElementById('modalNangisCount').textContent = artefak.reactions.nangis;
-            document.getElementById('modalApiCount').textContent = artefak.reactions.api;
-            
             artefakModal.classList.add('active');
         }
 
         function checkArtefakUploadStatus() {
-            if (!canUploadArtefak() && lastArtefakUpload) {
-                const lastUpload = new Date(lastArtefakUpload);
-                const now = new Date();
-                const daysLeft = 30 - Math.floor((now - lastUpload) / (1000 * 60 * 60 * 24));
-                
-                if (daysLeft > 0) {
-                    console.log(`Bisa upload lagi dalam ${daysLeft} hari`);
-                }
-            }
-        }
-
-        // Navigation
-        function switchScreen(screenId) {
-            // This function handles switching between different screens
-            // For now, we only have the Jejak screen implemented
-            console.log(`Switch to ${screenId} screen`);
+            updateMainArtefakDisplay();
         }
 
         // Initialize app
