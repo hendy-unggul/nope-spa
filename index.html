@@ -3,457 +3,617 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iamME · Jejak Pribadi</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#0a0a0f">
-    <meta name="description" content="Jejak digitalmu, ruang privatmu">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- CSS & Fonts -->
-    <link rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#4f46e5">
+    <title>iamME - Jejak Digital</title>
     <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="icons/icon-72.png">
-    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👤</text></svg>">
     <style>
-        /* SPA Transition */
-        .page {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            min-height: 100vh;
-        }
-        .page.active {
-            display: block;
-            opacity: 1;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
         }
         
-        /* Loading Screen */
-        #loadingScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #0a0a0f;
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s;
+            color: white;
         }
-        .loading-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 48px;
-            font-weight: 800;
-            background: linear-gradient(90deg, #5d6afb, #ff6b8b);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        .screen {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Header */
+        .app-header {
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        .app-logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .app-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .app-subtitle {
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+        
+        /* Form Styles */
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-group {
             margin-bottom: 20px;
         }
-        .loading-spinner {
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            margin-top: 10px;
+        }
+        
+        /* Jejak Screen */
+        .jejak-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
             width: 40px;
             height: 40px;
-            border: 3px solid rgba(93, 106, 251, 0.3);
+            background: white;
+            color: #667eea;
             border-radius: 50%;
-            border-top-color: #5d6afb;
-            animation: spin 1s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        
+        .jejak-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .jejak-list {
+            flex: 1;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        
+        .jejak-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .jejak-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .jejak-content {
+            flex: 1;
+        }
+        
+        .jejak-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        /* Install Prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: white;
+            color: #333;
+            border-radius: 15px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+        
+        .install-prompt.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .install-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .install-icon {
+            font-size: 24px;
+        }
+        
+        .install-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .install-buttons button {
+            flex: 1;
+        }
+        
+        .close-install {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        /* Footer */
+        .app-footer {
+            text-align: center;
+            padding: 20px 0;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .jejak-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen">
-        <div class="loading-logo">iamME</div>
-        <div class="loading-spinner"></div>
-        <p style="color: #666; margin-top: 20px; font-size: 14px;">Menyiapkan ruangmu...</p>
-    </div>
-    
-    <!-- ===== LOGIN PAGE ===== -->
-    <div id="loginPage" class="page">
-        <div class="login-container">
-            <!-- Logo & Tagline -->
-            <div class="login-header">
-                <h1 class="login-logo">iam<span class="logo-me">ME</span></h1>
-                <p class="login-tagline">Jejak digitalmu, ruang privatmu</p>
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="app-header">
+                <div class="app-logo">👤</div>
+                <h1 class="app-title">iamME</h1>
+                <p class="app-subtitle">Jejak Digital Pribadi</p>
             </div>
             
-            <!-- Login Form -->
-            <div class="login-card">
-                <h2 class="login-title">Mulai Jejak</h2>
-                <p class="login-subtitle">Tanpa email, tanpa password. Cuma kamu.</p>
-                
-                <div class="input-group">
-                    <div class="input-icon">👤</div>
-                    <input 
-                        type="text" 
-                        id="usernameInput"
-                        class="login-input"
-                        placeholder="pilih username (min. 3 karakter)"
-                        maxlength="20"
-                        autocomplete="off"
-                        autocapitalize="none"
-                        spellcheck="false">
-                    <div class="input-helper" id="usernameHelper"></div>
+            <div class="form-container">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="Masukkan username Anda" autocomplete="username">
                 </div>
                 
-                <div class="login-rules">
-                    <div class="rule-item">
-                        <span class="rule-icon">✓</span>
-                        <span class="rule-text">Anonim total - tidak ada email</span>
-                    </div>
-                    <div class="rule-item">
-                        <span class="rule-icon">✓</span>
-                        <span class="rule-text">Data tersimpan di perangkatmu</span>
-                    </div>
-                    <div class="rule-item">
-                        <span class="rule-icon">✓</span>
-                        <span class="rule-text">Hapus cache = hapus semua data</span>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Masukkan password" autocomplete="current-password">
                 </div>
                 
-                <button class="btn-login" id="loginBtn" onclick="loginUser()">
-                    <span class="btn-icon">🚀</span>
-                    <span class="btn-text">Mulai Jejak</span>
-                </button>
-                
-                <div class="login-warning">
-                    <span class="warning-icon">⚠️</span>
-                    <p>Ini bukan platform sosial. Jejakmu hanya untukmu.</p>
-                </div>
+                <button id="loginBtn" class="btn">Masuk</button>
+                <button id="guestBtn" class="btn btn-secondary">Masuk sebagai Tamu</button>
             </div>
             
-            <!-- Features -->
-            <div class="features-preview">
-                <div class="feature-item">
-                    <div class="feature-icon">🖼️</div>
-                    <div class="feature-content">
-                        <h3>Artefak Visual</h3>
-                        <p>1 foto setiap 30 hari + 4 kata caption</p>
-                    </div>
-                </div>
-                
-                <div class="feature-item">
-                    <div class="feature-icon">📝</div>
-                    <div class="feature-content">
-                        <h3>Rant Box</h3>
-                        <p>Curahkan perasaan, auto-categorize ke 3 zona</p>
-                    </div>
-                </div>
-                
-                <div class="feature-item">
-                    <div class="feature-icon">🔍</div>
-                    <div class="feature-content">
-                        <h3>Jejak Pribadi</h3>
-                        <p>Lihat pola emosi dan growth-mu sendiri</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Footer -->
-            <div class="login-footer">
-                <p class="footer-text">v1.0 · Jejak sementara untuk refleksi abadi</p>
-                <p class="footer-hint" id="pwaHint" style="display: none;">
-                    💡 Buka di Chrome & pilih "Install App" untuk experience terbaik
-                </p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- ===== HOME PAGE (JEJAK) ===== -->
-    <div id="homePage" class="page">
-        <div class="app-container">
-            <!-- HEADER -->
-            <header class="main-header">
-                <div class="header-left">
-                    <h1 class="logo-iamme">iam<span class="logo-me">ME</span></h1>
-                    <div class="subheadline">Jejak</div>
-                </div>
-                <div class="header-right">
-                    <div class="user-badge" id="usernameDisplay">@username</div>
-                    <div class="streak-badge" id="streakBadge" style="display: none;">🔥 0</div>
-                    <button class="logout-btn" onclick="logout()" title="Keluar">🚪</button>
-                </div>
-            </header>
-            
-            <!-- MAIN CONTENT -->
-            <main class="jejak-content">
-                <!-- TOP ARTEFAK -->
-                <section class="top-artefak-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Artefak Terbaru</h2>
-                        <button class="btn-squeak" id="btnSqueak" onclick="playSqueak()">
-                            <span class="squeak-icon">🔊</span> Berderit
-                        </button>
-                    </div>
-                    
-                    <div class="artefak-card" id="latestArtefak">
-                        <div class="artefak-placeholder" id="artePlaceholder">
-                            <div class="placeholder-icon">🖼️</div>
-                            <p>Belum ada artefak</p>
-                            <button class="btn-upload-arte" id="uploadArteBtn">+ Unggah Artefak</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Emoji Reactions -->
-                    <div class="emoji-reactions">
-                        <button class="emoji-btn" data-emoji="🤝" onclick="reactArtefak('🤝')">
-                            <span class="emoji">🤝</span>
-                            <span class="emoji-count" id="countGueJuga">0</span>
-                            <span class="emoji-label">GueJuga</span>
-                        </button>
-                        <button class="emoji-btn" data-emoji="😢" onclick="reactArtefak('😢')">
-                            <span class="emoji">😢</span>
-                            <span class="emoji-count" id="countNangis">0</span>
-                            <span class="emoji-label">Nangis</span>
-                        </button>
-                        <button class="emoji-btn" data-emoji="🔥" onclick="reactArtefak('🔥')">
-                            <span class="emoji">🔥</span>
-                            <span class="emoji-count" id="countApi">0</span>
-                            <span class="emoji-label">Api</span>
-                        </button>
-                    </div>
-                </section>
-                
-                <!-- RANT BOX -->
-                <section class="rantbox-section">
-                    <h2 class="section-title">Rant Box</h2>
-                    <div class="rantbox-container">
-                        <textarea 
-                            class="rantbox-textarea" 
-                            id="rantInput"
-                            placeholder="Tulis apa yang lagi kamu rasakan... (maks 5 baris)"
-                            rows="5"
-                            maxlength="300"
-                            oninput="updateCharCount(this)"></textarea>
-                        <div class="rantbox-footer">
-                            <div class="char-counter">
-                                <span id="charCount">0</span>/300
-                            </div>
-                            <button class="btn-rant" id="rantBtn" onclick="submitRant()">
-                                <span class="rant-icon">⚡</span> Lampiaskan!
-                            </button>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- JOURNAL PREVIEW -->
-                <section class="journal-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Jurnal Terakhir</h2>
-                        <button class="btn-view-all" onclick="viewAllJournal()">Lihat semua →</button>
-                    </div>
-                    
-                    <div class="journal-preview" id="journalPreview">
-                        <div class="journal-empty">
-                            <p>Mulai tulis rant pertama kamu...</p>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- ARTEFAK TRAY -->
-                <section class="artefak-tray-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Galeri Artefak</h2>
-                        <div class="upload-status" id="uploadStatus">
-                            <span class="status-icon">⏳</span>
-                            <span id="daysLeft">30</span> hari lagi
-                        </div>
-                    </div>
-                    
-                    <div class="artefak-grid" id="artefakGrid">
-                        <div class="grid-empty">
-                            <p>Artefak kamu akan muncul di sini</p>
-                        </div>
-                    </div>
-                </section>
-            </main>
-            
-            <!-- BOTTOM NAVIGATION -->
-            <nav class="bottom-nav">
-                <a href="#" class="nav-item nav-active" data-target="home" onclick="switchTab('home')">
-                    <div class="nav-icon">📝</div>
-                    <div class="nav-label">Jejak</div>
-                </a>
-                <a href="#" class="nav-item" data-target="popculture" onclick="switchTab('popculture')">
-                    <div class="nav-icon">🎬</div>
-                    <div class="nav-label">PopCulture</div>
-                </a>
-                <a href="#" class="nav-item" data-target="personalpain" onclick="switchTab('personalpain')">
-                    <div class="nav-icon">💔</div>
-                    <div class="nav-label">PersonalPain</div>
-                </a>
-                <a href="#" class="nav-item" data-target="socialsickness" onclick="switchTab('socialsickness')">
-                    <div class="nav-icon">🌪️</div>
-                    <div class="nav-label">SocialSickness</div>
-                </a>
-            </nav>
-        </div>
-        
-        <!-- MODAL UNGGAH ARTEFAK -->
-        <div class="modal-overlay" id="arteModal" style="display: none;">
-            <div class="modal-content">
-                <h3>Unggah Artefak</h3>
-                <p class="modal-subtitle">Pilih foto + tulis 4 kata deskripsi</p>
-                
-                <div class="upload-area" id="uploadArea">
-                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                    <div class="upload-preview" id="imagePreview">
-                        <div class="upload-placeholder">
-                            <span class="upload-icon">📷</span>
-                            <p>Tap untuk pilih foto</p>
-                        </div>
-                    </div>
-                    
-                    <div class="caption-input">
-                        <input type="text" 
-                               id="arteCaption" 
-                               placeholder="Tulis 4 kata..." 
-                               maxlength="30"
-                               oninput="validateCaption()">
-                        <div class="caption-hint">Contoh: "Senja di kamar sendiri"</div>
-                        <div class="caption-error" id="captionError" style="color: #ff6b8b; font-size: 12px; display: none;">
-                            Harus tepat 4 kata!
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="modal-actions">
-                    <button class="btn-cancel" onclick="closeModal()">Batal</button>
-                    <button class="btn-upload" id="confirmUpload" disabled onclick="uploadArtefak()">Unggah Artefak</button>
-                </div>
+            <div class="app-footer">
+                <p>Aplikasi PWA - Tidak perlu install untuk mencoba</p>
             </div>
         </div>
         
-        <!-- MODAL VIEW ALL JOURNAL -->
-        <div class="modal-overlay" id="journalModal" style="display: none;">
-            <div class="modal-content" style="max-height: 70vh; overflow-y: auto;">
-                <div class="modal-header">
-                    <h3>Semua Jurnal</h3>
-                    <button class="btn-close" onclick="closeJournalModal()">✕</button>
+        <!-- Jejak Screen -->
+        <div id="jejakScreen" class="screen">
+            <div class="jejak-header">
+                <div class="user-info">
+                    <div id="userAvatar" class="user-avatar">U</div>
+                    <div>
+                        <h3 id="userName">Username</h3>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">Online</p>
+                    </div>
                 </div>
-                <div class="journal-full" id="journalFull">
-                    <!-- Semua rant akan dimuat di sini -->
+                <button id="logoutBtn" class="btn btn-secondary" style="width: auto; padding: 10px 20px;">Keluar</button>
+            </div>
+            
+            <div class="form-container">
+                <div class="form-group">
+                    <label class="form-label">Tambah Jejak Baru</label>
+                    <input type="text" id="newJejak" class="form-input" placeholder="Apa yang sedang Anda lakukan?">
                 </div>
+                <button id="addJejakBtn" class="btn">Tambah Jejak</button>
+            </div>
+            
+            <div class="jejak-stats">
+                <div class="stat-card">
+                    <span id="totalJejak" class="stat-value">0</span>
+                    <span class="stat-label">Total Jejak</span>
+                </div>
+                <div class="stat-card">
+                    <span id="todayJejak" class="stat-value">0</span>
+                    <span class="stat-label">Hari Ini</span>
+                </div>
+                <div class="stat-card">
+                    <span id="activeDays" class="stat-value">1</span>
+                    <span class="stat-label">Hari Aktif</span>
+                </div>
+            </div>
+            
+            <h3 style="margin: 20px 0 10px 0;">Jejak Terbaru</h3>
+            <div id="jejakList" class="jejak-list">
+                <!-- Jejak items will be added here -->
             </div>
         </div>
     </div>
     
-    <!-- ===== FEED PAGES ===== -->
-    <div id="popculturePage" class="page">
-        <div class="app-container">
-            <header class="main-header">
-                <div class="header-left">
-                    <h1 class="logo-iamme">iam<span class="logo-me">ME</span></h1>
-                    <div class="subheadline">PopCulture</div>
-                </div>
-                <div class="header-right">
-                    <button class="back-btn" onclick="switchTab('home')">← Kembali</button>
-                </div>
-            </header>
-            
-            <main class="feed-content" id="popcultureContent">
-                <div class="feed-empty">
-                    <div class="empty-icon">🎬</div>
-                    <h3>Rant PopCulture</h3>
-                    <p>Semua rant tentang film, musik, meme, dan tren viral akan muncul di sini.</p>
-                    <div class="feed-stats" id="popcultureStats">0 rant</div>
-                </div>
-            </main>
-        </div>
-    </div>
-    
-    <div id="personalpainPage" class="page">
-        <div class="app-container">
-            <header class="main-header">
-                <div class="header-left">
-                    <h1 class="logo-iamme">iam<span class="logo-me">ME</span></h1>
-                    <div class="subheadline">PersonalPain</div>
-                </div>
-                <div class="header-right">
-                    <button class="back-btn" onclick="switchTab('home')">← Kembali</button>
-                </div>
-            </header>
-            
-            <main class="feed-content" id="personalpainContent">
-                <div class="feed-empty">
-                    <div class="empty-icon">💔</div>
-                    <h3>Rant PersonalPain</h3>
-                    <p>Semua rant tentang kecemasan, trauma, healing, dan self-care akan muncul di sini.</p>
-                    <div class="feed-stats" id="personalpainStats">0 rant</div>
-                </div>
-            </main>
-        </div>
-    </div>
-    
-    <div id="socialsicknessPage" class="page">
-        <div class="app-container">
-            <header class="main-header">
-                <div class="header-left">
-                    <h1 class="logo-iamme">iam<span class="logo-me">ME</span></h1>
-                    <div class="subheadline">SocialSickness</div>
-                </div>
-                <div class="header-right">
-                    <button class="back-btn" onclick="switchTab('home')">← Kembali</button>
-                </div>
-            </header>
-            
-            <main class="feed-content" id="socialsicknessContent">
-                <div class="feed-empty">
-                    <div class="empty-icon">🌪️</div>
-                    <h3>Rant SocialSickness</h3>
-                    <p>Semua rant tentang toxic relationship, FOMO, loneliness akan muncul di sini.</p>
-                    <div class="feed-stats" id="socialsicknessStats">0 rant</div>
-                </div>
-            </main>
-        </div>
-    </div>
-    
-    <!-- PWA Install Prompt -->
-    <div class="pwa-prompt" id="pwaPrompt" style="display: none;">
-        <div class="pwa-prompt-content">
-            <div class="pwa-icon">📱</div>
-            <div class="pwa-text">
-                <h4>Install iamME App</h4>
-                <p>Untuk experience terbaik, install sebagai aplikasi</p>
-            </div>
-            <div class="pwa-actions">
-                <button class="btn-pwa btn-pwa-later" onclick="hidePwaPrompt()">Nanti</button>
-                <button class="btn-pwa btn-pwa-install" onclick="installPWA()">Install</button>
+    <!-- Install Prompt -->
+    <div id="installPrompt" class="install-prompt">
+        <button class="close-install" id="closeInstall">×</button>
+        <div class="install-header">
+            <div class="install-icon">📱</div>
+            <div>
+                <h3 style="color: #333;">Install iamME App</h3>
+                <p style="color: #666; font-size: 0.9rem;">Untuk pengalaman terbaik, install sebagai aplikasi</p>
             </div>
         </div>
+        <div class="install-buttons">
+            <button id="installBtn" class="btn">Install</button>
+            <button id="laterBtn" class="btn btn-secondary">Nanti</button>
+        </div>
     </div>
-    
-    <!-- JavaScript -->
-    <script src="app.js"></script>
+
     <script>
-        // Hide loading screen after everything loads
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loadingScreen').style.opacity = '0';
-                setTimeout(function() {
-                    document.getElementById('loadingScreen').style.display = 'none';
-                }, 500);
-            }, 1000);
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const jejakScreen = document.getElementById('jejakScreen');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const guestBtn = document.getElementById('guestBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        const newJejakInput = document.getElementById('newJejak');
+        const addJejakBtn = document.getElementById('addJejakBtn');
+        const jejakList = document.getElementById('jejakList');
+        const totalJejak = document.getElementById('totalJejak');
+        const todayJejak = document.getElementById('todayJejak');
+        const installPrompt = document.getElementById('installPrompt');
+        const installBtn = document.getElementById('installBtn');
+        const laterBtn = document.getElementById('laterBtn');
+        const closeInstall = document.getElementById('closeInstall');
+
+        // State
+        let currentUser = null;
+        let jejakData = [];
+        let deferredPrompt = null;
+
+        // Sample jejak data
+        const sampleJejak = [
+            { id: 1, text: "Membuat aplikasi iamME", time: "10:30", date: "2024-01-20" },
+            { id: 2, text: "Meeting dengan tim developer", time: "14:15", date: "2024-01-20" },
+            { id: 3, text: "Mempelajari PWA implementation", time: "16:45", date: "2024-01-19" },
+            { id: 4, text: "Desain UX/UI aplikasi", time: "09:20", date: "2024-01-18" },
+            { id: 5, text: "Testing aplikasi di berbagai device", time: "11:00", date: "2024-01-17" }
+        ];
+
+        // Initialize
+        function init() {
+            // Load data from localStorage
+            const savedJejak = localStorage.getItem('jejakData');
+            const savedUser = localStorage.getItem('currentUser');
+            
+            if (savedJejak) {
+                jejakData = JSON.parse(savedJejak);
+            } else {
+                jejakData = [...sampleJejak];
+            }
+            
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showJejakScreen();
+            }
+            
+            // Setup PWA install prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Show install prompt only after user has logged in and used the app
+                // Not showing immediately for low friction experience
+            });
+            
+            // Show install button if app is already installed
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                console.log("App is running in standalone mode");
+            }
+        }
+
+        // Login Function
+        function login(username, isGuest = false) {
+            if (!username.trim() && !isGuest) {
+                alert("Username tidak boleh kosong!");
+                return;
+            }
+            
+            currentUser = {
+                username: isGuest ? "Tamu" : username,
+                isGuest: isGuest,
+                loginTime: new Date().toISOString()
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showJejakScreen();
+            
+            // Show install prompt after successful login (delayed)
+            setTimeout(() => {
+                if (deferredPrompt && !localStorage.getItem('installDismissed')) {
+                    installPrompt.classList.add('show');
+                }
+            }, 3000);
+        }
+
+        // Show Jejak Screen
+        function showJejakScreen() {
+            loginScreen.classList.remove('active');
+            jejakScreen.classList.add('active');
+            
+            userName.textContent = currentUser.username;
+            userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
+            
+            updateJejakDisplay();
+        }
+
+        // Add New Jejak
+        function addJejak(text) {
+            if (!text.trim()) {
+                alert("Jejak tidak boleh kosong!");
+                return;
+            }
+            
+            const now = new Date();
+            const newJejak = {
+                id: Date.now(),
+                text: text,
+                time: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+                date: now.toISOString().split('T')[0]
+            };
+            
+            jejakData.unshift(newJejak);
+            localStorage.setItem('jejakData', JSON.stringify(jejakData));
+            updateJekakDisplay();
+            newJejakInput.value = "";
+            
+            // Show install prompt after adding a few jejaks (engagement)
+            if (jejakData.length === 3 && deferredPrompt && !localStorage.getItem('installDismissed')) {
+                installPrompt.classList.add('show');
+            }
+        }
+
+        // Update Jejak Display
+        function updateJejakDisplay() {
+            // Update stats
+            totalJejak.textContent = jejakData.length;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const todayCount = jejakData.filter(j => j.date === today).length;
+            todayJejak.textContent = todayCount;
+            
+            // Update list
+            jejakList.innerHTML = "";
+            
+            jejakData.slice(0, 10).forEach(jejak => {
+                const jejakItem = document.createElement('div');
+                jejakItem.className = 'jejak-item';
+                jejakItem.innerHTML = `
+                    <div class="jejak-icon">📝</div>
+                    <div class="jejak-content">
+                        <div>${jejak.text}</div>
+                        <div class="jejak-time">${jejak.time} • ${jejak.date}</div>
+                    </div>
+                `;
+                jejakList.appendChild(jejakItem);
+            });
+        }
+
+        // Logout Function
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            jejakScreen.classList.remove('active');
+            loginScreen.classList.add('active');
+            usernameInput.value = "";
+            passwordInput.value = "";
+        }
+
+        // Install PWA
+        async function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                } else {
+                    console.log('User dismissed the install prompt');
+                }
+                
+                deferredPrompt = null;
+                installPrompt.classList.remove('show');
+            }
+        }
+
+        // Event Listeners
+        loginBtn.addEventListener('click', () => {
+            login(usernameInput.value);
         });
-        
-        // Check for PWA install prompt
-        window.addEventListener('beforeinstallprompt', function(e) {
-            e.preventDefault();
-            window.deferredPrompt = e;
-            setTimeout(function() {
-                document.getElementById('pwaHint').style.display = 'block';
-            }, 5000);
+
+        guestBtn.addEventListener('click', () => {
+            login("", true);
         });
+
+        logoutBtn.addEventListener('click', logout);
+
+        addJejakBtn.addEventListener('click', () => {
+            addJejak(newJejakInput.value);
+        });
+
+        newJejakInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addJejak(newJejakInput.value);
+            }
+        });
+
+        installBtn.addEventListener('click', installApp);
+
+        laterBtn.addEventListener('click', () => {
+            installPrompt.classList.remove('show');
+            localStorage.setItem('installDismissed', 'true');
+        });
+
+        closeInstall.addEventListener('click', () => {
+            installPrompt.classList.remove('show');
+            localStorage.setItem('installDismissed', 'true');
+        });
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    console.log('ServiceWorker registered: ', registration);
+                }).catch(error => {
+                    console.log('ServiceWorker registration failed: ', error);
+                });
+            });
+        }
+
+        // Initialize app
+        init();
     </script>
 </body>
 </html>
