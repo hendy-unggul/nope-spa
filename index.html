@@ -3,194 +3,403 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jejak - NOPE</title>
+  <title>Jejak • NOPE</title>
+  <meta name="description" content="ga perlu follower, cuma butuh sefrekuensi">
+  <link rel="manifest" href="/manifest.json">
   <style>
+    :root {
+      --black: #000;
+      --white: #fff;
+      --accent: #6c47ff;
+      --logo: #ff9999;
+      --card-bg: #12052d;
+      --input-bg: #1a0736;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #000;
-      color: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      flex-direction: column;
       min-height: 100vh;
-      padding-top: 20px; /* ruang untuk navbar browser */
+      padding-top: env(safe-area-inset-top);
     }
-
+    .header-bar {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--black);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #222;
+    }
+    .logo {
+      color: var(--logo);
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: -0.5px;
+    }
     .container {
-      width: 90%;
+      flex: 1;
+      width: 100%;
       max-width: 600px;
-      background: #12052d;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      padding: 16px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-
-    .header {
-      color: #ff6b6b;
-      font-size: 2rem;
-      font-weight: bold;
-      margin: 0 0 15px 0;
-    }
-
     .notification {
-      background: #2a0a3e;
-      border: 1px solid #ff6b6b;
-      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid var(--accent);
+      color: var(--accent);
       padding: 6px 12px;
       border-radius: 6px;
       font-size: 0.85rem;
       display: inline-block;
-      margin-bottom: 20px;
     }
-
-    .artefak-placeholder {
+    .artefak-container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 80%;
+      background: var(--input-bg);
+      border-radius: 10px;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 150px;
-      margin: 20px 0;
-      background: #1a0736;
-      border-radius: 8px;
     }
-
-    .artefak-placeholder img {
-      width: 60px;
-      height: auto;
+    .artefak-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.85);
+    }
+    .artefak-notasi {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 6px 12px;
       border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      text-align: center;
+      backdrop-filter: blur(2px);
+      opacity: 0.9;
     }
-
     .cta-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 0;
-      border-top: 1px solid #333;
-      margin-top: 15px;
+      padding: 12px 0;
+      margin-top: 8px;
     }
-
-    .emojis {
-      display: flex;
-      gap: 12px;
-      font-size: 1.5rem;
-    }
-
-    .upload-btn {
-      background: #6c47ff;
-      color: white;
-      padding: 8px 16px;
+    .upload-btn, .choose-photo-btn {
+      border: none;
+      padding: 8px 14px;
       border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 500;
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: opacity 0.2s;
     }
-
-    .upload-btn:hover {
-      background: #5a3bd8;
+    .upload-btn {
+      background: var(--accent);
+      color: white;
     }
-
-    .rant-box {
-      margin-top: 20px;
-      width: 100%;
+    .choose-photo-btn {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
     }
-
-    .rant-box label {
-      display: block;
-      color: #6c47ff;
-      font-weight: bold;
-      margin-bottom: 8px;
+    .upload-btn:hover, .choose-photo-btn:hover {
+      opacity: 0.9;
     }
-
     .rant-box textarea {
       width: 100%;
-      background: #1a0736;
+      background: var(--input-bg);
       border: 1px solid #333;
-      color: #fff;
-      padding: 12px;
-      border-radius: 8px;
+      color: var(--white);
+      padding: 14px;
+      border-radius: 10px;
       resize: vertical;
-      min-height: 80px;
-      font-size: 0.95rem;
+      min-height: 90px;
+      font-size: 1rem;
+      outline: none;
     }
-
-    /* Footer Navigation */
+    .rant-box textarea::placeholder {
+      color: #777;
+    }
+    .feed-title {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .rant-item {
+      background: var(--input-bg);
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      position: relative;
+    }
+    .rant-item .emoji-pulse {
+      display: inline-block;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: 8px;
+      animation: pulse 1.8s infinite ease-in-out;
+    }
+    .rant-item .emoji-popup {
+      position: absolute;
+      right: 10px;
+      top: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid #333;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    .rant-item:hover .emoji-popup {
+      opacity: 1;
+      visibility: visible;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+      100% { opacity: 0.7; transform: scale(1); }
+    }
     .nav-footer {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: #000;
+      background: var(--black);
       display: flex;
       justify-content: space-around;
       padding: 12px 0;
-      border-top: 1px solid #333;
+      border-top: 1px solid #222;
+      z-index: 100;
     }
-
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #fff;
+      color: #aaa;
       text-decoration: none;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
+      gap: 4px;
     }
-
     .nav-item.active {
-      color: #6c47ff;
+      color: var(--accent);
     }
-
-    .nav-item i {
-      font-size: 1.2rem;
-      margin-bottom: 4px;
+    .nav-item span {
+      font-size: 1.3rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Konten Utama -->
+  <div class="header-bar">
+    <div class="logo">NOPE</div>
+  </div>
+
   <div class="container">
-    <h1 class="header">NOPE</h1>
+    <div class="notification">Nobar terakhir sama mantan</div>
 
-    <div class="notification">
-      Nobar terakhir sama mantan
+    <div class="artefak-container">
+      <img src="https://via.placeholder.com/600x480?text=🖼️" alt="Artefak" class="artefak-image" />
+      <div class="artefak-notasi">Kita Tak Sendiri</div>
     </div>
 
-    <div class="artefak-placeholder">
-      <img src="https://via.placeholder.com/60x60?text=🖼️" alt="Artefak placeholder" />
-    </div>
-
-    <!-- Baris CTA + Emoji -->
     <div class="cta-row">
-      <div class="emojis">
-        😭 🔥 🤡
-      </div>
+      <button id="choose-photo" class="choose-photo-btn">Ubah Artefak</button>
       <button class="upload-btn">Unggah</button>
     </div>
 
-    <!-- Rant Box tanpa counter -->
     <div class="rant-box">
-      <label for="rant-input">Rant Box</label>
       <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..."></textarea>
     </div>
+
+    <div class="feed-title">Jejakmu</div>
+    <div id="feed-container"></div>
   </div>
 
-  <!-- Footer Navigation -->
   <div class="nav-footer">
-    <a href="#" class="nav-item active">
+    <a href="index.html" class="nav-item active">
       <span>📄</span>
       Jejak
     </a>
-    <a href="#" class="nav-item">
+    <a href="jalan.html" class="nav-item">
       <span>🚶</span>
       Jalan
     </a>
-    <a href="#" class="nav-item">
+    <a href="dunia.html" class="nav-item">
       <span>🌍</span>
       Dunia
     </a>
+    <a href="movement.html" class="nav-item">
+      <span>✊</span>
+      Movement
+    </a>
   </div>
 
+  <script>
+    const DUMMY_RANTS = [
+      "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
+      "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
+      "Kenapa semua orang pura-pura baik di medsos? Gue capek jadi orang lain."
+    ];
+
+    const ZONE_KEYWORDS = {
+      PopCulture: ['film', 'musik', 'konser', 'artis', 'drakor', 'kpop', 'netflix', 'yt', 'youtube', 'tiktok', 'lagu', 'album', 'celeb', 'fandom', 'nobar', 'anime', 'game'],
+      PersonalPoin: ['capek', 'sedih', 'nangis', 'galau', 'putus', 'keluarga', 'sendiri', 'gak kuat', 'gak sanggup', 'stress', 'cemas', 'depresi', 'hancur', 'harap', 'sendiri', 'malam', 'tangis'],
+      SocialSickness: ['politik', 'korupsi', 'hukum', 'polisi', 'pajak', 'demo', 'pemerintah', 'sistem', 'keadilan', 'rasisme', 'diskriminasi', 'toxic', 'media', 'hoax', 'berita', 'uang', 'kelas'],
+      Movement: ['kita', 'bareng', 'ubah', 'lawan', 'solidaritas', 'gerakan', 'aksi', 'perubahan', 'bangkit', 'bersama', 'suara', 'jujur', 'keadilan', 'kesetaraan', 'melawan', 'bangun', 'melangkah']
+    };
+
+    function calculateZoneScores(rant) {
+      const lower = rant.toLowerCase();
+      const scores = { PopCulture: 0, PersonalPoin: 0, SocialSickness: 0, Movement: 0 };
+      for (const [zone, words] of Object.entries(ZONE_KEYWORDS)) {
+        for (const w of words) {
+          if (lower.includes(w)) scores[zone]++;
+        }
+      }
+      return scores;
+    }
+
+    function getTop3Zones(scores) {
+      return Object.entries(scores)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 3)
+        .map(([z]) => `#${z}`);
+    }
+
+    function saveArtefakUrl(url) {
+      localStorage.setItem('nope_artefak', url);
+    }
+
+    function loadArtefak() {
+      const saved = localStorage.getItem('nope_artefak');
+      const img = document.querySelector('.artefak-image');
+      if (saved) {
+        img.src = saved;
+      }
+    }
+
+    function loadRants() {
+      return JSON.parse(localStorage.getItem('nope_rants') || '[]');
+    }
+
+    function saveRants(rants) {
+      localStorage.setItem('nope_rants', JSON.stringify(rants.slice(0, 100)));
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function renderFeed() {
+      const container = document.getElementById('feed-container');
+      const rants = loadRants();
+
+      if (rants.length === 0) {
+        container.innerHTML = DUMMY_RANTS.map(t => 
+          `<div class="rant-item">${escapeHtml(t)} <span class="emoji-pulse">😭</span><div class="emoji-popup">Terakhir merespon: @user1, @user2, @user3</div></div>`
+        ).join('');
+        return;
+      }
+
+      container.innerHTML = rants.map((r, i) => {
+        const emojis = ['😭', '🔥', '🤡'];
+        const emoji = emojis[i % 3];
+        return `
+          <div class="rant-item">
+            ${escapeHtml(r.text)} 
+            <span class="emoji-pulse">${emoji}</span>
+            <div class="emoji-popup">Terakhir merespon: @user${i+1}, @user${i+2}, @user${i+3}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function submitRant() {
+      const input = document.getElementById('rant-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const rants = loadRants();
+      rants.unshift({ text, timestamp: Date.now() });
+      saveRants(rants);
+
+      if (rants.length <= 3) {
+        const allText = rants.map(r => r.text).join(' ');
+        const scores = calculateZoneScores(allText);
+        const top3 = getTop3Zones(scores);
+        localStorage.setItem('nope_frequency', JSON.stringify(top3));
+      }
+
+      input.value = '';
+      renderFeed();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadArtefak();
+      renderFeed();
+
+      const uploadBtn = document.querySelector('.upload-btn');
+      if (uploadBtn) uploadBtn.addEventListener('click', submitRant);
+
+      const rantInput = document.getElementById('rant-input');
+      if (rantInput) {
+        rantInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            submitRant();
+          }
+        });
+      }
+
+      const chooseBtn = document.getElementById('choose-photo');
+      if (chooseBtn) {
+        chooseBtn.addEventListener('click', () => {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = 'image/*';
+          input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const url = URL.createObjectURL(file);
+              saveArtefakUrl(url);
+              document.querySelector('.artefak-image').src = url;
+            }
+          };
+          input.click();
+        });
+      }
+    });
+  </script>
 </body>
 </html>
