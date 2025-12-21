@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#4f46e5">
     <title>iamME - Jejak Digital</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👤</text></svg>">
     <style>
         * {
             margin: 0;
@@ -49,7 +47,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Header */
         .app-header {
             padding: 20px 0;
             text-align: center;
@@ -71,7 +68,6 @@
             font-size: 1rem;
         }
         
-        /* Form Styles */
         .form-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -118,8 +114,6 @@
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
-            text-decoration: none;
-            display: block;
             width: 100%;
         }
         
@@ -134,7 +128,6 @@
             margin-top: 10px;
         }
         
-        /* Jejak Screen */
         .jejak-header {
             display: flex;
             justify-content: space-between;
@@ -212,69 +205,6 @@
             justify-content: center;
         }
         
-        .jejak-content {
-            flex: 1;
-        }
-        
-        .jejak-time {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-        
-        /* Install Prompt */
-        .install-prompt {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: white;
-            color: #333;
-            border-radius: 15px;
-            padding: 20px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 1000;
-        }
-        
-        .install-prompt.show {
-            transform: translateX(-50%) translateY(0);
-        }
-        
-        .install-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .install-icon {
-            font-size: 24px;
-        }
-        
-        .install-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .install-buttons button {
-            flex: 1;
-        }
-        
-        .close-install {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #999;
-        }
-        
-        /* Footer */
         .app-footer {
             text-align: center;
             padding: 20px 0;
@@ -282,7 +212,6 @@
             font-size: 0.9rem;
         }
         
-        /* Responsive */
         @media (max-width: 480px) {
             .container {
                 padding: 15px;
@@ -324,7 +253,7 @@
             </div>
             
             <div class="app-footer">
-                <p>Aplikasi PWA - Tidak perlu install untuk mencoba</p>
+                <p>Aplikasi PWA - Langsung pakai tanpa install</p>
             </div>
         </div>
         
@@ -370,22 +299,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Install Prompt -->
-    <div id="installPrompt" class="install-prompt">
-        <button class="close-install" id="closeInstall">×</button>
-        <div class="install-header">
-            <div class="install-icon">📱</div>
-            <div>
-                <h3 style="color: #333;">Install iamME App</h3>
-                <p style="color: #666; font-size: 0.9rem;">Untuk pengalaman terbaik, install sebagai aplikasi</p>
-            </div>
-        </div>
-        <div class="install-buttons">
-            <button id="installBtn" class="btn">Install</button>
-            <button id="laterBtn" class="btn btn-secondary">Nanti</button>
-        </div>
-    </div>
 
     <script>
         // DOM Elements
@@ -403,28 +316,20 @@
         const jejakList = document.getElementById('jejakList');
         const totalJejak = document.getElementById('totalJejak');
         const todayJejak = document.getElementById('todayJejak');
-        const installPrompt = document.getElementById('installPrompt');
-        const installBtn = document.getElementById('installBtn');
-        const laterBtn = document.getElementById('laterBtn');
-        const closeInstall = document.getElementById('closeInstall');
 
         // State
         let currentUser = null;
         let jejakData = [];
-        let deferredPrompt = null;
 
         // Sample jejak data
         const sampleJejak = [
-            { id: 1, text: "Membuat aplikasi iamME", time: "10:30", date: "2024-01-20" },
-            { id: 2, text: "Meeting dengan tim developer", time: "14:15", date: "2024-01-20" },
-            { id: 3, text: "Mempelajari PWA implementation", time: "16:45", date: "2024-01-19" },
-            { id: 4, text: "Desain UX/UI aplikasi", time: "09:20", date: "2024-01-18" },
-            { id: 5, text: "Testing aplikasi di berbagai device", time: "11:00", date: "2024-01-17" }
+            { id: 1, text: "Membuat aplikasi iamME", time: "10:30", date: new Date().toISOString().split('T')[0] },
+            { id: 2, text: "Meeting dengan tim developer", time: "14:15", date: new Date().toISOString().split('T')[0] },
+            { id: 3, text: "Mempelajari PWA implementation", time: "16:45", date: "2024-01-19" }
         ];
 
         // Initialize
         function init() {
-            // Load data from localStorage
             const savedJejak = localStorage.getItem('jejakData');
             const savedUser = localStorage.getItem('currentUser');
             
@@ -437,20 +342,6 @@
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 showJejakScreen();
-            }
-            
-            // Setup PWA install prompt
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                
-                // Show install prompt only after user has logged in and used the app
-                // Not showing immediately for low friction experience
-            });
-            
-            // Show install button if app is already installed
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                console.log("App is running in standalone mode");
             }
         }
 
@@ -469,13 +360,6 @@
             
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             showJejakScreen();
-            
-            // Show install prompt after successful login (delayed)
-            setTimeout(() => {
-                if (deferredPrompt && !localStorage.getItem('installDismissed')) {
-                    installPrompt.classList.add('show');
-                }
-            }, 3000);
         }
 
         // Show Jejak Screen
@@ -506,13 +390,8 @@
             
             jejakData.unshift(newJejak);
             localStorage.setItem('jejakData', JSON.stringify(jejakData));
-            updateJekakDisplay();
+            updateJejakDisplay();
             newJejakInput.value = "";
-            
-            // Show install prompt after adding a few jejaks (engagement)
-            if (jejakData.length === 3 && deferredPrompt && !localStorage.getItem('installDismissed')) {
-                installPrompt.classList.add('show');
-            }
         }
 
         // Update Jejak Display
@@ -524,17 +403,24 @@
             const todayCount = jejakData.filter(j => j.date === today).length;
             todayJejak.textContent = todayCount;
             
+            // Unique days calculation
+            const uniqueDays = new Set(jejakData.map(j => j.date)).size;
+            document.getElementById('activeDays').textContent = uniqueDays;
+            
             // Update list
             jejakList.innerHTML = "";
             
             jejakData.slice(0, 10).forEach(jejak => {
                 const jejakItem = document.createElement('div');
                 jejakItem.className = 'jejak-item';
+                
+                const displayDate = jejak.date === today ? 'Hari ini' : jejak.date;
+                
                 jejakItem.innerHTML = `
                     <div class="jejak-icon">📝</div>
                     <div class="jejak-content">
                         <div>${jejak.text}</div>
-                        <div class="jejak-time">${jejak.time} • ${jejak.date}</div>
+                        <div class="jejak-time">${jejak.time} • ${displayDate}</div>
                     </div>
                 `;
                 jejakList.appendChild(jejakItem);
@@ -549,23 +435,6 @@
             loginScreen.classList.add('active');
             usernameInput.value = "";
             passwordInput.value = "";
-        }
-
-        // Install PWA
-        async function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                
-                if (outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                } else {
-                    console.log('User dismissed the install prompt');
-                }
-                
-                deferredPrompt = null;
-                installPrompt.classList.remove('show');
-            }
         }
 
         // Event Listeners
@@ -589,28 +458,8 @@
             }
         });
 
-        installBtn.addEventListener('click', installApp);
-
-        laterBtn.addEventListener('click', () => {
-            installPrompt.classList.remove('show');
-            localStorage.setItem('installDismissed', 'true');
-        });
-
-        closeInstall.addEventListener('click', () => {
-            installPrompt.classList.remove('show');
-            localStorage.setItem('installDismissed', 'true');
-        });
-
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').then(registration => {
-                    console.log('ServiceWorker registered: ', registration);
-                }).catch(error => {
-                    console.log('ServiceWorker registration failed: ', error);
-                });
-            });
-        }
+        // Auto-focus on username input
+        usernameInput.focus();
 
         // Initialize app
         init();
