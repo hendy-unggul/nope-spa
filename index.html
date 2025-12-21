@@ -16,37 +16,36 @@
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
             color: white;
         }
         
         .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
             max-width: 500px;
             margin: 0 auto;
-            width: 100%;
-            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 70px; /* Space for bottom nav */
         }
         
         .screen {
             display: none;
-            flex-direction: column;
             flex: 1;
-            animation: fadeIn 0.3s ease;
+            padding: 20px;
+            overflow-y: auto;
         }
         
         .screen.active {
-            display: flex;
+            display: block;
+            animation: fadeIn 0.3s ease;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
+        /* Header */
         .app-header {
             padding: 20px 0;
             text-align: center;
@@ -68,6 +67,7 @@
             font-size: 1rem;
         }
         
+        /* Login Form */
         .form-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -128,11 +128,15 @@
             margin-top: 10px;
         }
         
+        /* Jejak Screen */
         .jejak-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
         }
         
         .user-info {
@@ -179,10 +183,9 @@
             opacity: 0.8;
         }
         
+        /* Jejak List */
         .jejak-list {
-            flex: 1;
-            overflow-y: auto;
-            margin: 20px 0;
+            margin-top: 20px;
         }
         
         .jejak-item {
@@ -191,18 +194,139 @@
             padding: 15px;
             margin-bottom: 10px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 15px;
         }
         
-        .jejak-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
+        .jejak-checkbox {
+            margin-top: 3px;
+        }
+        
+        .jejak-content {
+            flex: 1;
+        }
+        
+        .jejak-text {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        
+        .jejak-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 5px;
+        }
+        
+        .jejak-time::before {
+            content: "🕒";
+            font-size: 0.7rem;
+        }
+        
+        .jejak-status {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-left: 10px;
+        }
+        
+        .status-completed {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        
+        .status-pending {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+            text-decoration: none;
+            flex: 1;
+            max-width: 80px;
+        }
+        
+        .nav-item.active {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .nav-icon {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+        
+        .nav-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        
+        /* Other Screens Content */
+        .screen-content {
+            padding: 20px;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .category-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .category-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .category-desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
         
         .app-footer {
@@ -210,10 +334,12 @@
             padding: 20px 0;
             opacity: 0.7;
             font-size: 0.9rem;
+            margin-top: auto;
         }
         
+        /* Responsive */
         @media (max-width: 480px) {
-            .container {
+            .screen {
                 padding: 15px;
             }
             
@@ -223,6 +349,22 @@
             
             .jejak-stats {
                 grid-template-columns: 1fr;
+            }
+            
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bottom-nav {
+                padding: 8px 0;
+            }
+            
+            .nav-item {
+                padding: 6px 10px;
+            }
+            
+            .nav-icon {
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -257,53 +399,212 @@
             </div>
         </div>
         
-        <!-- Jejak Screen -->
-        <div id="jejakScreen" class="screen">
-            <div class="jejak-header">
-                <div class="user-info">
-                    <div id="userAvatar" class="user-avatar">U</div>
-                    <div>
-                        <h3 id="userName">Username</h3>
-                        <p style="font-size: 0.9rem; opacity: 0.8;">Online</p>
+        <!-- Main App (after login) -->
+        <div id="mainApp" class="screen">
+            <!-- Jejak Screen -->
+            <div id="jejakScreen" class="screen-content">
+                <div class="jejak-header">
+                    <div class="user-info">
+                        <div id="userAvatar" class="user-avatar">U</div>
+                        <div>
+                            <h3 id="userName">Username</h3>
+                            <p style="font-size: 0.9rem; opacity: 0.8;">Online</p>
+                        </div>
+                    </div>
+                    <button id="logoutBtn" class="btn btn-secondary" style="width: auto; padding: 10px 20px;">Keluar</button>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-group">
+                        <label class="form-label">Tambah Jejak Baru</label>
+                        <input type="text" id="newJejak" class="form-input" placeholder="Apa yang sedang Anda lakukan?">
+                    </div>
+                    <button id="addJejakBtn" class="btn">Tambah Jejak</button>
+                </div>
+                
+                <div class="jejak-stats">
+                    <div class="stat-card">
+                        <span id="totalJejak" class="stat-value">0</span>
+                        <span class="stat-label">Total Jejak</span>
+                    </div>
+                    <div class="stat-card">
+                        <span id="todayJejak" class="stat-value">0</span>
+                        <span class="stat-label">Hari Ini</span>
+                    </div>
+                    <div class="stat-card">
+                        <span id="activeDays" class="stat-value">1</span>
+                        <span class="stat-label">Hari Aktif</span>
                     </div>
                 </div>
-                <button id="logoutBtn" class="btn btn-secondary" style="width: auto; padding: 10px 20px;">Keluar</button>
-            </div>
-            
-            <div class="form-container">
-                <div class="form-group">
-                    <label class="form-label">Tambah Jejak Baru</label>
-                    <input type="text" id="newJejak" class="form-input" placeholder="Apa yang sedang Anda lakukan?">
-                </div>
-                <button id="addJejakBtn" class="btn">Tambah Jejak</button>
-            </div>
-            
-            <div class="jejak-stats">
-                <div class="stat-card">
-                    <span id="totalJejak" class="stat-value">0</span>
-                    <span class="stat-label">Total Jejak</span>
-                </div>
-                <div class="stat-card">
-                    <span id="todayJejak" class="stat-value">0</span>
-                    <span class="stat-label">Hari Ini</span>
-                </div>
-                <div class="stat-card">
-                    <span id="activeDays" class="stat-value">1</span>
-                    <span class="stat-label">Hari Aktif</span>
+                
+                <h3 style="margin: 20px 0 10px 0;">Jejak Terbaru</h3>
+                <div id="jejakList" class="jejak-list">
+                    <!-- Jejak items will be added here -->
                 </div>
             </div>
             
-            <h3 style="margin: 20px 0 10px 0;">Jejak Terbaru</h3>
-            <div id="jejakList" class="jejak-list">
-                <!-- Jejak items will be added here -->
+            <!-- PopCulture Screen -->
+            <div id="popCultureScreen" class="screen-content" style="display: none;">
+                <div class="jejak-header">
+                    <h2>🎬 PopCulture</h2>
+                </div>
+                <p style="margin: 20px 0; opacity: 0.8;">Lacak budaya pop yang sedang Anda ikuti</p>
+                
+                <div class="category-grid">
+                    <div class="category-card" onclick="addPopCulture('Film')">
+                        <div class="category-icon">🎥</div>
+                        <div class="category-title">Film</div>
+                        <div class="category-desc">Film yang ditonton</div>
+                    </div>
+                    <div class="category-card" onclick="addPopCulture('Musik')">
+                        <div class="category-icon">🎵</div>
+                        <div class="category-title">Musik</div>
+                        <div class="category-desc">Lagu/album favorit</div>
+                    </div>
+                    <div class="category-card" onclick="addPopCulture('Buku')">
+                        <div class="category-icon">📚</div>
+                        <div class="category-title">Buku</div>
+                        <div class="category-desc">Bacaanku</div>
+                    </div>
+                    <div class="category-card" onclick="addPopCulture('Game')">
+                        <div class="category-icon">🎮</div>
+                        <div class="category-title">Game</div>
+                        <div class="category-desc">Game yang dimainkan</div>
+                    </div>
+                </div>
+                
+                <div id="popCultureList" class="jejak-list" style="margin-top: 30px;"></div>
+            </div>
+            
+            <!-- PersonalPain Screen -->
+            <div id="personalPainScreen" class="screen-content" style="display: none;">
+                <div class="jejak-header">
+                    <h2>😔 PersonalPain</h2>
+                </div>
+                <p style="margin: 20px 0; opacity: 0.8;">Ekspresikan dan lacak perasaan Anda</p>
+                
+                <div class="form-container">
+                    <div class="form-group">
+                        <label class="form-label">Bagaimana perasaan Anda hari ini?</label>
+                        <textarea id="painInput" class="form-input" placeholder="Tuliskan apa yang Anda rasakan..." rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tingkat intensitas</label>
+                        <select id="painLevel" class="form-input">
+                            <option value="low">Rendah</option>
+                            <option value="medium">Sedang</option>
+                            <option value="high">Tinggi</option>
+                        </select>
+                    </div>
+                    <button id="addPainBtn" class="btn">Simpan Perasaan</button>
+                </div>
+                
+                <div id="painList" class="jejak-list" style="margin-top: 30px;"></div>
+            </div>
+            
+            <!-- SocialSickness Screen -->
+            <div id="socialSicknessScreen" class="screen-content" style="display: none;">
+                <div class="jejak-header">
+                    <h2>🌐 SocialSickness</h2>
+                </div>
+                <p style="margin: 20px 0; opacity: 0.8;">Pantau kesehatan sosial digital Anda</p>
+                
+                <div class="jejak-stats">
+                    <div class="stat-card">
+                        <span id="socialTime" class="stat-value">0h</span>
+                        <span class="stat-label">Waktu Sosial</span>
+                    </div>
+                    <div class="stat-card">
+                        <span id="socialScore" class="stat-value">75</span>
+                        <span class="stat-label">Skor Sehat</span>
+                    </div>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-group">
+                        <label class="form-label">Platform Media Sosial</label>
+                        <select id="socialPlatform" class="form-input">
+                            <option value="instagram">Instagram</option>
+                            <option value="twitter">Twitter/X</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="youtube">YouTube</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Waktu penggunaan (jam)</label>
+                        <input type="number" id="socialHours" class="form-input" placeholder="0.5" step="0.5" min="0">
+                    </div>
+                    <button id="addSocialBtn" class="btn">Tambah Data</button>
+                </div>
+                
+                <div id="socialList" class="jejak-list" style="margin-top: 30px;"></div>
+            </div>
+            
+            <!-- Movement Screen -->
+            <div id="movementScreen" class="screen-content" style="display: none;">
+                <div class="jejak-header">
+                    <h2>🚶 Movement</h2>
+                </div>
+                <p style="margin: 20px 0; opacity: 0.8;">Lacak aktivitas fisik dan pergerakan Anda</p>
+                
+                <div class="category-grid">
+                    <div class="category-card" onclick="addMovement('Jalan Kaki')">
+                        <div class="category-icon">🚶</div>
+                        <div class="category-title">Jalan Kaki</div>
+                        <div class="category-desc">Langkah harian</div>
+                    </div>
+                    <div class="category-card" onclick="addMovement('Olahraga')">
+                        <div class="category-icon">🏋️</div>
+                        <div class="category-title">Olahraga</div>
+                        <div class="category-desc">Workout rutin</div>
+                    </div>
+                    <div class="category-card" onclick="addMovement('Meditasi')">
+                        <div class="category-icon">🧘</div>
+                        <div class="category-title">Meditasi</div>
+                        <div class="category-desc">Ketentraman</div>
+                    </div>
+                    <div class="category-card" onclick="addMovement('Perjalanan')">
+                        <div class="category-icon">✈️</div>
+                        <div class="category-title">Perjalanan</div>
+                        <div class="category-desc">Destinasi baru</div>
+                    </div>
+                </div>
+                
+                <div id="movementList" class="jejak-list" style="margin-top: 30px;"></div>
             </div>
         </div>
+    </div>
+    
+    <!-- Bottom Navigation (only shown after login) -->
+    <div id="bottomNav" class="bottom-nav" style="display: none;">
+        <a href="#" class="nav-item active" data-screen="jejak">
+            <div class="nav-icon">📝</div>
+            <div class="nav-label">Jejak</div>
+        </a>
+        <a href="#" class="nav-item" data-screen="popCulture">
+            <div class="nav-icon">🎬</div>
+            <div class="nav-label">PopCulture</div>
+        </a>
+        <a href="#" class="nav-item" data-screen="personalPain">
+            <div class="nav-icon">😔</div>
+            <div class="nav-label">PersonalPain</div>
+        </a>
+        <a href="#" class="nav-item" data-screen="socialSickness">
+            <div class="nav-icon">🌐</div>
+            <div class="nav-label">SocialSickness</div>
+        </a>
+        <a href="#" class="nav-item" data-screen="movement">
+            <div class="nav-icon">🚶</div>
+            <div class="nav-label">Movement</div>
+        </a>
     </div>
 
     <script>
         // DOM Elements
         const loginScreen = document.getElementById('loginScreen');
-        const jejakScreen = document.getElementById('jejakScreen');
+        const mainApp = document.getElementById('mainApp');
+        const bottomNav = document.getElementById('bottomNav');
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
         const loginBtn = document.getElementById('loginBtn');
@@ -316,33 +617,73 @@
         const jejakList = document.getElementById('jejakList');
         const totalJejak = document.getElementById('totalJejak');
         const todayJejak = document.getElementById('todayJejak');
-
+        
+        // Bottom nav elements
+        const navItems = document.querySelectorAll('.nav-item');
+        
         // State
         let currentUser = null;
         let jejakData = [];
+        let popCultureData = [];
+        let personalPainData = [];
+        let socialSicknessData = [];
+        let movementData = [];
 
-        // Sample jejak data
+        // Sample data
         const sampleJejak = [
-            { id: 1, text: "Membuat aplikasi iamME", time: "10:30", date: new Date().toISOString().split('T')[0] },
-            { id: 2, text: "Meeting dengan tim developer", time: "14:15", date: new Date().toISOString().split('T')[0] },
-            { id: 3, text: "Mempelajari PWA implementation", time: "16:45", date: "2024-01-19" }
+            { 
+                id: 1, 
+                text: "Membuat aplikasi iamME", 
+                time: "10:30", 
+                date: new Date().toISOString().split('T')[0],
+                completed: false 
+            },
+            { 
+                id: 2, 
+                text: "Meeting dengan tim developer", 
+                time: "14:15", 
+                date: new Date().toISOString().split('T')[0],
+                completed: true 
+            },
+            { 
+                id: 3, 
+                text: "Mempelajari PWA implementation", 
+                time: "16:45", 
+                date: "2024-01-19",
+                completed: false 
+            }
+        ];
+
+        const samplePopCulture = [
+            { id: 1, type: "Film", title: "Dune: Part Two", status: "Ditonton", date: "2024-01-20" },
+            { id: 2, type: "Musik", title: "Album baru - Taylor Swift", status: "Disukai", date: "2024-01-19" }
         ];
 
         // Initialize
         function init() {
-            const savedJejak = localStorage.getItem('jejakData');
-            const savedUser = localStorage.getItem('currentUser');
+            // Load data from localStorage
+            loadFromLocalStorage();
             
-            if (savedJejak) {
-                jejakData = JSON.parse(savedJejak);
-            } else {
-                jejakData = [...sampleJejak];
+            if (localStorage.getItem('currentUser')) {
+                currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                showMainApp();
             }
-            
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                showJejakScreen();
-            }
+        }
+
+        function loadFromLocalStorage() {
+            jejakData = JSON.parse(localStorage.getItem('jejakData')) || [...sampleJejak];
+            popCultureData = JSON.parse(localStorage.getItem('popCultureData')) || [...samplePopCulture];
+            personalPainData = JSON.parse(localStorage.getItem('personalPainData')) || [];
+            socialSicknessData = JSON.parse(localStorage.getItem('socialSicknessData')) || [];
+            movementData = JSON.parse(localStorage.getItem('movementData')) || [];
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('jejakData', JSON.stringify(jejakData));
+            localStorage.setItem('popCultureData', JSON.stringify(popCultureData));
+            localStorage.setItem('personalPainData', JSON.stringify(personalPainData));
+            localStorage.setItem('socialSicknessData', JSON.stringify(socialSicknessData));
+            localStorage.setItem('movementData', JSON.stringify(movementData));
         }
 
         // Login Function
@@ -359,21 +700,35 @@
             };
             
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            showJejakScreen();
+            showMainApp();
         }
 
-        // Show Jejak Screen
-        function showJejakScreen() {
+        function showMainApp() {
             loginScreen.classList.remove('active');
-            jejakScreen.classList.add('active');
+            mainApp.classList.add('active');
+            bottomNav.style.display = 'flex';
             
             userName.textContent = currentUser.username;
             userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
             
             updateJejakDisplay();
+            updatePopCultureDisplay();
+            updatePersonalPainDisplay();
+            updateSocialSicknessDisplay();
+            updateMovementDisplay();
         }
 
-        // Add New Jejak
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            mainApp.classList.remove('active');
+            bottomNav.style.display = 'none';
+            loginScreen.classList.add('active');
+            usernameInput.value = "";
+            passwordInput.value = "";
+        }
+
+        // Jejak Functions
         function addJejak(text) {
             if (!text.trim()) {
                 alert("Jejak tidak boleh kosong!");
@@ -385,29 +740,35 @@
                 id: Date.now(),
                 text: text,
                 time: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-                date: now.toISOString().split('T')[0]
+                date: now.toISOString().split('T')[0],
+                completed: false
             };
             
             jejakData.unshift(newJejak);
-            localStorage.setItem('jejakData', JSON.stringify(jejakData));
+            saveToLocalStorage();
             updateJejakDisplay();
             newJejakInput.value = "";
         }
 
-        // Update Jejak Display
+        function toggleJejakComplete(id) {
+            const jejak = jejakData.find(j => j.id === id);
+            if (jejak) {
+                jejak.completed = !jejak.completed;
+                saveToLocalStorage();
+                updateJejakDisplay();
+            }
+        }
+
         function updateJejakDisplay() {
-            // Update stats
             totalJejak.textContent = jejakData.length;
             
             const today = new Date().toISOString().split('T')[0];
             const todayCount = jejakData.filter(j => j.date === today).length;
             todayJejak.textContent = todayCount;
             
-            // Unique days calculation
             const uniqueDays = new Set(jejakData.map(j => j.date)).size;
             document.getElementById('activeDays').textContent = uniqueDays;
             
-            // Update list
             jejakList.innerHTML = "";
             
             jejakData.slice(0, 10).forEach(jejak => {
@@ -417,24 +778,275 @@
                 const displayDate = jejak.date === today ? 'Hari ini' : jejak.date;
                 
                 jejakItem.innerHTML = `
-                    <div class="jejak-icon">📝</div>
+                    <div class="jejak-checkbox">
+                        <input type="checkbox" ${jejak.completed ? 'checked' : ''} 
+                               onclick="toggleJejakComplete(${jejak.id})">
+                    </div>
                     <div class="jejak-content">
-                        <div>${jejak.text}</div>
-                        <div class="jejak-time">${jejak.time} • ${displayDate}</div>
+                        <div class="jejak-text">${jejak.text}</div>
+                        <div class="jejak-time">
+                            ${jejak.time} • ${displayDate}
+                            <span class="jejak-status ${jejak.completed ? 'status-completed' : 'status-pending'}">
+                                ${jejak.completed ? 'Selesai' : 'Belum'}
+                            </span>
+                        </div>
                     </div>
                 `;
                 jejakList.appendChild(jejakItem);
             });
         }
 
-        // Logout Function
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('currentUser');
-            jejakScreen.classList.remove('active');
-            loginScreen.classList.add('active');
-            usernameInput.value = "";
-            passwordInput.value = "";
+        // PopCulture Functions
+        function addPopCulture(type) {
+            const title = prompt(`Masukkan ${type} yang ingin ditambahkan:`);
+            if (title) {
+                const now = new Date();
+                const newItem = {
+                    id: Date.now(),
+                    type: type,
+                    title: title,
+                    status: "Dalam proses",
+                    date: now.toISOString().split('T')[0]
+                };
+                
+                popCultureData.unshift(newItem);
+                saveToLocalStorage();
+                updatePopCultureDisplay();
+            }
+        }
+
+        function updatePopCultureDisplay() {
+            const list = document.getElementById('popCultureList');
+            list.innerHTML = "";
+            
+            popCultureData.slice(0, 10).forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'jejak-item';
+                itemElement.innerHTML = `
+                    <div class="jejak-icon">${getPopCultureIcon(item.type)}</div>
+                    <div class="jejak-content">
+                        <div class="jejak-text">
+                            <strong>${item.type}:</strong> ${item.title}
+                        </div>
+                        <div class="jejak-time">${item.date} • ${item.status}</div>
+                    </div>
+                `;
+                list.appendChild(itemElement);
+            });
+        }
+
+        function getPopCultureIcon(type) {
+            const icons = {
+                'Film': '🎥',
+                'Musik': '🎵',
+                'Buku': '📚',
+                'Game': '🎮'
+            };
+            return icons[type] || '🎭';
+        }
+
+        // PersonalPain Functions
+        function addPersonalPain() {
+            const text = document.getElementById('painInput').value;
+            const level = document.getElementById('painLevel').value;
+            
+            if (!text.trim()) {
+                alert("Deskripsi perasaan tidak boleh kosong!");
+                return;
+            }
+            
+            const now = new Date();
+            const newPain = {
+                id: Date.now(),
+                text: text,
+                level: level,
+                time: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+                date: now.toISOString().split('T')[0]
+            };
+            
+            personalPainData.unshift(newPain);
+            saveToLocalStorage();
+            updatePersonalPainDisplay();
+            
+            document.getElementById('painInput').value = "";
+        }
+
+        function updatePersonalPainDisplay() {
+            const list = document.getElementById('painList');
+            list.innerHTML = "";
+            
+            personalPainData.slice(0, 10).forEach(pain => {
+                const levelText = { low: "Rendah", medium: "Sedang", high: "Tinggi" }[pain.level];
+                const levelColor = { low: "#22c55e", medium: "#eab308", high: "#ef4444" }[pain.level];
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'jejak-item';
+                itemElement.innerHTML = `
+                    <div class="jejak-icon">${getPainIcon(pain.level)}</div>
+                    <div class="jejak-content">
+                        <div class="jejak-text">${pain.text}</div>
+                        <div class="jejak-time">
+                            ${pain.time} • ${pain.date}
+                            <span class="jejak-status" style="background: ${levelColor}20; color: ${levelColor}">
+                                ${levelText}
+                            </span>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(itemElement);
+            });
+        }
+
+        function getPainIcon(level) {
+            const icons = { low: "😊", medium: "😐", high: "😔" };
+            return icons[level] || "😔";
+        }
+
+        // SocialSickness Functions
+        function addSocialSickness() {
+            const platform = document.getElementById('socialPlatform').value;
+            const hours = parseFloat(document.getElementById('socialHours').value);
+            
+            if (!hours || hours <= 0) {
+                alert("Masukkan waktu penggunaan yang valid!");
+                return;
+            }
+            
+            const now = new Date();
+            const newSocial = {
+                id: Date.now(),
+                platform: platform,
+                hours: hours,
+                date: now.toISOString().split('T')[0]
+            };
+            
+            socialSicknessData.unshift(newSocial);
+            saveToLocalStorage();
+            updateSocialSicknessDisplay();
+            
+            document.getElementById('socialHours').value = "";
+        }
+
+        function updateSocialSicknessDisplay() {
+            const list = document.getElementById('socialList');
+            list.innerHTML = "";
+            
+            // Calculate stats
+            const today = new Date().toISOString().split('T')[0];
+            const todayHours = socialSicknessData
+                .filter(s => s.date === today)
+                .reduce((sum, s) => sum + s.hours, 0);
+            
+            const avgHours = socialSicknessData.length > 0 
+                ? (socialSicknessData.reduce((sum, s) => sum + s.hours, 0) / socialSicknessData.length).toFixed(1)
+                : 0;
+            
+            const score = Math.max(0, Math.min(100, 100 - (todayHours * 10)));
+            
+            document.getElementById('socialTime').textContent = `${todayHours}h`;
+            document.getElementById('socialScore').textContent = Math.round(score);
+            
+            // Display list
+            socialSicknessData.slice(0, 10).forEach(social => {
+                const platformNames = {
+                    'instagram': 'Instagram',
+                    'twitter': 'Twitter/X',
+                    'facebook': 'Facebook',
+                    'tiktok': 'TikTok',
+                    'youtube': 'YouTube'
+                };
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'jejak-item';
+                itemElement.innerHTML = `
+                    <div class="jejak-icon">${getSocialIcon(social.platform)}</div>
+                    <div class="jejak-content">
+                        <div class="jejak-text">
+                            <strong>${platformNames[social.platform]}</strong> - ${social.hours} jam
+                        </div>
+                        <div class="jejak-time">${social.date}</div>
+                    </div>
+                `;
+                list.appendChild(itemElement);
+            });
+        }
+
+        function getSocialIcon(platform) {
+            const icons = {
+                'instagram': '📸',
+                'twitter': '🐦',
+                'facebook': '👥',
+                'tiktok': '🎵',
+                'youtube': '📺'
+            };
+            return icons[platform] || '📱';
+        }
+
+        // Movement Functions
+        function addMovement(type) {
+            const detail = prompt(`Detail ${type} (misal: 30 menit, 5000 langkah):`);
+            if (detail) {
+                const now = new Date();
+                const newMovement = {
+                    id: Date.now(),
+                    type: type,
+                    detail: detail,
+                    date: now.toISOString().split('T')[0]
+                };
+                
+                movementData.unshift(newMovement);
+                saveToLocalStorage();
+                updateMovementDisplay();
+            }
+        }
+
+        function updateMovementDisplay() {
+            const list = document.getElementById('movementList');
+            list.innerHTML = "";
+            
+            movementData.slice(0, 10).forEach(movement => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'jejak-item';
+                itemElement.innerHTML = `
+                    <div class="jejak-icon">${getMovementIcon(movement.type)}</div>
+                    <div class="jejak-content">
+                        <div class="jejak-text">
+                            <strong>${movement.type}:</strong> ${movement.detail}
+                        </div>
+                        <div class="jejak-time">${movement.date}</div>
+                    </div>
+                `;
+                list.appendChild(itemElement);
+            });
+        }
+
+        function getMovementIcon(type) {
+            const icons = {
+                'Jalan Kaki': '🚶',
+                'Olahraga': '🏋️',
+                'Meditasi': '🧘',
+                'Perjalanan': '✈️'
+            };
+            return icons[type] || '🚶';
+        }
+
+        // Navigation Functions
+        function switchScreen(screenId) {
+            // Hide all screen contents
+            document.querySelectorAll('.screen-content').forEach(screen => {
+                screen.style.display = 'none';
+            });
+            
+            // Show selected screen
+            document.getElementById(`${screenId}Screen`).style.display = 'block';
+            
+            // Update nav items
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.screen === screenId) {
+                    item.classList.add('active');
+                }
+            });
         }
 
         // Event Listeners
@@ -457,6 +1069,18 @@
                 addJejak(newJejakInput.value);
             }
         });
+
+        // Bottom nav event listeners
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchScreen(item.dataset.screen);
+            });
+        });
+
+        // Other screen buttons
+        document.getElementById('addPainBtn').addEventListener('click', addPersonalPain);
+        document.getElementById('addSocialBtn').addEventListener('click', addSocialSickness);
 
         // Auto-focus on username input
         usernameInput.focus();
