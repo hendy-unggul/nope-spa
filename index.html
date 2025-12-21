@@ -85,18 +85,17 @@
     }
     .artefak-notasi {
       position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 10px;
+      left: 10px;
       background: rgba(0, 0, 0, 0.6);
       color: white;
-      padding: 6px 12px;
+      padding: 4px 8px;
       border-radius: 4px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: bold;
-      text-align: center;
       backdrop-filter: blur(2px);
       opacity: 0.9;
+      pointer-events: none; /* biar tidak mengganggu klik */
     }
     .cta-row {
       display: flex;
@@ -219,31 +218,45 @@
 </head>
 <body>
 
+  <!-- Header -->
   <div class="header-bar">
     <div class="logo">NOPE</div>
   </div>
 
+  <!-- Konten Utama -->
   <div class="container">
-    <div class="notification">Nobar terakhir sama mantan</div>
-
-    <div class="artefak-container">
-      <img src="https://via.placeholder.com/600x480?text=🖼️" alt="Artefak" class="artefak-image" />
-      <div class="artefak-notasi">Kita Tak Sendiri</div>
+    <div class="notification">
+      Nobar terakhir sama mantan
     </div>
 
+    <!-- Artefak -->
+    <div class="artefak-container">
+      <img src="https://via.placeholder.com/600x480?text=🖼️" alt="Artefak" class="artefak-image" />
+      <div class="artefak-notasi">Gue mau simpen momen ini.</div>
+    </div>
+
+    <!-- CTA Row -->
     <div class="cta-row">
       <button id="choose-photo" class="choose-photo-btn">Ubah Artefak</button>
       <button class="upload-btn">Unggah</button>
     </div>
 
+    <!-- Rant Box -->
     <div class="rant-box">
       <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..."></textarea>
     </div>
 
+    <!-- Unggah Rant (rata kanan, di bawah rantbox) -->
+    <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+      <button class="upload-btn" id="submit-rant">Unggah</button>
+    </div>
+
+    <!-- Feed -->
     <div class="feed-title">Jejakmu</div>
     <div id="feed-container"></div>
   </div>
 
+  <!-- Footer Navigation -->
   <div class="nav-footer">
     <a href="index.html" class="nav-item active">
       <span>📄</span>
@@ -263,13 +276,16 @@
     </a>
   </div>
 
+  <!-- SCRIPT UTAMA -->
   <script>
+    // ========== DUMMY DATA ==========
     const DUMMY_RANTS = [
       "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
       "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
       "Kenapa semua orang pura-pura baik di medsos? Gue capek jadi orang lain."
     ];
 
+    // ========== ZONE KEYWORDS ==========
     const ZONE_KEYWORDS = {
       PopCulture: ['film', 'musik', 'konser', 'artis', 'drakor', 'kpop', 'netflix', 'yt', 'youtube', 'tiktok', 'lagu', 'album', 'celeb', 'fandom', 'nobar', 'anime', 'game'],
       PersonalPoin: ['capek', 'sedih', 'nangis', 'galau', 'putus', 'keluarga', 'sendiri', 'gak kuat', 'gak sanggup', 'stress', 'cemas', 'depresi', 'hancur', 'harap', 'sendiri', 'malam', 'tangis'],
@@ -277,6 +293,7 @@
       Movement: ['kita', 'bareng', 'ubah', 'lawan', 'solidaritas', 'gerakan', 'aksi', 'perubahan', 'bangkit', 'bersama', 'suara', 'jujur', 'keadilan', 'kesetaraan', 'melawan', 'bangun', 'melangkah']
     };
 
+    // ========== FREQUENCY DETECTION ==========
     function calculateZoneScores(rant) {
       const lower = rant.toLowerCase();
       const scores = { PopCulture: 0, PersonalPoin: 0, SocialSickness: 0, Movement: 0 };
@@ -295,6 +312,7 @@
         .map(([z]) => `#${z}`);
     }
 
+    // ========== ARTEFAK MANAGEMENT ==========
     function saveArtefakUrl(url) {
       localStorage.setItem('nope_artefak', url);
     }
@@ -307,8 +325,10 @@
       }
     }
 
+    // ========== RANT MANAGEMENT ==========
     function loadRants() {
-      return JSON.parse(localStorage.getItem('nope_rants') || '[]');
+      const saved = localStorage.getItem('nope_rants');
+      return saved ? JSON.parse(saved) : [];
     }
 
     function saveRants(rants) {
@@ -365,13 +385,16 @@
       renderFeed();
     }
 
+    // ========== INIT ==========
     document.addEventListener('DOMContentLoaded', () => {
       loadArtefak();
       renderFeed();
 
-      const uploadBtn = document.querySelector('.upload-btn');
-      if (uploadBtn) uploadBtn.addEventListener('click', submitRant);
+      // Tombol unggah rant (di bawah rantbox)
+      const submitBtn = document.getElementById('submit-rant');
+      if (submitBtn) submitBtn.addEventListener('click', submitRant);
 
+      // Input rant
       const rantInput = document.getElementById('rant-input');
       if (rantInput) {
         rantInput.addEventListener('keydown', (e) => {
@@ -382,6 +405,7 @@
         });
       }
 
+      // Pilih foto dari galeri
       const chooseBtn = document.getElementById('choose-photo');
       if (chooseBtn) {
         chooseBtn.addEventListener('click', () => {
@@ -394,6 +418,8 @@
               const url = URL.createObjectURL(file);
               saveArtefakUrl(url);
               document.querySelector('.artefak-image').src = url;
+              // Update notasi default
+              document.querySelector('.artefak-notasi').textContent = "Gue mau simpen momen ini.";
             }
           };
           input.click();
