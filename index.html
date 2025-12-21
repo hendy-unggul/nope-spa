@@ -14,12 +14,20 @@
       --logo: #ff9999;
       --card-bg: #12052d;
       --input-bg: #1a0736;
+      --space-4: 4px;
+      --space-8: 8px;
+      --space-12: 12px;
+      --space-16: 16px;
+      --space-24: 24px;
+      --radius-8: 8px;
+      --radius-10: 10px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--black);
       color: var(--white);
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.5;
       display: flex;
       flex-direction: column;
@@ -51,7 +59,7 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
     }
     .subheader {
       color: var(--accent);
@@ -65,7 +73,7 @@
       height: 0;
       padding-bottom: 80%;
       background: var(--input-bg);
-      border-radius: 10px;
+      border-radius: var(--radius-10);
       overflow: hidden;
       display: flex;
       justify-content: center;
@@ -102,7 +110,7 @@
     .upload-btn, .choose-photo-btn {
       border: none;
       padding: 8px 14px;
-      border-radius: 6px;
+      border-radius: var(--radius-8);
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
@@ -126,7 +134,7 @@
       border: 1px solid #333;
       color: var(--white);
       padding: 14px;
-      border-radius: 10px;
+      border-radius: var(--radius-10);
       resize: vertical;
       min-height: 90px;
       font-size: 1rem;
@@ -150,7 +158,7 @@
     .rant-item {
       background: var(--input-bg);
       padding: 14px;
-      border-radius: 10px;
+      border-radius: var(--radius-10);
       margin-bottom: 12px;
       font-size: 0.95rem;
       line-height: 1.6;
@@ -170,7 +178,7 @@
       background: rgba(0, 0, 0, 0.9);
       border: 1px solid #333;
       padding: 8px 12px;
-      border-radius: 6px;
+      border-radius: var(--radius-8);
       font-size: 0.8rem;
       white-space: nowrap;
       opacity: 0;
@@ -187,6 +195,169 @@
       50% { opacity: 1; transform: scale(1.05); }
       100% { opacity: 0.7; transform: scale(1); }
     }
+
+    /* ARTEFAK TRAY */
+    .artefak-tray {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 24px;
+      padding: 16px 0;
+      border-top: 1px solid #222;
+    }
+    .artefak-item {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 80%;
+      background: var(--input-bg);
+      border-radius: var(--radius-8);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .artefak-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+    .artefak-item img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.9);
+    }
+    .artefak-item .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      padding: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .artefak-item:hover .overlay {
+      opacity: 1;
+    }
+    .artefak-item .counter {
+      font-size: 0.8rem;
+      color: var(--white);
+      background: rgba(0,0,0,0.5);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .artefak-item .note-btn {
+      background: rgba(108, 71, 255, 0.2);
+      color: var(--accent);
+      border: none;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    /* MODAL CATATAN */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      padding: 16px;
+      display: none;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: var(--radius-10);
+      width: 100%;
+      max-width: 500px;
+      padding: 24px;
+      position: relative;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .modal-artefak {
+      width: 100%;
+      height: 0;
+      padding-bottom: 80%;
+      background: var(--input-bg);
+      border-radius: var(--radius-8);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .modal-artefak img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .modal-counter {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .modal-counter span {
+      background: rgba(0,0,0,0.5);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    .modal-note {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid #333;
+      color: var(--white);
+      padding: 12px;
+      border-radius: var(--radius-8);
+      resize: vertical;
+      min-height: 80px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .modal-actions button {
+      padding: 8px 16px;
+      border-radius: var(--radius-8);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .modal-actions .cancel {
+      background: transparent;
+      border: 1px solid #555;
+      color: #aaa;
+    }
+    .modal-actions .save {
+      background: var(--accent);
+      color: white;
+      border: none;
+    }
+
     .nav-footer {
       position: fixed;
       bottom: 0;
@@ -252,6 +423,34 @@
     <!-- Feed -->
     <div class="feed-title">Jejakmu</div>
     <div id="feed-container"></div>
+
+    <!-- Artefak Tray (3x2) -->
+    <div class="artefak-tray" id="artefak-tray">
+      <!-- Akan diisi oleh JS -->
+    </div>
+  </div>
+
+  <!-- Modal Catatan -->
+  <div class="modal" id="note-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📝 Catatan Pribadi</h3>
+        <button class="modal-close" id="close-modal">×</button>
+      </div>
+      <div class="modal-artefak">
+        <img id="modal-artefak-img" src="" alt="Artefak" />
+      </div>
+      <div class="modal-counter" id="modal-counter">
+        <span>😭 3</span>
+        <span>🔥 1</span>
+        <span>🤡 0</span>
+      </div>
+      <textarea class="modal-note" id="modal-note-input" placeholder="Tambahkan catatan pribadi untuk momen ini..."></textarea>
+      <div class="modal-actions">
+        <button class="cancel" id="cancel-note">Batal</button>
+        <button class="save" id="save-note">Simpan</button>
+      </div>
+    </div>
   </div>
 
   <!-- Footer Navigation -->
@@ -295,7 +494,6 @@
     function getOrCreateUsername() {
       let username = localStorage.getItem('nope_username');
       if (!username) {
-        // Auto-generate username 2 kata (sesuai permintaan kamu)
         const adjectives = ['sunyi', 'malam', 'bisu', 'redup', 'diam', 'abu', 'dingin', 'rapuh'];
         const nouns = ['jiwa', 'langit', 'awan', 'senja', 'rintik', 'cermin', 'bayangan', 'napas'];
         const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
@@ -378,6 +576,86 @@
       }).join('');
     }
 
+    // ========== ARTEFAK TRAY MANAGEMENT ==========
+    function loadArtefakHistory() {
+      const saved = localStorage.getItem('nope_artefak_history');
+      return saved ? JSON.parse(saved) : [];
+    }
+
+    function saveArtefakHistory(history) {
+      localStorage.setItem('nope_artefak_history', JSON.stringify(history.slice(0, 6)));
+    }
+
+    function renderArtefakTray() {
+      const tray = document.getElementById('artefak-tray');
+      const history = loadArtefakHistory();
+
+      if (history.length === 0) {
+        tray.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #777; padding: 16px;">Belum ada artefak yang disimpan.</div>';
+        return;
+      }
+
+      tray.innerHTML = history.map((item, i) => {
+        const counter = item.counter || { 😭: 0, 🔥: 0, 🤡: 0 };
+        return `
+          <div class="artefak-item" data-index="${i}">
+            <img src="${item.url}" alt="Artefak" />
+            <div class="overlay">
+              <div class="counter">😭${counter.😭} 🔥${counter.🔥} 🤡${counter.🤡}</div>
+              <button class="note-btn">📝</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Tambahkan event listener ke setiap artefak
+      document.querySelectorAll('.artefak-item').forEach(item => {
+        item.addEventListener('click', () => openNoteModal(parseInt(item.dataset.index)));
+      });
+    }
+
+    function openNoteModal(index) {
+      const history = loadArtefakHistory();
+      const item = history[index];
+      if (!item) return;
+
+      const modal = document.getElementById('note-modal');
+      const img = document.getElementById('modal-artefak-img');
+      const counterDiv = document.getElementById('modal-counter');
+      const noteInput = document.getElementById('modal-note-input');
+
+      img.src = item.url;
+      counterDiv.innerHTML = `
+        <span>😭 ${item.counter?.😭 || 0}</span>
+        <span>🔥 ${item.counter?.🔥 || 0}</span>
+        <span>🤡 ${item.counter?.🤡 || 0}</span>
+      `;
+      noteInput.value = item.note || '';
+
+      modal.style.display = 'flex';
+
+      // Simpan index untuk update nanti
+      window.currentArtefakIndex = index;
+    }
+
+    function closeNoteModal() {
+      document.getElementById('note-modal').style.display = 'none';
+    }
+
+    function saveNote() {
+      const note = document.getElementById('modal-note-input').value.trim();
+      const index = window.currentArtefakIndex;
+      const history = loadArtefakHistory();
+
+      if (index !== undefined && history[index]) {
+        history[index].note = note;
+        saveArtefakHistory(history);
+        renderArtefakTray(); // Refresh tray
+      }
+
+      closeNoteModal();
+    }
+
     function submitRant() {
       const input = document.getElementById('rant-input');
       const text = input.value.trim();
@@ -406,6 +684,7 @@
 
       loadArtefak();
       renderFeed();
+      renderArtefakTray();
 
       // Tombol unggah rant
       const submitBtn = document.getElementById('submit-rant');
@@ -434,13 +713,30 @@
             if (file) {
               const url = URL.createObjectURL(file);
               saveArtefakUrl(url);
+
+              // Simpan ke history
+              const history = loadArtefakHistory();
+              history.unshift({
+                url,
+                counter: { 😭: 0, 🔥: 0, 🤡: 0 },
+                note: "",
+                timestamp: Date.now()
+              });
+              saveArtefakHistory(history);
+
               document.querySelector('.artefak-image').src = url;
               document.querySelector('.artefak-notasi').textContent = "Gue mau simpen momen ini.";
+              renderArtefakTray(); // Update tray
             }
           };
           input.click();
         });
       }
+
+      // Modal events
+      document.getElementById('close-modal').addEventListener('click', closeNoteModal);
+      document.getElementById('cancel-note').addEventListener('click', closeNoteModal);
+      document.getElementById('save-note').addEventListener('click', saveNote);
     });
   </script>
 </body>
