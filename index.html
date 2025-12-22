@@ -41,7 +41,7 @@
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      padding: 12px 16px;
+      padding: 10px 16px 8px;
       background: var(--black);
       position: sticky;
       top: 0;
@@ -51,30 +51,30 @@
     .logo {
       color: var(--logo);
       font-weight: 800;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       letter-spacing: -0.5px;
     }
     .container {
       flex: 1;
       width: 100%;
       max-width: 600px;
-      padding: 16px;
+      padding: 0 16px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 16px; /* lebih rapat */
     }
     .subheader {
       color: var(--accent);
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin: 4px 0 6px;
     }
     .artefak-container {
       position: relative;
       width: 100%;
       height: 0;
-      padding-bottom: 80%;
+      padding-bottom: 75%; /* sedikit lebih tinggi */
       background: var(--input-bg);
       border-radius: var(--radius-10);
       overflow: hidden;
@@ -93,55 +93,58 @@
     }
     .artefak-notasi {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 8px;
+      left: 8px;
       background: rgba(0, 0, 0, 0.6);
       color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.85rem;
+      padding: 3px 6px;
+      border-radius: 3px;
+      font-size: 0.8rem;
       font-weight: bold;
       backdrop-filter: blur(2px);
       opacity: 0.9;
       pointer-events: none;
     }
+
+    /* CTA minimal — hanya teks berdenyut */
     .cta-row {
       display: flex;
       justify-content: flex-end;
-      margin-top: 8px;
+      margin-top: 4px;
     }
-    .upload-btn, .choose-photo-btn {
+    .impulse-text {
+      background: none;
       border: none;
-      padding: 8px 14px;
-      border-radius: var(--radius-8);
+      padding: 0;
+      margin: 0;
       font-size: 0.95rem;
       font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .upload-btn {
-      background: var(--accent);
-      color: white;
-    }
-    .choose-photo-btn {
-      background: transparent;
-      border: 1px solid var(--accent);
       color: var(--accent);
+      cursor: pointer;
+      outline: none;
+      animation: impulse 3s infinite;
     }
-    .upload-btn:hover, .choose-photo-btn:hover {
-      opacity: 0.9;
+    @keyframes impulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
     }
+
     .rant-box textarea {
       width: 100%;
       background: var(--input-bg);
       border: 1px solid #333;
       color: var(--white);
-      padding: 14px;
+      padding: 12px;
       border-radius: var(--radius-10);
       resize: vertical;
-      min-height: 90px;
-      font-size: 1rem;
+      min-height: 120px;
+      max-height: 600px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      line-height: 1.4;
       outline: none;
+      /* Membatasi visual ke ~60 karakter per baris */
+      font-size: 15px;
     }
     .rant-box textarea::placeholder {
       color: #777;
@@ -149,29 +152,30 @@
     .rant-upload-row {
       display: flex;
       justify-content: flex-end;
-      margin-top: 8px;
+      margin-top: 6px;
     }
+
     .feed-title {
       color: var(--accent);
       font-size: 1.1rem;
-      margin-top: 24px;
-      margin-bottom: 12px;
+      margin-top: 16px;
+      margin-bottom: 10px;
       font-weight: 600;
     }
     .rant-item {
       background: var(--input-bg);
-      padding: 14px;
+      padding: 12px;
       border-radius: var(--radius-10);
-      margin-bottom: 12px;
-      font-size: 0.95rem;
-      line-height: 1.6;
+      margin-bottom: 10px;
+      font-size: 0.93rem;
+      line-height: 1.55;
       position: relative;
     }
     .rant-item .emoji-pulse {
       display: inline-block;
       font-size: 1.2rem;
       cursor: pointer;
-      margin-left: 8px;
+      margin-left: 6px;
       animation: pulse 1.8s infinite ease-in-out;
     }
     .rant-item .emoji-popup {
@@ -180,9 +184,9 @@
       top: 100%;
       background: rgba(0, 0, 0, 0.9);
       border: 1px solid #333;
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: var(--radius-8);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       white-space: nowrap;
       opacity: 0;
       visibility: hidden;
@@ -203,9 +207,9 @@
     .artefak-tray {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 24px;
-      padding: 16px 0 100px;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 12px 0 100px;
       border-top: 1px solid #222;
     }
     .artefak-item {
@@ -217,11 +221,10 @@
       border-radius: var(--radius-8);
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s;
     }
     .artefak-item:hover {
       transform: scale(1.02);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
     }
     .artefak-item img {
       position: absolute;
@@ -238,7 +241,7 @@
       left: 0;
       right: 0;
       background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      padding: 8px;
+      padding: 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -249,19 +252,19 @@
       opacity: 1;
     }
     .artefak-item .counter {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--white);
       background: rgba(0,0,0,0.5);
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 1px 5px;
+      border-radius: 3px;
     }
     .artefak-item .note-btn {
       background: rgba(108, 71, 255, 0.2);
       color: var(--accent);
       border: none;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.8rem;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.75rem;
       cursor: pointer;
     }
 
@@ -285,30 +288,30 @@
       border-radius: var(--radius-10);
       width: 100%;
       max-width: 500px;
-      padding: 24px;
+      padding: 20px;
       position: relative;
     }
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .modal-close {
       background: none;
       border: none;
       color: var(--white);
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       cursor: pointer;
     }
     .modal-artefak {
       width: 100%;
       height: 0;
-      padding-bottom: 80%;
+      padding-bottom: 75%;
       background: var(--input-bg);
       border-radius: var(--radius-8);
       overflow: hidden;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .modal-artefak img {
       width: 100%;
@@ -317,37 +320,39 @@
     }
     .modal-counter {
       display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
+      gap: 6px;
+      margin-bottom: 14px;
     }
     .modal-counter span {
       background: rgba(0,0,0,0.5);
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.9rem;
+      padding: 3px 7px;
+      border-radius: 3px;
+      font-size: 0.85rem;
     }
     .modal-note {
       width: 100%;
       background: var(--input-bg);
       border: 1px solid #333;
       color: var(--white);
-      padding: 12px;
+      padding: 10px;
       border-radius: var(--radius-8);
       resize: vertical;
-      min-height: 80px;
-      font-size: 0.95rem;
+      min-height: 70px;
+      max-height: 200px;
+      font-size: 0.9rem;
       outline: none;
+      font-family: inherit;
     }
     .modal-actions {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
-      margin-top: 16px;
+      margin-top: 14px;
     }
     .modal-actions button {
-      padding: 8px 16px;
+      padding: 7px 14px;
       border-radius: var(--radius-8);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       cursor: pointer;
     }
     .modal-actions .cancel {
@@ -369,25 +374,25 @@
       background: var(--black);
       display: flex;
       justify-content: space-around;
-      padding: 12px 0;
+      padding: 10px 0;
       border-top: 1px solid #222;
       z-index: 100;
-      height: 60px;
+      height: 56px;
     }
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #aaa;
+      color: #888;
       text-decoration: none;
-      font-size: 0.78rem;
-      gap: 4px;
+      font-size: 0.75rem;
+      gap: 3px;
     }
     .nav-item.active {
       color: var(--accent);
     }
     .nav-item span {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
   </style>
 </head>
@@ -406,15 +411,16 @@
     </div>
 
     <div class="cta-row">
-      <button id="choose-photo" class="choose-photo-btn">Ubah Artefak</button>
+      <button id="choose-photo" class="impulse-text">Ubah Artefak</button>
     </div>
 
     <div class="rant-box">
-      <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..."></textarea>
+      <!-- cols=60 + rows=50 sebagai panduan logis, tetapi tidak mengunci ukuran -->
+      <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..." cols="60" rows="5"></textarea>
     </div>
 
     <div class="rant-upload-row">
-      <button class="upload-btn" id="submit-rant">Unggah</button>
+      <button class="impulse-text" id="submit-rant">Artefak</button>
     </div>
 
     <div class="feed-title">Jejakmu</div>
@@ -480,7 +486,6 @@
       { url: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 4, "🔥": 2, "🤡": 1 }, note: "Senyum sendirian", timestamp: Date.now() - 518400000 }
     ];
 
-    // ========== ZONE KEYWORDS ==========
     const ZONE_KEYWORDS = {
       PopCulture: ['film', 'musik', 'konser', 'artis', 'drakor', 'kpop', 'netflix', 'yt', 'youtube', 'tiktok', 'lagu', 'album', 'celeb', 'fandom', 'nobar', 'anime', 'game'],
       PersonalPoin: ['capek', 'sedih', 'nangis', 'galau', 'putus', 'keluarga', 'sendiri', 'gak kuat', 'gak sanggup', 'stress', 'cemas', 'depresi', 'hancur', 'harap', 'sendiri', 'malam', 'tangis'],
@@ -488,47 +493,34 @@
       Movement: ['kita', 'bareng', 'ubah', 'lawan', 'solidaritas', 'gerakan', 'aksi', 'perubahan', 'bangkit', 'bersama', 'suara', 'jujur', 'keadilan', 'kesetaraan', 'melawan', 'bangun', 'melangkah']
     };
 
-    // ========== UTILS ==========
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
     }
 
-    // ========== RENDER ==========
     function renderFeed() {
       const container = document.getElementById('feed-container');
-      try {
-        container.innerHTML = DUMMY_RANTS.map(t => 
-          `<div class="rant-item">${escapeHtml(t)} <span class="emoji-pulse">😭</span><div class="emoji-popup">Terakhir merespon: @user1, @user2, @user3</div></div>`
-        ).join('');
-      } catch (e) {
-        container.innerHTML = "<div class='rant-item'>Error memuat rant.</div>";
-      }
+      container.innerHTML = DUMMY_RANTS.map(t => 
+        `<div class="rant-item">${escapeHtml(t)} <span class="emoji-pulse">😭</span><div class="emoji-popup">Terakhir merespon: @user1, @user2, @user3</div></div>`
+      ).join('');
     }
 
     function renderArtefakTray() {
       const tray = document.getElementById('artefak-tray');
-      try {
-        tray.innerHTML = DUMMY_ARTEFAK_HISTORY.map((item, i) => {
-          return `
-            <div class="artefak-item" data-index="${i}">
-              <img src="${item.url}" alt="Artefak" />
-              <div class="overlay">
-                <div class="counter">😭${item.counter['😭']} 🔥${item.counter['🔥']} 🤡${item.counter['🤡']}</div>
-                <button class="note-btn">📝</button>
-              </div>
-            </div>
-          `;
-        }).join('');
+      tray.innerHTML = DUMMY_ARTEFAK_HISTORY.map((item, i) => `
+        <div class="artefak-item" data-index="${i}">
+          <img src="${item.url}" alt="Artefak" />
+          <div class="overlay">
+            <div class="counter">😭${item.counter['😭']} 🔥${item.counter['🔥']} 🤡${item.counter['🤡']}</div>
+            <button class="note-btn">📝</button>
+          </div>
+        </div>
+      `).join('');
 
-        // Pasang event listener
-        document.querySelectorAll('.artefak-item').forEach(item => {
-          item.addEventListener('click', () => openNoteModal(parseInt(item.dataset.index)));
-        });
-      } catch (e) {
-        tray.innerHTML = "<div style='grid-column:1/-1; text-align:center; color:#777;'>Error memuat artefak.</div>";
-      }
+      document.querySelectorAll('.artefak-item').forEach(item => {
+        item.addEventListener('click', () => openNoteModal(parseInt(item.dataset.index)));
+      });
     }
 
     function openNoteModal(index) {
@@ -545,37 +537,28 @@
       modal.style.display = 'flex';
     }
 
-    // ========== INIT ==========
     document.addEventListener('DOMContentLoaded', () => {
-      try {
-        renderFeed();
-        renderArtefakTray();
+      renderFeed();
+      renderArtefakTray();
 
-        // Tombol unggah
-        document.getElementById('submit-rant')?.addEventListener('click', (e) => {
-          alert('Fitur unggah aktif. Saat ini menampilkan data dummy.');
-        });
+      document.getElementById('submit-rant')?.addEventListener('click', () => {
+        alert('Fitur unggah aktif. Saat ini menampilkan data dummy.');
+      });
 
-        // Ubah artefak
-        document.getElementById('choose-photo')?.addEventListener('click', (e) => {
-          alert('Pilih foto dari galeri. Data tetap lokal & anonymous.');
-        });
+      document.getElementById('choose-photo')?.addEventListener('click', () => {
+        alert('Pilih foto dari galeri. Data tetap lokal & anonymous.');
+      });
 
-        // Modal
-        document.getElementById('close-modal')?.addEventListener('click', () => {
-          document.getElementById('note-modal').style.display = 'none';
-        });
-        document.getElementById('cancel-note')?.addEventListener('click', () => {
-          document.getElementById('note-modal').style.display = 'none';
-        });
-        document.getElementById('save-note')?.addEventListener('click', () => {
-          alert('Catatan disimpan (hanya di sesi ini).');
-          document.getElementById('note-modal').style.display = 'none';
-        });
-
-      } catch (err) {
-        console.error("NOPE ERROR:", err);
-      }
+      document.getElementById('close-modal')?.addEventListener('click', () => {
+        document.getElementById('note-modal').style.display = 'none';
+      });
+      document.getElementById('cancel-note')?.addEventListener('click', () => {
+        document.getElementById('note-modal').style.display = 'none';
+      });
+      document.getElementById('save-note')?.addEventListener('click', () => {
+        alert('Catatan disimpan (hanya di sesi ini).');
+        document.getElementById('note-modal').style.display = 'none';
+      });
     });
   </script>
 </body>
