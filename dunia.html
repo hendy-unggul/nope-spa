@@ -83,7 +83,7 @@
       background: var(--input-bg);
       padding: 12px;
       border-radius: var(--radius-10);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-size: 0.93rem;
       line-height: 1.55;
       position: relative;
@@ -107,6 +107,34 @@
     }
     .rant-text {
       margin-bottom: 8px;
+      word-break: break-word;
+    }
+    .artefak-thumb {
+      width: 100%;
+      height: 140px;
+      border-radius: var(--radius-8);
+      object-fit: cover;
+      margin: 8px 0;
+      filter: brightness(0.85);
+    }
+    .artefak-notasi-feed {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--white);
+      margin: 6px 0;
+      text-align: left;
+      padding: 4px 0;
+      border-left: 2px solid var(--accent);
+      padding-left: 8px;
+    }
+    .zone-badge {
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: rgba(108, 71, 255, 0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+      display: inline-block;
     }
     .emoji-pulse {
       display: inline-block;
@@ -226,9 +254,7 @@
       { user: "@sunyi_awan", text: "Dia bilang ‘kita temenan aja’ setelah 6 bulan daily call jam 3 pagi.", time: Date.now() - 7200000 },
       { user: "@tanpa_riuh", text: "Ngapain ya hidup kalo cuma buat bayar utang dan jadi background story orang lain?", time: Date.now() - 10800000 },
       { user: "@retak_senja", text: "...", time: Date.now() - 14400000 },
-      { user: "@hujan_jkt", text: "Aku capek jadi safe space orang lain, sementara aku sendiri gak punya tempat aman.", time: Date.now() - 18000000 },
-      { user: "@film_dan_hujan", text: "Baru nonton ending itu, gue mikir 2 jam. Ada yang nonton juga?", time: Date.now() - 21600000 },
-      { user: "@kita_berubah", text: "Kita gak butuh pahlawan. Kita butuh satu sama lain yang berani jujur.", time: Date.now() - 25200000 }
+      { user: "@hujan_jkt", text: "Aku capek jadi safe space orang lain, sementara aku sendiri gak punya tempat aman.", time: Date.now() - 18000000 }
     ];
 
     function escapeHtml(text) {
@@ -250,7 +276,20 @@
       let feed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
       
       if (feed.length === 0) {
-        feed = DUMMY_GLOBAL;
+        // Tambahkan dummy sebagai artefak & rant
+        const enrichedDummy = DUMMY_GLOBAL.map((item, i) => {
+          if (i === 0) {
+            return {
+              type: 'artefak',
+              user: item.user,
+              imageUrl: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=300&h=200&q=80",
+              notasi: "jejak abadi",
+              time: item.time
+            };
+          }
+          return item;
+        });
+        feed = enrichedDummy;
         localStorage.setItem('nopeGlobalFeed', JSON.stringify(feed));
       }
 
@@ -258,24 +297,42 @@
       const display = feed.slice(0, 10);
 
       const container = document.getElementById('global-feed');
-      container.innerHTML = display.map(item => `
-        <div class="rant-item">
-          <div class="rant-header">
-            <div class="rant-user">${item.user}</div>
-            <div class="rant-time">${formatTime(item.time)}</div>
-          </div>
-          <div class="rant-text">${escapeHtml(item.text)}</div>
-          <span class="emoji-pulse">😭</span>
-        </div>
-      `).join('');
+      container.innerHTML = display.map(item => {
+        if (item.type === 'artefak') {
+          return `
+            <div class="rant-item">
+              <div class="rant-header">
+                <div class="rant-user">${item.user}</div>
+                <div class="rant-time">${formatTime(item.time)}</div>
+              </div>
+              <img src="${item.imageUrl}" class="artefak-thumb" alt="Artefak">
+              <div class="artefak-notasi-feed">${escapeHtml(item.notasi)}</div>
+              <div class="zone-badge">Artefak</div>
+              <span class="emoji-pulse">🖼️</span>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="rant-item">
+              <div class="rant-header">
+                <div class="rant-user">${item.user}</div>
+                <div class="rant-time">${formatTime(item.time)}</div>
+              </div>
+              <div class="rant-text">${escapeHtml(item.text)}</div>
+              <div class="zone-badge">Global</div>
+              <span class="emoji-pulse">😭</span>
+            </div>
+          `;
+        }
+      }).join('');
 
-      document.getElementById('load-more').style.display = feed.length > 10 ? 'block' : 'none';
+      document.getElementById('load-more').style.display = 'none';
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       renderGlobalFeed();
       document.getElementById('load-more').addEventListener('click', () => {
-        alert('Ini versi lokal. Semua rant sudah ditampilkan.');
+        alert('Ini versi lokal. Semua jejak sudah ditampilkan.');
       });
     });
   </script>
