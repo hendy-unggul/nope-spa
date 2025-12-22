@@ -179,9 +179,9 @@
 
     .rant-item {
       background: var(--input-bg);
-      padding: 11px;
+      padding: 12px;
       border-radius: var(--radius-10);
-      margin-bottom: 9px;
+      margin-bottom: 12px;
       font-size: 0.93rem;
       line-height: 1.55;
       position: relative;
@@ -190,31 +190,56 @@
     .rant-item:active {
       background-color: #200a40;
     }
-    .rant-item .emoji-pulse {
+    .rant-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+    .rant-user {
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .rant-time {
+      color: #777;
+    }
+    .rant-text {
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+    .artefak-thumb {
+      width: 100%;
+      height: 140px;
+      border-radius: var(--radius-8);
+      object-fit: cover;
+      margin: 8px 0;
+      filter: brightness(0.85);
+    }
+    .artefak-notasi-feed {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--white);
+      margin: 6px 0;
+      text-align: left;
+      padding: 4px 0;
+      border-left: 2px solid var(--accent);
+      padding-left: 8px;
+    }
+    .zone-badge {
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: rgba(108, 71, 255, 0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .emoji-pulse {
       display: inline-block;
       font-size: 1.2rem;
       cursor: pointer;
       margin-left: 6px;
       animation: pulse 1.8s infinite ease-in-out;
-    }
-    .rant-item .emoji-popup {
-      position: absolute;
-      right: 10px;
-      top: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      border: 1px solid #333;
-      padding: 6px 10px;
-      border-radius: var(--radius-8);
-      font-size: 0.78rem;
-      white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.2s;
-      z-index: 10;
-    }
-    .rant-item:hover .emoji-popup {
-      opacity: 1;
-      visibility: visible;
     }
     @keyframes pulse {
       0% { opacity: 0.7; transform: scale(1); }
@@ -535,6 +560,7 @@
   </div>
 
   <script>
+    // DUMMY DATA
     const DUMMY_RANTS = [
       "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
       "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
@@ -550,19 +576,28 @@
       { url: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 4, "🔥": 2, "🤡": 1 }, note: "Senyum sendirian" }
     ];
 
+    // DOM
     const mainArtefakImg = document.getElementById('main-artefak');
     const rantInput = document.getElementById('rant-input');
     const feedContainer = document.getElementById('feed-container');
     const imageUpload = document.getElementById('image-upload');
 
-    let currentArtefak = mainArtefakImg.src;
-
+    // UTILS
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
     }
 
+    function loadImageAsDataURL(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // RENDER
     function renderFeed() {
       const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
       const allRants = [...userRants];
@@ -573,9 +608,24 @@
       }
 
       const display = allRants.slice(0, 5);
-      feedContainer.innerHTML = display.map(item => 
-        `<div class="rant-item">${escapeHtml(item.text)} <span class="emoji-pulse">😭</span></div>`
-      ).join('');
+      feedContainer.innerHTML = display.map(item => {
+        if (item.type === 'artefak') {
+          return `
+            <div class="rant-item">
+              <div class="rant-header">
+                <div class="rant-user">${item.user}</div>
+                <div class="rant-time">${new Date(item.time).toLocaleDateString('id-ID')}</div>
+              </div>
+              <img src="${item.imageUrl}" class="artefak-thumb" alt="Artefak">
+              <div class="artefak-notasi-feed">${escapeHtml(item.notasi)}</div>
+              <div class="zone-badge">Artefak</div>
+              <span class="emoji-pulse">🖼️</span>
+            </div>
+          `;
+        } else {
+          return `<div class="rant-item">${escapeHtml(item.text)} <span class="emoji-pulse">😭</span></div>`;
+        }
+      }).join('');
     }
 
     function renderArtefakTray() {
@@ -607,24 +657,83 @@
       });
     }
 
+    // INIT
     document.addEventListener('DOMContentLoaded', () => {
       renderFeed();
       renderArtefakTray();
 
+      // === ARTEFAK UPLOAD ===
       document.getElementById('choose-photo').addEventListener('click', () => {
         imageUpload.click();
       });
 
-      imageUpload.addEventListener('change', (e) => {
+      imageUpload.addEventListener('change', async (e) => {
         const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-          const url = URL.createObjectURL(file);
-          mainArtefakImg.src = url;
-          currentArtefak = url;
-          mainArtefakImg.onload = () => URL.revokeObjectURL(url);
+        if (!file || !file.type.startsWith('image/')) return;
+
+        // Cek waktu terakhir upload
+        const lastArtefakTime = localStorage.getItem('nopeLastArtefakTime');
+        const now = Date.now();
+        if (lastArtefakTime && (now - parseInt(lastArtefakTime)) < 30 * 24 * 60 * 60 * 1000) {
+          const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (now - parseInt(lastArtefakTime))) / (24 * 60 * 60 * 1000));
+          alert(`Artefak hanya bisa diunggah sekali per 30 hari.\nKamu bisa lagi dalam ${daysLeft} hari.`);
+          return;
         }
+
+        // Peringatan konten
+        const confirmed = confirm(
+          "⚠️ PERINGATAN SUCI:\n" +
+          "• JANGAN unggah wajah manusia\n" +
+          "• JANGAN unggah konten seksual/kekerasan\n" +
+          "• JANGAN unggah logo/iklan/komersial\n\n" +
+          "ℹ️ Artefak ini ABADI — tidak bisa dihapus, bahkan olehmu.\n\n" +
+          "Apakah ini momen yang layak diabadikan?"
+        );
+        if (!confirmed) return;
+
+        // Notasi (maks 4 kata)
+        const notasi = prompt("Tulis maksimal 4 kata yang mewakili momen ini:", "");
+        if (notasi === null) return;
+
+        const words = notasi.trim().split(/\s+/).filter(w => w.length > 0);
+        if (words.length === 0) {
+          alert("Notasi tidak boleh kosong.");
+          return;
+        }
+        if (words.length > 4) {
+          alert("Maksimal 4 kata saja. Pilih yang paling berarti.");
+          return;
+        }
+        const finalNotasi = words.join(" ");
+
+        // Simpan sebagai data URL (abadi)
+        const imageUrl = await loadImageAsDataURL(file);
+
+        const artefakEntry = {
+          type: 'artefak',
+          id: 'art_' + Date.now(),
+          imageUrl,
+          notasi: finalNotasi,
+          time: now,
+          user: "@sunyisenja"
+        };
+
+        // Simpan ke GLOBAL FEED (untuk muncul di Jalan & Dunia)
+        const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
+        globalFeed.unshift(artefakEntry);
+        localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
+
+        // Simpan waktu
+        localStorage.setItem('nopeLastArtefakTime', now.toString());
+
+        // Update UI
+        mainArtefakImg.src = imageUrl;
+        alert(`✅ Artefak abadi tersimpan!\nNotasi: “${finalNotasi}”`);
+
+        renderFeed();
       });
 
+      // === RANT UPLOAD ===
       document.getElementById('submit-rant').addEventListener('click', () => {
         const text = rantInput.value.trim();
         if (!text) {
@@ -639,25 +748,22 @@
         const newRant = { 
           user: "@sunyisenja", 
           text, 
-          time: Date.now(),
-          artefak: null
+          time: Date.now()
         };
 
-        // Simpan ke Jejak
         const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
         userRants.unshift(newRant);
         localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
 
-        // Simpan ke Global Feed → utk Jalan & Dunia
         const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
         globalFeed.unshift(newRant);
         localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
 
         rantInput.value = '';
         renderFeed();
-        alert('Rant-mu sudah tersimpan di seluruh NOPE.');
       });
 
+      // Modal
       const modal = document.getElementById('note-modal');
       const closeModal = () => {
         modal.classList.remove('active');
