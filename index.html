@@ -458,7 +458,6 @@
       transform: scale(0.95);
     }
 
-    /* Hidden file input */
     #image-upload {
       display: none;
     }
@@ -496,10 +495,8 @@
     <div class="artefak-tray" id="artefak-tray"></div>
   </div>
 
-  <!-- Hidden file input -->
   <input type="file" id="image-upload" accept="image/*">
 
-  <!-- Modal Catatan -->
   <div class="modal" id="note-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -538,9 +535,7 @@
   </div>
 
   <script>
-    // State
-    let userRants = [];
-    const MAX_DUMMY = 3;
+    // DUMMY RANT (untuk Jejakmu)
     const DUMMY_RANTS = [
       "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
       "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
@@ -562,6 +557,9 @@
     const feedContainer = document.getElementById('feed-container');
     const imageUpload = document.getElementById('image-upload');
 
+    // STATE
+    let currentArtefak = mainArtefakImg.src;
+
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
@@ -569,13 +567,20 @@
     }
 
     function renderFeed() {
+      const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
       const allRants = [...userRants];
-      if (userRants.length < MAX_DUMMY) {
-        const remaining = MAX_DUMMY - userRants.length;
-        allRants.push(...DUMMY_RANTS.slice(0, remaining));
+
+      // Tambahkan dummy jika kurang dari 3
+      if (userRants.length < 3) {
+        const needed = 3 - userRants.length;
+        allRants.push(...DUMMY_RANTS.slice(0, needed).map(text => ({ text, time: Date.now() - 100000 })));
       }
-      feedContainer.innerHTML = allRants.map(t => 
-        `<div class="rant-item">${escapeHtml(t)} <span class="emoji-pulse">😭</span><div class="emoji-popup">Terakhir merespon: @user1, @user2, @user3</div></div>`
+
+      // Ambil maks 5
+      const display = allRants.slice(0, 5);
+
+      feedContainer.innerHTML = display.map(item => 
+        `<div class="rant-item">${escapeHtml(item.text)} <span class="emoji-pulse">😭</span></div>`
       ).join('');
     }
 
@@ -594,32 +599,25 @@
       document.querySelectorAll('.artefak-item').forEach(item => {
         item.addEventListener('click', () => {
           const idx = parseInt(item.dataset.index);
-          openNoteModal(idx);
+          const modal = document.getElementById('note-modal');
+          document.getElementById('modal-artefak-img').src = DUMMY_ARTEFAK_HISTORY[idx].url;
+          document.getElementById('modal-counter').innerHTML = `
+            <span>😭 ${DUMMY_ARTEFAK_HISTORY[idx].counter['😭']}</span>
+            <span>🔥 ${DUMMY_ARTEFAK_HISTORY[idx].counter['🔥']}</span>
+            <span>🤡 ${DUMMY_ARTEFAK_HISTORY[idx].counter['🤡']}</span>
+          `;
+          document.getElementById('modal-note-input').value = DUMMY_ARTEFAK_HISTORY[idx].note || '';
+          modal.style.display = 'flex';
+          requestAnimationFrame(() => modal.classList.add('active'));
         });
       });
     }
 
-    function openNoteModal(index) {
-      const item = DUMMY_ARTEFAK_HISTORY[index];
-      if (!item) return;
-      document.getElementById('modal-artefak-img').src = item.url;
-      document.getElementById('modal-counter').innerHTML = `
-        <span>😭 ${item.counter['😭']}</span>
-        <span>🔥 ${item.counter['🔥']}</span>
-        <span>🤡 ${item.counter['🤡']}</span>
-      `;
-      document.getElementById('modal-note-input').value = item.note || '';
-      const modal = document.getElementById('note-modal');
-      modal.style.display = 'flex';
-      requestAnimationFrame(() => modal.classList.add('active'));
-    }
-
-    // INIT
     document.addEventListener('DOMContentLoaded', () => {
       renderFeed();
       renderArtefakTray();
 
-      // CTA: Pilih gambar dari galeri
+      // Pilih artefak
       document.getElementById('choose-photo').addEventListener('click', () => {
         imageUpload.click();
       });
@@ -629,11 +627,12 @@
         if (file && file.type.startsWith('image/')) {
           const url = URL.createObjectURL(file);
           mainArtefakImg.src = url;
+          currentArtefak = url;
           mainArtefakImg.onload = () => URL.revokeObjectURL(url);
         }
       });
 
-      // CTA: Unggah rant
+      // Unggah rant
       document.getElementById('submit-rant').addEventListener('click', () => {
         const text = rantInput.value.trim();
         if (!text) {
@@ -644,9 +643,16 @@
           alert('Maksimal 300 huruf ya.');
           return;
         }
-        userRants.unshift(text);
+
+        // Simpan ke localStorage
+        const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+        userRants.unshift({ text, time: Date.now() });
+        localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
+
         rantInput.value = '';
         renderFeed();
+
+        alert('Rant-mu sudah tersimpan. Dummy rant otomatis tergeser.');
       });
 
       // Modal
