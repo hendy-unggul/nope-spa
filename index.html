@@ -535,7 +535,6 @@
   </div>
 
   <script>
-    // DUMMY RANT (untuk Jejakmu)
     const DUMMY_RANTS = [
       "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
       "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
@@ -551,13 +550,11 @@
       { url: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 4, "🔥": 2, "🤡": 1 }, note: "Senyum sendirian" }
     ];
 
-    // DOM
     const mainArtefakImg = document.getElementById('main-artefak');
     const rantInput = document.getElementById('rant-input');
     const feedContainer = document.getElementById('feed-container');
     const imageUpload = document.getElementById('image-upload');
 
-    // STATE
     let currentArtefak = mainArtefakImg.src;
 
     function escapeHtml(text) {
@@ -570,15 +567,12 @@
       const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
       const allRants = [...userRants];
 
-      // Tambahkan dummy jika kurang dari 3
       if (userRants.length < 3) {
         const needed = 3 - userRants.length;
         allRants.push(...DUMMY_RANTS.slice(0, needed).map(text => ({ text, time: Date.now() - 100000 })));
       }
 
-      // Ambil maks 5
       const display = allRants.slice(0, 5);
-
       feedContainer.innerHTML = display.map(item => 
         `<div class="rant-item">${escapeHtml(item.text)} <span class="emoji-pulse">😭</span></div>`
       ).join('');
@@ -617,7 +611,6 @@
       renderFeed();
       renderArtefakTray();
 
-      // Pilih artefak
       document.getElementById('choose-photo').addEventListener('click', () => {
         imageUpload.click();
       });
@@ -632,7 +625,6 @@
         }
       });
 
-      // Unggah rant
       document.getElementById('submit-rant').addEventListener('click', () => {
         const text = rantInput.value.trim();
         if (!text) {
@@ -644,18 +636,28 @@
           return;
         }
 
-        // Simpan ke localStorage
+        const newRant = { 
+          user: "@sunyisenja", 
+          text, 
+          time: Date.now(),
+          artefak: null
+        };
+
+        // Simpan ke Jejak
         const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
-        userRants.unshift({ text, time: Date.now() });
+        userRants.unshift(newRant);
         localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
+
+        // Simpan ke Global Feed → utk Jalan & Dunia
+        const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
+        globalFeed.unshift(newRant);
+        localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
 
         rantInput.value = '';
         renderFeed();
-
-        alert('Rant-mu sudah tersimpan. Dummy rant otomatis tergeser.');
+        alert('Rant-mu sudah tersimpan di seluruh NOPE.');
       });
 
-      // Modal
       const modal = document.getElementById('note-modal');
       const closeModal = () => {
         modal.classList.remove('active');
