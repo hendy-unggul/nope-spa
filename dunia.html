@@ -2,34 +2,43 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Dunia • NOPE</title>
   <meta name="description" content="ga perlu follower, cuma butuh sefrekuensi">
+  <link rel="manifest" href="/manifest.json">
   <style>
     :root {
       --black: #000;
       --white: #fff;
       --accent: #6c47ff;
+      --accent-light: #8a6dff;
       --logo: #ff9999;
       --card-bg: #12052d;
       --input-bg: #1a0736;
+      --radius-8: 8px;
+      --radius-10: 10px;
+      --transition-fast: 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--black);
       color: var(--white);
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.5;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
       padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom, 60px);
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
+
     .header-bar {
       display: flex;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
-      padding: 12px 16px;
+      padding: 10px 16px 8px;
       background: var(--black);
       position: sticky;
       top: 0;
@@ -39,65 +48,91 @@
     .logo {
       color: var(--logo);
       font-weight: 800;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       letter-spacing: -0.5px;
+      text-align: center;
     }
+
     .container {
       flex: 1;
       width: 100%;
       max-width: 600px;
-      padding: 16px;
+      padding: 0 16px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
-    .feed-title {
+
+    .page-title {
+      text-align: center;
+      margin: 16px 0 8px;
+    }
+    .page-title h1 {
+      font-size: 1.2rem;
       color: var(--accent);
-      font-size: 1.1rem;
-      margin-bottom: 12px;
       font-weight: 600;
     }
+    .page-title p {
+      font-size: 0.9rem;
+      color: #777;
+      margin-top: 4px;
+    }
+
     .rant-item {
       background: var(--input-bg);
-      padding: 14px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      font-size: 0.95rem;
-      line-height: 1.6;
+      padding: 12px;
+      border-radius: var(--radius-10);
+      margin-bottom: 10px;
+      font-size: 0.93rem;
+      line-height: 1.55;
       position: relative;
+      transition: background-color var(--transition-fast);
     }
-    .rant-item .emoji-pulse {
+    .rant-item:active {
+      background-color: #200a40;
+    }
+    .rant-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+    .rant-user {
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .rant-time {
+      color: #777;
+    }
+    .rant-text {
+      margin-bottom: 8px;
+    }
+    .emoji-pulse {
       display: inline-block;
       font-size: 1.2rem;
       cursor: pointer;
-      margin-left: 8px;
+      margin-left: 6px;
       animation: pulse 1.8s infinite ease-in-out;
-    }
-    .rant-item .emoji-popup {
-      position: absolute;
-      right: 10px;
-      top: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      border: 1px solid #333;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.2s;
-      z-index: 10;
-    }
-    .rant-item:hover .emoji-popup {
-      opacity: 1;
-      visibility: visible;
     }
     @keyframes pulse {
       0% { opacity: 0.7; transform: scale(1); }
       50% { opacity: 1; transform: scale(1.05); }
       100% { opacity: 0.7; transform: scale(1); }
     }
+
+    .load-more {
+      text-align: center;
+      padding: 12px;
+      color: var(--accent);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity var(--transition-fast);
+    }
+    .load-more:active {
+      opacity: 0.7;
+    }
+
     .nav-footer {
       position: fixed;
       bottom: 0;
@@ -106,24 +141,44 @@
       background: var(--black);
       display: flex;
       justify-content: space-around;
-      padding: 12px 0;
+      align-items: center;
+      padding: 8px 0;
       border-top: 1px solid #222;
       z-index: 100;
+      height: 56px;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    @media (min-width: 601px) {
+      .nav-footer {
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 12px 12px 0 0;
+      }
     }
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #aaa;
+      color: #888;
       text-decoration: none;
-      font-size: 0.78rem;
-      gap: 4px;
+      font-size: 0.74rem;
+      gap: 2px;
+      transition: color var(--transition-fast);
     }
     .nav-item.active {
       color: var(--accent);
     }
+    .nav-item:active {
+      color: var(--accent-light);
+    }
     .nav-item span {
-      font-size: 1.3rem;
+      font-size: 1.18rem;
+      transition: transform var(--transition-fast);
+    }
+    .nav-item:active span {
+      transform: scale(0.95);
     }
   </style>
 </head>
@@ -134,13 +189,16 @@
   </div>
 
   <div class="container">
-    <div class="feed-title">Dunia</div>
-    <div id="feed-container">
-      <div class="rant-item">"Kadang gue ngerasa hidup cuma buat bayar tagihan." 😭</div>
-      <div class="rant-item">"Nonton konser tadi, rasanya kayak hidup lagi." 🔥</div>
-      <div class="rant-item">"Kenapa kejujuran dianggap aneh sekarang?" 🤡</div>
-      <div class="rant-item">"Gue capek jadi baik biar orang suka." 😭</div>
+    <div class="page-title">
+      <h1>Dunia</h1>
+      <p>Semua jejak, tanpa filter</p>
     </div>
+
+    <div id="global-feed">
+      <!-- Diisi via JS -->
+    </div>
+
+    <div class="load-more" id="load-more">Muat lebih banyak</div>
   </div>
 
   <div class="nav-footer">
@@ -162,5 +220,64 @@
     </a>
   </div>
 
+  <script>
+    const DUMMY_GLOBAL = [
+      { user: "@diam_dan_hancur", text: "Gue udah 3 tahun ngelawan burnout, sekarang malah rindu jadi workaholic.", time: Date.now() - 3600000 },
+      { user: "@sunyi_awan", text: "Dia bilang ‘kita temenan aja’ setelah 6 bulan daily call jam 3 pagi.", time: Date.now() - 7200000 },
+      { user: "@tanpa_riuh", text: "Ngapain ya hidup kalo cuma buat bayar utang dan jadi background story orang lain?", time: Date.now() - 10800000 },
+      { user: "@retak_senja", text: "...", time: Date.now() - 14400000 },
+      { user: "@hujan_jkt", text: "Aku capek jadi safe space orang lain, sementara aku sendiri gak punya tempat aman.", time: Date.now() - 18000000 },
+      { user: "@film_dan_hujan", text: "Baru nonton ending itu, gue mikir 2 jam. Ada yang nonton juga?", time: Date.now() - 21600000 },
+      { user: "@kita_berubah", text: "Kita gak butuh pahlawan. Kita butuh satu sama lain yang berani jujur.", time: Date.now() - 25200000 }
+    ];
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatTime(timestamp) {
+      const now = Date.now();
+      const diff = now - timestamp;
+      if (diff < 60000) return "baru saja";
+      if (diff < 3600000) return Math.floor(diff / 60000) + " menit lalu";
+      if (diff < 86400000) return Math.floor(diff / 3600000) + " jam lalu";
+      return Math.floor(diff / 86400000) + " hari lalu";
+    }
+
+    function renderGlobalFeed() {
+      let feed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
+      
+      if (feed.length === 0) {
+        feed = DUMMY_GLOBAL;
+        localStorage.setItem('nopeGlobalFeed', JSON.stringify(feed));
+      }
+
+      feed.sort((a, b) => b.time - a.time);
+      const display = feed.slice(0, 10);
+
+      const container = document.getElementById('global-feed');
+      container.innerHTML = display.map(item => `
+        <div class="rant-item">
+          <div class="rant-header">
+            <div class="rant-user">${item.user}</div>
+            <div class="rant-time">${formatTime(item.time)}</div>
+          </div>
+          <div class="rant-text">${escapeHtml(item.text)}</div>
+          <span class="emoji-pulse">😭</span>
+        </div>
+      `).join('');
+
+      document.getElementById('load-more').style.display = feed.length > 10 ? 'block' : 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderGlobalFeed();
+      document.getElementById('load-more').addEventListener('click', () => {
+        alert('Ini versi lokal. Semua rant sudah ditampilkan.');
+      });
+    });
+  </script>
 </body>
 </html>
