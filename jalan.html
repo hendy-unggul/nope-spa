@@ -83,7 +83,7 @@
       background: var(--input-bg);
       padding: 12px;
       border-radius: var(--radius-10);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-size: 0.93rem;
       line-height: 1.55;
       position: relative;
@@ -107,6 +107,15 @@
     }
     .rant-text {
       margin-bottom: 8px;
+      word-break: break-word;
+    }
+    .artefak-thumb {
+      width: 100%;
+      height: 120px;
+      border-radius: var(--radius-8);
+      object-fit: cover;
+      margin: 8px 0;
+      filter: brightness(0.85);
     }
     .zone-badge {
       font-size: 0.8rem;
@@ -214,8 +223,6 @@
     <div id="feed-content">
       <!-- Diisi via JS -->
     </div>
-
-    <div class="load-more" id="load-more" style="display:none;">Muat lebih banyak</div>
   </div>
 
   <div class="nav-footer">
@@ -238,12 +245,45 @@
   </div>
 
   <script>
-    // ─── ZONA EMOSI & KEYWORD ─────────────────────────────────────
+    // ─── 30 DUMMY RANT YANG RELATABLE & BERAGAM ───────────────────
+    const DUMMY_RANTS = [
+      { user: "@diam_dan_hancur", text: "Gue udah 3 tahun ngelawan burnout, sekarang malah rindu jadi workaholic.", artefak: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@sunyi_awan", text: "Dia bilang ‘kita temenan aja’ setelah 6 bulan daily call jam 3 pagi.", artefak: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@tanpa_riuh", text: "Ngapain ya hidup kalo cuma buat bayar utang dan jadi background story orang lain?", artefak: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@retak_senja", text: "...", artefak: null },
+      { user: "@hujan_jkt", text: "Aku capek jadi safe space orang lain, sementara aku sendiri gak punya tempat aman.", artefak: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@film_dan_hujan", text: "Baru nonton ending itu, gue mikir 2 jam. Ada yang nonton juga?", artefak: "https://images.unsplash.com/photo-1480714378409-634531dbc169?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@kita_berubah", text: "Kita gak butuh pahlawan. Kita butuh satu sama lain yang berani jujur.", artefak: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@ghosted_by_reality", text: "Gue udah bantuin dia tiap malem ngerjain skripsi, giliran gue butuh dia bilang sibuk.", artefak: null },
+      { user: "@deadline_menipis", text: "Deadline mepet, dosen gak jelas ngasih materi, kelompok pada pasif. Mau nope aja sebenernya.", artefak: null },
+      { user: "@no_name_today", text: "Hari ini gue memilih untuk gak memaafkan. Bukan karena dendam, tapi karena harga diri.", artefak: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@macet_dan_hati", text: "Macet 3 jam cuma buat balikin barang yang salah kirim. Gue nangis di mobil, gak ada yang tau.", artefak: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@existensial_kopi", text: "Ngopi sendirian di warung pinggir jalan, mikir: apakah aku benar-benar ada?", artefak: null },
+      { user: "@not_your_muse", text: "Jangan jadikan luka gue sebagai bahan puisimu.", artefak: null },
+      { user: "@silent_scream", text: "Gak nangis bukan berarti gak sakit. Kadang diam itu bentuk terkuat dari teriakan.", artefak: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@alone_together", text: "Di keramaian, gue merasa paling sendiri.", artefak: null },
+      { user: "@no_caption_needed", text: "😔", artefak: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@tired_but_awake", text: "Mata gak bisa tidur, otak gak bisa berhenti.", artefak: null },
+      { user: "@ghosting_is_violence", text: "Ghosting itu bentuk kekerasan emosional yang dianggap biasa.", artefak: null },
+      { user: "@hope_is_a_verb", text: "Harapan bukan cuma nunggu. Harapan itu berani tetap berjalan meski gelap.", artefak: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@not_okay", text: "Gue gak okay. Tapi gue udah biasa bilang ‘iya, gue baik’.", artefak: null },
+      { user: "@burnt_out", text: "Gue bukan malas. Gue cuma kehabisan alasan untuk peduli.", artefak: null },
+      { user: "@quiet_rebellion", text: "Rebels sekarang gak teriak. Mereka memilih diam dan pergi.", artefak: "https://images.unsplash.com/photo-1480714378409-634531dbc169?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@soul_is_tired", text: "Bukan badan yang capek. Jiwa gue yang minta libur.", artefak: null },
+      { user: "@invisible_pain", text: "Luka yang gak kelihatan, sering dianggap gak ada.", artefak: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@still_trying", text: "Masih coba. Meski kadang pengen menyerah.", artefak: null },
+      { user: "@no_filter_soul", text: "Gue gak pakai filter di foto. Apalagi di perasaan.", artefak: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@emotional_tax", text: "Jadi empatik itu melelahkan. Tapi jadi dingin itu menyakitkan.", artefak: null },
+      { user: "@waiting_for_sign", text: "Masih nunggu tanda. Atau mungkin gue harus jadi tanda itu sendiri.", artefak: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=300&h=200&q=80" },
+      { user: "@soft_in_a_hard_world", text: "Jadi lembut di dunia yang keras itu bentuk keberanian.", artefak: null },
+      { user: "@home_is_a_feeling", text: "Home bukan tempat. Home itu rasa ‘di sini aku boleh jadi diri sendiri’.", artefak: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=300&h=200&q=80" }
+    ];
+
     const ZONE_KEYWORDS = {
-      personalpain: ['sedih', 'nangis', 'putus', 'hancur', 'galau', 'sendiri', 'capek', 'stress', 'gak kuat', 'mati rasa', 'gak tahan', 'harap', 'tangis', 'malam', 'sunyi'],
-      socialsickness: ['toxic', 'ghosting', 'pura-pura', 'sombong', 'pamer', 'dm', 'follow', 'like', 'story', 'fake', 'netral', 'netizen', 'wa group', 'kerjaan'],
+      personalpain: ['sedih', 'nangis', 'putus', 'hancur', 'galau', 'sendiri', 'capek', 'stress', 'gak kuat', 'mati rasa', 'harap', 'tangis', 'malam', 'sunyi', 'diam', 'luka', 'jiwa', 'cape'],
+      socialsickness: ['toxic', 'ghosting', 'pura-pura', 'sombong', 'pamer', 'dm', 'follow', 'like', 'story', 'fake', 'netizen', 'wa group', 'kerjaan', 'kekerasan', 'biasa', 'kekerasan'],
       popculture: ['film', 'lagu', 'drakor', 'kpop', 'netflix', 'tiktok', 'viral', 'artis', 'konser', 'album', 'anime', 'game', 'yt', 'youtube', 'nobar'],
-      movement: ['kita', 'bareng', 'ubah', 'lawan', 'suara', 'bersama', 'gerakan', 'jujur', 'bangkit', 'melawan', 'solidaritas', 'keadilan', 'kesetaraan']
+      movement: ['kita', 'bareng', 'ubah', 'lawan', 'suara', 'bersama', 'gerakan', 'jujur', 'bangkit', 'melawan', 'solidaritas', 'keadilan', 'kesetaraan', 'pemberontakan', 'berani']
     };
 
     const ZONE_LABELS = {
@@ -253,101 +293,17 @@
       movement: "Movement"
     };
 
-    // ─── SIMULASI DATA GLOBAL (bisa diambil dari localStorage nanti) ───
-    const GLOBAL_RANTS = [
-      { user: "@sunyi_awan", text: "gue udah bantuin dia tiap malem, giliran gue butuh dia bilang sibuk.", time: "2 jam lalu" },
-      { user: "@diam_fajar", text: "deadline mepet, dosen gak jelas, kelompok pada pasif. mau nope aja.", time: "5 jam lalu" },
-      { user: "@retak_senja", text: "dia bilang 'temenan aja' setelah 6 bulan daily call jam 3 pagi.", time: "1 hari lalu" },
-      { user: "@tanpa_riuh", text: "gue gak nangis pas putus. nangis pas sadar udah terlalu lama nahan rasa.", time: "3 jam lalu" },
-      { user: "@sunyisenja", text: "hari ini gue memilih untuk gak memaafkan. bukan dendam, tapi harga diri.", time: "8 jam lalu" },
-      { user: "@hujan_jkt", text: "macet 3 jam cuma buat balikin barang salah kirim. nangis di mobil, gak ada tau.", time: "12 jam lalu" },
-      { user: "@film_dan_hujan", text: "baru nonton ending itu, gue mikir 2 jam. ada yang nonton juga?", time: "4 jam lalu" },
-      { user: "@kita_berubah", text: "kita gak butuh pahlawan. kita butuh satu sama lain yang berani jujur.", time: "18 jam lalu" }
-    ];
-
-    // ─── FUNGSI UTAMA ─────────────────────────────────────────────
     function detectZone(text) {
       const zones = { personalpain: 0, socialsickness: 0, popculture: 0, movement: 0 };
       const cleanText = text.toLowerCase();
-      
       for (const [zone, keywords] of Object.entries(ZONE_KEYWORDS)) {
         for (const kw of keywords) {
-          if (cleanText.includes(kw)) {
-            zones[zone]++;
-          }
+          if (cleanText.includes(kw)) zones[zone]++;
         }
       }
-
-      // Ambil zona dengan skor tertinggi
       const entries = Object.entries(zones);
       const max = Math.max(...entries.map(e => e[1]));
-      if (max === 0) return 'personalpain'; // default ke personal
-      return entries.find(e => e[1] === max)[0];
-    }
-
-    function getUserZone() {
-      // Ambil rant user dari localStorage (simulasi Jejak)
-      const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
-      if (userRants.length === 0) return null;
-      
-      // Gunakan RANT PERTAMA untuk tentukan frekuensi
-      const firstRant = userRants[0];
-      const zone = detectZone(firstRant.text);
-      localStorage.setItem('nopeUserZone', zone);
-      return zone;
-    }
-
-    function getPersonalizedFeed() {
-      const userZone = getUserZone();
-      const allRants = [...GLOBAL_RANTS]; // nanti bisa gabung user + global
-
-      if (!userZone) {
-        // Fallback: tampilkan global + ajakan halus
-        return {
-          items: allRants.slice(0, 4),
-          note: "Rant pertamamu di Jejak akan membantu kami temukan jejak yang sefrekuensi."
-        };
-      }
-
-      // Filter berdasarkan zona
-      const sameZone = allRants.filter(r => detectZone(r.text) === userZone);
-      const others = allRants.filter(r => detectZone(r.text) !== userZone);
-
-      const feed = [
-        ...sameZone.slice(0, 3),
-        ...others.slice(0, 2)
-      ].slice(0, 5);
-
-      return { items: feed, zone: userZone, note: null };
-    }
-
-    function renderFeed() {
-      const { items, zone, note } = getPersonalizedFeed();
-      const container = document.getElementById('feed-content');
-
-      let html = '';
-
-      if (note) {
-        html += `<div class="fallback-note">${note}</div>`;
-      }
-
-      html += items.map(item => {
-        const itemZone = detectZone(item.text);
-        return `
-          <div class="rant-item">
-            <div class="rant-header">
-              <div class="rant-user">${item.user}</div>
-              <div class="rant-time">${item.time}</div>
-            </div>
-            <div class="rant-text">${escapeHtml(item.text)}</div>
-            <div class="zone-badge">${ZONE_LABELS[itemZone]}</div>
-            <span class="emoji-pulse">😭</span>
-          </div>
-        `;
-      }).join('');
-
-      container.innerHTML = html;
-      document.getElementById('load-more').style.display = 'none';
+      return max === 0 ? 'personalpain' : entries.find(e => e[1] === max)[0];
     }
 
     function escapeHtml(text) {
@@ -356,18 +312,79 @@
       return div.innerHTML;
     }
 
-    // ─── INIT ─────────────────────────────────────────────────────
+    function formatTime(timestamp) {
+      const now = Date.now();
+      const diff = now - timestamp;
+      if (diff < 60000) return "baru saja";
+      if (diff < 3600000) return Math.floor(diff / 60000) + " menit lalu";
+      if (diff < 86400000) return Math.floor(diff / 3600000) + " jam lalu";
+      return Math.floor(diff / 86400000) + " hari lalu";
+    }
+
+    function renderFeed() {
+      // Ambil rant asli user
+      const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+      const allItems = [];
+
+      // Tambahkan rant user (dengan artefak null untuk sementara)
+      userRants.forEach(rant => {
+        allItems.push({
+          user: "@sunyisenja",
+          text: rant.text,
+          artefak: null,
+          time: rant.time,
+          isUser: true
+        });
+      });
+
+      // Tambahkan dummy rant
+      DUMMY_RANTS.forEach((rant, i) => {
+        allItems.push({
+          ...rant,
+          time: Date.now() - (i * 3600000), // sebar waktu
+          isUser: false
+        });
+      });
+
+      // Urutkan: terbaru di atas
+      allItems.sort((a, b) => b.time - a.time);
+
+      // Ambil 8 teratas
+      const displayItems = allItems.slice(0, 8);
+
+      // Render
+      const container = document.getElementById('feed-content');
+      container.innerHTML = displayItems.map(item => {
+        const zone = detectZone(item.text);
+        return `
+          <div class="rant-item">
+            <div class="rant-header">
+              <div class="rant-user">${item.user}</div>
+              <div class="rant-time">${formatTime(item.time)}</div>
+            </div>
+            <div class="rant-text">${escapeHtml(item.text)}</div>
+            ${item.artefak ? `<img src="${item.artefak}" class="artefak-thumb" alt="Artefak">` : ''}
+            <div class="zone-badge">${ZONE_LABELS[zone]}</div>
+            <span class="emoji-pulse">😭</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ─── INISIALISASI ─────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
       renderFeed();
 
-      // Untuk demo: simulasikan user sudah punya rant di localStorage
-      // Hapus baris di bawah ini di versi production
+      // Hanya untuk demo: pastikan ada minimal 1 rant user
       if (!localStorage.getItem('nopeUserRants')) {
         localStorage.setItem('nopeUserRants', JSON.stringify([
-          { text: "gue capek jadi orang baik terus. kadang pengen jadi jahat aja biar gak dimanfaatin.", time: Date.now() }
+          { text: "Hari ini gue ngerasa… kayak gak ada yang benar-benar ngerti.", time: Date.now() - 300000 }
         ]));
-        setTimeout(renderFeed, 300); // refresh setelah sim sim
+        setTimeout(renderFeed, 200);
       }
+
+      // Jika ada perubahan di localStorage (dari index.html), refresh
+      window.addEventListener('storage', renderFeed);
     });
   </script>
 </body>
