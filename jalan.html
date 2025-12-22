@@ -2,34 +2,43 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Jalan • NOPE</title>
   <meta name="description" content="ga perlu follower, cuma butuh sefrekuensi">
+  <link rel="manifest" href="/manifest.json">
   <style>
     :root {
       --black: #000;
       --white: #fff;
       --accent: #6c47ff;
+      --accent-light: #8a6dff;
       --logo: #ff9999;
       --card-bg: #12052d;
       --input-bg: #1a0736;
+      --radius-8: 8px;
+      --radius-10: 10px;
+      --transition-fast: 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--black);
       color: var(--white);
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.5;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
       padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom, 60px);
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
+
     .header-bar {
       display: flex;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
-      padding: 12px 16px;
+      padding: 10px 16px 8px;
       background: var(--black);
       position: sticky;
       top: 0;
@@ -39,65 +48,100 @@
     .logo {
       color: var(--logo);
       font-weight: 800;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       letter-spacing: -0.5px;
+      text-align: center;
     }
+
     .container {
       flex: 1;
       width: 100%;
       max-width: 600px;
-      padding: 16px;
+      padding: 0 16px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
-    .feed-title {
+
+    .page-title {
+      text-align: center;
+      margin: 16px 0 8px;
+    }
+    .page-title h1 {
+      font-size: 1.2rem;
       color: var(--accent);
-      font-size: 1.1rem;
-      margin-bottom: 12px;
       font-weight: 600;
     }
+    .page-title p {
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 4px;
+    }
+
     .rant-item {
       background: var(--input-bg);
-      padding: 14px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      font-size: 0.95rem;
-      line-height: 1.6;
+      padding: 12px;
+      border-radius: var(--radius-10);
+      margin-bottom: 10px;
+      font-size: 0.93rem;
+      line-height: 1.55;
       position: relative;
+      transition: background-color var(--transition-fast);
     }
-    .rant-item .emoji-pulse {
+    .rant-item:active {
+      background-color: #200a40;
+    }
+    .rant-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+    .rant-user {
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .rant-time {
+      color: #777;
+    }
+    .rant-text {
+      margin-bottom: 8px;
+    }
+    .zone-badge {
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: rgba(108, 71, 255, 0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .emoji-pulse {
       display: inline-block;
       font-size: 1.2rem;
       cursor: pointer;
-      margin-left: 8px;
+      margin-left: 6px;
       animation: pulse 1.8s infinite ease-in-out;
-    }
-    .rant-item .emoji-popup {
-      position: absolute;
-      right: 10px;
-      top: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      border: 1px solid #333;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.2s;
-      z-index: 10;
-    }
-    .rant-item:hover .emoji-popup {
-      opacity: 1;
-      visibility: visible;
     }
     @keyframes pulse {
       0% { opacity: 0.7; transform: scale(1); }
       50% { opacity: 1; transform: scale(1.05); }
       100% { opacity: 0.7; transform: scale(1); }
     }
+
+    .load-more {
+      text-align: center;
+      padding: 12px;
+      color: var(--accent);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: opacity var(--transition-fast);
+    }
+    .load-more:active {
+      opacity: 0.7;
+    }
+
     .nav-footer {
       position: fixed;
       bottom: 0;
@@ -106,24 +150,52 @@
       background: var(--black);
       display: flex;
       justify-content: space-around;
-      padding: 12px 0;
+      align-items: center;
+      padding: 8px 0;
       border-top: 1px solid #222;
       z-index: 100;
+      height: 56px;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    @media (min-width: 601px) {
+      .nav-footer {
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 12px 12px 0 0;
+      }
     }
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #aaa;
+      color: #888;
       text-decoration: none;
-      font-size: 0.78rem;
-      gap: 4px;
+      font-size: 0.74rem;
+      gap: 2px;
+      transition: color var(--transition-fast);
     }
     .nav-item.active {
       color: var(--accent);
     }
+    .nav-item:active {
+      color: var(--accent-light);
+    }
     .nav-item span {
-      font-size: 1.3rem;
+      font-size: 1.18rem;
+      transition: transform var(--transition-fast);
+    }
+    .nav-item:active span {
+      transform: scale(0.95);
+    }
+
+    .fallback-note {
+      text-align: center;
+      color: #777;
+      font-size: 0.9rem;
+      padding: 16px;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -134,10 +206,16 @@
   </div>
 
   <div class="container">
-    <div class="feed-title">Jalanmu</div>
-    <div id="feed-container">
-      <div class="rant-item">Belum ada rant di sekitarmu. Unggah di Jejak agar muncul di sini.</div>
+    <div class="page-title">
+      <h1>Jalan</h1>
+      <p>Jejak yang sefrekuensi</p>
     </div>
+
+    <div id="feed-content">
+      <!-- Diisi via JS -->
+    </div>
+
+    <div class="load-more" id="load-more" style="display:none;">Muat lebih banyak</div>
   </div>
 
   <div class="nav-footer">
@@ -160,9 +238,137 @@
   </div>
 
   <script>
-    // Untuk versi lengkap, Jalan bisa tampilkan rant dengan lokasi (jika diizinkan)
-    // Tapi sesuai prinsip NOPE: tanpa GPS → jadi hanya tampilkan pesan placeholder
-    console.log("Jalan: fitur lokasi tidak aktif demi privasi.");
+    // ─── ZONA EMOSI & KEYWORD ─────────────────────────────────────
+    const ZONE_KEYWORDS = {
+      personalpain: ['sedih', 'nangis', 'putus', 'hancur', 'galau', 'sendiri', 'capek', 'stress', 'gak kuat', 'mati rasa', 'gak tahan', 'harap', 'tangis', 'malam', 'sunyi'],
+      socialsickness: ['toxic', 'ghosting', 'pura-pura', 'sombong', 'pamer', 'dm', 'follow', 'like', 'story', 'fake', 'netral', 'netizen', 'wa group', 'kerjaan'],
+      popculture: ['film', 'lagu', 'drakor', 'kpop', 'netflix', 'tiktok', 'viral', 'artis', 'konser', 'album', 'anime', 'game', 'yt', 'youtube', 'nobar'],
+      movement: ['kita', 'bareng', 'ubah', 'lawan', 'suara', 'bersama', 'gerakan', 'jujur', 'bangkit', 'melawan', 'solidaritas', 'keadilan', 'kesetaraan']
+    };
+
+    const ZONE_LABELS = {
+      personalpain: "Personal Pain",
+      socialsickness: "Social Sickness",
+      popculture: "Pop Culture",
+      movement: "Movement"
+    };
+
+    // ─── SIMULASI DATA GLOBAL (bisa diambil dari localStorage nanti) ───
+    const GLOBAL_RANTS = [
+      { user: "@sunyi_awan", text: "gue udah bantuin dia tiap malem, giliran gue butuh dia bilang sibuk.", time: "2 jam lalu" },
+      { user: "@diam_fajar", text: "deadline mepet, dosen gak jelas, kelompok pada pasif. mau nope aja.", time: "5 jam lalu" },
+      { user: "@retak_senja", text: "dia bilang 'temenan aja' setelah 6 bulan daily call jam 3 pagi.", time: "1 hari lalu" },
+      { user: "@tanpa_riuh", text: "gue gak nangis pas putus. nangis pas sadar udah terlalu lama nahan rasa.", time: "3 jam lalu" },
+      { user: "@sunyisenja", text: "hari ini gue memilih untuk gak memaafkan. bukan dendam, tapi harga diri.", time: "8 jam lalu" },
+      { user: "@hujan_jkt", text: "macet 3 jam cuma buat balikin barang salah kirim. nangis di mobil, gak ada tau.", time: "12 jam lalu" },
+      { user: "@film_dan_hujan", text: "baru nonton ending itu, gue mikir 2 jam. ada yang nonton juga?", time: "4 jam lalu" },
+      { user: "@kita_berubah", text: "kita gak butuh pahlawan. kita butuh satu sama lain yang berani jujur.", time: "18 jam lalu" }
+    ];
+
+    // ─── FUNGSI UTAMA ─────────────────────────────────────────────
+    function detectZone(text) {
+      const zones = { personalpain: 0, socialsickness: 0, popculture: 0, movement: 0 };
+      const cleanText = text.toLowerCase();
+      
+      for (const [zone, keywords] of Object.entries(ZONE_KEYWORDS)) {
+        for (const kw of keywords) {
+          if (cleanText.includes(kw)) {
+            zones[zone]++;
+          }
+        }
+      }
+
+      // Ambil zona dengan skor tertinggi
+      const entries = Object.entries(zones);
+      const max = Math.max(...entries.map(e => e[1]));
+      if (max === 0) return 'personalpain'; // default ke personal
+      return entries.find(e => e[1] === max)[0];
+    }
+
+    function getUserZone() {
+      // Ambil rant user dari localStorage (simulasi Jejak)
+      const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+      if (userRants.length === 0) return null;
+      
+      // Gunakan RANT PERTAMA untuk tentukan frekuensi
+      const firstRant = userRants[0];
+      const zone = detectZone(firstRant.text);
+      localStorage.setItem('nopeUserZone', zone);
+      return zone;
+    }
+
+    function getPersonalizedFeed() {
+      const userZone = getUserZone();
+      const allRants = [...GLOBAL_RANTS]; // nanti bisa gabung user + global
+
+      if (!userZone) {
+        // Fallback: tampilkan global + ajakan halus
+        return {
+          items: allRants.slice(0, 4),
+          note: "Rant pertamamu di Jejak akan membantu kami temukan jejak yang sefrekuensi."
+        };
+      }
+
+      // Filter berdasarkan zona
+      const sameZone = allRants.filter(r => detectZone(r.text) === userZone);
+      const others = allRants.filter(r => detectZone(r.text) !== userZone);
+
+      const feed = [
+        ...sameZone.slice(0, 3),
+        ...others.slice(0, 2)
+      ].slice(0, 5);
+
+      return { items: feed, zone: userZone, note: null };
+    }
+
+    function renderFeed() {
+      const { items, zone, note } = getPersonalizedFeed();
+      const container = document.getElementById('feed-content');
+
+      let html = '';
+
+      if (note) {
+        html += `<div class="fallback-note">${note}</div>`;
+      }
+
+      html += items.map(item => {
+        const itemZone = detectZone(item.text);
+        return `
+          <div class="rant-item">
+            <div class="rant-header">
+              <div class="rant-user">${item.user}</div>
+              <div class="rant-time">${item.time}</div>
+            </div>
+            <div class="rant-text">${escapeHtml(item.text)}</div>
+            <div class="zone-badge">${ZONE_LABELS[itemZone]}</div>
+            <span class="emoji-pulse">😭</span>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = html;
+      document.getElementById('load-more').style.display = 'none';
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ─── INIT ─────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      renderFeed();
+
+      // Untuk demo: simulasikan user sudah punya rant di localStorage
+      // Hapus baris di bawah ini di versi production
+      if (!localStorage.getItem('nopeUserRants')) {
+        localStorage.setItem('nopeUserRants', JSON.stringify([
+          { text: "gue capek jadi orang baik terus. kadang pengen jadi jahat aja biar gak dimanfaatin.", time: Date.now() }
+        ]));
+        setTimeout(renderFeed, 300); // refresh setelah sim sim
+      }
+    });
   </script>
 </body>
 </html>
