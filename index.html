@@ -6,6 +6,8 @@
   <title>Jejak • NOPE</title>
   <meta name="description" content="ga perlu follower, cuma butuh sefrekuensi">
   <link rel="manifest" href="/manifest.json">
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --black: #000;
@@ -570,18 +572,37 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const storedUser = localStorage.getItem('nopeUsername');
+    // === SUPABASE CONFIG — DARI SCREENSHOT-MU ===
+    const SUPABASE_URL = 'https://qujnxcbtkcoscptavepe.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_2sIlR05Nk5H1Lo6dFZ33pA_LbEldzh4';
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // === UTILS ===
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function loadImageAsDataURL(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // === MAIN APP ===
+    document.addEventListener('DOMContentLoaded', async () => {
+      const storedUserId = localStorage.getItem('nopeUserId');
       const loginOverlay = document.getElementById('login-overlay');
 
-      if (!storedUser) {
+      if (!storedUserId) {
         loginOverlay.style.display = 'flex';
 
-        const loginBtn = document.getElementById('login-btn');
-        const loginInput = document.getElementById('login-username');
-
-        loginBtn.addEventListener('click', () => {
-          let username = loginInput.value.trim();
+        document.getElementById('login-btn').addEventListener('click', async () => {
+          let username = document.getElementById('login-username').value.trim();
           if (!username) {
             alert('Masukkan username dulu.');
             return;
@@ -594,22 +615,57 @@
           if (words.length > 2) {
             username = words.slice(0, 2).join(' ');
           }
+
+          // Cek user
+          const { data: existingUser, error: fetchError } = await supabase
+            .from('users')
+            .select('id')
+            .eq('username', username)
+            .single();
+
+          let userId;
+          if (existingUser) {
+            userId = existingUser.id;
+          } else {
+            const { data: newUser, error: insertError } = await supabase
+              .from('users')
+              .insert({ username })
+              .select()
+              .single();
+            if (insertError) {
+              console.error(insertError);
+              alert('Gagal daftar. Coba lagi.');
+              return;
+            }
+            userId = newUser.id;
+          }
+
+          localStorage.setItem('nopeUserId', userId);
           localStorage.setItem('nopeUsername', username);
           loginOverlay.style.display = 'none';
           location.reload();
         });
 
-        loginInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') loginBtn.click();
+        document.getElementById('login-username').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') document.getElementById('login-btn').click();
         });
 
       } else {
-        window.NOPE_USER = storedUser;
+        const username = localStorage.getItem('nopeUsername');
+        window.NOPE_USER = username;
+        window.NOPE_USER_ID = storedUserId;
+
+        // Update last_active
+        await supabase
+          .from('users')
+          .update({ last_active: new Date().toISOString() })
+          .eq('id', storedUserId);
+
         runMainApp();
       }
     });
 
-    function runMainApp() {
+    async function runMainApp() {
       const DUMMY_RANTS = [
         "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
         "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
@@ -629,20 +685,6 @@
       const rantInput = document.getElementById('rant-input');
       const feedContainer = document.getElementById('feed-container');
       const imageUpload = document.getElementById('image-upload');
-
-      function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-      }
-
-      function loadImageAsDataURL(file) {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (e) => resolve(e.target.result);
-          reader.readAsDataURL(file);
-        });
-      }
 
       function renderFeed() {
         const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
@@ -703,9 +745,49 @@
         });
       }
 
+      // INIT
+      document.getElementById('jejak-title').textContent = `Jejak @${window.NOPE_USER}`;
       renderFeed();
       renderArtefakTray();
 
+      // RANT
+      document.getElementById('submit-rant').addEventListener('click', async () => {
+        const text = rantInput.value.trim();
+        if (!text) {
+          alert('Isi dulu perasaanmu...');
+          return;
+        }
+        if (text.length > 300) {
+          alert('Maksimal 300 huruf ya.');
+          return;
+        }
+
+        // Kirim ke Supabase
+        const { error } = await supabase
+          .from('rants')
+          .insert({
+            user_id: window.NOPE_USER_ID,
+            text,
+            created_at: new Date().toISOString()
+          });
+
+        if (error) {
+          console.error(error);
+          alert('Gagal unggah rant. Coba lagi.');
+          return;
+        }
+
+        // Simpan lokal untuk UI
+        const newRant = { user: `@${window.NOPE_USER}`, text, time: Date.now() };
+        const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+        userRants.unshift(newRant);
+        localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
+
+        rantInput.value = '';
+        renderFeed();
+      });
+
+      // ARTEFAK
       document.getElementById('choose-photo').addEventListener('click', () => {
         imageUpload.click();
       });
@@ -748,55 +830,30 @@
 
         const imageUrl = await loadImageAsDataURL(file);
 
-        const artefakEntry = {
-          type: 'artefak',
-          id: 'art_' + Date.now(),
-          imageUrl,
-          notasi: finalNotasi,
-          time: now,
-          user: `@${window.NOPE_USER}`
-        };
+        // Kirim ke Supabase
+        const { error } = await supabase
+          .from('artefaks')
+          .insert({
+            user_id: window.NOPE_USER_ID,
+            image_url: imageUrl,
+            notasi: finalNotasi,
+            created_at: new Date().toISOString()
+          });
 
-        const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
-        globalFeed.unshift(artefakEntry);
-        localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
+        if (error) {
+          console.error(error);
+          alert('Gagal unggah artefak. Coba lagi.');
+          return;
+        }
+
         localStorage.setItem('nopeLastArtefakTime', now.toString());
-
         mainArtefakImg.src = imageUrl;
         alert(`✅ Artefak abadi tersimpan!\nNotasi: “${finalNotasi}”`);
 
         renderFeed();
       });
 
-      document.getElementById('submit-rant').addEventListener('click', () => {
-        const text = rantInput.value.trim();
-        if (!text) {
-          alert('Isi dulu perasaanmu...');
-          return;
-        }
-        if (text.length > 300) {
-          alert('Maksimal 300 huruf ya.');
-          return;
-        }
-
-        const newRant = { 
-          user: `@${window.NOPE_USER}`, 
-          text, 
-          time: Date.now()
-        };
-
-        const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
-        userRants.unshift(newRant);
-        localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
-
-        const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
-        globalFeed.unshift(newRant);
-        localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
-
-        rantInput.value = '';
-        renderFeed();
-      });
-
+      // MODAL
       const modal = document.getElementById('note-modal');
       const closeModal = () => {
         modal.classList.remove('active');
@@ -808,8 +865,6 @@
         alert('Catatan disimpan (hanya di sesi ini).');
         closeModal();
       });
-
-      document.getElementById('jejak-title').textContent = `Jejak @${window.NOPE_USER}`;
     }
   </script>
 </body>
