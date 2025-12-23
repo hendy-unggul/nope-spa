@@ -486,35 +486,18 @@
     #image-upload {
       display: none;
     }
-
-    /* LOGIN OVERLAY STYLES */
-    #login-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: var(--black);
-      z-index: 1000;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    #login-overlay input,
-    #login-overlay button {
-      font-family: inherit;
-    }
   </style>
 </head>
 <body>
 
   <!-- LOGIN OVERLAY -->
-  <div id="login-overlay">
-    <div style="color: var(--logo); font-size: 1.8rem; font-weight: 800; margin-bottom: 24px;">NOPE</div>
-    <div style="color: #aaa; font-size: 1rem; text-align: center; margin-bottom: 24px;">ga perlu follower,<br>cuma butuh sefrekuensi</div>
+  <div id="login-overlay" style="display:none; position:fixed; inset:0; background:#000; z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
+    <div style="color:#6c47ff; font-size:1.8rem; font-weight:800; margin-bottom:24px;">NOPE</div>
+    <div style="color:#aaa; font-size:1rem; text-align:center; margin-bottom:24px;">ga perlu follower,<br>cuma butuh sefrekuensi</div>
     <input type="text" id="login-username" placeholder="Masukkan username (2 kata)" maxlength="30"
-      style="width: 100%; max-width: 300px; padding: 12px; background: var(--input-bg); border: 1px solid #333; border-radius: var(--radius-10); color: var(--white); font-size: 1rem; text-align: center; margin-bottom: 16px;">
-    <button id="login-btn" style="background: var(--accent); color: white; border: none; padding: 10px 24px; border-radius: var(--radius-8); font-weight: 600;">Masuk</button>
-    <p style="color: #555; font-size: 0.85rem; margin-top: 24px;">Username hanya untuk identitas. Tidak perlu password.</p>
+      style="width:100%; max-width:300px; padding:12px; background:#1a0736; border:1px solid #333; border-radius:10px; color:#fff; font-size:1rem; text-align:center; margin-bottom:16px;">
+    <button id="login-btn" style="background:#6c47ff; color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:600;">Masuk</button>
+    <p style="color:#555; font-size:0.85rem; margin-top:24px;">Username hanya untuk identitas. Tidak perlu password.</p>
   </div>
 
   <div class="header-bar">
@@ -587,152 +570,149 @@
   </div>
 
   <script>
-    // === SISTEM LOGIN (TIDAK MENGUBAH LOGIKA UTAMA) ===
-    let NOPE_USER = null;
-    const loginOverlay = document.getElementById('login-overlay');
+    // === SISTEM LOGIN (Ringan & Aman) ===
+    function initializeApp() {
+      const storedUser = localStorage.getItem('nopeUsername');
+      const loginOverlay = document.getElementById('login-overlay');
 
-    (function initializeLogin() {
-      const stored = localStorage.getItem('nopeUsername');
-      if (stored) {
-        NOPE_USER = stored;
-        return true;
-      }
-
-      loginOverlay.style.display = 'flex';
-
-      document.getElementById('login-btn').addEventListener('click', handleLogin);
-      document.getElementById('login-username').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleLogin();
-      });
-
-      function handleLogin() {
-        let username = document.getElementById('login-username').value.trim();
-        if (!username) {
-          alert('Masukkan username dulu.');
-          return;
-        }
-        const words = username.split(/\s+/).filter(w => w.length > 0);
-        if (words.length < 2) {
-          alert('Username harus terdiri dari minimal 2 kata.');
-          return;
-        }
-        if (words.length > 2) {
-          username = words.slice(0, 2).join(' ');
-        }
-        localStorage.setItem('nopeUsername', username);
-        NOPE_USER = username;
-        loginOverlay.style.display = 'none';
-        location.reload();
-      }
-    })();
-
-    // DUMMY DATA (tidak diubah)
-    const DUMMY_RANTS = [
-      "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
-      "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
-      "Kenapa semua orang pura-pura baik di medsos? Gue capek jadi orang lain."
-    ];
-
-    const DUMMY_ARTEFAK_HISTORY = [
-      { url: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 3, "🔥": 1, "🤡": 0 }, note: "Gunung yang menenangkan" },
-      { url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 0, "🔥": 5, "🤡": 2 }, note: "Senja yang membakar" },
-      { url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 2, "🔥": 0, "🤡": 1 }, note: "Langit malam" },
-      { url: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 1, "🔥": 3, "🤡": 0 }, note: "Air yang tenang" },
-      { url: "https://images.unsplash.com/photo-1480714378409-634531dbc169?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 0, "🔥": 0, "🤡": 4 }, note: "Kabut pagi" },
-      { url: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 4, "🔥": 2, "🤡": 1 }, note: "Senyum sendirian" }
-    ];
-
-    // DOM
-    const mainArtefakImg = document.getElementById('main-artefak');
-    const rantInput = document.getElementById('rant-input');
-    const feedContainer = document.getElementById('feed-container');
-    const imageUpload = document.getElementById('image-upload');
-
-    // UTILS
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    function loadImageAsDataURL(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target.result);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // RENDER
-    function renderFeed() {
-      const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
-      const allRants = [...userRants];
-
-      if (userRants.length < 3) {
-        const needed = 3 - userRants.length;
-        allRants.push(...DUMMY_RANTS.slice(0, needed).map(text => ({ text, time: Date.now() - 100000 })));
-      }
-
-      const display = allRants.slice(0, 5);
-      feedContainer.innerHTML = display.map(item => {
-        if (item.type === 'artefak') {
-          return `
-            <div class="rant-item">
-              <div class="rant-header">
-                <div class="rant-user">${item.user}</div>
-                <div class="rant-time">${new Date(item.time).toLocaleDateString('id-ID')}</div>
-              </div>
-              <img src="${item.imageUrl}" class="artefak-thumb" alt="Artefak">
-              <div class="artefak-notasi-feed">${escapeHtml(item.notasi)}</div>
-              <div class="zone-badge">Artefak</div>
-              <span class="emoji-pulse">🖼️</span>
-            </div>
-          `;
-        } else {
-          return `<div class="rant-item">${escapeHtml(item.text)} <span class="emoji-pulse">😭</span></div>`;
-        }
-      }).join('');
-    }
-
-    function renderArtefakTray() {
-      const tray = document.getElementById('artefak-tray');
-      tray.innerHTML = DUMMY_ARTEFAK_HISTORY.map((item, i) => `
-        <div class="artefak-item" data-index="${i}">
-          <img src="${item.url}" alt="Artefak" />
-          <div class="overlay">
-            <div class="counter">😭${item.counter['😭']} 🔥${item.counter['🔥']} 🤡${item.counter['🤡']}</div>
-            <button class="note-btn">📝</button>
-          </div>
-        </div>
-      `).join('');
-
-      document.querySelectorAll('.artefak-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const idx = parseInt(item.dataset.index);
-          const modal = document.getElementById('note-modal');
-          document.getElementById('modal-artefak-img').src = DUMMY_ARTEFAK_HISTORY[idx].url;
-          document.getElementById('modal-counter').innerHTML = `
-            <span>😭 ${DUMMY_ARTEFAK_HISTORY[idx].counter['😭']}</span>
-            <span>🔥 ${DUMMY_ARTEFAK_HISTORY[idx].counter['🔥']}</span>
-            <span>🤡 ${DUMMY_ARTEFAK_HISTORY[idx].counter['🤡']}</span>
-          `;
-          document.getElementById('modal-note-input').value = DUMMY_ARTEFAK_HISTORY[idx].note || '';
-          modal.style.display = 'flex';
-          requestAnimationFrame(() => modal.classList.add('active'));
+      if (!storedUser) {
+        loginOverlay.style.display = 'flex';
+        document.getElementById('login-btn').addEventListener('click', () => {
+          let username = document.getElementById('login-username').value.trim();
+          if (!username) {
+            alert('Masukkan username dulu.');
+            return;
+          }
+          const words = username.split(/\s+/).filter(w => w.length > 0);
+          if (words.length < 2) {
+            alert('Username harus terdiri dari minimal 2 kata.');
+            return;
+          }
+          if (words.length > 2) {
+            username = words.slice(0, 2).join(' ');
+          }
+          localStorage.setItem('nopeUsername', username);
+          loginOverlay.style.display = 'none';
+          location.reload();
         });
-      });
+        document.getElementById('login-username').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            document.getElementById('login-btn').click();
+          }
+        });
+        return false;
+      }
+
+      window.NOPE_USER = storedUser;
+      return true;
     }
 
-    // INIT
-    if (NOPE_USER) {
+    // Jalankan login sebelum konten utama
+    if (!initializeApp()) {
+      // Menunggu login
+    } else {
+      // === DATA & LOGIKA UTAMA (TIDAK DIUBAH) ===
+
+      const DUMMY_RANTS = [
+        "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
+        "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
+        "Kenapa semua orang pura-pura baik di medsos? Gue capek jadi orang lain."
+      ];
+
+      const DUMMY_ARTEFAK_HISTORY = [
+        { url: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 3, "🔥": 1, "🤡": 0 }, note: "Gunung yang menenangkan" },
+        { url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 0, "🔥": 5, "🤡": 2 }, note: "Senja yang membakar" },
+        { url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 2, "🔥": 0, "🤡": 1 }, note: "Langit malam" },
+        { url: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 1, "🔥": 3, "🤡": 0 }, note: "Air yang tenang" },
+        { url: "https://images.unsplash.com/photo-1480714378409-634531dbc169?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 0, "🔥": 0, "🤡": 4 }, note: "Kabut pagi" },
+        { url: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 4, "🔥": 2, "🤡": 1 }, note: "Senyum sendirian" }
+      ];
+
+      const mainArtefakImg = document.getElementById('main-artefak');
+      const rantInput = document.getElementById('rant-input');
+      const feedContainer = document.getElementById('feed-container');
+      const imageUpload = document.getElementById('image-upload');
+
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function loadImageAsDataURL(file) {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function renderFeed() {
+        const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+        const allRants = [...userRants];
+
+        if (userRants.length < 3) {
+          const needed = 3 - userRants.length;
+          allRants.push(...DUMMY_RANTS.slice(0, needed).map(text => ({ text, time: Date.now() - 100000 })));
+        }
+
+        const display = allRants.slice(0, 5);
+        feedContainer.innerHTML = display.map(item => {
+          if (item.type === 'artefak') {
+            return `
+              <div class="rant-item">
+                <div class="rant-header">
+                  <div class="rant-user">@${window.NOPE_USER}</div>
+                  <div class="rant-time">${new Date(item.time).toLocaleDateString('id-ID')}</div>
+                </div>
+                <img src="${item.imageUrl}" class="artefak-thumb" alt="Artefak">
+                <div class="artefak-notasi-feed">${escapeHtml(item.notasi)}</div>
+                <div class="zone-badge">Artefak</div>
+                <span class="emoji-pulse">🖼️</span>
+              </div>
+            `;
+          } else {
+            return `<div class="rant-item">${escapeHtml(item.text)} <span class="emoji-pulse">😭</span></div>`;
+          }
+        }).join('');
+      }
+
+      function renderArtefakTray() {
+        const tray = document.getElementById('artefak-tray');
+        tray.innerHTML = DUMMY_ARTEFAK_HISTORY.map((item, i) => `
+          <div class="artefak-item" data-index="${i}">
+            <img src="${item.url}" alt="Artefak" />
+            <div class="overlay">
+              <div class="counter">😭${item.counter['😭']} 🔥${item.counter['🔥']} 🤡${item.counter['🤡']}</div>
+              <button class="note-btn">📝</button>
+            </div>
+          </div>
+        `).join('');
+
+        document.querySelectorAll('.artefak-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const idx = parseInt(item.dataset.index);
+            const modal = document.getElementById('note-modal');
+            document.getElementById('modal-artefak-img').src = DUMMY_ARTEFAK_HISTORY[idx].url;
+            document.getElementById('modal-counter').innerHTML = `
+              <span>😭 ${DUMMY_ARTEFAK_HISTORY[idx].counter['😭']}</span>
+              <span>🔥 ${DUMMY_ARTEFAK_HISTORY[idx].counter['🔥']}</span>
+              <span>🤡 ${DUMMY_ARTEFAK_HISTORY[idx].counter['🤡']}</span>
+            `;
+            document.getElementById('modal-note-input').value = DUMMY_ARTEFAK_HISTORY[idx].note || '';
+            modal.style.display = 'flex';
+            requestAnimationFrame(() => modal.classList.add('active'));
+          });
+        });
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
-        // Update username di UI
-        document.getElementById('jejak-title').textContent = `Jejak @${NOPE_USER}`;
+        // Update judul Jejak dengan username aktif
+        document.getElementById('jejak-title').textContent = `Jejak @${window.NOPE_USER}`;
 
         renderFeed();
         renderArtefakTray();
 
-        // === ARTEFAK UPLOAD ===
         document.getElementById('choose-photo').addEventListener('click', () => {
           imageUpload.click();
         });
@@ -781,7 +761,7 @@
             imageUrl,
             notasi: finalNotasi,
             time: now,
-            user: `@${NOPE_USER}`
+            user: `@${window.NOPE_USER}`
           };
 
           const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
@@ -795,7 +775,6 @@
           renderFeed();
         });
 
-        // === RANT UPLOAD ===
         document.getElementById('submit-rant').addEventListener('click', () => {
           const text = rantInput.value.trim();
           if (!text) {
@@ -808,7 +787,7 @@
           }
 
           const newRant = { 
-            user: `@${NOPE_USER}`, 
+            user: `@${window.NOPE_USER}`, 
             text, 
             time: Date.now()
           };
@@ -825,7 +804,6 @@
           renderFeed();
         });
 
-        // Modal
         const modal = document.getElementById('note-modal');
         const closeModal = () => {
           modal.classList.remove('active');
