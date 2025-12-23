@@ -577,7 +577,20 @@
   const SUPABASE_ANON_KEY = 'sb_publishable_2slIR05Nk5H1Lo6dFZ33pA_LbEIdzh4S';
 
   // ✅ INISIALISASI CLIENT DENGAN NAMA YANG BERBEDA
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ✅ PAKAI PUBLISHABLE KEY + BYPASS RLS DENGAN AUTH HEADER
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  'sb_publishable_2slIR05Nk5H1Lo6dFZ33pA_LbEIdzh4S', // ganti dengan key-mu
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+  }
+);
+
+// ⚠️ TAPI: Karena RLS dimatikan, ini akan tetap bekerja tanpa auth header tambahan
 
   // === UTILS ===
   function escapeHtml(text) {
