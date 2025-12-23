@@ -570,15 +570,18 @@
   </div>
 
   <script>
-    // === SISTEM LOGIN (Ringan & Aman) ===
-    function initializeApp() {
+    document.addEventListener('DOMContentLoaded', () => {
       const storedUser = localStorage.getItem('nopeUsername');
       const loginOverlay = document.getElementById('login-overlay');
 
       if (!storedUser) {
         loginOverlay.style.display = 'flex';
-        document.getElementById('login-btn').addEventListener('click', () => {
-          let username = document.getElementById('login-username').value.trim();
+
+        const loginBtn = document.getElementById('login-btn');
+        const loginInput = document.getElementById('login-username');
+
+        loginBtn.addEventListener('click', () => {
+          let username = loginInput.value.trim();
           if (!username) {
             alert('Masukkan username dulu.');
             return;
@@ -595,24 +598,18 @@
           loginOverlay.style.display = 'none';
           location.reload();
         });
-        document.getElementById('login-username').addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            document.getElementById('login-btn').click();
-          }
+
+        loginInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') loginBtn.click();
         });
-        return false;
+
+      } else {
+        window.NOPE_USER = storedUser;
+        runMainApp();
       }
+    });
 
-      window.NOPE_USER = storedUser;
-      return true;
-    }
-
-    // Jalankan login sebelum konten utama
-    if (!initializeApp()) {
-      // Menunggu login
-    } else {
-      // === DATA & LOGIKA UTAMA (TIDAK DIUBAH) ===
-
+    function runMainApp() {
       const DUMMY_RANTS = [
         "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
         "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
@@ -706,116 +703,113 @@
         });
       }
 
-      document.addEventListener('DOMContentLoaded', () => {
-        // Update judul Jejak dengan username aktif
-        document.getElementById('jejak-title').textContent = `Jejak @${window.NOPE_USER}`;
+      renderFeed();
+      renderArtefakTray();
+
+      document.getElementById('choose-photo').addEventListener('click', () => {
+        imageUpload.click();
+      });
+
+      imageUpload.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+
+        const lastArtefakTime = localStorage.getItem('nopeLastArtefakTime');
+        const now = Date.now();
+        if (lastArtefakTime && (now - parseInt(lastArtefakTime)) < 30 * 24 * 60 * 60 * 1000) {
+          const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (now - parseInt(lastArtefakTime))) / (24 * 60 * 60 * 1000));
+          alert(`Artefak hanya bisa diunggah sekali per 30 hari.\nKamu bisa lagi dalam ${daysLeft} hari.`);
+          return;
+        }
+
+        const confirmed = confirm(
+          "⚠️ PERINGATAN SUCI:\n" +
+          "• JANGAN unggah wajah manusia\n" +
+          "• JANGAN unggah konten seksual/kekerasan\n" +
+          "• JANGAN unggah logo/iklan/komersial\n\n" +
+          "ℹ️ Artefak ini ABADI — tidak bisa dihapus, bahkan olehmu.\n\n" +
+          "Apakah ini momen yang layak diabadikan?"
+        );
+        if (!confirmed) return;
+
+        const notasi = prompt("Tulis maksimal 4 kata yang mewakili momen ini:", "");
+        if (notasi === null) return;
+
+        const words = notasi.trim().split(/\s+/).filter(w => w.length > 0);
+        if (words.length === 0) {
+          alert("Notasi tidak boleh kosong.");
+          return;
+        }
+        if (words.length > 4) {
+          alert("Maksimal 4 kata saja. Pilih yang paling berarti.");
+          return;
+        }
+        const finalNotasi = words.join(" ");
+
+        const imageUrl = await loadImageAsDataURL(file);
+
+        const artefakEntry = {
+          type: 'artefak',
+          id: 'art_' + Date.now(),
+          imageUrl,
+          notasi: finalNotasi,
+          time: now,
+          user: `@${window.NOPE_USER}`
+        };
+
+        const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
+        globalFeed.unshift(artefakEntry);
+        localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
+        localStorage.setItem('nopeLastArtefakTime', now.toString());
+
+        mainArtefakImg.src = imageUrl;
+        alert(`✅ Artefak abadi tersimpan!\nNotasi: “${finalNotasi}”`);
 
         renderFeed();
-        renderArtefakTray();
-
-        document.getElementById('choose-photo').addEventListener('click', () => {
-          imageUpload.click();
-        });
-
-        imageUpload.addEventListener('change', async (e) => {
-          const file = e.target.files[0];
-          if (!file || !file.type.startsWith('image/')) return;
-
-          const lastArtefakTime = localStorage.getItem('nopeLastArtefakTime');
-          const now = Date.now();
-          if (lastArtefakTime && (now - parseInt(lastArtefakTime)) < 30 * 24 * 60 * 60 * 1000) {
-            const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (now - parseInt(lastArtefakTime))) / (24 * 60 * 60 * 1000));
-            alert(`Artefak hanya bisa diunggah sekali per 30 hari.\nKamu bisa lagi dalam ${daysLeft} hari.`);
-            return;
-          }
-
-          const confirmed = confirm(
-            "⚠️ PERINGATAN SUCI:\n" +
-            "• JANGAN unggah wajah manusia\n" +
-            "• JANGAN unggah konten seksual/kekerasan\n" +
-            "• JANGAN unggah logo/iklan/komersial\n\n" +
-            "ℹ️ Artefak ini ABADI — tidak bisa dihapus, bahkan olehmu.\n\n" +
-            "Apakah ini momen yang layak diabadikan?"
-          );
-          if (!confirmed) return;
-
-          const notasi = prompt("Tulis maksimal 4 kata yang mewakili momen ini:", "");
-          if (notasi === null) return;
-
-          const words = notasi.trim().split(/\s+/).filter(w => w.length > 0);
-          if (words.length === 0) {
-            alert("Notasi tidak boleh kosong.");
-            return;
-          }
-          if (words.length > 4) {
-            alert("Maksimal 4 kata saja. Pilih yang paling berarti.");
-            return;
-          }
-          const finalNotasi = words.join(" ");
-
-          const imageUrl = await loadImageAsDataURL(file);
-
-          const artefakEntry = {
-            type: 'artefak',
-            id: 'art_' + Date.now(),
-            imageUrl,
-            notasi: finalNotasi,
-            time: now,
-            user: `@${window.NOPE_USER}`
-          };
-
-          const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
-          globalFeed.unshift(artefakEntry);
-          localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
-          localStorage.setItem('nopeLastArtefakTime', now.toString());
-
-          mainArtefakImg.src = imageUrl;
-          alert(`✅ Artefak abadi tersimpan!\nNotasi: “${finalNotasi}”`);
-
-          renderFeed();
-        });
-
-        document.getElementById('submit-rant').addEventListener('click', () => {
-          const text = rantInput.value.trim();
-          if (!text) {
-            alert('Isi dulu perasaanmu...');
-            return;
-          }
-          if (text.length > 300) {
-            alert('Maksimal 300 huruf ya.');
-            return;
-          }
-
-          const newRant = { 
-            user: `@${window.NOPE_USER}`, 
-            text, 
-            time: Date.now()
-          };
-
-          const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
-          userRants.unshift(newRant);
-          localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
-
-          const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
-          globalFeed.unshift(newRant);
-          localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
-
-          rantInput.value = '';
-          renderFeed();
-        });
-
-        const modal = document.getElementById('note-modal');
-        const closeModal = () => {
-          modal.classList.remove('active');
-          setTimeout(() => modal.style.display = 'none', 150);
-        };
-        document.getElementById('close-modal').addEventListener('click', closeModal);
-        document.getElementById('cancel-note').addEventListener('click', closeModal);
-        document.getElementById('save-note').addEventListener('click', () => {
-          alert('Catatan disimpan (hanya di sesi ini).');
-          closeModal();
-        });
       });
+
+      document.getElementById('submit-rant').addEventListener('click', () => {
+        const text = rantInput.value.trim();
+        if (!text) {
+          alert('Isi dulu perasaanmu...');
+          return;
+        }
+        if (text.length > 300) {
+          alert('Maksimal 300 huruf ya.');
+          return;
+        }
+
+        const newRant = { 
+          user: `@${window.NOPE_USER}`, 
+          text, 
+          time: Date.now()
+        };
+
+        const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+        userRants.unshift(newRant);
+        localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
+
+        const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
+        globalFeed.unshift(newRant);
+        localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
+
+        rantInput.value = '';
+        renderFeed();
+      });
+
+      const modal = document.getElementById('note-modal');
+      const closeModal = () => {
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 150);
+      };
+      document.getElementById('close-modal').addEventListener('click', closeModal);
+      document.getElementById('cancel-note').addEventListener('click', closeModal);
+      document.getElementById('save-note').addEventListener('click', () => {
+        alert('Catatan disimpan (hanya di sesi ini).');
+        closeModal();
+      });
+
+      document.getElementById('jejak-title').textContent = `Jejak @${window.NOPE_USER}`;
     }
   </script>
 </body>
