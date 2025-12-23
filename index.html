@@ -571,301 +571,102 @@
     </a>
   </div>
 
-  <script>
-    // === SUPABASE CONFIG — DARI SCREENSHOT-MU ===
-    const SUPABASE_URL = 'https://qujnxcbtkcoscptavepe.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_2slIR05Nk5H1Lo6dFZ33pA_LbEIdzh4S';
+<script>
+  // === SUPABASE CONFIG ===
+  const SUPABASE_URL = 'https://qujnxcbtkcoscptavepe.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_2slIR05Nk5H1Lo6dFZ33pA_LbEIdzh4S';
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // ✅ INISIALISASI CLIENT DENGAN NAMA YANG BERBEDA
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // === UTILS ===
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
+  // === UTILS ===
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
-    function loadImageAsDataURL(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target.result);
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // === MAIN APP ===
-    document.addEventListener('DOMContentLoaded', async () => {
-      const storedUserId = localStorage.getItem('nopeUserId');
-      const loginOverlay = document.getElementById('login-overlay');
-
-      if (!storedUserId) {
-        loginOverlay.style.display = 'flex';
-
-        document.getElementById('login-btn').addEventListener('click', async () => {
-          let username = document.getElementById('login-username').value.trim();
-          if (!username) {
-            alert('Masukkan username dulu.');
-            return;
-          }
-          const words = username.split(/\s+/).filter(w => w.length > 0);
-          if (words.length < 2) {
-            alert('Username harus terdiri dari minimal 2 kata.');
-            return;
-          }
-          if (words.length > 2) {
-            username = words.slice(0, 2).join(' ');
-          }
-
-          // Cek user
-          const { data: existingUser, error: fetchError } = await supabase
-            .from('users')
-            .select('id')
-            .eq('username', username)
-            .single();
-
-          let userId;
-          if (existingUser) {
-            userId = existingUser.id;
-          } else {
-            const { data: newUser, error: insertError } = await supabase
-              .from('users')
-              .insert({ username })
-              .select()
-              .single();
-            if (insertError) {
-              console.error(insertError);
-              alert('Gagal daftar. Coba lagi.');
-              return;
-            }
-            userId = newUser.id;
-          }
-
-          localStorage.setItem('nopeUserId', userId);
-          localStorage.setItem('nopeUsername', username);
-          loginOverlay.style.display = 'none';
-          location.reload();
-        });
-
-        document.getElementById('login-username').addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') document.getElementById('login-btn').click();
-        });
-
-      } else {
-        const username = localStorage.getItem('nopeUsername');
-        window.NOPE_USER = username;
-        window.NOPE_USER_ID = storedUserId;
-
-        // Update last_active
-        await supabase
-          .from('users')
-          .update({ last_active: new Date().toISOString() })
-          .eq('id', storedUserId);
-
-        runMainApp();
-      }
+  function loadImageAsDataURL(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.readAsDataURL(file);
     });
+  }
 
-    async function runMainApp() {
-      const DUMMY_RANTS = [
-        "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
-        "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
-        "Kenapa semua orang pura-pura baik di medsos? Gue capek jadi orang lain."
-      ];
+  // === MAIN APP ===
+  document.addEventListener('DOMContentLoaded', async () => {
+    const storedUserId = localStorage.getItem('nopeUserId');
+    const loginOverlay = document.getElementById('login-overlay');
 
-      const DUMMY_ARTEFAK_HISTORY = [
-        { url: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 3, "🔥": 1, "🤡": 0 }, note: "Gunung yang menenangkan" },
-        { url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 0, "🔥": 5, "🤡": 2 }, note: "Senja yang membakar" },
-        { url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 2, "🔥": 0, "🤡": 1 }, note: "Langit malam" },
-        { url: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 1, "🔥": 3, "🤡": 0 }, note: "Air yang tenang" },
-        { url: "https://images.unsplash.com/photo-1480714378409-634531dbc169?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 0, "🔥": 0, "🤡": 4 }, note: "Kabut pagi" },
-        { url: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=300&h=240&q=80", counter: { "😭": 4, "🔥": 2, "🤡": 1 }, note: "Senyum sendirian" }
-      ];
+    if (!storedUserId) {
+      loginOverlay.style.display = 'flex';
 
-      const mainArtefakImg = document.getElementById('main-artefak');
-      const rantInput = document.getElementById('rant-input');
-      const feedContainer = document.getElementById('feed-container');
-      const imageUpload = document.getElementById('image-upload');
-
-      function renderFeed() {
-        const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
-        const allRants = [...userRants];
-
-        if (userRants.length < 3) {
-          const needed = 3 - userRants.length;
-          allRants.push(...DUMMY_RANTS.slice(0, needed).map(text => ({ text, time: Date.now() - 100000 })));
+      document.getElementById('login-btn').addEventListener('click', async () => {
+        let username = document.getElementById('login-username').value.trim();
+        if (!username) {
+          alert('Masukkan username dulu.');
+          return;
+        }
+        const words = username.split(/\s+/).filter(w => w.length > 0);
+        if (words.length < 2) {
+          alert('Username harus terdiri dari minimal 2 kata.');
+          return;
+        }
+        if (words.length > 2) {
+          username = words.slice(0, 2).join(' ');
         }
 
-        const display = allRants.slice(0, 5);
-        feedContainer.innerHTML = display.map(item => {
-          if (item.type === 'artefak') {
-            return `
-              <div class="rant-item">
-                <div class="rant-header">
-                  <div class="rant-user">@${window.NOPE_USER}</div>
-                  <div class="rant-time">${new Date(item.time).toLocaleDateString('id-ID')}</div>
-                </div>
-                <img src="${item.imageUrl}" class="artefak-thumb" alt="Artefak">
-                <div class="artefak-notasi-feed">${escapeHtml(item.notasi)}</div>
-                <div class="zone-badge">Artefak</div>
-                <span class="emoji-pulse">🖼️</span>
-              </div>
-            `;
-          } else {
-            return `<div class="rant-item">${escapeHtml(item.text)} <span class="emoji-pulse">😭</span></div>`;
+        // Cek user di Supabase
+        const { data: existingUser, error: fetchError } = await supabaseClient
+          .from('users')
+          .select('id')
+          .eq('username', username)
+          .single();
+
+        let userId;
+        if (existingUser) {
+          userId = existingUser.id;
+        } else {
+          const { data: newUser, error: insertError } = await supabaseClient
+            .from('users')
+            .insert({ username })
+            .select()
+            .single();
+          if (insertError) {
+            console.error(insertError);
+            alert('Gagal daftar. Coba lagi.');
+            return;
           }
-        }).join('');
-      }
+          userId = newUser.id;
+        }
 
-      function renderArtefakTray() {
-        const tray = document.getElementById('artefak-tray');
-        tray.innerHTML = DUMMY_ARTEFAK_HISTORY.map((item, i) => `
-          <div class="artefak-item" data-index="${i}">
-            <img src="${item.url}" alt="Artefak" />
-            <div class="overlay">
-              <div class="counter">😭${item.counter['😭']} 🔥${item.counter['🔥']} 🤡${item.counter['🤡']}</div>
-              <button class="note-btn">📝</button>
-            </div>
-          </div>
-        `).join('');
+        localStorage.setItem('nopeUserId', userId);
+        localStorage.setItem('nopeUsername', username);
+        loginOverlay.style.display = 'none';
+        location.reload();
+      });
 
-        document.querySelectorAll('.artefak-item').forEach(item => {
-          item.addEventListener('click', () => {
-            const idx = parseInt(item.dataset.index);
-            const modal = document.getElementById('note-modal');
-            document.getElementById('modal-artefak-img').src = DUMMY_ARTEFAK_HISTORY[idx].url;
-            document.getElementById('modal-counter').innerHTML = `
-              <span>😭 ${DUMMY_ARTEFAK_HISTORY[idx].counter['😭']}</span>
-              <span>🔥 ${DUMMY_ARTEFAK_HISTORY[idx].counter['🔥']}</span>
-              <span>🤡 ${DUMMY_ARTEFAK_HISTORY[idx].counter['🤡']}</span>
-            `;
-            document.getElementById('modal-note-input').value = DUMMY_ARTEFAK_HISTORY[idx].note || '';
-            modal.style.display = 'flex';
-            requestAnimationFrame(() => modal.classList.add('active'));
-          });
-        });
-      }
+      document.getElementById('login-username').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('login-btn').click();
+      });
 
-      // INIT
+    } else {
+      const username = localStorage.getItem('nopeUsername');
+      window.NOPE_USER = username;
+      window.NOPE_USER_ID = storedUserId;
+
+      // Update last_active
+      await supabaseClient
+        .from('users')
+        .update({ last_active: new Date().toISOString() })
+        .eq('id', storedUserId);
+
+      // JALANKAN HALAMAN UTAMA — TAPI UNTUK SEKARANG, HANYA TAMPILKAN HEADER DAN LOGIN SUKSES
       document.getElementById('jejak-title').textContent = `Jejak @${window.NOPE_USER}`;
-      renderFeed();
-      renderArtefakTray();
-
-      // RANT
-      document.getElementById('submit-rant').addEventListener('click', async () => {
-        const text = rantInput.value.trim();
-        if (!text) {
-          alert('Isi dulu perasaanmu...');
-          return;
-        }
-        if (text.length > 300) {
-          alert('Maksimal 300 huruf ya.');
-          return;
-        }
-
-        // Kirim ke Supabase
-        const { error } = await supabase
-          .from('rants')
-          .insert({
-            user_id: window.NOPE_USER_ID,
-            text,
-            created_at: new Date().toISOString()
-          });
-
-        if (error) {
-          console.error(error);
-          alert('Gagal unggah rant. Coba lagi.');
-          return;
-        }
-
-        // Simpan lokal untuk UI
-        const newRant = { user: `@${window.NOPE_USER}`, text, time: Date.now() };
-        const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
-        userRants.unshift(newRant);
-        localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
-
-        rantInput.value = '';
-        renderFeed();
-      });
-
-      // ARTEFAK
-      document.getElementById('choose-photo').addEventListener('click', () => {
-        imageUpload.click();
-      });
-
-      imageUpload.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file || !file.type.startsWith('image/')) return;
-
-        const lastArtefakTime = localStorage.getItem('nopeLastArtefakTime');
-        const now = Date.now();
-        if (lastArtefakTime && (now - parseInt(lastArtefakTime)) < 30 * 24 * 60 * 60 * 1000) {
-          const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (now - parseInt(lastArtefakTime))) / (24 * 60 * 60 * 1000));
-          alert(`Artefak hanya bisa diunggah sekali per 30 hari.\nKamu bisa lagi dalam ${daysLeft} hari.`);
-          return;
-        }
-
-        const confirmed = confirm(
-          "⚠️ PERINGATAN SUCI:\n" +
-          "• JANGAN unggah wajah manusia\n" +
-          "• JANGAN unggah konten seksual/kekerasan\n" +
-          "• JANGAN unggah logo/iklan/komersial\n\n" +
-          "ℹ️ Artefak ini ABADI — tidak bisa dihapus, bahkan olehmu.\n\n" +
-          "Apakah ini momen yang layak diabadikan?"
-        );
-        if (!confirmed) return;
-
-        const notasi = prompt("Tulis maksimal 4 kata yang mewakili momen ini:", "");
-        if (notasi === null) return;
-
-        const words = notasi.trim().split(/\s+/).filter(w => w.length > 0);
-        if (words.length === 0) {
-          alert("Notasi tidak boleh kosong.");
-          return;
-        }
-        if (words.length > 4) {
-          alert("Maksimal 4 kata saja. Pilih yang paling berarti.");
-          return;
-        }
-        const finalNotasi = words.join(" ");
-
-        const imageUrl = await loadImageAsDataURL(file);
-
-        // Kirim ke Supabase
-        const { error } = await supabase
-          .from('artefaks')
-          .insert({
-            user_id: window.NOPE_USER_ID,
-            image_url: imageUrl,
-            notasi: finalNotasi,
-            created_at: new Date().toISOString()
-          });
-
-        if (error) {
-          console.error(error);
-          alert('Gagal unggah artefak. Coba lagi.');
-          return;
-        }
-
-        localStorage.setItem('nopeLastArtefakTime', now.toString());
-        mainArtefakImg.src = imageUrl;
-        alert(`✅ Artefak abadi tersimpan!\nNotasi: “${finalNotasi}”`);
-
-        renderFeed();
-      });
-
-      // MODAL
-      const modal = document.getElementById('note-modal');
-      const closeModal = () => {
-        modal.classList.remove('active');
-        setTimeout(() => modal.style.display = 'none', 150);
-      };
-      document.getElementById('close-modal').addEventListener('click', closeModal);
-      document.getElementById('cancel-note').addEventListener('click', closeModal);
-      document.getElementById('save-note').addEventListener('click', () => {
-        alert('Catatan disimpan (hanya di sesi ini).');
-        closeModal();
-      });
+      alert(`✅ Login berhasil! Selamat datang, ${username}`);
     }
-  </script>
+  });
+</script>
 </body>
 </html>
