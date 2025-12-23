@@ -486,9 +486,36 @@
     #image-upload {
       display: none;
     }
+
+    /* LOGIN OVERLAY STYLES */
+    #login-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #login-overlay input,
+    #login-overlay button {
+      font-family: inherit;
+    }
   </style>
 </head>
 <body>
+
+  <!-- LOGIN OVERLAY -->
+  <div id="login-overlay">
+    <div style="color: var(--logo); font-size: 1.8rem; font-weight: 800; margin-bottom: 24px;">NOPE</div>
+    <div style="color: #aaa; font-size: 1rem; text-align: center; margin-bottom: 24px;">ga perlu follower,<br>cuma butuh sefrekuensi</div>
+    <input type="text" id="login-username" placeholder="Masukkan username (2 kata)" maxlength="30"
+      style="width: 100%; max-width: 300px; padding: 12px; background: var(--input-bg); border: 1px solid #333; border-radius: var(--radius-10); color: var(--white); font-size: 1rem; text-align: center; margin-bottom: 16px;">
+    <button id="login-btn" style="background: var(--accent); color: white; border: none; padding: 10px 24px; border-radius: var(--radius-8); font-weight: 600;">Masuk</button>
+    <p style="color: #555; font-size: 0.85rem; margin-top: 24px;">Username hanya untuk identitas. Tidak perlu password.</p>
+  </div>
 
   <div class="header-bar">
     <div class="logo">NOPE</div>
@@ -560,7 +587,46 @@
   </div>
 
   <script>
-    // DUMMY DATA
+    // === SISTEM LOGIN (TIDAK MENGUBAH LOGIKA UTAMA) ===
+    let NOPE_USER = null;
+    const loginOverlay = document.getElementById('login-overlay');
+
+    (function initializeLogin() {
+      const stored = localStorage.getItem('nopeUsername');
+      if (stored) {
+        NOPE_USER = stored;
+        return true;
+      }
+
+      loginOverlay.style.display = 'flex';
+
+      document.getElementById('login-btn').addEventListener('click', handleLogin);
+      document.getElementById('login-username').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleLogin();
+      });
+
+      function handleLogin() {
+        let username = document.getElementById('login-username').value.trim();
+        if (!username) {
+          alert('Masukkan username dulu.');
+          return;
+        }
+        const words = username.split(/\s+/).filter(w => w.length > 0);
+        if (words.length < 2) {
+          alert('Username harus terdiri dari minimal 2 kata.');
+          return;
+        }
+        if (words.length > 2) {
+          username = words.slice(0, 2).join(' ');
+        }
+        localStorage.setItem('nopeUsername', username);
+        NOPE_USER = username;
+        loginOverlay.style.display = 'none';
+        location.reload();
+      }
+    })();
+
+    // DUMMY DATA (tidak diubah)
     const DUMMY_RANTS = [
       "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
       "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
@@ -658,124 +724,121 @@
     }
 
     // INIT
-    document.addEventListener('DOMContentLoaded', () => {
-      renderFeed();
-      renderArtefakTray();
-
-      // === ARTEFAK UPLOAD ===
-      document.getElementById('choose-photo').addEventListener('click', () => {
-        imageUpload.click();
-      });
-
-      imageUpload.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file || !file.type.startsWith('image/')) return;
-
-        // Cek waktu terakhir upload
-        const lastArtefakTime = localStorage.getItem('nopeLastArtefakTime');
-        const now = Date.now();
-        if (lastArtefakTime && (now - parseInt(lastArtefakTime)) < 30 * 24 * 60 * 60 * 1000) {
-          const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (now - parseInt(lastArtefakTime))) / (24 * 60 * 60 * 1000));
-          alert(`Artefak hanya bisa diunggah sekali per 30 hari.\nKamu bisa lagi dalam ${daysLeft} hari.`);
-          return;
-        }
-
-        // Peringatan konten
-        const confirmed = confirm(
-          "⚠️ PERINGATAN SUCI:\n" +
-          "• JANGAN unggah wajah manusia\n" +
-          "• JANGAN unggah konten seksual/kekerasan\n" +
-          "• JANGAN unggah logo/iklan/komersial\n\n" +
-          "ℹ️ Artefak ini ABADI — tidak bisa dihapus, bahkan olehmu.\n\n" +
-          "Apakah ini momen yang layak diabadikan?"
-        );
-        if (!confirmed) return;
-
-        // Notasi (maks 4 kata)
-        const notasi = prompt("Tulis maksimal 4 kata yang mewakili momen ini:", "");
-        if (notasi === null) return;
-
-        const words = notasi.trim().split(/\s+/).filter(w => w.length > 0);
-        if (words.length === 0) {
-          alert("Notasi tidak boleh kosong.");
-          return;
-        }
-        if (words.length > 4) {
-          alert("Maksimal 4 kata saja. Pilih yang paling berarti.");
-          return;
-        }
-        const finalNotasi = words.join(" ");
-
-        // Simpan sebagai data URL (abadi)
-        const imageUrl = await loadImageAsDataURL(file);
-
-        const artefakEntry = {
-          type: 'artefak',
-          id: 'art_' + Date.now(),
-          imageUrl,
-          notasi: finalNotasi,
-          time: now,
-          user: "@sunyisenja"
-        };
-
-        // Simpan ke GLOBAL FEED (untuk muncul di Jalan & Dunia)
-        const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
-        globalFeed.unshift(artefakEntry);
-        localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
-
-        // Simpan waktu
-        localStorage.setItem('nopeLastArtefakTime', now.toString());
-
-        // Update UI
-        mainArtefakImg.src = imageUrl;
-        alert(`✅ Artefak abadi tersimpan!\nNotasi: “${finalNotasi}”`);
+    if (NOPE_USER) {
+      document.addEventListener('DOMContentLoaded', () => {
+        // Update username di UI
+        document.getElementById('jejak-title').textContent = `Jejak @${NOPE_USER}`;
 
         renderFeed();
-      });
+        renderArtefakTray();
 
-      // === RANT UPLOAD ===
-      document.getElementById('submit-rant').addEventListener('click', () => {
-        const text = rantInput.value.trim();
-        if (!text) {
-          alert('Isi dulu perasaanmu...');
-          return;
-        }
-        if (text.length > 300) {
-          alert('Maksimal 300 huruf ya.');
-          return;
-        }
+        // === ARTEFAK UPLOAD ===
+        document.getElementById('choose-photo').addEventListener('click', () => {
+          imageUpload.click();
+        });
 
-        const newRant = { 
-          user: "@sunyisenja", 
-          text, 
-          time: Date.now()
+        imageUpload.addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (!file || !file.type.startsWith('image/')) return;
+
+          const lastArtefakTime = localStorage.getItem('nopeLastArtefakTime');
+          const now = Date.now();
+          if (lastArtefakTime && (now - parseInt(lastArtefakTime)) < 30 * 24 * 60 * 60 * 1000) {
+            const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (now - parseInt(lastArtefakTime))) / (24 * 60 * 60 * 1000));
+            alert(`Artefak hanya bisa diunggah sekali per 30 hari.\nKamu bisa lagi dalam ${daysLeft} hari.`);
+            return;
+          }
+
+          const confirmed = confirm(
+            "⚠️ PERINGATAN SUCI:\n" +
+            "• JANGAN unggah wajah manusia\n" +
+            "• JANGAN unggah konten seksual/kekerasan\n" +
+            "• JANGAN unggah logo/iklan/komersial\n\n" +
+            "ℹ️ Artefak ini ABADI — tidak bisa dihapus, bahkan olehmu.\n\n" +
+            "Apakah ini momen yang layak diabadikan?"
+          );
+          if (!confirmed) return;
+
+          const notasi = prompt("Tulis maksimal 4 kata yang mewakili momen ini:", "");
+          if (notasi === null) return;
+
+          const words = notasi.trim().split(/\s+/).filter(w => w.length > 0);
+          if (words.length === 0) {
+            alert("Notasi tidak boleh kosong.");
+            return;
+          }
+          if (words.length > 4) {
+            alert("Maksimal 4 kata saja. Pilih yang paling berarti.");
+            return;
+          }
+          const finalNotasi = words.join(" ");
+
+          const imageUrl = await loadImageAsDataURL(file);
+
+          const artefakEntry = {
+            type: 'artefak',
+            id: 'art_' + Date.now(),
+            imageUrl,
+            notasi: finalNotasi,
+            time: now,
+            user: `@${NOPE_USER}`
+          };
+
+          const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
+          globalFeed.unshift(artefakEntry);
+          localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
+          localStorage.setItem('nopeLastArtefakTime', now.toString());
+
+          mainArtefakImg.src = imageUrl;
+          alert(`✅ Artefak abadi tersimpan!\nNotasi: “${finalNotasi}”`);
+
+          renderFeed();
+        });
+
+        // === RANT UPLOAD ===
+        document.getElementById('submit-rant').addEventListener('click', () => {
+          const text = rantInput.value.trim();
+          if (!text) {
+            alert('Isi dulu perasaanmu...');
+            return;
+          }
+          if (text.length > 300) {
+            alert('Maksimal 300 huruf ya.');
+            return;
+          }
+
+          const newRant = { 
+            user: `@${NOPE_USER}`, 
+            text, 
+            time: Date.now()
+          };
+
+          const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+          userRants.unshift(newRant);
+          localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
+
+          const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
+          globalFeed.unshift(newRant);
+          localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
+
+          rantInput.value = '';
+          renderFeed();
+        });
+
+        // Modal
+        const modal = document.getElementById('note-modal');
+        const closeModal = () => {
+          modal.classList.remove('active');
+          setTimeout(() => modal.style.display = 'none', 150);
         };
-
-        const userRants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
-        userRants.unshift(newRant);
-        localStorage.setItem('nopeUserRants', JSON.stringify(userRants));
-
-        const globalFeed = JSON.parse(localStorage.getItem('nopeGlobalFeed') || '[]');
-        globalFeed.unshift(newRant);
-        localStorage.setItem('nopeGlobalFeed', JSON.stringify(globalFeed));
-
-        rantInput.value = '';
-        renderFeed();
+        document.getElementById('close-modal').addEventListener('click', closeModal);
+        document.getElementById('cancel-note').addEventListener('click', closeModal);
+        document.getElementById('save-note').addEventListener('click', () => {
+          alert('Catatan disimpan (hanya di sesi ini).');
+          closeModal();
+        });
       });
-
-      // Modal
-      const modal = document.getElementById('note-modal');
-      const closeModal = () => {
-        modal.classList.remove('active');
-        setTimeout(() => modal.style.display = 'none', 150);
-      };
-      document.getElementById('close-modal').addEventListener('click', closeModal);
-      document.getElementById('cancel-note').addEventListener('click', closeModal);
-      document.getElementById('save-note').addEventListener('click', () => {
-        alert('Catatan disimpan (hanya di sesi ini).');
-        closeModal();
-      });
-    });
+    }
   </script>
 </body>
 </html>
