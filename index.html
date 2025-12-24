@@ -5,15 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Jejak • NOPE</title>
   <meta name="description" content="ga perlu follower, cuma butuh sefrekuensi">
-  <link rel="manifest" href="/manifest.json">
-  <!-- Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.0"></script>
   <style>
     :root {
       --black: #000;
       --white: #fff;
-      --accent: #6c47ff;
-      --accent-light: #8a6dff;
+      --accent: #4903fc;
       --logo: #ff9999;
       --input-bg: #1a0736;
       --radius-10: 10px;
@@ -28,7 +24,7 @@
       flex-direction: column;
       min-height: 100vh;
       padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom, 60px);
+      padding-bottom: 60px;
       overflow-x: hidden;
       -webkit-tap-highlight-color: transparent;
     }
@@ -61,7 +57,7 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     .subheader {
@@ -70,18 +66,164 @@
       font-weight: 600;
       margin: 2px 0 4px;
     }
+
+    .rant-box textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid #333;
+      color: var(--white);
+      padding: 12px;
+      border-radius: var(--radius-10);
+      resize: vertical;
+      min-height: 110px;
+      max-height: 500px;
+      font-size: 15px;
+      line-height: 1.4;
+      outline: none;
+      font-family: inherit;
+    }
+    .rant-box textarea::placeholder {
+      color: #777;
+    }
+
+    .rant-item {
+      background: var(--input-bg);
+      padding: 12px;
+      border-radius: var(--radius-10);
+      margin-bottom: 12px;
+      font-size: 0.93rem;
+      line-height: 1.55;
+      position: relative;
+    }
+
+    .feed-title {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .artefak-tray {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 16px;
+      padding-bottom: 100px;
+      border-top: 1px solid #222;
+      padding-top: 12px;
+    }
+    .artefak-item {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 80%;
+      background: var(--input-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .artefak-item img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.9);
+    }
+
+    .nav-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--black);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+      border-top: 1px solid #222;
+      z-index: 100;
+      height: 56px;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #888;
+      text-decoration: none;
+      font-size: 0.74rem;
+      gap: 2px;
+    }
+    .nav-item.active {
+      color: var(--accent);
+    }
+    .nav-item span {
+      font-size: 1.18rem;
+    }
+
+    /* Login */
+    #login-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #login-username {
+      width: 100%;
+      max-width: 300px;
+      padding: 12px;
+      background: var(--input-bg);
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    #login-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .login-hint {
+      color: #555;
+      font-size: 0.85rem;
+      margin-top: 24px;
+      text-align: center;
+    }
+    .emoji-pulse {
+      display: inline-block;
+      font-size: 1.2rem;
+      margin-left: 6px;
+      animation: pulse 1.8s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
   </style>
 </head>
 <body>
 
   <!-- LOGIN OVERLAY -->
-  <div id="login-overlay" style="display:none; position:fixed; inset:0; background:#000; z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
-    <div style="color:#6c47ff; font-size:1.8rem; font-weight:800; margin-bottom:24px;">NOPE</div>
-    <div style="color:#aaa; font-size:1rem; text-align:center; margin-bottom:24px;">ga perlu follower,<br>cuma butuh sefrekuensi</div>
-    <input type="text" id="login-username" placeholder="Masukkan username (2 kata)" maxlength="30"
-      style="width:100%; max-width:300px; padding:12px; background:#1a0736; border:1px solid #333; border-radius:10px; color:#fff; font-size:1rem; text-align:center; margin-bottom:16px;">
-    <button id="login-btn" style="background:#6c47ff; color:white; border:none; padding:10px 24px; border-radius:8px; font-weight:600;">Masuk</button>
-    <p style="color:#555; font-size:0.85rem; margin-top:24px;">Username hanya untuk identitas. Tidak perlu password.</p>
+  <div id="login-overlay">
+    <div style="color: var(--logo); font-size: 1.8rem; font-weight: 800; margin-bottom: 24px;">NOPE</div>
+    <div style="color:#aaa; font-size:1rem; text-align:center; margin-bottom:24px;">
+      ga perlu follower,<br>cuma butuh sefrekuensi
+    </div>
+    <input type="text" id="login-username" placeholder="Masukkan username (2 kata)" maxlength="30">
+    <button id="login-btn">Masuk</button>
+    <p class="login-hint">Username hanya untuk identitas. Tidak perlu password.</p>
   </div>
 
   <div class="header-bar">
@@ -90,69 +232,62 @@
 
   <div class="container">
     <div class="subheader" id="jejak-title">Jejak @sunyisenja</div>
-    <p style="color:#777;">Login berhasil. Ini adalah halaman utama sementara.</p>
+
+    <div class="rant-box">
+      <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..." maxlength="300"></textarea>
+    </div>
+
+    <button id="submit-rant" style="align-self:flex-end; background:none; border:none; color:var(--accent); font-weight:600; margin-top:4px;">
+      Unggah
+    </button>
+
+    <div class="feed-title">Jejakmu</div>
+    <div id="feed-container"></div>
+
+    <div class="artefak-tray" id="artefak-tray"></div>
+  </div>
+
+  <div class="nav-footer">
+    <a href="#" class="nav-item active">
+      <span>📄</span>
+      Jejak
+    </a>
+    <a href="#" class="nav-item">
+      <span>🚶</span>
+      Jalan
+    </a>
+    <a href="#" class="nav-item">
+      <span>🌍</span>
+      Dunia
+    </a>
+    <a href="#" class="nav-item">
+      <span>✊</span>
+      Jelajah
+    </a>
   </div>
 
   <script>
-    // === SUPABASE CONFIG — 100% SESUAI YANG KAMU BERIKAN ===
-    const SUPABASE_URL = 'https://pgadsneffhdjzdliaokm.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnYWRzbmVmZmhkanpkbGlhb2ttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1MzE5NjksImV4cCI6MjA4MjEwNzk2OX0.t1rSOWETWLt2hvUj9eoXaD4RD8Keb2dYrlvk-kxO2vc';
-
-    // ✅ INISIALISASI CLIENT — TIDAK ADA NAMA GANDA
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    document.addEventListener('DOMContentLoaded', async () => {
+    // === USER LOGIN ===
+    document.addEventListener('DOMContentLoaded', () => {
       const storedUserId = localStorage.getItem('nopeUserId');
       const loginOverlay = document.getElementById('login-overlay');
 
       if (!storedUserId) {
         loginOverlay.style.display = 'flex';
 
-        document.getElementById('login-btn').addEventListener('click', async () => {
+        document.getElementById('login-btn').addEventListener('click', () => {
           let username = document.getElementById('login-username').value.trim();
-          if (!username) {
-            alert('Masukkan username dulu.');
-            return;
-          }
+          if (!username) { alert('Masukkan username dulu.'); return; }
           const words = username.split(/\s+/).filter(w => w.length > 0);
-          if (words.length < 2) {
-            alert('Username harus terdiri dari minimal 2 kata.');
-            return;
-          }
-          if (words.length > 2) {
-            username = words.slice(0, 2).join(' ');
-          }
+          if (words.length < 2) { alert('Username harus terdiri dari minimal 2 kata.'); return; }
+          if (words.length > 2) username = words.slice(0, 2).join(' ');
 
-          // Cek apakah username sudah ada
-          const { data: existingUser } = await supabaseClient
-            .from('users')
-            .select('id')
-            .eq('username', username)
-            .single();
-
-          let userId;
-          if (existingUser) {
-            userId = existingUser.id;
-          } else {
-            // Simpan user baru
-            const { data: newUser, error } = await supabaseClient
-              .from('users')
-              .insert({ username })
-              .select('id')
-              .single();
-
-            if (error) {
-              console.error('Supabase error:', error);
-              alert('Gagal daftar. Coba lagi.');
-              return;
-            }
-            userId = newUser.id;
-          }
-
+          const userId = 'user_' + Date.now();
           localStorage.setItem('nopeUserId', userId);
           localStorage.setItem('nopeUsername', username);
+          localStorage.setItem('nopeLastActive', new Date().toISOString());
           loginOverlay.style.display = 'none';
-          location.reload();
+          initApp();
         });
 
         document.getElementById('login-username').addEventListener('keypress', (e) => {
@@ -160,10 +295,104 @@
         });
 
       } else {
-        const username = localStorage.getItem('nopeUsername');
-        document.getElementById('jejak-title').textContent = `Jejak @${username}`;
+        initApp();
       }
     });
+
+    function initApp() {
+      const username = localStorage.getItem('nopeUsername');
+      document.getElementById('jejak-title').textContent = `Jejak @${username}`;
+
+      // Load dummy data if not exists
+      if (!localStorage.getItem('nopeUserRants')) {
+        localStorage.setItem('nopeUserRants', JSON.stringify([]));
+      }
+      if (!localStorage.getItem('nopeArtefaks')) {
+        localStorage.setItem('nopeArtefaks', JSON.stringify([]));
+      }
+
+      renderFeed();
+      renderArtefakTray();
+
+      // Rant upload
+      document.getElementById('submit-rant').addEventListener('click', () => {
+        const text = document.getElementById('rant-input').value.trim();
+        if (!text) { alert('Isi dulu perasaanmu...'); return; }
+        if (text.length > 300) { alert('Maksimal 300 huruf ya.'); return; }
+
+        const newRant = {
+          id: 'rant_' + Date.now(),
+          text,
+          time: Date.now(),
+          emojis: { '😭': 0, '🔥': 0, '🤡': 0 }
+        };
+
+        const rants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+        rants.unshift(newRant);
+        localStorage.setItem('nopeUserRants', JSON.stringify(rants));
+
+        document.getElementById('rant-input').value = '';
+        renderFeed();
+      });
+    }
+
+    // === DUMMY DATA ===
+    const DUMMY_RANTS = [
+      "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
+      "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
+      "Kenapa semua orang pura-pura baik di medsos? Gue capek jadi orang lain.",
+      "Hujan hari ini nemenin gue nangis diam-diam.",
+      "Gue pengen ilang sebentar. Bukan kabur — cuma butuh napas.",
+      "Ada yang ngerasa hidupnya kayak lagu yang chorus-nya gak pernah datang?",
+      "Kadang gue iri sama orang yang bisa bilang 'ga apa-apa' dan beneran ga apa-apa.",
+      "Gue capek jadi kuat.",
+      "Malam ini gue ngerasa kayak bintang yang redup — masih nyala, tapi gak diliat siapa-siapa.",
+      "Gue nulis ini bukan minta diselamatin. Cuma biar gak sendiri."
+    ];
+
+    const DUMMY_ARTEFAK = [
+      { url: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=100", note: "Gunung yang menenangkan" },
+      { url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=100", note: "Senja yang membakar" },
+      { url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=100", note: "Langit malam" },
+      { url: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=100", note: "Air yang tenang" },
+      { url: "https://images.unsplash.com/photo-1480714378409-634531dbc169?auto=format&fit=crop&w=100", note: "Kabut pagi" },
+      { url: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=100", note: "Senyum sendirian" }
+    ];
+
+    function renderFeed() {
+      const rants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+      const allRants = [...rants];
+
+      if (rants.length < 10) {
+        const needed = 10 - rants.length;
+        for (let i = 0; i < needed; i++) {
+          allRants.push({ text: DUMMY_RANTS[i % DUMMY_RANTS.length], time: Date.now() - (i + 1) * 86400000, emojis: { '😭': 0, '🔥': 0, '🤡': 0 } });
+        }
+      }
+
+      const feed = document.getElementById('feed-container');
+      feed.innerHTML = allRants.slice(0, 10).map(rant => `
+        <div class="rant-item">
+          ${escapeHtml(rant.text)}
+          <span class="emoji-pulse">😭</span>
+        </div>
+      `).join('');
+    }
+
+    function renderArtefakTray() {
+      const tray = document.getElementById('artefak-tray');
+      tray.innerHTML = DUMMY_ARTEFAK.map(item => `
+        <div class="artefak-item">
+          <img src="${item.url}" alt="Artefak" />
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
   </script>
 </body>
 </html>
