@@ -42,8 +42,8 @@
     }
     .logo {
       color: var(--logo);
-      font-weight: 800;
-      font-size: 1.5rem;
+      font-weight: 700;
+      font-size: 1.8rem;
       letter-spacing: -0.5px;
       text-align: center;
     }
@@ -57,16 +57,41 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
-    .subheader {
+    #jejak-title {
       color: var(--accent);
-      font-size: 1.15rem;
+      font-size: 1.4rem;
       font-weight: 600;
-      margin: 2px 0 4px;
+      margin: 8px 0 12px;
+      text-align: left;
     }
 
+    .artefak-container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 48%;
+      background: var(--input-bg);
+      border-radius: var(--radius-10);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .artefak-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.85);
+    }
+
+    .rant-box {
+      position: relative;
+      margin-bottom: 24px;
+    }
     .rant-box textarea {
       width: 100%;
       background: var(--input-bg);
@@ -75,15 +100,38 @@
       padding: 12px;
       border-radius: var(--radius-10);
       resize: vertical;
-      min-height: 110px;
+      min-height: 110px; /* Pas untuk 5 baris */
       max-height: 500px;
-      font-size: 15px;
-      line-height: 1.4;
+      font-size: 15px; /* Benchmark 60 karakter */
+      line-height: 1.4; /* Agar rapi */
       outline: none;
       font-family: inherit;
+      padding-bottom: 36px; /* Ruang untuk CTA */
     }
     .rant-box textarea::placeholder {
       color: #777;
+    }
+
+    #submit-rant {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+    }
+
+    .feed-title {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
     .rant-item {
@@ -94,14 +142,6 @@
       font-size: 0.93rem;
       line-height: 1.55;
       position: relative;
-    }
-
-    .feed-title {
-      color: var(--accent);
-      font-size: 1.1rem;
-      margin-top: 16px;
-      margin-bottom: 8px;
-      font-weight: 600;
     }
 
     .artefak-tray {
@@ -131,6 +171,14 @@
       height: 100%;
       object-fit: cover;
       filter: brightness(0.9);
+    }
+
+    .tagline-gen-z {
+      color: #aaa;
+      font-style: italic;
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.9rem;
     }
 
     .nav-footer {
@@ -223,7 +271,6 @@
     </div>
     <input type="text" id="login-username" placeholder="Masukkan username (2 kata)" maxlength="30">
     <button id="login-btn">Masuk</button>
-    <div id="login-enter-hint" style="background:none; color:#aaa; font-size:0.85rem; padding:6px;">tekan **enter** untuk masuk</div>
     <p class="login-hint">Username hanya untuk identitas. Tidak perlu password.</p>
   </div>
 
@@ -232,7 +279,7 @@
   </div>
 
   <div class="container">
-    <div id="jejak-title">@sunyisenja</div>
+    <div id="jejak-title">Hello @sunyisenja</div>
 
     <!-- Artefak window DI ATAS rant box -->
     <div class="artefak-container">
@@ -249,6 +296,10 @@
     <div id="feed-container"></div>
 
     <div class="artefak-tray" id="artefak-tray"></div>
+
+    <div class="tagline-gen-z">
+      Bukan feed. Bukan timeline. Ini jejakmu yang abadi.
+    </div>
   </div>
 
   <div class="nav-footer">
@@ -270,7 +321,6 @@
     </a>
   </div>
 
-</body>
   <script>
     // === USER LOGIN ===
     document.addEventListener('DOMContentLoaded', () => {
@@ -280,35 +330,39 @@
       if (!storedUserId) {
         loginOverlay.style.display = 'flex';
 
-        document.getElementById('login-btn').addEventListener('click', () => {
-          let username = document.getElementById('login-username').value.trim();
-          if (!username) { alert('Masukkan username dulu.'); return; }
-          const words = username.split(/\s+/).filter(w => w.length > 0);
-          if (words.length < 2) { alert('Username harus terdiri dari minimal 2 kata.'); return; }
-          if (words.length > 2) username = words.slice(0, 2).join(' ');
+        const loginBtn = document.getElementById('login-btn');
+        const usernameInput = document.getElementById('login-username');
 
-          const userId = 'user_' + Date.now();
-          localStorage.setItem('nopeUserId', userId);
-          localStorage.setItem('nopeUsername', username);
-          localStorage.setItem('nopeLastActive', new Date().toISOString());
-          loginOverlay.style.display = 'none';
-          initApp();
-        });
-
-        document.getElementById('login-username').addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') document.getElementById('login-btn').click();
+        loginBtn.addEventListener('click', handleLogin);
+        usernameInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') handleLogin();
         });
 
       } else {
+        const username = localStorage.getItem('nopeUsername');
+        document.getElementById('jejak-title').textContent = `Hello @${username}`;
         initApp();
       }
     });
 
-    function initApp() {
-      const username = localStorage.getItem('nopeUsername');
-      document.getElementById('jejak-title').textContent = `Jejak @${username}`;
+    function handleLogin() {
+      let username = document.getElementById('login-username').value.trim();
+      if (!username) { alert('Masukkan username dulu.'); return; }
+      const words = username.split(/\s+/).filter(w => w.length > 0);
+      if (words.length < 2) { alert('Username harus terdiri dari minimal 2 kata.'); return; }
+      if (words.length > 2) username = words.slice(0, 2).join(' ');
 
-      // Load dummy data if not exists
+      const userId = 'user_' + Date.now();
+      localStorage.setItem('nopeUserId', userId);
+      localStorage.setItem('nopeUsername', username);
+      localStorage.setItem('nopeLastActive', new Date().toISOString());
+
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('jejak-title').textContent = `Hello @${username}`;
+      initApp();
+    }
+
+    function initApp() {
       if (!localStorage.getItem('nopeUserRants')) {
         localStorage.setItem('nopeUserRants', JSON.stringify([]));
       }
@@ -319,7 +373,6 @@
       renderFeed();
       renderArtefakTray();
 
-      // Rant upload
       document.getElementById('submit-rant').addEventListener('click', () => {
         const text = document.getElementById('rant-input').value.trim();
         if (!text) { alert('Isi dulu perasaanmu...'); return; }
@@ -344,7 +397,7 @@
     // === DUMMY DATA ===
     const DUMMY_RANTS = [
       "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
-      "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam. Ada yang nonton juga?",
+      "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam.",
       "Kenapa semua orang pura-pura baik di medsos? Gue capek jadi orang lain.",
       "Hujan hari ini nemenin gue nangis diam-diam.",
       "Gue pengen ilang sebentar. Bukan kabur — cuma butuh napas.",
@@ -371,7 +424,11 @@
       if (rants.length < 10) {
         const needed = 10 - rants.length;
         for (let i = 0; i < needed; i++) {
-          allRants.push({ text: DUMMY_RANTS[i % DUMMY_RANTS.length], time: Date.now() - (i + 1) * 86400000, emojis: { '😭': 0, '🔥': 0, '🤡': 0 } });
+          allRants.push({ 
+            text: DUMMY_RANTS[i % DUMMY_RANTS.length], 
+            time: Date.now() - (i + 1) * 86400000, 
+            emojis: { '😭': 0, '🔥': 0, '🤡': 0 } 
+          });
         }
       }
 
