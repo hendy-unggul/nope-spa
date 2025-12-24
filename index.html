@@ -2,1033 +2,299 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Jejak • NOPE</title>
-  <meta name="description" content="ga perlu follower, cuma butuh sefrekuensi">
-  <!-- Tambahkan Supabase client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOPE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --black: #000;
-      --white: #fff;
+      --black: #000000;
+      --white: #ffffff;
       --accent: #4903fc;
       --logo: #ff9999;
-      --input-bg: #1a0736;
-      --radius-10: 10px;
-      --transition-fast: 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      --deep-black: #0a0a0a;
+      --bg: var(--deep-black);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background: var(--black);
+      background-color: var(--bg);
       color: var(--white);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: 60px;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
       overflow-x: hidden;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    /* HIDE MAIN CONTENT BY DEFAULT */
-    .header-bar,
-    .container,
-    .nav-footer {
-      display: none;
-    }
-
-    /* SHOW MAIN CONTENT WHEN LOGGED IN */
-    body.logged-in .header-bar,
-    body.logged-in .container,
-    body.logged-in .nav-footer {
-      display: flex;
-    }
-
-    .header-bar {
-      justify-content: center;
-      align-items: center;
-      padding: 10px 16px 8px;
-      background: var(--black);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid #222;
-    }
-    .logo {
-      color: var(--logo);
-      font-weight: 700;
-      font-size: 1.8rem;
-      letter-spacing: -0.5px;
-      text-align: center;
+      min-height: 100vh;
+      padding-bottom: 70px;
     }
 
     .container {
-      flex: 1;
-      width: 100%;
-      max-width: 600px;
-      padding: 0 16px;
+      max-width: 500px;
       margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ———— LOGIN ———— */
+    #login-screen {
+      display: flex;
       flex-direction: column;
-      gap: 14px;
-      margin-top: 8px;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 0 24px;
+      text-align: center;
     }
 
-    #jejak-title {
-      color: var(--accent);
-      font-size: 1.4rem;
+    .logo {
+      font-size: 28px;
       font-weight: 600;
-      margin: 8px 0 12px;
-      text-align: left;
-    }
-
-    .artefak-container {
-      position: relative;
-      width: 100%;
-      height: 0;
-      padding-bottom: 48%;
-      background: var(--input-bg);
-      border-radius: var(--radius-10);
-      overflow: hidden;
-      margin-bottom: 14px;
-    }
-    .artefak-container img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.85);
-    }
-
-    .rant-box {
-      position: relative;
+      color: var(--logo);
       margin-bottom: 24px;
     }
-    .rant-box textarea {
-      width: 100%;
-      background: var(--input-bg);
-      border: 1px solid #333;
-      color: var(--white);
-      padding: 12px;
-      border-radius: var(--radius-10);
-      resize: vertical;
-      min-height: 110px;
-      max-height: 500px;
-      font-size: 15px;
-      line-height: 1.4;
-      outline: none;
-      font-family: inherit;
-      padding-bottom: 36px;
-    }
-    .rant-box textarea::placeholder {
-      color: #777;
-    }
 
-    #submit-rant {
-      position: absolute;
-      bottom: 10px;
-      right: 12px;
-      background: none;
-      border: none;
-      color: var(--accent);
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-
-    .feed-title {
-      color: var(--accent);
-      font-size: 1.1rem;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .rant-item {
-      background: var(--input-bg);
-      padding: 12px;
-      border-radius: var(--radius-10);
-      margin-bottom: 12px;
-      font-size: 0.93rem;
-      line-height: 1.55;
-      position: relative;
-    }
-
-    .artefak-tray {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-top: 16px;
-      padding-bottom: 100px;
-      border-top: 1px solid #222;
-      padding-top: 12px;
-    }
-    .artefak-item {
-      position: relative;
-      width: 100%;
-      height: 0;
-      padding-bottom: 80%;
-      background: var(--input-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-    }
-    .artefak-item img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.9);
-    }
-
-    .tagline-gen-z {
+    .tagline {
+      font-size: 16px;
       color: #aaa;
-      font-style: italic;
-      text-align: center;
-      margin-top: 24px;
-      font-size: 0.9rem;
+      margin-bottom: 32px;
+      line-height: 1.4;
     }
 
-    .nav-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--black);
-      justify-content: space-around;
-      align-items: center;
-      padding: 8px 0;
-      border-top: 1px solid #222;
-      z-index: 100;
-      height: 56px;
-      width: 100vw;
-    }
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #888;
-      text-decoration: none;
-      font-size: 0.74rem;
-      gap: 2px;
-    }
-    .nav-item.active {
-      color: var(--accent);
-    }
-    .nav-item span {
-      font-size: 1.18rem;
-    }
-
-    /* Login */
-    #login-overlay {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 1000;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      display: flex !important; /* Always show by default */
-    }
-    #login-username {
+    input {
       width: 100%;
-      max-width: 300px;
-      padding: 12px;
-      background: var(--input-bg);
-      border: 1px solid #333;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 1rem;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    #login-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .login-hint {
-      color: #555;
-      font-size: 0.85rem;
-      margin-top: 24px;
-      text-align: center;
-    }
-    .emoji-pulse {
-      display: inline-block;
-      font-size: 1.2rem;
-      margin-left: 6px;
-      animation: pulse 1.8s infinite ease-in-out;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 0.7; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.05); }
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--white);
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 24px;
     }
 
-    /* Artefak Upload Modal */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.82);
-      justify-content: center;
-      align-items: center;
-      z-index: 200;
-      padding: 16px;
+    input::placeholder {
+      color: #666;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+    }
+
+    button {
+      width: 100%;
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    /* ———— DASHBOARD ———— */
+    #dashboard {
       display: none;
     }
-    .modal-content {
-      background: var(--input-bg);
-      border-radius: var(--radius-10);
-      width: 100%;
-      max-width: 500px;
-      padding: 20px;
-      position: relative;
-    }
-    .modal-header {
+
+    .header {
+      padding: 16px 0;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
-    }
-    .modal-close {
-      background: none;
-      border: none;
-      color: var(--white);
-      font-size: 1.4rem;
-      cursor: pointer;
-    }
-    .modal-artefak {
-      width: 100%;
-      height: 0;
-      padding-bottom: 75%;
-      background: var(--input-bg);
-      border-radius: var(--radius-10);
-      overflow: hidden;
-      margin-bottom: 14px;
-    }
-    .modal-artefak img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .modal-note {
-      width: 100%;
-      background: var(--input-bg);
-      border: 1px solid #333;
-      color: var(--white);
-      padding: 10px;
-      border-radius: var(--radius-10);
-      resize: vertical;
-      min-height: 70px;
-      max-height: 200px;
-      font-size: 0.9rem;
-      outline: none;
-      font-family: inherit;
-    }
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 14px;
-    }
-    .modal-actions button {
-      padding: 7px 14px;
-      border-radius: var(--radius-10);
-      font-size: 0.88rem;
-      cursor: pointer;
-    }
-    .modal-actions .cancel {
-      background: transparent;
-      border: 1px solid #555;
-      color: #aaa;
-    }
-    .modal-actions .save {
-      background: var(--accent);
-      color: white;
-      border: none;
+      gap: 12px;
     }
 
-    /* CTA Artefak */
-    .cta-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 8px;
-    }
-    .impulse-text {
-      background: none;
-      border: none;
-      padding: 0;
-      margin: 0;
-      font-size: 0.95rem;
+    .logo-small {
+      font-size: 20px;
       font-weight: 600;
-      color: var(--accent);
-      cursor: pointer;
+      color: var(--logo);
+    }
+
+    .greeting {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--white);
+      margin-left: auto;
+    }
+
+    .rant-input {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 16px;
+      color: var(--white);
+      font-size: 15px;
+      resize: none;
       outline: none;
-      animation: impulse 3s infinite;
+      height: 60px;
+      margin: 16px 0 24px;
     }
-    @keyframes impulse {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; }
+
+    .rant-input::placeholder {
+      color: #666;
     }
-    
-    /* Emoji Reactions */
-    .emoji-reactions {
+
+    .rant-input:focus {
+      border-color: var(--accent);
+    }
+
+    .feed {
+      padding: 8px 0;
+    }
+
+    .rant {
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--deep-black);
+      border-top: 1px solid rgba(255,255,255,0.05);
       display: flex;
-      gap: 10px;
-      margin-top: 8px;
+      justify-content: space-around;
+      padding: 12px 0;
     }
-    .emoji-btn {
-      background: none;
-      border: 1px solid #333;
-      color: #aaa;
-      padding: 4px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
+
+    .nav-item {
+      color: #777;
+      font-size: 12px;
+      text-align: center;
+      width: 25%;
     }
-    .emoji-btn:hover {
-      background: rgba(255,255,255,0.05);
+
+    .nav-item.active {
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
-
-  <!-- LOGIN OVERLAY - ALWAYS SHOW FIRST -->
-  <div id="login-overlay">
+  <!-- LOGIN -->
+  <div id="login-screen">
     <div class="logo">NOPE</div>
-    <div style="color:#aaa; font-size:1rem; text-align:center; margin:16px 0;">
-      ga perlu follower,<br>cuma butuh sefrekuensi
-    </div>
-    <input type="text" id="login-username" placeholder="Masukkan username (2 kata)" maxlength="30">
+    <div class="tagline">ga perlu follower, cuma butuh sefrekuensi</div>
+    <input type="text" id="username-input" placeholder="Masukkan username (2 kata)" maxlength="30" />
     <button id="login-btn">Masuk</button>
-    <p class="login-hint">Username hanya untuk identitas. Tidak perlu password.</p>
   </div>
 
-  <div class="header-bar">
-    <div class="logo">NOPE</div>
-  </div>
-
-  <div class="container">
-    <div id="jejak-title">Hello @sunyisenja</div>
-
-    <!-- Artefak window DI ATAS rant box -->
-    <div class="artefak-container">
-      <img id="main-artefak" src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=600&h=480&q=80" alt="Artefak" />
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="container">
+    <div class="header">
+      <div class="logo-small">NOPE</div>
+      <div class="greeting">Hello @<span id="display-username"></span></div>
     </div>
 
-    <!-- CTA Artefak -->
-    <div class="cta-row">
-      <button id="choose-photo" class="impulse-text">Artefak</button>
+    <textarea class="rant-input" placeholder="Perasaanmu dalam 300 huruf" maxlength="300"></textarea>
+
+    <div class="feed" id="feed">
+      <!-- Dummy rants -->
+      <div class="rant">kadang pengen ilang aja gitu, gak perlu alasan</div>
+      <div class="rant">ngobrol sama diri sendiri ternyata paling nyaman</div>
+      <div class="rant">capek jadi versi yang disukai orang</div>
+      <div class="rant">aku kangen masa kecil yang gapapa gabut</div>
+      <div class="rant">hari ini aku bertahan. itu aja dulu.</div>
+      <div class="rant">ga semua hal harus dijelasin, kan?</div>
+      <div class="rant">ada yang ngerasa hidup cuma jadi to-do list?</div>
+      <div class="rant">kadang ‘baik-baik aja’ itu cara buat ga nangis di depan orang</div>
+      <div class="rant">aku pengen dipeluk, tapi malu minta</div>
+      <div class="rant">ngerasa kosong, tapi tetep senyum di grup WA</div>
+      <div class="rant">bukan sedih, cuma… lelah jadi manusia</div>
+      <div class="rant">aku sayang kamu, tapi aku lagi ga kuat</div>
     </div>
 
-    <!-- Rant box dengan CTA di dalam -->
-    <div class="rant-box">
-      <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..." maxlength="300"></textarea>
-      <button id="submit-rant">Unggah</button>
-    </div>
-
-    <div class="feed-title">Jejakmu</div>
-    <div id="feed-container"></div>
-
-    <div class="artefak-tray" id="artefak-tray"></div>
-
-    <div class="tagline-gen-z">
-      Bukan feed. Bukan timeline. Ini jejakmu yang abadi.
-    </div>
-  </div>
-
-  <div class="nav-footer">
-    <a href="#" class="nav-item active">
-      <span>📄</span>
-      Jejak
-    </a>
-    <a href="#" class="nav-item">
-      <span>🚶</span>
-      Jalan
-    </a>
-    <a href="#" class="nav-item">
-      <span>🌍</span>
-      Dunia
-    </a>
-    <a href="#" class="nav-item">
-      <span>✊</span>
-      Jelajah
-    </a>
-  </div>
-
-  <!-- Modal Artefak -->
-  <div class="modal" id="note-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>📝 Catatan Pribadi</h3>
-        <button class="modal-close" id="close-modal">×</button>
-      </div>
-      <div class="modal-artefak">
-        <img id="modal-artefak-img" src="" alt="Artefak" />
-      </div>
-      <textarea class="modal-note" id="modal-note-input" placeholder="Tambahkan catatan pribadi untuk momen ini..."></textarea>
-      <div class="modal-actions">
-        <button class="cancel" id="cancel-note">Batal</button>
-        <button class="save" id="save-note">Simpan</button>
-      </div>
+    <div class="bottom-nav">
+      <div class="nav-item active">Jejak</div>
+      <div class="nav-item">Jalan</div>
+      <div class="nav-item">Dunia</div>
+      <div class="nav-item">Jelajah</div>
     </div>
   </div>
-
-  <input type="file" id="image-upload" accept="image/*" style="display:none;">
 
   <script>
-    // ===== SUPABASE CONFIGURATION =====
-    // GANTI DENGAN URL DAN KEY SUPABASE ANDA
-    const SUPABASE_URL = 'https://your-project.supabase.co';
-    const SUPABASE_KEY = 'your-anon-key';
-    
-    // Inisialisasi Supabase client (akan null jika URL/KEY tidak valid)
-    let supabase = null;
-    try {
-      if (SUPABASE_URL && SUPABASE_KEY && 
-          SUPABASE_URL !== 'https://your-project.supabase.co' && 
-          SUPABASE_KEY !== 'your-anon-key') {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      }
-    } catch (error) {
-      console.log('Supabase tidak diinisialisasi, menggunakan localStorage saja');
+    // ———— SESSION HANDLING (PERBAIKAN UTAMA) ————
+    function saveSession(username) {
+      const session = {
+        username: username.trim(),
+        token: 'fcascghasc', // dummy token, bisa diganti nanti
+        timestamp: Date.now()
+      };
+      localStorage.setItem('userSession', JSON.stringify(session));
     }
-    
-    // ===== APP STATE =====
-    let currentUser = null;
 
-    // ===== USER LOGIN & AUTH =====
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM loaded, checking login status...');
-      
-      // Cek apakah sudah login
-      const storedUser = localStorage.getItem('nopeUser');
-      
-      if (storedUser) {
-        console.log('User found in localStorage:', storedUser);
-        // Jika sudah login, langsung setup app
-        currentUser = JSON.parse(storedUser);
-        setupAppAfterLogin();
-      } else {
-        console.log('No user found, showing login overlay');
-        // Tampilkan login overlay jika belum login
-        document.getElementById('login-overlay').style.display = 'flex';
-        setupLoginHandlers();
+    function getSession() {
+      const raw = localStorage.getItem('userSession');
+      if (!raw) return null;
+      try {
+        const parsed = JSON.parse(raw);
+        // Pastikan ini objek dan punya username
+        if (parsed && typeof parsed === 'object' && parsed.username) {
+          return parsed;
+        } else {
+          throw new Error('Invalid session structure');
+        }
+      } catch (e) {
+        console.warn('⚠️ Session corrupt, clearing...', e);
+        localStorage.removeItem('userSession');
+        return null;
       }
+    }
+
+    function clearSession() {
+      localStorage.removeItem('userSession');
+    }
+
+    // ———— LOGIN LOGIC ————
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const input = document.getElementById('username-input');
+      let username = input.value.trim();
+
+      if (!username) {
+        alert('Masukkan username dulu, sayang ❤️');
+        return;
+      }
+
+      const words = username.split(/\s+/);
+      if (words.length !== 2) {
+        alert('Username harus dua kata, ya!\nContoh: bintang jatuh');
+        return;
+      }
+
+      // Simpan session yang VALID (JSON)
+      saveSession(username);
+      showDashboard(username);
     });
 
-    function setupLoginHandlers() {
-      const loginBtn = document.getElementById('login-btn');
-      const usernameInput = document.getElementById('login-username');
-      
-      loginBtn.addEventListener('click', handleLogin);
-      usernameInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleLogin();
-      });
+    function showDashboard(username) {
+      document.getElementById('display-username').textContent = username;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
     }
 
-    function handleLogin() {
-      let username = document.getElementById('login-username').value.trim();
-      if (!username) { 
-        alert('Masukkan username dulu.'); 
-        return; 
+    // ———— ON LOAD ————
+    window.addEventListener('DOMContentLoaded', () => {
+      const session = getSession();
+      if (session && session.username) {
+        showDashboard(session.username);
       }
-      
-      const words = username.split(/\s+/).filter(w => w.length > 0);
-      if (words.length < 2) { 
-        alert('Username harus terdiri dari minimal 2 kata.'); 
-        return; 
-      }
-      
-      if (words.length > 2) username = words.slice(0, 2).join(' ');
-      
-      // Create user object
-      currentUser = {
-        id: 'user_' + Date.now(),
-        username: username,
-        created_at: new Date().toISOString(),
-        last_active: new Date().toISOString()
-      };
-      
-      // Save to localStorage
-      localStorage.setItem('nopeUser', JSON.stringify(currentUser));
-      
-      // Setup app after login
-      setupAppAfterLogin();
-      
-      // Try to sync with Supabase if available
-      if (supabase) {
-        try {
-          // Simpan user ke Supabase
-          const { error } = supabase
-            .from('users')
-            .upsert({
-              user_id: currentUser.id,
-              username: currentUser.username,
-              last_active: currentUser.last_active
-            });
-            
-          if (error) console.error('Error saving user to Supabase:', error);
-        } catch (error) {
-          console.error('Supabase connection error:', error);
-        }
-      }
-    }
-
-    function setupAppAfterLogin() {
-      console.log('Setting up app after login for user:', currentUser.username);
-      
-      // Hide login overlay
-      document.getElementById('login-overlay').style.display = 'none';
-      
-      // Show main content
-      document.body.classList.add('logged-in');
-      
-      // Update title
-      document.getElementById('jejak-title').textContent = `Hello @${currentUser.username}`;
-      
-      // Setup event listeners
-      setupEventListeners();
-      
-      // Load data
-      loadRants();
-      loadArtefaks();
-      
-      // Setup dummy data jika belum ada data
-      if (!localStorage.getItem('nopeRants')) {
-        setupInitialData();
-      }
-    }
-
-    function setupEventListeners() {
-      // Rant upload
-      document.getElementById('submit-rant').addEventListener('click', uploadRant);
-      
-      // Artefak upload
-      document.getElementById('choose-photo').addEventListener('click', () => {
-        document.getElementById('image-upload').click();
-      });
-      
-      document.getElementById('image-upload').addEventListener('change', handleImageUpload);
-      
-      // Modal handlers
-      const modal = document.getElementById('note-modal');
-      document.getElementById('close-modal').addEventListener('click', () => {
-        modal.style.display = 'none';
-      });
-      
-      document.getElementById('cancel-note').addEventListener('click', () => {
-        modal.style.display = 'none';
-      });
-      
-      document.getElementById('save-note').addEventListener('click', saveNote);
-      
-      // Enter key untuk rant
-      document.getElementById('rant-input').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && e.ctrlKey) {
-          uploadRant();
-        }
-      });
-    }
-
-    function uploadRant() {
-      if (!currentUser) {
-        alert('Silakan login terlebih dahulu.');
-        return;
-      }
-      
-      const text = document.getElementById('rant-input').value.trim();
-      if (!text) { 
-        alert('Isi dulu perasaanmu...'); 
-        return; 
-      }
-      
-      if (text.length > 300) { 
-        alert('Maksimal 300 huruf ya.'); 
-        return; 
-      }
-      
-      const newRant = {
-        id: 'rant_' + Date.now(),
-        user_id: currentUser.id,
-        username: currentUser.username,
-        text: text,
-        created_at: new Date().toISOString(),
-        emojis: { '😭': 0, '🔥': 0, '🤡': 0 }
-      };
-      
-      // Save to localStorage
-      const rants = JSON.parse(localStorage.getItem('nopeRants') || '[]');
-      rants.unshift(newRant);
-      localStorage.setItem('nopeRants', JSON.stringify(rants));
-      
-      // Save to Supabase if available
-      if (supabase) {
-        try {
-          const { error } = supabase
-            .from('rants')
-            .insert({
-              rant_id: newRant.id,
-              user_id: newRant.user_id,
-              username: newRant.username,
-              text: newRant.text,
-              emojis: newRant.emojis
-            });
-            
-          if (error) console.error('Error saving rant to Supabase:', error);
-        } catch (error) {
-          console.error('Supabase connection error:', error);
-        }
-      }
-      
-      // Clear input
-      document.getElementById('rant-input').value = '';
-      
-      // Reload rants
-      loadRants();
-    }
-
-    function handleImageUpload(e) {
-      if (!currentUser) {
-        alert('Silakan login terlebih dahulu.');
-        return;
-      }
-      
-      const file = e.target.files[0];
-      if (!file || !file.type.startsWith('image/')) return;
-      
-      // Check 30-day rule
-      const lastArtefakTime = localStorage.getItem('nopeLastArtefakTime');
-      const now = Date.now();
-      if (lastArtefakTime && (now - parseInt(lastArtefakTime)) < 30 * 24 * 60 * 60 * 1000) {
-        const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (now - parseInt(lastArtefakTime))) / (24 * 60 * 60 * 1000));
-        alert(`Artefak hanya bisa diunggah sekali per 30 hari.\nKamu bisa lagi dalam ${daysLeft} hari.`);
-        return;
-      }
-      
-      // Warning confirmation
-      const confirmed = confirm(
-        "⚠️ PERINGATAN SUCI:\n" +
-        "• JANGAN unggah wajah manusia\n" +
-        "• JANGAN unggah konten seksual/kekerasan\n" +
-        "• JANGAN unggah logo/iklan/komersial\n\n" +
-        "ℹ️ Artefak ini ABADI — tidak bisa dihapus, bahkan olehmu.\n\n" +
-        "Apakah ini momen yang layak diabadikan?"
-      );
-      if (!confirmed) return;
-      
-      // Get notation
-      const notasi = prompt("Tulis maksimal 4 kata yang mewakili momen ini:", "");
-      if (notasi === null) return;
-      
-      const words = notasi.trim().split(/\s+/).filter(w => w.length > 0);
-      if (words.length === 0) {
-        alert("Notasi tidak boleh kosong.");
-        return;
-      }
-      if (words.length > 4) {
-        alert("Maksimal 4 kata saja. Pilih yang paling berarti.");
-        return;
-      }
-      const finalNotasi = words.join(" ");
-      
-      // Convert image to data URL
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const imageUrl = e.target.result;
-        
-        // Create artefak object
-        const newArtefak = {
-          id: 'art_' + Date.now(),
-          user_id: currentUser.id,
-          username: currentUser.username,
-          image_url: imageUrl,
-          notasi: finalNotasi,
-          created_at: new Date().toISOString(),
-          note: "",
-          emojis: { '😭': 0, '🔥': 0, '🤡': 0 }
-        };
-        
-        // Save to localStorage
-        const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
-        artefaks.push(newArtefak);
-        localStorage.setItem('nopeArtefaks', JSON.stringify(artefaks));
-        localStorage.setItem('nopeLastArtefakTime', now.toString());
-        
-        // Save to Supabase if available
-        if (supabase) {
-          try {
-            const { error } = supabase
-              .from('artefaks')
-              .insert({
-                artefak_id: newArtefak.id,
-                user_id: newArtefak.user_id,
-                username: newArtefak.username,
-                notasi: newArtefak.notasi,
-                note: newArtefak.note,
-                emojis: newArtefak.emojis
-              });
-              
-            if (error) console.error('Error saving artefak to Supabase:', error);
-          } catch (error) {
-            console.error('Supabase connection error:', error);
-          }
-        }
-        
-        // Update main artefak image
-        document.getElementById('main-artefak').src = imageUrl;
-        
-        alert(`✅ Artefak abadi tersimpan!\nNotasi: "${finalNotasi}"`);
-        
-        // Reload artefaks
-        loadArtefaks();
-        
-        // Reset file input
-        e.target.value = '';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function loadRants() {
-      let rants = [];
-      
-      // Try to load from Supabase first
-      if (supabase && currentUser) {
-        try {
-          // In a real app, you'd fetch from Supabase
-          // For now, fallback to localStorage
-          rants = JSON.parse(localStorage.getItem('nopeRants') || '[]');
-        } catch (error) {
-          console.error('Error loading rants from Supabase:', error);
-          rants = JSON.parse(localStorage.getItem('nopeRants') || '[]');
-        }
-      } else {
-        // Use localStorage only
-        rants = JSON.parse(localStorage.getItem('nopeRants') || '[]');
-      }
-      
-      // Add dummy data if less than 10 rants
-      if (rants.length < 10) {
-        const needed = 10 - rants.length;
-        const dummyRants = getDummyRants();
-        for (let i = 0; i < needed; i++) {
-          rants.push(dummyRants[i % dummyRants.length]);
-        }
-      }
-      
-      // Render rants
-      renderRants(rants.slice(0, 10));
-    }
-
-    function loadArtefaks() {
-      let artefaks = [];
-      
-      // Try to load from Supabase first
-      if (supabase && currentUser) {
-        try {
-          // In a real app, you'd fetch from Supabase
-          // For now, fallback to localStorage
-          artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
-        } catch (error) {
-          console.error('Error loading artefaks from Supabase:', error);
-          artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
-        }
-      } else {
-        // Use localStorage only
-        artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
-      }
-      
-      // Add dummy data if less than 6 artefaks
-      if (artefaks.length < 6) {
-        const needed = 6 - artefaks.length;
-        const dummyArtefaks = getDummyArtefaks();
-        for (let i = 0; i < needed; i++) {
-          artefaks.push(dummyArtefaks[i % dummyArtefaks.length]);
-        }
-      }
-      
-      // Render artefaks
-      renderArtefaks(artefaks.slice(0, 6));
-    }
-
-    function renderRants(rants) {
-      const feedContainer = document.getElementById('feed-container');
-      
-      if (rants.length === 0) {
-        feedContainer.innerHTML = '<div class="rant-item">Belum ada jejak. Mulai tulis perasaanmu...</div>';
-        return;
-      }
-      
-      feedContainer.innerHTML = rants.map(rant => `
-        <div class="rant-item" data-id="${rant.id}">
-          <div class="rant-text">${escapeHtml(rant.text)}</div>
-          <div class="emoji-reactions">
-            <button class="emoji-btn" data-emoji="😭" data-id="${rant.id}">😭 ${rant.emojis['😭'] || 0}</button>
-            <button class="emoji-btn" data-emoji="🔥" data-id="${rant.id}">🔥 ${rant.emojis['🔥'] || 0}</button>
-            <button class="emoji-btn" data-emoji="🤡" data-id="${rant.id}">🤡 ${rant.emojis['🤡'] || 0}</button>
-          </div>
-          <div class="rant-meta">
-            <small>@${rant.username} • ${formatTime(rant.created_at)}</small>
-          </div>
-        </div>
-      `).join('');
-      
-      // Add event listeners for emoji reactions
-      document.querySelectorAll('.emoji-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const rantId = e.target.dataset.id;
-          const emoji = e.target.dataset.emoji;
-          handleReaction('rant', rantId, emoji);
-        });
-      });
-    }
-
-    function renderArtefaks(artefaks) {
-      const tray = document.getElementById('artefak-tray');
-      
-      tray.innerHTML = artefaks.map((artefak, index) => `
-        <div class="artefak-item" data-index="${index}">
-          <img src="${artefak.image_url || artefak.url}" alt="Artefak" />
-          <div class="artefak-overlay" style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.7); padding:4px; font-size:0.7rem;">
-            <div>${artefak.notasi || ''}</div>
-            <button class="note-btn" style="background:none; border:none; color:#fff; cursor:pointer; font-size:0.8rem;">📝</button>
-          </div>
-        </div>
-      `).join('');
-      
-      // Add event listeners for artefak items
-      document.querySelectorAll('.artefak-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-          if (e.target.classList.contains('note-btn')) {
-            e.stopPropagation();
-            const index = parseInt(item.dataset.index);
-            openNoteModal(artefaks[index], index);
-          } else {
-            const index = parseInt(item.dataset.index);
-            // Show large image or details
-            document.getElementById('main-artefak').src = artefaks[index].image_url || artefaks[index].url;
-          }
-        });
-      });
-    }
-
-    function openNoteModal(artefak, index) {
-      const modal = document.getElementById('note-modal');
-      document.getElementById('modal-artefak-img').src = artefak.image_url || artefak.url;
-      document.getElementById('modal-note-input').value = artefak.note || '';
-      modal.dataset.index = index;
-      modal.dataset.id = artefak.id;
-      modal.style.display = 'flex';
-    }
-
-    function saveNote() {
-      const modal = document.getElementById('note-modal');
-      const index = parseInt(modal.dataset.index);
-      const artefakId = modal.dataset.id;
-      const note = document.getElementById('modal-note-input').value.trim();
-      
-      // Update in localStorage
-      const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
-      if (artefaks[index]) {
-        artefaks[index].note = note;
-        localStorage.setItem('nopeArtefaks', JSON.stringify(artefaks));
-      }
-      
-      // Update in Supabase if available
-      if (supabase && artefakId) {
-        try {
-          const { error } = supabase
-            .from('artefaks')
-            .update({ note: note })
-            .eq('artefak_id', artefakId);
-            
-          if (error) console.error('Error updating note in Supabase:', error);
-        } catch (error) {
-          console.error('Supabase connection error:', error);
-        }
-      }
-      
-      alert('Catatan disimpan.');
-      modal.style.display = 'none';
-    }
-
-    function handleReaction(type, itemId, emoji) {
-      if (!currentUser) return;
-      
-      let items, storageKey;
-      
-      if (type === 'rant') {
-        items = JSON.parse(localStorage.getItem('nopeRants') || '[]');
-        storageKey = 'nopeRants';
-      } else {
-        items = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
-        storageKey = 'nopeArtefaks';
-      }
-      
-      const itemIndex = items.findIndex(item => item.id === itemId);
-      if (itemIndex === -1) return;
-      
-      // Update emoji count
-      if (!items[itemIndex].emojis) {
-        items[itemIndex].emojis = { '😭': 0, '🔥': 0, '🤡': 0 };
-      }
-      
-      items[itemIndex].emojis[emoji] = (items[itemIndex].emojis[emoji] || 0) + 1;
-      
-      // Save to localStorage
-      localStorage.setItem(storageKey, JSON.stringify(items));
-      
-      // Save to Supabase if available
-      if (supabase) {
-        try {
-          const tableName = type === 'rant' ? 'rants' : 'artefaks';
-          const idField = type === 'rant' ? 'rant_id' : 'artefak_id';
-          
-          const { error } = supabase
-            .from(tableName)
-            .update({ emojis: items[itemIndex].emojis })
-            .eq(idField, itemId);
-            
-          if (error) console.error(`Error updating ${type} reaction in Supabase:`, error);
-        } catch (error) {
-          console.error('Supabase connection error:', error);
-        }
-      }
-      
-      // Reload the appropriate data
-      if (type === 'rant') {
-        loadRants();
-      } else {
-        loadArtefaks();
-      }
-    }
-
-    function setupInitialData() {
-      // Setup initial rants if none exist
-      if (!localStorage.getItem('nopeRants') || JSON.parse(localStorage.getItem('nopeRants')).length === 0) {
-        const dummyRants = getDummyRants();
-        localStorage.setItem('nopeRants', JSON.stringify(dummyRants));
-      }
-      
-      // Setup initial artefaks if none exist
-      if (!localStorage.getItem('nopeArtefaks') || JSON.parse(localStorage.getItem('nopeArtefaks')).length === 0) {
-        localStorage.setItem('nopeArtefaks', JSON.stringify([]));
-      }
-    }
-
-    // ===== HELPER FUNCTIONS =====
-    function getDummyRants() {
-      return [
-        {
-          id: 'rant
+    });
+  </script>
+</body>
+</html>
