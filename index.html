@@ -31,8 +31,21 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .header-bar {
+    /* HIDE MAIN CONTENT BY DEFAULT */
+    .header-bar,
+    .container,
+    .nav-footer {
+      display: none;
+    }
+
+    /* SHOW MAIN CONTENT WHEN LOGGED IN */
+    body.logged-in .header-bar,
+    body.logged-in .container,
+    body.logged-in .nav-footer {
       display: flex;
+    }
+
+    .header-bar {
       justify-content: center;
       align-items: center;
       padding: 10px 16px 8px;
@@ -56,7 +69,6 @@
       max-width: 600px;
       padding: 0 16px;
       margin: 0 auto;
-      display: flex;
       flex-direction: column;
       gap: 14px;
       margin-top: 8px;
@@ -187,7 +199,6 @@
       left: 0;
       right: 0;
       background: var(--black);
-      display: flex;
       justify-content: space-around;
       align-items: center;
       padding: 8px 0;
@@ -214,7 +225,6 @@
 
     /* Login */
     #login-overlay {
-      display: none;
       position: fixed;
       inset: 0;
       background: #000;
@@ -223,6 +233,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
+      display: flex !important; /* Always show by default */
     }
     #login-username {
       width: 100%;
@@ -270,7 +281,6 @@
       right: 0;
       bottom: 0;
       background: rgba(0,0,0,0.82);
-      display: flex;
       justify-content: center;
       align-items: center;
       z-index: 200;
@@ -394,7 +404,7 @@
 </head>
 <body>
 
-  <!-- LOGIN OVERLAY -->
+  <!-- LOGIN OVERLAY - ALWAYS SHOW FIRST -->
   <div id="login-overlay">
     <div class="logo">NOPE</div>
     <div style="color:#aaa; font-size:1rem; text-align:center; margin:16px 0;">
@@ -479,30 +489,42 @@
 
   <script>
     // ===== SUPABASE CONFIGURATION =====
-    // Ganti dengan URL dan Key Supabase Anda
+    // GANTI DENGAN URL DAN KEY SUPABASE ANDA
     const SUPABASE_URL = 'https://your-project.supabase.co';
     const SUPABASE_KEY = 'your-anon-key';
     
-    // Inisialisasi Supabase client
-    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+    // Inisialisasi Supabase client (akan null jika URL/KEY tidak valid)
+    let supabase = null;
+    try {
+      if (SUPABASE_URL && SUPABASE_KEY && 
+          SUPABASE_URL !== 'https://your-project.supabase.co' && 
+          SUPABASE_KEY !== 'your-anon-key') {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch (error) {
+      console.log('Supabase tidak diinisialisasi, menggunakan localStorage saja');
+    }
     
     // ===== APP STATE =====
     let currentUser = null;
 
     // ===== USER LOGIN & AUTH =====
-    document.addEventListener('DOMContentLoaded', async () => {
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, checking login status...');
+      
       // Cek apakah sudah login
       const storedUser = localStorage.getItem('nopeUser');
       
-      if (!storedUser) {
+      if (storedUser) {
+        console.log('User found in localStorage:', storedUser);
+        // Jika sudah login, langsung setup app
+        currentUser = JSON.parse(storedUser);
+        setupAppAfterLogin();
+      } else {
+        console.log('No user found, showing login overlay');
         // Tampilkan login overlay jika belum login
         document.getElementById('login-overlay').style.display = 'flex';
         setupLoginHandlers();
-      } else {
-        // Jika sudah login, inisialisasi app
-        currentUser = JSON.parse(storedUser);
-        document.getElementById('jejak-title').textContent = `Hello @${currentUser.username}`;
-        await initApp();
       }
     });
 
@@ -516,7 +538,7 @@
       });
     }
 
-    async function handleLogin() {
+    function handleLogin() {
       let username = document.getElementById('login-username').value.trim();
       if (!username) { 
         alert('Masukkan username dulu.'); 
@@ -542,18 +564,14 @@
       // Save to localStorage
       localStorage.setItem('nopeUser', JSON.stringify(currentUser));
       
-      // Hide login overlay
-      document.getElementById('login-overlay').style.display = 'none';
-      document.getElementById('jejak-title').textContent = `Hello @${username}`;
-      
-      // Initialize app
-      await initApp();
+      // Setup app after login
+      setupAppAfterLogin();
       
       // Try to sync with Supabase if available
       if (supabase) {
         try {
           // Simpan user ke Supabase
-          const { error } = await supabase
+          const { error } = supabase
             .from('users')
             .upsert({
               user_id: currentUser.id,
@@ -568,13 +586,24 @@
       }
     }
 
-    async function initApp() {
+    function setupAppAfterLogin() {
+      console.log('Setting up app after login for user:', currentUser.username);
+      
+      // Hide login overlay
+      document.getElementById('login-overlay').style.display = 'none';
+      
+      // Show main content
+      document.body.classList.add('logged-in');
+      
+      // Update title
+      document.getElementById('jejak-title').textContent = `Hello @${currentUser.username}`;
+      
       // Setup event listeners
       setupEventListeners();
       
       // Load data
-      await loadRants();
-      await loadArtefaks();
+      loadRants();
+      loadArtefaks();
       
       // Setup dummy data jika belum ada data
       if (!localStorage.getItem('nopeRants')) {
@@ -613,7 +642,7 @@
       });
     }
 
-    async function uploadRant() {
+    function uploadRant() {
       if (!currentUser) {
         alert('Silakan login terlebih dahulu.');
         return;
@@ -647,7 +676,7 @@
       // Save to Supabase if available
       if (supabase) {
         try {
-          const { error } = await supabase
+          const { error } = supabase
             .from('rants')
             .insert({
               rant_id: newRant.id,
@@ -667,10 +696,10 @@
       document.getElementById('rant-input').value = '';
       
       // Reload rants
-      await loadRants();
+      loadRants();
     }
 
-    async function handleImageUpload(e) {
+    function handleImageUpload(e) {
       if (!currentUser) {
         alert('Silakan login terlebih dahulu.');
         return;
@@ -715,80 +744,71 @@
       const finalNotasi = words.join(" ");
       
       // Convert image to data URL
-      const imageUrl = await loadImageAsDataURL(file);
-      
-      // Create artefak object
-      const newArtefak = {
-        id: 'art_' + Date.now(),
-        user_id: currentUser.id,
-        username: currentUser.username,
-        image_url: imageUrl,
-        notasi: finalNotasi,
-        created_at: new Date().toISOString(),
-        note: "",
-        emojis: { '😭': 0, '🔥': 0, '🤡': 0 }
-      };
-      
-      // Save to localStorage
-      const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
-      artefaks.push(newArtefak);
-      localStorage.setItem('nopeArtefaks', JSON.stringify(artefaks));
-      localStorage.setItem('nopeLastArtefakTime', now.toString());
-      
-      // Save to Supabase if available
-      if (supabase) {
-        try {
-          const { error } = await supabase
-            .from('artefaks')
-            .insert({
-              artefak_id: newArtefak.id,
-              user_id: newArtefak.user_id,
-              username: newArtefak.username,
-              notasi: newArtefak.notasi,
-              note: newArtefak.note,
-              emojis: newArtefak.emojis
-              // Note: Supabase akan menyimpan gambar sebagai URL atau di storage
-            });
-            
-          if (error) console.error('Error saving artefak to Supabase:', error);
-        } catch (error) {
-          console.error('Supabase connection error:', error);
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageUrl = e.target.result;
+        
+        // Create artefak object
+        const newArtefak = {
+          id: 'art_' + Date.now(),
+          user_id: currentUser.id,
+          username: currentUser.username,
+          image_url: imageUrl,
+          notasi: finalNotasi,
+          created_at: new Date().toISOString(),
+          note: "",
+          emojis: { '😭': 0, '🔥': 0, '🤡': 0 }
+        };
+        
+        // Save to localStorage
+        const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
+        artefaks.push(newArtefak);
+        localStorage.setItem('nopeArtefaks', JSON.stringify(artefaks));
+        localStorage.setItem('nopeLastArtefakTime', now.toString());
+        
+        // Save to Supabase if available
+        if (supabase) {
+          try {
+            const { error } = supabase
+              .from('artefaks')
+              .insert({
+                artefak_id: newArtefak.id,
+                user_id: newArtefak.user_id,
+                username: newArtefak.username,
+                notasi: newArtefak.notasi,
+                note: newArtefak.note,
+                emojis: newArtefak.emojis
+              });
+              
+            if (error) console.error('Error saving artefak to Supabase:', error);
+          } catch (error) {
+            console.error('Supabase connection error:', error);
+          }
         }
-      }
-      
-      // Update main artefak image
-      document.getElementById('main-artefak').src = imageUrl;
-      
-      alert(`✅ Artefak abadi tersimpan!\nNotasi: "${finalNotasi}"`);
-      
-      // Reload artefaks
-      await loadArtefaks();
-      
-      // Reset file input
-      e.target.value = '';
+        
+        // Update main artefak image
+        document.getElementById('main-artefak').src = imageUrl;
+        
+        alert(`✅ Artefak abadi tersimpan!\nNotasi: "${finalNotasi}"`);
+        
+        // Reload artefaks
+        loadArtefaks();
+        
+        // Reset file input
+        e.target.value = '';
+      };
+      reader.readAsDataURL(file);
     }
 
-    async function loadRants() {
+    function loadRants() {
       let rants = [];
       
       // Try to load from Supabase first
       if (supabase && currentUser) {
         try {
-          const { data, error } = await supabase
-            .from('rants')
-            .select('*')
-            .eq('user_id', currentUser.id)
-            .order('created_at', { ascending: false })
-            .limit(20);
-            
-          if (!error && data) {
-            rants = data;
-            // Save to localStorage for offline use
-            localStorage.setItem('nopeRants', JSON.stringify(rants));
-          } else {
-            // Fallback to localStorage
-            rants = JSON.parse(localStorage.getItem('nopeRants') || '[]');
-          }
+          // In a real app, you'd fetch from Supabase
+          // For now, fallback to localStorage
+          rants = JSON.parse(localStorage.getItem('nopeRants') || '[]');
         } catch (error) {
           console.error('Error loading rants from Supabase:', error);
           rants = JSON.parse(localStorage.getItem('nopeRants') || '[]');
@@ -811,27 +831,15 @@
       renderRants(rants.slice(0, 10));
     }
 
-    async function loadArtefaks() {
+    function loadArtefaks() {
       let artefaks = [];
       
       // Try to load from Supabase first
       if (supabase && currentUser) {
         try {
-          const { data, error } = await supabase
-            .from('artefaks')
-            .select('*')
-            .eq('user_id', currentUser.id)
-            .order('created_at', { ascending: false })
-            .limit(12);
-            
-          if (!error && data) {
-            artefaks = data;
-            // Save to localStorage for offline use
-            localStorage.setItem('nopeArtefaks', JSON.stringify(artefaks));
-          } else {
-            // Fallback to localStorage
-            artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
-          }
+          // In a real app, you'd fetch from Supabase
+          // For now, fallback to localStorage
+          artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
         } catch (error) {
           console.error('Error loading artefaks from Supabase:', error);
           artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
@@ -878,10 +886,10 @@
       
       // Add event listeners for emoji reactions
       document.querySelectorAll('.emoji-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
+        btn.addEventListener('click', (e) => {
           const rantId = e.target.dataset.id;
           const emoji = e.target.dataset.emoji;
-          await handleReaction('rant', rantId, emoji);
+          handleReaction('rant', rantId, emoji);
         });
       });
     }
@@ -924,7 +932,7 @@
       modal.style.display = 'flex';
     }
 
-    async function saveNote() {
+    function saveNote() {
       const modal = document.getElementById('note-modal');
       const index = parseInt(modal.dataset.index);
       const artefakId = modal.dataset.id;
@@ -940,7 +948,7 @@
       // Update in Supabase if available
       if (supabase && artefakId) {
         try {
-          const { error } = await supabase
+          const { error } = supabase
             .from('artefaks')
             .update({ note: note })
             .eq('artefak_id', artefakId);
@@ -955,21 +963,17 @@
       modal.style.display = 'none';
     }
 
-    async function handleReaction(type, itemId, emoji) {
+    function handleReaction(type, itemId, emoji) {
       if (!currentUser) return;
       
-      let items, storageKey, tableName, idField;
+      let items, storageKey;
       
       if (type === 'rant') {
         items = JSON.parse(localStorage.getItem('nopeRants') || '[]');
         storageKey = 'nopeRants';
-        tableName = 'rants';
-        idField = 'rant_id';
       } else {
         items = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
         storageKey = 'nopeArtefaks';
-        tableName = 'artefaks';
-        idField = 'artefak_id';
       }
       
       const itemIndex = items.findIndex(item => item.id === itemId);
@@ -988,7 +992,10 @@
       // Save to Supabase if available
       if (supabase) {
         try {
-          const { error } = await supabase
+          const tableName = type === 'rant' ? 'rants' : 'artefaks';
+          const idField = type === 'rant' ? 'rant_id' : 'artefak_id';
+          
+          const { error } = supabase
             .from(tableName)
             .update({ emojis: items[itemIndex].emojis })
             .eq(idField, itemId);
@@ -1001,9 +1008,9 @@
       
       // Reload the appropriate data
       if (type === 'rant') {
-        await loadRants();
+        loadRants();
       } else {
-        await loadArtefaks();
+        loadArtefaks();
       }
     }
 
@@ -1021,4 +1028,7 @@
     }
 
     // ===== HELPER FUNCTIONS =====
-    function loadImageAsDataURL(file) {
+    function getDummyRants() {
+      return [
+        {
+          id: 'rant
