@@ -7,7 +7,7 @@
   <meta name="description" content="ga perlu follower, cuma butuh sefrekuensi">
   <link rel="manifest" href="/manifest.json">
   <!-- Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.0"></script>
   <style>
     :root {
       --black: #000;
@@ -15,9 +15,7 @@
       --accent: #6c47ff;
       --accent-light: #8a6dff;
       --logo: #ff9999;
-      --card-bg: #12052d;
       --input-bg: #1a0736;
-      --radius-8: 8px;
       --radius-10: 10px;
       --transition-fast: 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
     }
@@ -26,7 +24,6 @@
       background: var(--black);
       color: var(--white);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.5;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -53,7 +50,6 @@
       font-size: 1.5rem;
       letter-spacing: -0.5px;
       text-align: center;
-      transition: transform var(--transition-fast);
     }
 
     .container {
@@ -65,6 +61,7 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
+      margin-top: 20px;
     }
 
     .subheader {
@@ -72,421 +69,6 @@
       font-size: 1.15rem;
       font-weight: 600;
       margin: 2px 0 4px;
-    }
-
-    .artefak-container {
-      position: relative;
-      width: 100%;
-      height: 0;
-      padding-bottom: 72%;
-      background: var(--input-bg);
-      border-radius: var(--radius-10);
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: transform var(--transition-fast);
-    }
-    .artefak-container:active {
-      transform: scale(0.992);
-    }
-    .artefak-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.85);
-    }
-    .artefak-notasi {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
-      padding: 3px 6px;
-      border-radius: 3px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      backdrop-filter: blur(2px);
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
-    .cta-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 2px;
-    }
-    .impulse-text {
-      background: none;
-      border: none;
-      padding: 0;
-      margin: 0;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--accent);
-      cursor: pointer;
-      outline: none;
-      animation: impulse 3s infinite;
-      transition: color var(--transition-fast), transform var(--transition-fast);
-    }
-    .impulse-text:active {
-      color: var(--accent-light);
-      transform: scale(0.98);
-    }
-    @keyframes impulse {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; }
-    }
-
-    .rant-box textarea {
-      width: 100%;
-      background: var(--input-bg);
-      border: 1px solid #333;
-      color: var(--white);
-      padding: 12px;
-      border-radius: var(--radius-10);
-      resize: vertical;
-      min-height: 110px;
-      max-height: 500px;
-      font-size: 15px;
-      line-height: 1.4;
-      outline: none;
-      font-family: inherit;
-      transition: border-color var(--transition-fast), background-color var(--transition-fast);
-    }
-    .rant-box textarea:focus {
-      border-color: var(--accent);
-      background-color: #1e093d;
-    }
-    .rant-box textarea::placeholder {
-      color: #777;
-    }
-
-    .rant-upload-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 4px;
-    }
-
-    .feed-title {
-      color: var(--accent);
-      font-size: 1.1rem;
-      margin-top: 8px;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .rant-item {
-      background: var(--input-bg);
-      padding: 12px;
-      border-radius: var(--radius-10);
-      margin-bottom: 12px;
-      font-size: 0.93rem;
-      line-height: 1.55;
-      position: relative;
-      transition: background-color var(--transition-fast);
-    }
-    .rant-item:active {
-      background-color: #200a40;
-    }
-    .rant-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-    }
-    .rant-user {
-      font-weight: 600;
-      color: var(--accent);
-    }
-    .rant-time {
-      color: #777;
-    }
-    .rant-text {
-      margin-bottom: 8px;
-      word-break: break-word;
-    }
-    .artefak-thumb {
-      width: 100%;
-      height: 140px;
-      border-radius: var(--radius-8);
-      object-fit: cover;
-      margin: 8px 0;
-      filter: brightness(0.85);
-    }
-    .artefak-notasi-feed {
-      font-size: 0.95rem;
-      font-weight: bold;
-      color: var(--white);
-      margin: 6px 0;
-      text-align: left;
-      padding: 4px 0;
-      border-left: 2px solid var(--accent);
-      padding-left: 8px;
-    }
-    .zone-badge {
-      font-size: 0.8rem;
-      color: var(--accent);
-      background: rgba(108, 71, 255, 0.15);
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-top: 4px;
-      display: inline-block;
-    }
-    .emoji-pulse {
-      display: inline-block;
-      font-size: 1.2rem;
-      cursor: pointer;
-      margin-left: 6px;
-      animation: pulse 1.8s infinite ease-in-out;
-    }
-    @keyframes pulse {
-      0% { opacity: 0.7; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.05); }
-      100% { opacity: 0.7; transform: scale(1); }
-    }
-
-    .artefak-tray {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-top: 16px;
-      padding-bottom: 100px;
-      border-top: 1px solid #222;
-      padding-top: 12px;
-    }
-    .artefak-item {
-      position: relative;
-      width: 100%;
-      height: 0;
-      padding-bottom: 80%;
-      background: var(--input-bg);
-      border-radius: var(--radius-8);
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform var(--transition-fast);
-    }
-    .artefak-item:active {
-      transform: scale(0.97);
-    }
-    .artefak-item img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.9);
-    }
-    .artefak-item .overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      padding: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .artefak-item:hover .overlay,
-    .artefak-item:active .overlay {
-      opacity: 1;
-    }
-    .artefak-item .counter {
-      font-size: 0.75rem;
-      color: var(--white);
-      background: rgba(0,0,0,0.5);
-      padding: 1px 5px;
-      border-radius: 3px;
-    }
-    .artefak-item .note-btn {
-      background: rgba(108, 71, 255, 0.2);
-      color: var(--accent);
-      border: none;
-      padding: 1px 5px;
-      border-radius: 3px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: color var(--transition-fast);
-    }
-    .artefak-item .note-btn:active {
-      color: var(--accent-light);
-    }
-
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.82);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 200;
-      padding: 16px;
-      display: none;
-    }
-    .modal-content {
-      background: var(--card-bg);
-      border-radius: var(--radius-10);
-      width: 100%;
-      max-width: 500px;
-      padding: 20px;
-      position: relative;
-      transform: scale(1);
-      transition: transform var(--transition-fast);
-    }
-    .modal.active .modal-content {
-      transform: scale(1.02);
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .modal-close {
-      background: none;
-      border: none;
-      color: var(--white);
-      font-size: 1.4rem;
-      cursor: pointer;
-      transition: opacity var(--transition-fast);
-    }
-    .modal-close:active {
-      opacity: 0.6;
-    }
-    .modal-artefak {
-      width: 100%;
-      height: 0;
-      padding-bottom: 75%;
-      background: var(--input-bg);
-      border-radius: var(--radius-8);
-      overflow: hidden;
-      margin-bottom: 14px;
-    }
-    .modal-artefak img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .modal-counter {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-    .modal-counter span {
-      background: rgba(0,0,0,0.5);
-      padding: 3px 7px;
-      border-radius: 3px;
-      font-size: 0.85rem;
-      transition: background-color var(--transition-fast);
-    }
-    .modal-counter span:active {
-      background: rgba(108, 71, 255, 0.3);
-    }
-    .modal-note {
-      width: 100%;
-      background: var(--input-bg);
-      border: 1px solid #333;
-      color: var(--white);
-      padding: 10px;
-      border-radius: var(--radius-8);
-      resize: vertical;
-      min-height: 70px;
-      max-height: 200px;
-      font-size: 0.9rem;
-      outline: none;
-      font-family: inherit;
-    }
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 14px;
-    }
-    .modal-actions button {
-      padding: 7px 14px;
-      border-radius: var(--radius-8);
-      font-size: 0.88rem;
-      cursor: pointer;
-      transition: var(--transition-fast);
-    }
-    .modal-actions .cancel {
-      background: transparent;
-      border: 1px solid #555;
-      color: #aaa;
-    }
-    .modal-actions .cancel:active {
-      border-color: #777;
-      color: #ccc;
-    }
-    .modal-actions .save {
-      background: var(--accent);
-      color: white;
-      border: none;
-    }
-    .modal-actions .save:active {
-      background: var(--accent-light);
-    }
-
-    .nav-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--black);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 8px 0;
-      border-top: 1px solid #222;
-      z-index: 100;
-      height: 56px;
-      max-width: 600px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    @media (min-width: 601px) {
-      .nav-footer {
-        left: 50%;
-        transform: translateX(-50%);
-        border-radius: 12px 12px 0 0;
-      }
-    }
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #888;
-      text-decoration: none;
-      font-size: 0.74rem;
-      gap: 2px;
-      transition: color var(--transition-fast);
-    }
-    .nav-item.active {
-      color: var(--accent);
-    }
-    .nav-item:active {
-      color: var(--accent-light);
-    }
-    .nav-item span {
-      font-size: 1.18rem;
-      transition: transform var(--transition-fast);
-    }
-    .nav-item:active span {
-      transform: scale(0.95);
-    }
-
-    #image-upload {
-      display: none;
     }
   </style>
 </head>
@@ -508,178 +90,80 @@
 
   <div class="container">
     <div class="subheader" id="jejak-title">Jejak @sunyisenja</div>
-
-    <div class="artefak-container">
-      <img id="main-artefak" src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=600&h=480&q=80" alt="Artefak" class="artefak-image" />
-      <div class="artefak-notasi">Gue mau simpen momen ini.</div>
-    </div>
-
-    <div class="cta-row">
-      <button id="choose-photo" class="impulse-text">Artefak</button>
-    </div>
-
-    <div class="rant-box">
-      <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..." maxlength="300"></textarea>
-    </div>
-
-    <div class="rant-upload-row">
-      <button class="impulse-text" id="submit-rant">Unggah</button>
-    </div>
-
-    <div class="feed-title">Jejakmu</div>
-    <div id="feed-container"></div>
-
-    <div class="artefak-tray" id="artefak-tray"></div>
+    <p style="color:#777;">Login berhasil. Ini adalah halaman utama sementara.</p>
   </div>
 
-  <input type="file" id="image-upload" accept="image/*">
+  <script>
+    // === SUPABASE CONFIG — 100% SESUAI YANG KAMU BERIKAN ===
+    const SUPABASE_URL = 'https://pgadsneffhdjzdliaokm.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnYWRzbmVmZmhkanpkbGlhb2ttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1MzE5NjksImV4cCI6MjA4MjEwNzk2OX0.t1rSOWETWLt2hvUj9eoXaD4RD8Keb2dYrlvk-kxO2vc';
 
-  <div class="modal" id="note-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>📝 Catatan Pribadi</h3>
-        <button class="modal-close" id="close-modal">×</button>
-      </div>
-      <div class="modal-artefak">
-        <img id="modal-artefak-img" src="" alt="Artefak" />
-      </div>
-      <div class="modal-counter" id="modal-counter"></div>
-      <textarea class="modal-note" id="modal-note-input" placeholder="Tambahkan catatan pribadi untuk momen ini..."></textarea>
-      <div class="modal-actions">
-        <button class="cancel" id="cancel-note">Batal</button>
-        <button class="save" id="save-note">Simpan</button>
-      </div>
-    </div>
-  </div>
+    // ✅ INISIALISASI CLIENT — TIDAK ADA NAMA GANDA
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  <div class="nav-footer">
-    <a href="index.html" class="nav-item active">
-      <span>📄</span>
-      Jejak
-    </a>
-    <a href="jalan.html" class="nav-item">
-      <span>🚶</span>
-      Jalan
-    </a>
-    <a href="dunia.html" class="nav-item">
-      <span>🌍</span>
-      Dunia
-    </a>
-    <a href="movement.html" class="nav-item">
-      <span>✊</span>
-      Movement
-    </a>
-  </div>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const storedUserId = localStorage.getItem('nopeUserId');
+      const loginOverlay = document.getElementById('login-overlay');
 
-<script>
-  // === SUPABASE CONFIG ===
-  const SUPABASE_URL = 'https://pgadsneffhdjzdliaokm.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnYWRzbmVmZmhkanpkbGlhb2ttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1MzE5NjksImV4cCI6MjA4MjEwNzk2OX0.t1rSOWETWLt2hvUj9eoXaD4RD8Keb2dYrlvk-kxO2vc';
+      if (!storedUserId) {
+        loginOverlay.style.display = 'flex';
 
-  // ✅ INISIALISASI CLIENT DENGAN NAMA YANG BERBEDA
-// ✅ PAKAI PUBLISHABLE KEY + BYPASS RLS DENGAN AUTH HEADER
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  'sb_publishable_2slIR05Nk5H1Lo6dFZ33pA_LbEIdzh4S', // ganti dengan key-mu
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true
-    }
-  }
-);
-
-// ⚠️ TAPI: Karena RLS dimatikan, ini akan tetap bekerja tanpa auth header tambahan
-
-  // === UTILS ===
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  function loadImageAsDataURL(file) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target.result);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  // === MAIN APP ===
-  document.addEventListener('DOMContentLoaded', async () => {
-    const storedUserId = localStorage.getItem('nopeUserId');
-    const loginOverlay = document.getElementById('login-overlay');
-
-    if (!storedUserId) {
-      loginOverlay.style.display = 'flex';
-
-      document.getElementById('login-btn').addEventListener('click', async () => {
-        let username = document.getElementById('login-username').value.trim();
-        if (!username) {
-          alert('Masukkan username dulu.');
-          return;
-        }
-        const words = username.split(/\s+/).filter(w => w.length > 0);
-        if (words.length < 2) {
-          alert('Username harus terdiri dari minimal 2 kata.');
-          return;
-        }
-        if (words.length > 2) {
-          username = words.slice(0, 2).join(' ');
-        }
-
-        // Cek user di Supabase
-        const { data: existingUser, error: fetchError } = await supabaseClient
-          .from('users')
-          .select('id')
-          .eq('username', username)
-          .single();
-
-        let userId;
-        if (existingUser) {
-          userId = existingUser.id;
-        } else {
-          const { data: newUser, error: insertError } = await supabaseClient
-            .from('users')
-            .insert({ username })
-            .select()
-            .single();
-          if (insertError) {
-            console.error(insertError);
-            alert('Gagal daftar. Coba lagi.');
+        document.getElementById('login-btn').addEventListener('click', async () => {
+          let username = document.getElementById('login-username').value.trim();
+          if (!username) {
+            alert('Masukkan username dulu.');
             return;
           }
-          userId = newUser.id;
-        }
+          const words = username.split(/\s+/).filter(w => w.length > 0);
+          if (words.length < 2) {
+            alert('Username harus terdiri dari minimal 2 kata.');
+            return;
+          }
+          if (words.length > 2) {
+            username = words.slice(0, 2).join(' ');
+          }
 
-        localStorage.setItem('nopeUserId', userId);
-        localStorage.setItem('nopeUsername', username);
-        loginOverlay.style.display = 'none';
-        location.reload();
-      });
+          // Cek apakah username sudah ada
+          const { data: existingUser } = await supabaseClient
+            .from('users')
+            .select('id')
+            .eq('username', username)
+            .single();
 
-      document.getElementById('login-username').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') document.getElementById('login-btn').click();
-      });
+          let userId;
+          if (existingUser) {
+            userId = existingUser.id;
+          } else {
+            // Simpan user baru
+            const { data: newUser, error } = await supabaseClient
+              .from('users')
+              .insert({ username })
+              .select('id')
+              .single();
 
-    } else {
-      const username = localStorage.getItem('nopeUsername');
-      window.NOPE_USER = username;
-      window.NOPE_USER_ID = storedUserId;
+            if (error) {
+              console.error('Supabase error:', error);
+              alert('Gagal daftar. Coba lagi.');
+              return;
+            }
+            userId = newUser.id;
+          }
 
-      // Update last_active
-      await supabaseClient
-        .from('users')
-        .update({ last_active: new Date().toISOString() })
-        .eq('id', storedUserId);
+          localStorage.setItem('nopeUserId', userId);
+          localStorage.setItem('nopeUsername', username);
+          loginOverlay.style.display = 'none';
+          location.reload();
+        });
 
-      // JALANKAN HALAMAN UTAMA — TAPI UNTUK SEKARANG, HANYA TAMPILKAN HEADER DAN LOGIN SUKSES
-      document.getElementById('jejak-title').textContent = `Jejak @${window.NOPE_USER}`;
-      alert(`✅ Login berhasil! Selamat datang, ${username}`);
-    }
-  });
-</script>
+        document.getElementById('login-username').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') document.getElementById('login-btn').click();
+        });
+
+      } else {
+        const username = localStorage.getItem('nopeUsername');
+        document.getElementById('jejak-title').textContent = `Jejak @${username}`;
+      }
+    });
+  </script>
 </body>
 </html>
