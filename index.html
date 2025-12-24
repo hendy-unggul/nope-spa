@@ -2,309 +2,701 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NOPE</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Jejak • NOPE</title>
+  <meta name="description" content="ga perlu follower, cuma butuh sefrekuensi">
   <style>
     :root {
-      --black: #000000;
-      --white: #ffffff;
+      --black: #000;
+      --white: #fff;
       --accent: #4903fc;
       --logo: #ff9999;
-      --deep-black: #0a0a0a;
-      --bg: var(--deep-black);
+      --input-bg: #1a0736;
+      --radius-10: 10px;
+      --transition-fast: 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background-color: var(--bg);
+      background: var(--black);
       color: var(--white);
-      font-family: 'Inter', sans-serif;
-      font-size: 16px;
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
-
-    /* ———— LOGIN ———— */
-    #login-screen {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: 60px;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .header-bar {
+      display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      padding: 0 24px;
+      padding: 10px 16px 8px;
+      background: var(--black);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #222;
+    }
+    .logo {
+      color: var(--logo);
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: -0.5px;
       text-align: center;
     }
 
-    .logo {
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--logo);
-      margin-bottom: 24px;
-    }
-
-    .tagline {
-      font-size: 16px;
-      color: #aaa;
-      margin-bottom: 32px;
-      line-height: 1.4;
-    }
-
-    .input-group {
+    .container {
+      flex: 1;
       width: 100%;
-      margin-bottom: 24px;
-    }
-
-    input {
-      width: 100%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 14px 16px;
-      color: var(--white);
-      font-size: 16px;
-      outline: none;
-    }
-
-    input::placeholder {
-      color: #666;
-    }
-
-    input:focus {
-      border-color: var(--accent);
-    }
-
-    button {
-      width: 100%;
-      background: var(--accent);
-      color: var(--white);
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    /* ———— DASHBOARD ———— */
-    #dashboard {
-      display: none;
-      min-height: 100vh;
-    }
-
-    .header {
-      padding: 16px 0;
+      max-width: 600px;
+      padding: 0 16px;
+      margin: 0 auto;
       display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 8px;
     }
 
-    .logo-small {
-      font-size: 20px;
+    #jejak-title {
+      color: var(--accent);
+      font-size: 1.4rem;
       font-weight: 600;
-      color: var(--logo);
+      margin: 8px 0 12px;
+      text-align: left;
     }
 
-    .greeting {
-      font-size: 16px;
-      font-weight: 500;
+    .artefak-container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 48%;
+      background: var(--input-bg);
+      border-radius: var(--radius-10);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .artefak-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.85);
+    }
+
+    .rant-box {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .rant-box textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid #333;
       color: var(--white);
-      margin-left: auto;
-    }
-
-    .feed {
-      padding: 16px 0;
-    }
-
-    .rant {
-      background: rgba(255,255,255,0.04);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
+      padding: 12px;
+      border-radius: var(--radius-10);
+      resize: vertical;
+      min-height: 110px;
+      max-height: 500px;
       font-size: 15px;
-      line-height: 1.5;
+      line-height: 1.4;
+      outline: none;
+      font-family: inherit;
+      padding-bottom: 36px;
+    }
+    .rant-box textarea::placeholder {
+      color: #777;
     }
 
-    .bottom-nav {
+    #submit-rant {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .feed-title {
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .rant-item {
+      background: var(--input-bg);
+      padding: 12px;
+      border-radius: var(--radius-10);
+      margin-bottom: 12px;
+      font-size: 0.93rem;
+      line-height: 1.55;
+      position: relative;
+    }
+
+    .artefak-tray {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 16px;
+      padding-bottom: 100px;
+      border-top: 1px solid #222;
+      padding-top: 12px;
+    }
+    .artefak-item {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 80%;
+      background: var(--input-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .artefak-item img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.9);
+    }
+
+    .tagline-gen-z {
+      color: #aaa;
+      font-style: italic;
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.9rem;
+    }
+
+    .nav-footer {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: var(--deep-black);
-      border-top: 1px solid rgba(255,255,255,0.05);
+      background: var(--black);
       display: flex;
       justify-content: space-around;
-      padding: 12px 0;
+      align-items: center;
+      padding: 8px 0;
+      border-top: 1px solid #222;
+      z-index: 100;
+      height: 56px;
+      width: 100vw;
     }
-
     .nav-item {
-      color: #777;
-      font-size: 12px;
-      text-align: center;
-      width: 25%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #888;
+      text-decoration: none;
+      font-size: 0.74rem;
+      gap: 2px;
     }
-
     .nav-item.active {
       color: var(--accent);
     }
+    .nav-item span {
+      font-size: 1.18rem;
+    }
 
-    textarea {
+    /* Login */
+    #login-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #login-username {
       width: 100%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
+      max-width: 300px;
+      padding: 12px;
+      background: var(--input-bg);
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    #login-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .login-hint {
+      color: #555;
+      font-size: 0.85rem;
+      margin-top: 24px;
+      text-align: center;
+    }
+    .emoji-pulse {
+      display: inline-block;
+      font-size: 1.2rem;
+      margin-left: 6px;
+      animation: pulse 1.8s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* Artefak Upload Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.82);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
       padding: 16px;
+      display: none;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: var(--radius-10);
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+      position: relative;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .modal-close {
+      background: none;
+      border: none;
       color: var(--white);
-      font-size: 15px;
-      resize: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .modal-artefak {
+      width: 100%;
+      height: 0;
+      padding-bottom: 75%;
+      background: var(--input-bg);
+      border-radius: var(--radius-8);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .modal-artefak img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .modal-note {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid #333;
+      color: var(--white);
+      padding: 10px;
+      border-radius: var(--radius-8);
+      resize: vertical;
+      min-height: 70px;
+      max-height: 200px;
+      font-size: 0.9rem;
       outline: none;
-      height: 60px;
-      margin-bottom: 24px;
+      font-family: inherit;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .modal-actions button {
+      padding: 7px 14px;
+      border-radius: var(--radius-8);
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .modal-actions .cancel {
+      background: transparent;
+      border: 1px solid #555;
+      color: #aaa;
+    }
+    .modal-actions .save {
+      background: var(--accent);
+      color: white;
+      border: none;
     }
 
-    textarea::placeholder {
-      color: #666;
+    /* CTA Artefak */
+    .cta-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
     }
-
-    textarea:focus {
-      border-color: var(--accent);
+    .impulse-text {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      outline: none;
+      animation: impulse 3s infinite;
+    }
+    @keyframes impulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <!-- Login Screen -->
-  <div id="login-screen">
+
+  <!-- LOGIN OVERLAY -->
+  <div id="login-overlay">
     <div class="logo">NOPE</div>
-    <div class="tagline">ga perlu follower, cuma butuh sefrekuensi</div>
-    <div class="input-group">
-      <input type="text" id="username-input" placeholder="Masukkan username (2 kata)" maxlength="30" />
+    <div style="color:#aaa; font-size:1rem; text-align:center; margin:16px 0;">
+      ga perlu follower,<br>cuma butuh sefrekuensi
     </div>
+    <input type="text" id="login-username" placeholder="Masukkan username (2 kata)" maxlength="30">
     <button id="login-btn">Masuk</button>
+    <p class="login-hint">Username hanya untuk identitas. Tidak perlu password.</p>
   </div>
 
-  <!-- Dashboard -->
-  <div id="dashboard" class="container">
-    <div class="header">
-      <div class="logo-small">NOPE</div>
-      <div class="greeting" id="greeting">Hello @<span id="display-username"></span></div>
+  <div class="header-bar">
+    <div class="logo">NOPE</div>
+  </div>
+
+  <div class="container">
+    <div id="jejak-title">Hello @sunyisenja</div>
+
+    <!-- Artefak window DI ATAS rant box -->
+    <div class="artefak-container">
+      <img id="main-artefak" src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=600&h=480&q=80" alt="Artefak" />
     </div>
 
-    <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf"></textarea>
-
-    <div class="feed" id="feed">
-      <!-- Dummy rants akan muncul di sini -->
+    <!-- CTA Artefak -->
+    <div class="cta-row">
+      <button id="choose-photo" class="impulse-text">Artefak</button>
     </div>
 
-    <div class="bottom-nav">
-      <div class="nav-item active">Jejak</div>
-      <div class="nav-item">Jalan</div>
-      <div class="nav-item">Dunia</div>
-      <div class="nav-item">Jelajah</div>
+    <!-- Rant box dengan CTA di dalam -->
+    <div class="rant-box">
+      <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..." maxlength="300"></textarea>
+      <button id="submit-rant">Unggah</button>
+    </div>
+
+    <div class="feed-title">Jejakmu</div>
+    <div id="feed-container"></div>
+
+    <div class="artefak-tray" id="artefak-tray"></div>
+
+    <div class="tagline-gen-z">
+      Bukan feed. Bukan timeline. Ini jejakmu yang abadi.
     </div>
   </div>
+
+  <div class="nav-footer">
+    <a href="#" class="nav-item active">
+      <span>📄</span>
+      Jejak
+    </a>
+    <a href="#" class="nav-item">
+      <span>🚶</span>
+      Jalan
+    </a>
+    <a href="#" class="nav-item">
+      <span>🌍</span>
+      Dunia
+    </a>
+    <a href="#" class="nav-item">
+      <span>✊</span>
+      Jelajah
+    </a>
+  </div>
+
+  <!-- Modal Artefak -->
+  <div class="modal" id="note-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📝 Catatan Pribadi</h3>
+        <button class="modal-close" id="close-modal">×</button>
+      </div>
+      <div class="modal-artefak">
+        <img id="modal-artefak-img" src="" alt="Artefak" />
+      </div>
+      <textarea class="modal-note" id="modal-note-input" placeholder="Tambahkan catatan pribadi untuk momen ini..."></textarea>
+      <div class="modal-actions">
+        <button class="cancel" id="cancel-note">Batal</button>
+        <button class="save" id="save-note">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="image-upload" accept="image/*" style="display:none;">
 
   <script>
-    // ———— SESSION HANDLING ————
-    function saveSession(username) {
-      const session = { username: username.trim(), timestamp: Date.now() };
-      localStorage.setItem('userSession', JSON.stringify(session));
-    }
+    // === USER LOGIN ===
+    document.addEventListener('DOMContentLoaded', () => {
+      const storedUserId = localStorage.getItem('nopeUserId');
+      const loginOverlay = document.getElementById('login-overlay');
 
-    function getSession() {
-      const raw = localStorage.getItem('userSession');
-      if (!raw) return null;
-      try {
-        return JSON.parse(raw);
-      } catch (e) {
-        console.warn('Session corrupted, clearing...', e);
-        localStorage.removeItem('userSession');
-        return null;
+      if (!storedUserId) {
+        loginOverlay.style.display = 'flex';
+
+        const loginBtn = document.getElementById('login-btn');
+        const usernameInput = document.getElementById('login-username');
+
+        loginBtn.addEventListener('click', handleLogin);
+        usernameInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') handleLogin();
+        });
+
+      } else {
+        const username = localStorage.getItem('nopeUsername');
+        document.getElementById('jejak-title').textContent = `Hello @${username}`;
+        initApp();
       }
+    });
+
+    function handleLogin() {
+      let username = document.getElementById('login-username').value.trim();
+      if (!username) { alert('Masukkan username dulu.'); return; }
+      const words = username.split(/\s+/).filter(w => w.length > 0);
+      if (words.length < 2) { alert('Username harus terdiri dari minimal 2 kata.'); return; }
+      if (words.length > 2) username = words.slice(0, 2).join(' ');
+
+      const userId = 'user_' + Date.now();
+      localStorage.setItem('nopeUserId', userId);
+      localStorage.setItem('nopeUsername', username);
+      localStorage.setItem('nopeLastActive', new Date().toISOString());
+
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('jejak-title').textContent = `Hello @${username}`;
+      initApp();
     }
 
-    function clearSession() {
-      localStorage.removeItem('userSession');
-    }
+    function initApp() {
+      if (!localStorage.getItem('nopeUserRants')) {
+        localStorage.setItem('nopeUserRants', JSON.stringify([]));
+      }
+      if (!localStorage.getItem('nopeArtefaks')) {
+        localStorage.setItem('nopeArtefaks', JSON.stringify([]));
+      }
 
-    // ———— DUMMY RANTS ————
-    const dummyRants = [
-      "kadang pengen ilang aja gitu, gak perlu alasan",
-      "ngobrol sama diri sendiri ternyata paling nyaman",
-      "capek jadi versi yang disukai orang",
-      "aku kangen masa kecil yang gapapa gabut",
-      "hari ini aku bertahan. itu aja dulu.",
-      "ga semua hal harus dijelasin, kan?",
-      "ada yang ngerasa hidup cuma jadi to-do list?",
-      "kadang ‘baik-baik aja’ itu cara buat ga nangis di depan orang",
-      "aku pengen dipeluk, tapi malu minta",
-      "ngerasa kosong, tapi tetep senyum di grup WA"
-    ];
+      renderFeed();
+      renderArtefakTray();
 
-    function renderDummyFeed() {
-      const feed = document.getElementById('feed');
-      feed.innerHTML = '';
-      dummyRants.forEach(text => {
-        const el = document.createElement('div');
-        el.className = 'rant';
-        el.textContent = text;
-        feed.appendChild(el);
+      // Rant upload
+      document.getElementById('submit-rant').addEventListener('click', () => {
+        const text = document.getElementById('rant-input').value.trim();
+        if (!text) { alert('Isi dulu perasaanmu...'); return; }
+        if (text.length > 300) { alert('Maksimal 300 huruf ya.'); return; }
+
+        const newRant = {
+          id: 'rant_' + Date.now(),
+          text,
+          time: Date.now(),
+          emojis: { '😭': 0, '🔥': 0, '🤡': 0 }
+        };
+
+        const rants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+        rants.unshift(newRant);
+        localStorage.setItem('nopeUserRants', JSON.stringify(rants));
+
+        document.getElementById('rant-input').value = '';
+        renderFeed();
+      });
+
+      // Artefak upload
+      document.getElementById('choose-photo').addEventListener('click', () => {
+        document.getElementById('image-upload').click();
+      });
+
+      document.getElementById('image-upload').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+
+        const lastArtefakTime = localStorage.getItem('nopeLastArtefakTime');
+        const now = Date.now();
+        if (lastArtefakTime && (now - parseInt(lastArtefakTime)) < 30 * 24 * 60 * 60 * 1000) {
+          const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (now - parseInt(lastArtefakTime))) / (24 * 60 * 60 * 1000));
+          alert(`Artefak hanya bisa diunggah sekali per 30 hari.\nKamu bisa lagi dalam ${daysLeft} hari.`);
+          return;
+        }
+
+        const confirmed = confirm(
+          "⚠️ PERINGATAN SUCI:\n" +
+          "• JANGAN unggah wajah manusia\n" +
+          "• JANGAN unggah konten seksual/kekerasan\n" +
+          "• JANGAN unggah logo/iklan/komersial\n\n" +
+          "ℹ️ Artefak ini ABADI — tidak bisa dihapus, bahkan olehmu.\n\n" +
+          "Apakah ini momen yang layak diabadikan?"
+        );
+        if (!confirmed) return;
+
+        const notasi = prompt("Tulis maksimal 4 kata yang mewakili momen ini:", "");
+        if (notasi === null) return;
+
+        const words = notasi.trim().split(/\s+/).filter(w => w.length > 0);
+        if (words.length === 0) {
+          alert("Notasi tidak boleh kosong.");
+          return;
+        }
+        if (words.length > 4) {
+          alert("Maksimal 4 kata saja. Pilih yang paling berarti.");
+          return;
+        }
+        const finalNotasi = words.join(" ");
+
+        const imageUrl = await loadImageAsDataURL(file);
+
+        // Simpan ke localStorage
+        const newArtefak = {
+          id: 'art_' + Date.now(),
+          imageUrl,
+          notasi: finalNotasi,
+          time: Date.now(),
+          note: "",
+          emojis: { '😭': 0, '🔥': 0, '🤡': 0 }
+        };
+
+        const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
+        artefaks.push(newArtefak);
+        localStorage.setItem('nopeArtefaks', JSON.stringify(artefaks));
+        localStorage.setItem('nopeLastArtefakTime', now.toString());
+
+        document.getElementById('main-artefak').src = imageUrl;
+        alert(`✅ Artefak abadi tersimpan!\nNotasi: “${finalNotasi}”`);
+
+        renderArtefakTray();
+      });
+
+      // Modal note
+      const modal = document.getElementById('note-modal');
+      const closeModal = () => {
+        modal.style.display = 'none';
+      };
+      document.getElementById('close-modal').addEventListener('click', closeModal);
+      document.getElementById('cancel-note').addEventListener('click', closeModal);
+      document.getElementById('save-note').addEventListener('click', () => {
+        const note = document.getElementById('modal-note-input').value.trim();
+        const idx = parseInt(modal.dataset.index);
+        const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
+        artefaks[idx].note = note;
+        localStorage.setItem('nopeArtefaks', JSON.stringify(artefaks));
+        alert('Catatan disimpan.');
+        closeModal();
       });
     }
 
-    // ———— LOGIN LOGIC ————
-    document.getElementById('login-btn').addEventListener('click', () => {
-      const input = document.getElementById('username-input');
-      let username = input.value.trim();
-
-      if (!username) {
-        alert('Masukkan username dulu, sayang ❤️');
-        return;
-      }
-
-      // Pastikan username hanya 2 kata
-      const words = username.split(/\s+/);
-      if (words.length !== 2) {
-        alert('Username harus terdiri dari dua kata, ya!');
-        return;
-      }
-
-      // Simpan session
-      saveSession(username);
-      showDashboard(username);
-    });
-
-    function showDashboard(username) {
-      document.getElementById('display-username').textContent = username;
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      renderDummyFeed();
+    function loadImageAsDataURL(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
     }
 
-    // ———— ON LOAD ————
-    window.addEventListener('DOMContentLoaded', () => {
-      const session = getSession();
-      if (session && session.username) {
-        showDashboard(session.username);
+    // === DUMMY DATA ===
+    const DUMMY_RANTS = [
+      "Gue nangis sampe mata bengkak. Gak ngerti lagi harus gimana.",
+      "Baru aja nonton film itu, endingnya bikin gue mikir berjam-jam.",
+      "Kenapa semua orang pura-pura baik di medsos? Gue capek jadi orang lain.",
+      "Hujan hari ini nemenin gue nangis diam-diam.",
+      "Gue pengen ilang sebentar. Bukan kabur — cuma butuh napas.",
+      "Ada yang ngerasa hidupnya kayak lagu yang chorus-nya gak pernah datang?",
+      "Kadang gue iri sama orang yang bisa bilang 'ga apa-apa' dan beneran ga apa-apa.",
+      "Gue capek jadi kuat.",
+      "Malam ini gue ngerasa kayak bintang yang redup — masih nyala, tapi gak diliat siapa-siapa.",
+      "Gue nulis ini bukan minta diselamatin. Cuma biar gak sendiri."
+    ];
+
+    const DUMMY_ARTEFAK = [
+      { url: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=100", note: "Gunung yang menenangkan" },
+      { url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=100", note: "Senja yang membakar" },
+      { url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=100", note: "Langit malam" },
+      { url: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=100", note: "Air yang tenang" },
+      { url: "https://images.unsplash.com/photo-1480714378409-634531dbc169?auto=format&fit=crop&w=100", note: "Kabut pagi" },
+      { url: "https://images.unsplash.com/photo-1506260408123-9e6e537a2e05?auto=format&fit=crop&w=100", note: "Senyum sendirian" }
+    ];
+
+    function renderFeed() {
+      const rants = JSON.parse(localStorage.getItem('nopeUserRants') || '[]');
+      const allRants = [...rants];
+
+      if (rants.length < 10) {
+        const needed = 10 - rants.length;
+        for (let i = 0; i < needed; i++) {
+          allRants.push({ 
+            text: DUMMY_RANTS[i % DUMMY_RANTS.length], 
+            time: Date.now() - (i + 1) * 86400000, 
+            emojis: { '😭': 0, '🔥': 0, '🤡': 0 } 
+          });
+        }
       }
-    });
+
+      const feed = document.getElementById('feed-container');
+      feed.innerHTML = allRants.slice(0, 10).map(rant => `
+        <div class="rant-item">
+          ${escapeHtml(rant.text)}
+          <span class="emoji-pulse">😭</span>
+        </div>
+      `).join('');
+    }
+
+    function renderArtefakTray() {
+      const tray = document.getElementById('artefak-tray');
+      const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
+      const allArtefaks = [...artefaks, ...DUMMY_ARTEFAK.slice(0, 6 - artefaks.length)];
+
+      tray.innerHTML = allArtefaks.map((item, i) => `
+        <div class="artefak-item" data-index="${i}">
+          <img src="${item.url}" alt="Artefak" />
+          <div class="overlay">
+            <div class="counter">😭${item.emojis['😭']} 🔥${item.emojis['🔥']} 🤡${item.emojis['🤡']}</div>
+            <button class="note-btn">📝</button>
+          </div>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.artefak-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const idx = parseInt(item.dataset.index);
+          const modal = document.getElementById('note-modal');
+          document.getElementById('modal-artefak-img').src = allArtefaks[idx].url;
+          document.getElementById('modal-note-input').value = allArtefaks[idx].note || '';
+          modal.dataset.index = idx;
+          modal.style.display = 'flex';
+        });
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
   </script>
 </body>
 </html>
