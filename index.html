@@ -100,13 +100,13 @@
       padding: 12px;
       border-radius: var(--radius-10);
       resize: vertical;
-      min-height: 110px; /* Pas untuk 5 baris */
+      min-height: 110px;
       max-height: 500px;
-      font-size: 15px; /* Benchmark 60 karakter */
-      line-height: 1.4; /* Agar rapi */
+      font-size: 15px;
+      line-height: 1.4;
       outline: none;
       font-family: inherit;
-      padding-bottom: 36px; /* Ruang untuk CTA */
+      padding-bottom: 36px;
     }
     .rant-box textarea::placeholder {
       color: #777;
@@ -122,8 +122,6 @@
       font-weight: 600;
       font-size: 0.9rem;
       cursor: pointer;
-      padding: 0;
-      margin: 0;
     }
 
     .feed-title {
@@ -194,6 +192,7 @@
       border-top: 1px solid #222;
       z-index: 100;
       height: 56px;
+      width: 100vw; /* Lebar full screen */
     }
     .nav-item {
       display: flex;
@@ -259,6 +258,116 @@
       0%, 100% { opacity: 0.7; transform: scale(1); }
       50% { opacity: 1; transform: scale(1.05); }
     }
+
+    /* Artefak Upload Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.82);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      padding: 16px;
+      display: none;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: var(--radius-10);
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+      position: relative;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .modal-artefak {
+      width: 100%;
+      height: 0;
+      padding-bottom: 75%;
+      background: var(--input-bg);
+      border-radius: var(--radius-8);
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .modal-artefak img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .modal-note {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid #333;
+      color: var(--white);
+      padding: 10px;
+      border-radius: var(--radius-8);
+      resize: vertical;
+      min-height: 70px;
+      max-height: 200px;
+      font-size: 0.9rem;
+      outline: none;
+      font-family: inherit;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .modal-actions button {
+      padding: 7px 14px;
+      border-radius: var(--radius-8);
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .modal-actions .cancel {
+      background: transparent;
+      border: 1px solid #555;
+      color: #aaa;
+    }
+    .modal-actions .save {
+      background: var(--accent);
+      color: white;
+      border: none;
+    }
+
+    /* CTA Artefak */
+    .cta-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .impulse-text {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent);
+      cursor: pointer;
+      outline: none;
+      animation: impulse 3s infinite;
+    }
+    @keyframes impulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -284,6 +393,11 @@
     <!-- Artefak window DI ATAS rant box -->
     <div class="artefak-container">
       <img id="main-artefak" src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=600&h=480&q=80" alt="Artefak" />
+    </div>
+
+    <!-- CTA Artefak -->
+    <div class="cta-row">
+      <button id="choose-photo" class="impulse-text">Artefak</button>
     </div>
 
     <!-- Rant box dengan CTA di dalam -->
@@ -320,6 +434,26 @@
       Jelajah
     </a>
   </div>
+
+  <!-- Modal Artefak -->
+  <div class="modal" id="note-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📝 Catatan Pribadi</h3>
+        <button class="modal-close" id="close-modal">×</button>
+      </div>
+      <div class="modal-artefak">
+        <img id="modal-artefak-img" src="" alt="Artefak" />
+      </div>
+      <textarea class="modal-note" id="modal-note-input" placeholder="Tambahkan catatan pribadi untuk momen ini..."></textarea>
+      <div class="modal-actions">
+        <button class="cancel" id="cancel-note">Batal</button>
+        <button class="save" id="save-note">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="image-upload" accept="image/*" style="display:none;">
 
   <script>
     // === USER LOGIN ===
@@ -373,6 +507,7 @@
       renderFeed();
       renderArtefakTray();
 
+      // Rant upload
       document.getElementById('submit-rant').addEventListener('click', () => {
         const text = document.getElementById('rant-input').value.trim();
         if (!text) { alert('Isi dulu perasaanmu...'); return; }
@@ -391,6 +526,95 @@
 
         document.getElementById('rant-input').value = '';
         renderFeed();
+      });
+
+      // Artefak upload
+      document.getElementById('choose-photo').addEventListener('click', () => {
+        document.getElementById('image-upload').click();
+      });
+
+      document.getElementById('image-upload').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+
+        const lastArtefakTime = localStorage.getItem('nopeLastArtefakTime');
+        const now = Date.now();
+        if (lastArtefakTime && (now - parseInt(lastArtefakTime)) < 30 * 24 * 60 * 60 * 1000) {
+          const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (now - parseInt(lastArtefakTime))) / (24 * 60 * 60 * 1000));
+          alert(`Artefak hanya bisa diunggah sekali per 30 hari.\nKamu bisa lagi dalam ${daysLeft} hari.`);
+          return;
+        }
+
+        const confirmed = confirm(
+          "⚠️ PERINGATAN SUCI:\n" +
+          "• JANGAN unggah wajah manusia\n" +
+          "• JANGAN unggah konten seksual/kekerasan\n" +
+          "• JANGAN unggah logo/iklan/komersial\n\n" +
+          "ℹ️ Artefak ini ABADI — tidak bisa dihapus, bahkan olehmu.\n\n" +
+          "Apakah ini momen yang layak diabadikan?"
+        );
+        if (!confirmed) return;
+
+        const notasi = prompt("Tulis maksimal 4 kata yang mewakili momen ini:", "");
+        if (notasi === null) return;
+
+        const words = notasi.trim().split(/\s+/).filter(w => w.length > 0);
+        if (words.length === 0) {
+          alert("Notasi tidak boleh kosong.");
+          return;
+        }
+        if (words.length > 4) {
+          alert("Maksimal 4 kata saja. Pilih yang paling berarti.");
+          return;
+        }
+        const finalNotasi = words.join(" ");
+
+        const imageUrl = await loadImageAsDataURL(file);
+
+        // Simpan ke localStorage
+        const newArtefak = {
+          id: 'art_' + Date.now(),
+          imageUrl,
+          notasi: finalNotasi,
+          time: Date.now(),
+          note: "",
+          emojis: { '😭': 0, '🔥': 0, '🤡': 0 }
+        };
+
+        const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
+        artefaks.push(newArtefak);
+        localStorage.setItem('nopeArtefaks', JSON.stringify(artefaks));
+        localStorage.setItem('nopeLastArtefakTime', now.toString());
+
+        document.getElementById('main-artefak').src = imageUrl;
+        alert(`✅ Artefak abadi tersimpan!\nNotasi: “${finalNotasi}”`);
+
+        renderArtefakTray();
+      });
+
+      // Modal note
+      const modal = document.getElementById('note-modal');
+      const closeModal = () => {
+        modal.style.display = 'none';
+      };
+      document.getElementById('close-modal').addEventListener('click', closeModal);
+      document.getElementById('cancel-note').addEventListener('click', closeModal);
+      document.getElementById('save-note').addEventListener('click', () => {
+        const note = document.getElementById('modal-note-input').value.trim();
+        const idx = parseInt(modal.dataset.index);
+        const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
+        artefaks[idx].note = note;
+        localStorage.setItem('nopeArtefaks', JSON.stringify(artefaks));
+        alert('Catatan disimpan.');
+        closeModal();
+      });
+    }
+
+    function loadImageAsDataURL(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
       });
     }
 
@@ -443,11 +667,29 @@
 
     function renderArtefakTray() {
       const tray = document.getElementById('artefak-tray');
-      tray.innerHTML = DUMMY_ARTEFAK.map(item => `
-        <div class="artefak-item">
+      const artefaks = JSON.parse(localStorage.getItem('nopeArtefaks') || '[]');
+      const allArtefaks = [...artefaks, ...DUMMY_ARTEFAK.slice(0, 6 - artefaks.length)];
+
+      tray.innerHTML = allArtefaks.map((item, i) => `
+        <div class="artefak-item" data-index="${i}">
           <img src="${item.url}" alt="Artefak" />
+          <div class="overlay">
+            <div class="counter">😭${item.emojis['😭']} 🔥${item.emojis['🔥']} 🤡${item.emojis['🤡']}</div>
+            <button class="note-btn">📝</button>
+          </div>
         </div>
       `).join('');
+
+      document.querySelectorAll('.artefak-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const idx = parseInt(item.dataset.index);
+          const modal = document.getElementById('note-modal');
+          document.getElementById('modal-artefak-img').src = allArtefaks[idx].url;
+          document.getElementById('modal-note-input').value = allArtefaks[idx].note || '';
+          modal.dataset.index = idx;
+          modal.style.display = 'flex';
+        });
+      });
     }
 
     function escapeHtml(text) {
