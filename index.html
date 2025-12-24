@@ -217,12 +217,13 @@
 
   <!-- LOGIN OVERLAY -->
   <div id="login-overlay">
-    <div style="color: var(--logo); font-size: 1.8rem; font-weight: 800; margin-bottom: 24px;">NOPE</div>
-    <div style="color:#aaa; font-size:1rem; text-align:center; margin-bottom:24px;">
+    <div class="logo">NOPE</div>
+    <div style="color:#aaa; font-size:1rem; text-align:center; margin:16px 0;">
       ga perlu follower,<br>cuma butuh sefrekuensi
     </div>
     <input type="text" id="login-username" placeholder="Masukkan username (2 kata)" maxlength="30">
     <button id="login-btn">Masuk</button>
+    <div id="login-enter-hint" style="background:none; color:#aaa; font-size:0.85rem; padding:6px;">tekan **enter** untuk masuk</div>
     <p class="login-hint">Username hanya untuk identitas. Tidak perlu password.</p>
   </div>
 
@@ -231,15 +232,18 @@
   </div>
 
   <div class="container">
-    <div class="subheader" id="jejak-title">Jejak @sunyisenja</div>
+    <div id="jejak-title">@sunyisenja</div>
 
-    <div class="rant-box">
-      <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..." maxlength="300"></textarea>
+    <!-- Artefak window DI ATAS rant box -->
+    <div class="artefak-container">
+      <img id="main-artefak" src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=600&h=480&q=80" alt="Artefak" />
     </div>
 
-    <button id="submit-rant" style="align-self:flex-end; background:none; border:none; color:var(--accent); font-weight:600; margin-top:4px;">
-      Unggah
-    </button>
+    <!-- Rant box dengan CTA di dalam -->
+    <div class="rant-box">
+      <textarea id="rant-input" placeholder="Perasaanmu dalam 300 huruf..." maxlength="300"></textarea>
+      <button id="submit-rant">Unggah</button>
+    </div>
 
     <div class="feed-title">Jejakmu</div>
     <div id="feed-container"></div>
@@ -266,6 +270,7 @@
     </a>
   </div>
 
+</body>
   <script>
     // === USER LOGIN ===
     document.addEventListener('DOMContentLoaded', () => {
